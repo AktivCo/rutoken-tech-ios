@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5ED8B92C2ACD8EA100BCFC20 /* TinyAsyncRedux in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B92B2ACD8EA100BCFC20 /* TinyAsyncRedux */; };
+		5ED8B92F2ACD8F1D00BCFC20 /* FlowStacks in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B92E2ACD8F1D00BCFC20 /* FlowStacks */; };
+		5ED8B9322ACD8FAC00BCFC20 /* rtpkcs11ecp in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B9312ACD8FAC00BCFC20 /* rtpkcs11ecp */; };
+		5ED8B9352ACD8FD100BCFC20 /* rtengine in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B9342ACD8FD100BCFC20 /* rtengine */; };
+		5ED8B9382ACD996100BCFC20 /* openssl in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B9372ACD996100BCFC20 /* openssl */; };
+		5ED8B93B2ACDA1C300BCFC20 /* RtPcsc in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B93A2ACDA1C300BCFC20 /* RtPcsc */; };
 		5EF75DDF2AC707BD001834BE /* Rutoken_TechApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF75DDE2AC707BD001834BE /* Rutoken_TechApp.swift */; };
 		5EF75DE12AC707BD001834BE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF75DE02AC707BD001834BE /* ContentView.swift */; };
 		5EF75DE32AC707BD001834BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EF75DE22AC707BD001834BE /* Assets.xcassets */; };
@@ -26,6 +32,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5ED8B9352ACD8FD100BCFC20 /* rtengine in Frameworks */,
+				5ED8B92C2ACD8EA100BCFC20 /* TinyAsyncRedux in Frameworks */,
+				5ED8B9322ACD8FAC00BCFC20 /* rtpkcs11ecp in Frameworks */,
+				5ED8B9382ACD996100BCFC20 /* openssl in Frameworks */,
+				5ED8B92F2ACD8F1D00BCFC20 /* FlowStacks in Frameworks */,
+				5ED8B93B2ACDA1C300BCFC20 /* RtPcsc in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +95,14 @@
 			dependencies = (
 			);
 			name = "Rutoken Tech";
+			packageProductDependencies = (
+				5ED8B92B2ACD8EA100BCFC20 /* TinyAsyncRedux */,
+				5ED8B92E2ACD8F1D00BCFC20 /* FlowStacks */,
+				5ED8B9312ACD8FAC00BCFC20 /* rtpkcs11ecp */,
+				5ED8B9342ACD8FD100BCFC20 /* rtengine */,
+				5ED8B9372ACD996100BCFC20 /* openssl */,
+				5ED8B93A2ACDA1C300BCFC20 /* RtPcsc */,
+			);
 			productName = "Rutoken Tech";
 			productReference = 5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +131,14 @@
 				Base,
 			);
 			mainGroup = 5EF75DD22AC707BC001834BE;
+			packageReferences = (
+				5ED8B92A2ACD8EA100BCFC20 /* XCRemoteSwiftPackageReference "tiny-redux" */,
+				5ED8B92D2ACD8F1D00BCFC20 /* XCRemoteSwiftPackageReference "FlowStacks" */,
+				5ED8B9302ACD8FAC00BCFC20 /* XCRemoteSwiftPackageReference "rt-pkcs11ecp" */,
+				5ED8B9332ACD8FD100BCFC20 /* XCRemoteSwiftPackageReference "rt-engine" */,
+				5ED8B9362ACD996100BCFC20 /* XCRemoteSwiftPackageReference "openssl-xcframework" */,
+				5ED8B9392ACDA1C300BCFC20 /* XCRemoteSwiftPackageReference "rt-pcsc" */,
+			);
 			productRefGroup = 5EF75DDC2AC707BD001834BE /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -350,6 +378,90 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5ED8B92A2ACD8EA100BCFC20 /* XCRemoteSwiftPackageReference "tiny-redux" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/tiny-redux.git";
+			requirement = {
+				kind = exactVersion;
+				version = 4.0.0;
+			};
+		};
+		5ED8B92D2ACD8F1D00BCFC20 /* XCRemoteSwiftPackageReference "FlowStacks" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/johnpatrickmorgan/FlowStacks.git";
+			requirement = {
+				kind = exactVersion;
+				version = 0.3.2;
+			};
+		};
+		5ED8B9302ACD8FAC00BCFC20 /* XCRemoteSwiftPackageReference "rt-pkcs11ecp" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-pkcs11ecp.git";
+			requirement = {
+				kind = revision;
+				revision = 9fec5ca73fd6ebeff34383d1d049c305208e138d;
+			};
+		};
+		5ED8B9332ACD8FD100BCFC20 /* XCRemoteSwiftPackageReference "rt-engine" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-engine.git";
+			requirement = {
+				kind = exactVersion;
+				version = 3.2.1;
+			};
+		};
+		5ED8B9362ACD996100BCFC20 /* XCRemoteSwiftPackageReference "openssl-xcframework" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/openssl-xcframework.git";
+			requirement = {
+				kind = revision;
+				revision = 5383153db995ede4e40e6331b1f31347c8d74b1b;
+			};
+		};
+		5ED8B9392ACDA1C300BCFC20 /* XCRemoteSwiftPackageReference "rt-pcsc" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-pcsc.git";
+			requirement = {
+				kind = exactVersion;
+				version = 5.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5ED8B92B2ACD8EA100BCFC20 /* TinyAsyncRedux */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5ED8B92A2ACD8EA100BCFC20 /* XCRemoteSwiftPackageReference "tiny-redux" */;
+			productName = TinyAsyncRedux;
+		};
+		5ED8B92E2ACD8F1D00BCFC20 /* FlowStacks */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5ED8B92D2ACD8F1D00BCFC20 /* XCRemoteSwiftPackageReference "FlowStacks" */;
+			productName = FlowStacks;
+		};
+		5ED8B9312ACD8FAC00BCFC20 /* rtpkcs11ecp */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5ED8B9302ACD8FAC00BCFC20 /* XCRemoteSwiftPackageReference "rt-pkcs11ecp" */;
+			productName = rtpkcs11ecp;
+		};
+		5ED8B9342ACD8FD100BCFC20 /* rtengine */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5ED8B9332ACD8FD100BCFC20 /* XCRemoteSwiftPackageReference "rt-engine" */;
+			productName = rtengine;
+		};
+		5ED8B9372ACD996100BCFC20 /* openssl */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5ED8B9362ACD996100BCFC20 /* XCRemoteSwiftPackageReference "openssl-xcframework" */;
+			productName = openssl;
+		};
+		5ED8B93A2ACDA1C300BCFC20 /* RtPcsc */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5ED8B9392ACDA1C300BCFC20 /* XCRemoteSwiftPackageReference "rt-pcsc" */;
+			productName = RtPcsc;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5EF75DD32AC707BC001834BE /* Project object */;
 }
