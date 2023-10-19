@@ -1,0 +1,37 @@
+stages:
+  - build
+  - archive
+  - export
+  - deploy
+
+
+workflow:
+  rules:
+    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS && $CI_PIPELINE_SOURCE == "push"'
+      when: never
+    - when: always
+
+
+variables:
+  PUBLISH_TO:
+    value: "none"
+    description: "To whom build should be published, possible values: none, dev, internal"
+  SKIP_BUILD:
+    value: "false"
+    description: "Run only deploy jobs. Values: true/false"
+
+  VAULT_ADDR: "https://vault.aktivco.ru"
+  FOLDER_ARTIFACTS: "artifacts"
+  RT_CI_VAGRANT_BOX_NAME: rutoken/macos
+  RT_CI_VAGRANT_BOX_VERSION: 1.6.1
+
+  MATCH_PASSWORD: ""
+  KEYCHAIN_PASSWORD: "vagrant"
+  KEY_ID: ""
+  ISSUER_ID: ""
+  API_KEY: "/tmp/api_key.p8"
+  FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 120
+
+
+include:
+  - .ci/stage-*.yml

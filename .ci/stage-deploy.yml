@@ -1,0 +1,20 @@
+include: .ci/vault.yml
+
+
+testFlight:
+  stage: deploy
+  tags: [vagrant-darwin]
+  rules:
+    - if: $PUBLISH_TO != "none"
+    - when: never
+  needs:
+    - job: export
+  variables:
+    RT_CI_VAGRANT_BOX_CPUS: 2
+    RT_CI_VAGRANT_BOX_MEMORY: 4096
+  before_script:
+    - !reference [.vault, testflight_secrets]
+  script:
+    - PRODUCT_NAME_LOCAL="Rutoken Tech"
+    - PATH_TO_EXPORT_DIR="${CI_PROJECT_NAME}/ios-arm64-clang"
+    - fastlane publish ipa_path:"${PATH_TO_EXPORT_DIR}/${PRODUCT_NAME_LOCAL}.ipa" publish_to:"${PUBLISH_TO}"

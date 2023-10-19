@@ -1,0 +1,68 @@
+include: .ci/vault.yml
+
+
+archive:
+  image:
+    name: ${NEXUS_PREFIX}-publish-artifacts:latest
+    entrypoint: ["/bin/bash"]
+  stage: archive
+  tags: [local]
+  rules:
+    - if: $SKIP_BUILD == "false"
+    - when: never
+  needs:
+    - job: build
+  variables:
+    GIT_STRATEGY: none
+  before_script:
+    - !reference [.vault, archive_secrets]
+
+  script:
+    - PROJECT_NAME_LOCAL="${CI_PROJECT_NAME}"
+    - REF="${CI_COMMIT_SHA}"
+    - PACKAGE_URL="https://builds.aktivco.ru/new/${PROJECT_NAME_LOCAL}/${PROJECT_NAME_LOCAL}-${REF}.zip"
+    - UPLOAD_PACKAGE_URL="${AKTIV_BUILDS_DIRECTORY}/${PROJECT_NAME_LOCAL}/${PROJECT_NAME_LOCAL}-${REF}.zip"
+
+    - FOLDER_OUT="${CI_PROJECT_DIR}/out"
+    - ALL_ARTIFACTS="${FOLDER_OUT}/${CI_PROJECT_NAME}"
+    - mkdir -p "${ALL_ARTIFACTS}"
+
+    - cp -r ${FOLDER_ARTIFACTS}/* ${ALL_ARTIFACTS}/
+
+    - curl --output /dev/null --silent --head --fail ${PACKAGE_URL} && ret=0 || ret=${?}
+
+    - |
+      if [[ ${ret} -eq 0 && ${PUBLISH_TO} != "none" ]]
+      then
+          echo "No need to reupload archive!"
+          exit 0
+      fi
+
+    - UPLOAD_ARCHIVE="${CI_PROJECT_DIR}/${CI_PROJECT_NAME}.zip"
+    - |
+      if [ ${ret} -eq 0 ]
+      then
+          curl -O ${PACKAGE_URL}
+          unzip ${PACKAGE}
+
+          for ARTIFACT in $(ls "${ALL_ARTIFACTS}")
+          do
+              if [ ! -d "${CI_PROJECT_NAME}/${ARTIFACT}" ]
+              then
+                  pushd ${FOLDER_OUT}
+                  zip -r -g ${UPLOAD_ARCHIVE} ${CI_PROJECT_NAME}/${ARTIFACT}
+                  popd
+              fi
+          done
+      else
+          pushd ${FOLDER_OUT}
+          echo ${CI_COMMIT_SHA} > ${ALL_ARTIFACTS}/${CI_PROJECT_NAME}_version
+          zip -9 -r ${UPLOAD_ARCHIVE} ./*
+          popd
+      fi
+
+    - echo "Uploading ${PACKAGE_URL}"
+    - |
+      scp -o StrictHostKeyChecking=no \
+          -o UserKnownHostsFile=/dev/null \
+          ${UPLOAD_ARCHIVE} ${UPLOAD_PACKAGE_URL}
