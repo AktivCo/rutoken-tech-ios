@@ -1,0 +1,100 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Build application"
+
+  lane :build do |options|
+
+    if is_ci
+      app_store_connect_api_key(
+        key_id: ENV["KEY_ID"],
+        issuer_id: ENV["ISSUER_ID"],
+        key_filepath: ENV["API_KEY"],
+        duration: 1200,
+        in_house: false
+      )
+    end
+
+    match(
+      git_url: "git@scm.aktivco.ru:rutoken/dev/ios-projects/fastlane/developer-certificates.git",
+      keychain_password: ENV["KEYCHAIN_PASSWORD"],
+      type: "development"
+    )
+
+    build_app(
+      scheme: "Rutoken Tech",
+      clean: true,
+      skip_package_ipa: true,
+      archive_path: (options[:output_path] ? options[:output_path] : "./build/Rutoken Tech.xcarchive")
+    )
+
+  end
+
+  lane :export do |options|
+
+    if is_ci
+      app_store_connect_api_key(
+        key_id: ENV["KEY_ID"],
+        issuer_id: ENV["ISSUER_ID"],
+        key_filepath: ENV["API_KEY"],
+        duration: 1200,
+        in_house: false
+      )
+
+    end
+      set_info_plist_value(
+        path: (options[:archive_path] ? (options[:archive_path]+"/Info.plist") : "./build/Rutoken Tech.xcarchive/Info.plist"),
+        key: "ApplicationProperties",
+        subkey: "CFBundleVersion",
+        value: (latest_testflight_build_number(version: get_version_number(xcodeproj: "Rutoken Tech.xcodeproj"))+1).to_s
+      )
+
+
+    match(
+      git_url: "git@scm.aktivco.ru:rutoken/dev/ios-projects/fastlane/distribution-certificates.git",
+      keychain_password: ENV["KEYCHAIN_PASSWORD"],
+      type: "appstore"
+    )
+
+    build_app(
+      scheme: "Rutoken Tech",
+      skip_build_archive: true,
+      output_directory: (options[:output_path] ? options[:output_path] : "./build/"),
+      output_name: "Rutoken Tech.ipa",
+      archive_path: (options[:archive_path] ? options[:archive_path] : "./build/Rutoken Tech.xcarchive")
+    )
+
+   end
+
+   lane :publish do |options|
+
+     if is_ci
+       app_store_connect_api_key(
+         key_id: ENV["KEY_ID"],
+         issuer_id: ENV["ISSUER_ID"],
+         key_filepath: ENV["API_KEY"],
+         duration: 1200,
+         in_house: false
+       )
+     end
+
+     groups = "dev"
+     if options[:publish_to] == "internal"
+       groups = "QA,Product"
+     elsif options[:publish_to] == "external"
+       groups = "Employee,Public"
+     elsif options[:publish_to] != "dev"
+       UI.user_error!("publish_to should be one of the following: dev, internal, external")
+     end
+
+     upload_to_testflight(
+       ipa: (options[:ipa_path] ? options[:ipa_path] : "./build/Rutoken Tech.ipa"),
+       notify_external_testers: true,
+       distribute_external: true,
+       groups: groups,
+       changelog: "New version avaliable"
+     )
+
+   end
+
+end
