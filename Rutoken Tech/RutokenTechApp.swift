@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct Rutoken_TechApp: App {
+struct RutokenTechApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

@@ -13,7 +13,7 @@
 		5ED8B9352ACD8FD100BCFC20 /* rtengine in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B9342ACD8FD100BCFC20 /* rtengine */; };
 		5ED8B9382ACD996100BCFC20 /* openssl in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B9372ACD996100BCFC20 /* openssl */; };
 		5ED8B93B2ACDA1C300BCFC20 /* RtPcsc in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B93A2ACDA1C300BCFC20 /* RtPcsc */; };
-		5EF75DDF2AC707BD001834BE /* Rutoken_TechApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF75DDE2AC707BD001834BE /* Rutoken_TechApp.swift */; };
+		5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF75DDE2AC707BD001834BE /* RutokenTechApp.swift */; };
 		5EF75DE12AC707BD001834BE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF75DE02AC707BD001834BE /* ContentView.swift */; };
 		5EF75DE32AC707BD001834BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EF75DE22AC707BD001834BE /* Assets.xcassets */; };
 		5EF75DE62AC707BD001834BE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EF75DE52AC707BD001834BE /* Preview Assets.xcassets */; };
@@ -21,7 +21,7 @@
 
 /* Begin PBXFileReference section */
 		5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rutoken Tech.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5EF75DDE2AC707BD001834BE /* Rutoken_TechApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rutoken_TechApp.swift; sourceTree = "<group>"; };
+		5EF75DDE2AC707BD001834BE /* RutokenTechApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RutokenTechApp.swift; sourceTree = "<group>"; };
 		5EF75DE02AC707BD001834BE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		5EF75DE22AC707BD001834BE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5EF75DE52AC707BD001834BE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -63,7 +63,7 @@
 		5EF75DDD2AC707BD001834BE /* Rutoken Tech */ = {
 			isa = PBXGroup;
 			children = (
-				5EF75DDE2AC707BD001834BE /* Rutoken_TechApp.swift */,
+				5EF75DDE2AC707BD001834BE /* RutokenTechApp.swift */,
 				5EF75DE02AC707BD001834BE /* ContentView.swift */,
 				5EF75DE22AC707BD001834BE /* Assets.xcassets */,
 				5EF75DE42AC707BD001834BE /* Preview Content */,
@@ -89,6 +89,7 @@
 				5EF75DD72AC707BD001834BE /* Sources */,
 				5EF75DD82AC707BD001834BE /* Frameworks */,
 				5EF75DD92AC707BD001834BE /* Resources */,
+				7D98BD802AE1233400B6A281 /* Run Swiftlint */,
 			);
 			buildRules = (
 			);
@@ -160,13 +161,35 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		7D98BD802AE1233400B6A281 /* Run Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Swiftlint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n  swiftlint lint --strict\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		5EF75DD72AC707BD001834BE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				5EF75DE12AC707BD001834BE /* ContentView.swift in Sources */,
-				5EF75DDF2AC707BD001834BE /* Rutoken_TechApp.swift in Sources */,
+				5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,7 +233,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -273,7 +296,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
