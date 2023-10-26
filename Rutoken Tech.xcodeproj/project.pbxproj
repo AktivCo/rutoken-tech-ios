@@ -14,17 +14,21 @@
 		5ED8B9382ACD996100BCFC20 /* openssl in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B9372ACD996100BCFC20 /* openssl */; };
 		5ED8B93B2ACDA1C300BCFC20 /* RtPcsc in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B93A2ACDA1C300BCFC20 /* RtPcsc */; };
 		5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF75DDE2AC707BD001834BE /* RutokenTechApp.swift */; };
-		5EF75DE12AC707BD001834BE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF75DE02AC707BD001834BE /* ContentView.swift */; };
+		5EF75DE12AC707BD001834BE /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF75DE02AC707BD001834BE /* RootView.swift */; };
 		5EF75DE32AC707BD001834BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EF75DE22AC707BD001834BE /* Assets.xcassets */; };
 		5EF75DE62AC707BD001834BE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EF75DE52AC707BD001834BE /* Preview Assets.xcassets */; };
+		D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */; };
+		D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F52AEA796E00B0AB64 /* RtAppTab.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rutoken Tech.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EF75DDE2AC707BD001834BE /* RutokenTechApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RutokenTechApp.swift; sourceTree = "<group>"; };
-		5EF75DE02AC707BD001834BE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		5EF75DE02AC707BD001834BE /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		5EF75DE22AC707BD001834BE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5EF75DE52AC707BD001834BE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IphoneRootView.swift; sourceTree = "<group>"; };
+		D44997F52AEA796E00B0AB64 /* RtAppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtAppTab.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,8 +67,8 @@
 		5EF75DDD2AC707BD001834BE /* Rutoken Tech */ = {
 			isa = PBXGroup;
 			children = (
+				D44997F12AEA6EB500B0AB64 /* Views */,
 				5EF75DDE2AC707BD001834BE /* RutokenTechApp.swift */,
-				5EF75DE02AC707BD001834BE /* ContentView.swift */,
 				5EF75DE22AC707BD001834BE /* Assets.xcassets */,
 				5EF75DE42AC707BD001834BE /* Preview Content */,
 			);
@@ -77,6 +81,16 @@
 				5EF75DE52AC707BD001834BE /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		D44997F12AEA6EB500B0AB64 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D44997F52AEA796E00B0AB64 /* RtAppTab.swift */,
+				5EF75DE02AC707BD001834BE /* RootView.swift */,
+				D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -188,8 +202,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5EF75DE12AC707BD001834BE /* ContentView.swift in Sources */,
+				5EF75DE12AC707BD001834BE /* RootView.swift in Sources */,
 				5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */,
+				D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */,
+				D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
