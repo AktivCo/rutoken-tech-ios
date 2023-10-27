@@ -5,22 +5,42 @@
 //  Created by Никита Девятых on 26.10.2023.
 //
 
+import UIKit
+
+
 enum RtAppTab: String, CaseIterable, Equatable {
-    case bank = "Банк"
-    case ca = "УЦ"
-    case dev = "Разработка"
-    case about = "О приложении"
+    case bank
+    case ca
+    case dev
+    case about
+
+    var rawValue: String {
+        switch self {
+        case .bank:
+            return "Банк"
+        case .ca:
+            return UIDevice.isPhone ? "УЦ" : "Удостоверяющий центр"
+        case .dev:
+            return "Разработка"
+        case .about:
+            return "О приложении"
+        }
+    }
 
     var imageName: String {
+        var result: String
+
         switch self {
         case .ca:
-            return "tray.full.fill"
+            result = "tray.full.fill"
         case .bank:
-            return "person.crop.rectangle.stack.fill"
+            result = "person.crop.rectangle.stack.fill"
         case .about:
-            return "app.badge.fill"
+            result = "app.badge.fill"
         case .dev:
-            return "square.grid.2x2.fill"
+            result = "square.grid.2x2.fill"
         }
+
+        return UIDevice.isPhone ? result : result.replacingOccurrences(of: ".fill", with: "")
     }
 }

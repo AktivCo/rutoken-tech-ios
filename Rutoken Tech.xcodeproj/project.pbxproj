@@ -18,6 +18,8 @@
 		5EF75DE32AC707BD001834BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EF75DE22AC707BD001834BE /* Assets.xcassets */; };
 		5EF75DE62AC707BD001834BE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EF75DE52AC707BD001834BE /* Preview Assets.xcassets */; };
 		D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */; };
+		7D2021472AEC16E8003E2B73 /* IpadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2021462AEC16E8003E2B73 /* IpadRootView.swift */; };
+		7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */; };
 		D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F52AEA796E00B0AB64 /* RtAppTab.swift */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +30,8 @@
 		5EF75DE22AC707BD001834BE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5EF75DE52AC707BD001834BE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IphoneRootView.swift; sourceTree = "<group>"; };
+		7D2021462AEC16E8003E2B73 /* IpadRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IpadRootView.swift; sourceTree = "<group>"; };
+		7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+isPhone.swift"; sourceTree = "<group>"; };
 		D44997F52AEA796E00B0AB64 /* RtAppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtAppTab.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -67,6 +71,7 @@
 		5EF75DDD2AC707BD001834BE /* Rutoken Tech */ = {
 			isa = PBXGroup;
 			children = (
+				7DAF6E742AFA35A5003A57D1 /* Extensions */,
 				D44997F12AEA6EB500B0AB64 /* Views */,
 				5EF75DDE2AC707BD001834BE /* RutokenTechApp.swift */,
 				5EF75DE22AC707BD001834BE /* Assets.xcassets */,
@@ -83,12 +88,21 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		7DAF6E742AFA35A5003A57D1 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		D44997F12AEA6EB500B0AB64 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				D44997F52AEA796E00B0AB64 /* RtAppTab.swift */,
 				5EF75DE02AC707BD001834BE /* RootView.swift */,
 				D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */,
+				7D2021462AEC16E8003E2B73 /* IpadRootView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -206,6 +220,8 @@
 				5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */,
 				D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */,
 				D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */,
+				7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */,
+				7D2021472AEC16E8003E2B73 /* IpadRootView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

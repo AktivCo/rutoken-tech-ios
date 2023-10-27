@@ -12,10 +12,10 @@ struct RootView: View {
     @State private var selectedTab: RtAppTab = .ca
 
     var body: some View {
-        if UIDevice.current.userInterfaceIdiom == .phone {
+        if UIDevice.isPhone {
             IphoneRootView(selectedTab: $selectedTab)
         } else {
-            Text("Ipad RootView")
+            IpadRootView()
         }
     }
 }
