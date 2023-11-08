@@ -7,42 +7,58 @@
 
 import SwiftUI
 
+import TinyAsyncRedux
+
 
 struct IpadRootView: View {
+    @EnvironmentObject private var store: Store<AppState, AppAction>
     @State var selectedTab: RtAppTab? = .ca
 
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.doubleColumn)) {
+            VStack(spacing: 0) {
+                Text("Рутокен Технологии").font(.largeTitle).fontWeight(.bold)
+                    .foregroundStyle(Color("labelPrimary"))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, 24)
+                    .padding(.top, 5+44)
+                    .padding(.bottom, 12)
 
-            Text("Рутокен Технологии").font(.largeTitle).fontWeight(.bold)
-                .foregroundStyle(Color("labelPrimary"))
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, 24)
-                .padding(.top, 49)
-
-            List(RtAppTab.allCases, id: \.self, selection: $selectedTab) { tab in
-                NavigationLink {
-                    Text(tab.rawValue)
-                        .foregroundStyle(Color("labelPrimary"))
-                } label: {
-                    Label(
-                        title: {
-                            Text(tab.rawValue)
-                                .foregroundStyle(selectedTab == tab ?
-                                                 Color("colorsOnPrimary") : Color("labelPrimary"))
-                        },
-                        icon: {
-                            Image(systemName: tab.imageName)
-                        }
-                    )
+                List(RtAppTab.allCases, id: \.self, selection: $selectedTab) { tab in
+                    NavigationLink(value: tab) {
+                        Label(
+                            title: {
+                                Text(tab.rawValue)
+                                    .foregroundStyle(selectedTab == tab ?
+                                                     Color("colorsOnPrimary") : Color("labelPrimary"))
+                            },
+                            icon: {
+                                Image(systemName: tab.imageName)
+                            }
+                        )
+                    }
                 }
             }
             .listStyle(.sidebar)
             .scrollContentBackground(.hidden)
-
             .toolbar(.hidden, for: .navigationBar)
         } detail: {
-            if let selectedTab { Text(selectedTab.rawValue) }
+            if let selectedTab {
+                switch selectedTab {
+                case .ca:
+                    ZStack {
+                        Color("surfaceSecondary")
+                            .ignoresSafeArea()
+                        VStack(spacing: 0) {
+                            CaEntryView()
+                        }
+                    }
+                    .toolbar(.hidden, for: .navigationBar)
+                default:
+                    Text(selectedTab.rawValue)
+                        .foregroundStyle(Color("labelPrimary"))
+                }
+            }
         }
         .navigationSplitViewStyle(.balanced)
         .tint(Color("colorsSecondary"))
@@ -51,6 +67,10 @@ struct IpadRootView: View {
 
 struct IpadRootView_Previews: PreviewProvider {
     static var previews: some View {
+        let store = Store(initialState: AppState(),
+                          reducer: AppReducer(),
+                          middlewares: [])
         IpadRootView()
+            .environmentObject(store)
     }
 }

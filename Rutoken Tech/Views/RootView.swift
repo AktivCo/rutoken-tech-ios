@@ -7,8 +7,11 @@
 
 import SwiftUI
 
+import TinyAsyncRedux
+
 
 struct RootView: View {
+    @EnvironmentObject private var store: Store<AppState, AppAction>
     @State private var selectedTab: RtAppTab = .ca
 
     var body: some View {
@@ -18,10 +21,15 @@ struct RootView: View {
             IpadRootView()
         }
     }
+
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
+        let store = Store(initialState: AppState(),
+                          reducer: AppReducer(),
+                          middlewares: [])
         RootView()
+            .environmentObject(store)
     }
 }

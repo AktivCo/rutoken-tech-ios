@@ -19,6 +19,11 @@
 		5EF75DE32AC707BD001834BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EF75DE22AC707BD001834BE /* Assets.xcassets */; };
 		5EF75DE62AC707BD001834BE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EF75DE52AC707BD001834BE /* Preview Assets.xcassets */; };
 		7D2021472AEC16E8003E2B73 /* IpadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2021462AEC16E8003E2B73 /* IpadRootView.swift */; };
+		7D38D6DA2B0E2C190045FBAD /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D38D6D92B0E2C190045FBAD /* AppState.swift */; };
+		7D38D6DC2B0E2D3F0045FBAD /* AppAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D38D6DB2B0E2D3F0045FBAD /* AppAction.swift */; };
+		7D38D6E02B0E33780045FBAD /* AppReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D38D6DF2B0E33780045FBAD /* AppReducer.swift */; };
+		7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5145402AFBD1DB004B6947 /* CaEntryView.swift */; };
+		7D9E5A602B0BA55E00E2EAB7 /* CaEntryViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E5A5F2B0BA55E00E2EAB7 /* CaEntryViewState.swift */; };
 		7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */; };
 		D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */; };
 		D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F52AEA796E00B0AB64 /* RtAppTab.swift */; };
@@ -55,6 +60,11 @@
 		5EF75DE22AC707BD001834BE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5EF75DE52AC707BD001834BE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		7D2021462AEC16E8003E2B73 /* IpadRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IpadRootView.swift; sourceTree = "<group>"; };
+		7D38D6D92B0E2C190045FBAD /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		7D38D6DB2B0E2D3F0045FBAD /* AppAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAction.swift; sourceTree = "<group>"; };
+		7D38D6DF2B0E33780045FBAD /* AppReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReducer.swift; sourceTree = "<group>"; };
+		7D5145402AFBD1DB004B6947 /* CaEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaEntryView.swift; sourceTree = "<group>"; };
+		7D9E5A5F2B0BA55E00E2EAB7 /* CaEntryViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaEntryViewState.swift; sourceTree = "<group>"; };
 		7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+isPhone.swift"; sourceTree = "<group>"; };
 		D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IphoneRootView.swift; sourceTree = "<group>"; };
 		D44997F52AEA796E00B0AB64 /* RtAppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtAppTab.swift; sourceTree = "<group>"; };
@@ -124,6 +134,7 @@
 				D4B130A62B0CFD1B00AD390F /* Managers */,
 				7DAF6E742AFA35A5003A57D1 /* Extensions */,
 				D44997F12AEA6EB500B0AB64 /* Views */,
+				7D38D6D82B0E2B920045FBAD /* Redux */,
 				5EF75DDE2AC707BD001834BE /* RutokenTechApp.swift */,
 				5EF75DE22AC707BD001834BE /* Assets.xcassets */,
 				5EF75DE42AC707BD001834BE /* Preview Content */,
@@ -140,6 +151,49 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		7D38D6D82B0E2B920045FBAD /* Redux */ = {
+			isa = PBXGroup;
+			children = (
+				7D38D6DD2B0E2D7E0045FBAD /* Actions */,
+				7D38D6DE2B0E33620045FBAD /* Reducers */,
+				7D9E5A5E2B0BA51600E2EAB7 /* States */,
+			);
+			path = Redux;
+			sourceTree = "<group>";
+		};
+		7D38D6DD2B0E2D7E0045FBAD /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				7D38D6DB2B0E2D3F0045FBAD /* AppAction.swift */,
+			);
+			path = Actions;
+			sourceTree = "<group>";
+		};
+		7D38D6DE2B0E33620045FBAD /* Reducers */ = {
+			isa = PBXGroup;
+			children = (
+				7D38D6DF2B0E33780045FBAD /* AppReducer.swift */,
+			);
+			path = Reducers;
+			sourceTree = "<group>";
+		};
+		7D5390082B0FA17E00FE4738 /* Ca */ = {
+			isa = PBXGroup;
+			children = (
+				7D5145402AFBD1DB004B6947 /* CaEntryView.swift */,
+			);
+			path = Ca;
+			sourceTree = "<group>";
+		};
+		7D9E5A5E2B0BA51600E2EAB7 /* States */ = {
+			isa = PBXGroup;
+			children = (
+				7D38D6D92B0E2C190045FBAD /* AppState.swift */,
+				7D9E5A5F2B0BA55E00E2EAB7 /* CaEntryViewState.swift */,
+			);
+			path = States;
+			sourceTree = "<group>";
+		};
 		7DAF6E742AFA35A5003A57D1 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -151,6 +205,7 @@
 		D44997F12AEA6EB500B0AB64 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				7D5390082B0FA17E00FE4738 /* Ca */,
 				D44997F52AEA796E00B0AB64 /* RtAppTab.swift */,
 				5EF75DE02AC707BD001834BE /* RootView.swift */,
 				D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */,
@@ -375,14 +430,19 @@
 				D4B130A82B0CFD2F00AD390F /* CryptoManager.swift in Sources */,
 				44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */,
 				D4B130B02B0CFFCD00AD390F /* TokenModel.swift in Sources */,
+				7D38D6DA2B0E2C190045FBAD /* AppState.swift in Sources */,
 				5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */,
 				D4B130B52B0DDB2200AD390F /* Pkcs11Helper.swift in Sources */,
 				D4B130D82B0E4F8200AD390F /* TokenInterface.swift in Sources */,
 				D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */,
+				7D38D6DC2B0E2D3F0045FBAD /* AppAction.swift in Sources */,
 				D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */,
+                7D38D6E02B0E33780045FBAD /* AppReducer.swift in Sources */,
+                7D2021472AEC16E8003E2B73 /* IpadRootView.swift in Sources */,
+                7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */,
+                7D9E5A602B0BA55E00E2EAB7 /* CaEntryViewState.swift in Sources */,
 				D4B130B32B0DD52A00AD390F /* Token.swift in Sources */,
 				7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */,
-				7D2021472AEC16E8003E2B73 /* IpadRootView.swift in Sources */,
 				D4B130AB2B0CFD7300AD390F /* TokenInfo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
