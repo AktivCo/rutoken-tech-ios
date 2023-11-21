@@ -17,11 +17,33 @@
 		5EF75DE12AC707BD001834BE /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF75DE02AC707BD001834BE /* RootView.swift */; };
 		5EF75DE32AC707BD001834BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EF75DE22AC707BD001834BE /* Assets.xcassets */; };
 		5EF75DE62AC707BD001834BE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EF75DE52AC707BD001834BE /* Preview Assets.xcassets */; };
-		D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */; };
 		7D2021472AEC16E8003E2B73 /* IpadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2021462AEC16E8003E2B73 /* IpadRootView.swift */; };
 		7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */; };
+		D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */; };
 		D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F52AEA796E00B0AB64 /* RtAppTab.swift */; };
+		D4B130A82B0CFD2F00AD390F /* CryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */; };
+		D4B130AB2B0CFD7300AD390F /* TokenInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130AA2B0CFD7300AD390F /* TokenInfo.swift */; };
+		D4B130B02B0CFFCD00AD390F /* TokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130AF2B0CFFCD00AD390F /* TokenModel.swift */; };
+		D4B130B32B0DD52A00AD390F /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130B22B0DD52A00AD390F /* Token.swift */; };
+		D4B130B52B0DDB2200AD390F /* Pkcs11Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130B42B0DDB2200AD390F /* Pkcs11Helper.swift */; };
+		D4B130C52B0E37D600AD390F /* TokenMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130C42B0E37D600AD390F /* TokenMock.swift */; };
+		D4B130C72B0E37F200AD390F /* Pkcs11HelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130C62B0E37F200AD390F /* Pkcs11HelperMock.swift */; };
+		D4B130D02B0E3B1600AD390F /* CryptoManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130CF2B0E3B1600AD390F /* CryptoManagerTests.swift */; };
+		D4B130D32B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D22B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift */; };
+		D4B130D62B0E4F2400AD390F /* PcscHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D52B0E4F2400AD390F /* PcscHelper.swift */; };
+		D4B130D82B0E4F8200AD390F /* TokenInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D72B0E4F8200AD390F /* TokenInterface.swift */; };
+		D4B130DA2B0E51FE00AD390F /* PcscHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D4B130BE2B0E379900AD390F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5EF75DD32AC707BC001834BE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5EF75DDA2AC707BD001834BE;
+			remoteInfo = "Rutoken Tech";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rutoken Tech.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -29,10 +51,23 @@
 		5EF75DE02AC707BD001834BE /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		5EF75DE22AC707BD001834BE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5EF75DE52AC707BD001834BE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IphoneRootView.swift; sourceTree = "<group>"; };
 		7D2021462AEC16E8003E2B73 /* IpadRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IpadRootView.swift; sourceTree = "<group>"; };
 		7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+isPhone.swift"; sourceTree = "<group>"; };
+		D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IphoneRootView.swift; sourceTree = "<group>"; };
 		D44997F52AEA796E00B0AB64 /* RtAppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtAppTab.swift; sourceTree = "<group>"; };
+		D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoManager.swift; sourceTree = "<group>"; };
+		D4B130AA2B0CFD7300AD390F /* TokenInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenInfo.swift; sourceTree = "<group>"; };
+		D4B130AF2B0CFFCD00AD390F /* TokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenModel.swift; sourceTree = "<group>"; };
+		D4B130B22B0DD52A00AD390F /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
+		D4B130B42B0DDB2200AD390F /* Pkcs11Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Helper.swift; sourceTree = "<group>"; };
+		D4B130BA2B0E379900AD390F /* Rutoken Tech Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Rutoken Tech Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4B130C42B0E37D600AD390F /* TokenMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMock.swift; sourceTree = "<group>"; };
+		D4B130C62B0E37F200AD390F /* Pkcs11HelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11HelperMock.swift; sourceTree = "<group>"; };
+		D4B130CF2B0E3B1600AD390F /* CryptoManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoManagerTests.swift; sourceTree = "<group>"; };
+		D4B130D22B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+AssertSpecificError.swift"; sourceTree = "<group>"; };
+		D4B130D52B0E4F2400AD390F /* PcscHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcscHelper.swift; sourceTree = "<group>"; };
+		D4B130D72B0E4F8200AD390F /* TokenInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenInterface.swift; sourceTree = "<group>"; };
+		D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcscHelperMock.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,6 +84,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D4B130B72B0E379900AD390F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -56,6 +98,7 @@
 			isa = PBXGroup;
 			children = (
 				5EF75DDD2AC707BD001834BE /* Rutoken Tech */,
+				D4B130BB2B0E379900AD390F /* Rutoken Tech Tests */,
 				5EF75DDC2AC707BD001834BE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -64,6 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */,
+				D4B130BA2B0E379900AD390F /* Rutoken Tech Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -71,6 +115,10 @@
 		5EF75DDD2AC707BD001834BE /* Rutoken Tech */ = {
 			isa = PBXGroup;
 			children = (
+				D4B130D42B0E4F1300AD390F /* Pcsc */,
+				D4B130B12B0DD50F00AD390F /* Pkcs11 */,
+				D4B130A92B0CFD6600AD390F /* Models */,
+				D4B130A62B0CFD1B00AD390F /* Managers */,
 				7DAF6E742AFA35A5003A57D1 /* Extensions */,
 				D44997F12AEA6EB500B0AB64 /* Views */,
 				5EF75DDE2AC707BD001834BE /* RutokenTechApp.swift */,
@@ -107,6 +155,77 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		D4B130A62B0CFD1B00AD390F /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		D4B130A92B0CFD6600AD390F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D4B130AA2B0CFD7300AD390F /* TokenInfo.swift */,
+				D4B130AF2B0CFFCD00AD390F /* TokenModel.swift */,
+				D4B130D72B0E4F8200AD390F /* TokenInterface.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		D4B130B12B0DD50F00AD390F /* Pkcs11 */ = {
+			isa = PBXGroup;
+			children = (
+				D4B130B22B0DD52A00AD390F /* Token.swift */,
+				D4B130B42B0DDB2200AD390F /* Pkcs11Helper.swift */,
+			);
+			path = Pkcs11;
+			sourceTree = "<group>";
+		};
+		D4B130BB2B0E379900AD390F /* Rutoken Tech Tests */ = {
+			isa = PBXGroup;
+			children = (
+				D4B130D12B0E3ECC00AD390F /* Extensions */,
+				D4B130CE2B0E3AEF00AD390F /* Managers */,
+				D4B130C32B0E37BB00AD390F /* Mocks */,
+			);
+			path = "Rutoken Tech Tests";
+			sourceTree = "<group>";
+		};
+		D4B130C32B0E37BB00AD390F /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				D4B130C42B0E37D600AD390F /* TokenMock.swift */,
+				D4B130C62B0E37F200AD390F /* Pkcs11HelperMock.swift */,
+				D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */,
+			);
+			path = Mocks;
+			sourceTree = "<group>";
+		};
+		D4B130CE2B0E3AEF00AD390F /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				D4B130CF2B0E3B1600AD390F /* CryptoManagerTests.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		D4B130D12B0E3ECC00AD390F /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				D4B130D22B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		D4B130D42B0E4F1300AD390F /* Pcsc */ = {
+			isa = PBXGroup;
+			children = (
+				D4B130D52B0E4F2400AD390F /* PcscHelper.swift */,
+			);
+			path = Pcsc;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -136,6 +255,24 @@
 			productReference = 5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */;
 			productType = "com.apple.product-type.application";
 		};
+		D4B130B92B0E379900AD390F /* Rutoken Tech Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D4B130C22B0E379900AD390F /* Build configuration list for PBXNativeTarget "Rutoken Tech Tests" */;
+			buildPhases = (
+				D4B130B62B0E379900AD390F /* Sources */,
+				D4B130B72B0E379900AD390F /* Frameworks */,
+				D4B130B82B0E379900AD390F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D4B130BF2B0E379900AD390F /* PBXTargetDependency */,
+			);
+			name = "Rutoken Tech Tests";
+			productName = "Rutoken Tech Tests";
+			productReference = D4B130BA2B0E379900AD390F /* Rutoken Tech Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -148,6 +285,10 @@
 				TargetAttributes = {
 					5EF75DDA2AC707BD001834BE = {
 						CreatedOnToolsVersion = 15.0;
+					};
+					D4B130B92B0E379900AD390F = {
+						CreatedOnToolsVersion = 15.0.1;
+						TestTargetID = 5EF75DDA2AC707BD001834BE;
 					};
 				};
 			};
@@ -173,6 +314,7 @@
 			projectRoot = "";
 			targets = (
 				5EF75DDA2AC707BD001834BE /* Rutoken Tech */,
+				D4B130B92B0E379900AD390F /* Rutoken Tech Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -184,6 +326,13 @@
 			files = (
 				5EF75DE62AC707BD001834BE /* Preview Assets.xcassets in Resources */,
 				5EF75DE32AC707BD001834BE /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D4B130B82B0E379900AD390F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,16 +365,43 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4B130D62B0E4F2400AD390F /* PcscHelper.swift in Sources */,
 				5EF75DE12AC707BD001834BE /* RootView.swift in Sources */,
+				D4B130A82B0CFD2F00AD390F /* CryptoManager.swift in Sources */,
+				D4B130B02B0CFFCD00AD390F /* TokenModel.swift in Sources */,
 				5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */,
+				D4B130B52B0DDB2200AD390F /* Pkcs11Helper.swift in Sources */,
+				D4B130D82B0E4F8200AD390F /* TokenInterface.swift in Sources */,
 				D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */,
 				D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */,
+				D4B130B32B0DD52A00AD390F /* Token.swift in Sources */,
 				7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */,
 				7D2021472AEC16E8003E2B73 /* IpadRootView.swift in Sources */,
+				D4B130AB2B0CFD7300AD390F /* TokenInfo.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D4B130B62B0E379900AD390F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D4B130DA2B0E51FE00AD390F /* PcscHelperMock.swift in Sources */,
+				D4B130C72B0E37F200AD390F /* Pkcs11HelperMock.swift in Sources */,
+				D4B130D02B0E3B1600AD390F /* CryptoManagerTests.swift in Sources */,
+				D4B130C52B0E37D600AD390F /* TokenMock.swift in Sources */,
+				D4B130D32B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D4B130BF2B0E379900AD390F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5EF75DDA2AC707BD001834BE /* Rutoken Tech */;
+			targetProxy = D4B130BE2B0E379900AD390F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		5EF75DE72AC707BD001834BE /* Debug */ = {
@@ -417,6 +593,46 @@
 			};
 			name = Release;
 		};
+		D4B130C02B0E379900AD390F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TRCKC8GFT7;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "ru.rutoken.Rutoken-Tech-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Rutoken Tech.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Rutoken Tech";
+			};
+			name = Debug;
+		};
+		D4B130C12B0E379900AD390F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TRCKC8GFT7;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "ru.rutoken.Rutoken-Tech-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Rutoken Tech.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Rutoken Tech";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -434,6 +650,15 @@
 			buildConfigurations = (
 				5EF75DEA2AC707BD001834BE /* Debug */,
 				5EF75DEB2AC707BD001834BE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D4B130C22B0E379900AD390F /* Build configuration list for PBXNativeTarget "Rutoken Tech Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D4B130C02B0E379900AD390F /* Debug */,
+				D4B130C12B0E379900AD390F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
