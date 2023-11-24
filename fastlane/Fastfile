@@ -30,6 +30,14 @@ platform :ios do
 
   end
 
+  lane :tests do
+    run_tests(
+      scheme: "Rutoken Tech",
+      device: "iPhone 14 (16.2)"
+    )
+  end
+
+
   lane :export do |options|
 
     if is_ci

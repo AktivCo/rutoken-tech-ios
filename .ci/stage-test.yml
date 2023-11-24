@@ -1,0 +1,23 @@
+include: .ci/vault.yml
+
+
+test:
+  stage: test
+  tags: [vagrant-darwin]
+  rules:
+    - if: $SKIP_BUILD == "false"
+    - when: never
+  needs:
+    - job: code-quality
+      artifacts: false
+      optional: true
+  variables:
+    RT_CI_VAGRANT_BOX_CPUS: 2
+    RT_CI_VAGRANT_BOX_MEMORY: 4096
+  before_script:
+    - !reference [.vault, test_secrets]
+
+    - ip=$(dig scm.aktivco.ru +short)
+    - ssh-keyscan scm.aktivco.ru,$ip >> ~/.ssh/known_hosts
+  script:
+    - fastlane tests

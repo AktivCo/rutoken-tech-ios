@@ -26,6 +26,13 @@
     - vault token revoke -self
     - !reference [.vault, .keychain_creation]
 
+  test_secrets:
+    - PROJECT_ROLE="ci-${CI_PROJECT_NAME}"
+  
+    - !reference [.vault, .base_secrets]
+  
+    - vault token revoke -self
+
   archive_secrets:
     - PROJECT_ROLE="ci-publish-artifacts"
     - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=${PROJECT_ROLE} jwt=${CI_JOB_JWT})"

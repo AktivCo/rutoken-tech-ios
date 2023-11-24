@@ -1,6 +1,7 @@
 stages:
   - analyse
   - build
+  - test
   - archive
   - export
   - deploy
