@@ -17,6 +17,29 @@ enum Pkcs11Error: Error {
 }
 
 class Pkcs11Helper: Pkcs11HelperProtocol {
+    private let engine: RtEngineWrapperProtocol
+
+    private init(with engine: RtEngineWrapperProtocol) {
+        self.engine = engine
+        start()
+    }
+
+    deinit {
+        stop()
+    }
+
+    func start() {
+        var initArgs = CK_C_INITIALIZE_ARGS()
+        initArgs.flags = UInt(CKF_OS_LOCKING_OK)
+
+        let rv = C_Initialize(&initArgs)
+        assert(rv == CKR_OK)
+    }
+
+    func stop() {
+        C_Finalize(nil)
+    }
+
     func getConnectedToken(tokenType: TokenInterface) throws -> TokenProtocol {
         return Token()
     }

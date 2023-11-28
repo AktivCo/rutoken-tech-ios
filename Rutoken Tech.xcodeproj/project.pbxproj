@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */; };
 		5ED8B92C2ACD8EA100BCFC20 /* TinyAsyncRedux in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B92B2ACD8EA100BCFC20 /* TinyAsyncRedux */; };
 		5ED8B92F2ACD8F1D00BCFC20 /* FlowStacks in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B92E2ACD8F1D00BCFC20 /* FlowStacks */; };
 		5ED8B9322ACD8FAC00BCFC20 /* rtpkcs11ecp in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B9312ACD8FAC00BCFC20 /* rtpkcs11ecp */; };
@@ -46,6 +47,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		443AF4DD2B10B40500D34150 /* Rutoken_Tech-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Rutoken_Tech-Bridging-Header.h"; sourceTree = "<group>"; };
+		44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtEngineWrapper.swift; sourceTree = "<group>"; };
 		5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rutoken Tech.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EF75DDE2AC707BD001834BE /* RutokenTechApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RutokenTechApp.swift; sourceTree = "<group>"; };
 		5EF75DE02AC707BD001834BE /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -124,6 +127,7 @@
 				5EF75DDE2AC707BD001834BE /* RutokenTechApp.swift */,
 				5EF75DE22AC707BD001834BE /* Assets.xcassets */,
 				5EF75DE42AC707BD001834BE /* Preview Content */,
+				443AF4DD2B10B40500D34150 /* Rutoken_Tech-Bridging-Header.h */,
 			);
 			path = "Rutoken Tech";
 			sourceTree = "<group>";
@@ -178,6 +182,7 @@
 			children = (
 				D4B130B22B0DD52A00AD390F /* Token.swift */,
 				D4B130B42B0DDB2200AD390F /* Pkcs11Helper.swift */,
+				44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */,
 			);
 			path = Pkcs11;
 			sourceTree = "<group>";
@@ -368,6 +373,7 @@
 				D4B130D62B0E4F2400AD390F /* PcscHelper.swift in Sources */,
 				5EF75DE12AC707BD001834BE /* RootView.swift in Sources */,
 				D4B130A82B0CFD2F00AD390F /* CryptoManager.swift in Sources */,
+				44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */,
 				D4B130B02B0CFFCD00AD390F /* TokenModel.swift in Sources */,
 				5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */,
 				D4B130B52B0DDB2200AD390F /* Pkcs11Helper.swift in Sources */,
@@ -536,6 +542,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = TRCKC8GFT7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = $CONFIGURATION_BUILD_DIR/rtpkcs11ecp.framework/Headers/;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -553,6 +560,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/$(PRODUCT_NAME)/$(PRODUCT_MODULE_NAME)-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -571,6 +579,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = TRCKC8GFT7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = $CONFIGURATION_BUILD_DIR/rtpkcs11ecp.framework/Headers/;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -588,6 +597,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/$(PRODUCT_NAME)/$(PRODUCT_MODULE_NAME)-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -602,6 +612,7 @@
 				DEVELOPMENT_TEAM = TRCKC8GFT7;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = $CONFIGURATION_BUILD_DIR/rtpkcs11ecp.framework/Headers/;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "ru.rutoken.Rutoken-Tech-Tests";
@@ -622,6 +633,7 @@
 				DEVELOPMENT_TEAM = TRCKC8GFT7;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = $CONFIGURATION_BUILD_DIR/rtpkcs11ecp.framework/Headers/;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "ru.rutoken.Rutoken-Tech-Tests";
