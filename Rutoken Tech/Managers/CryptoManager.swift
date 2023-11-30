@@ -7,7 +7,7 @@
 
 
 protocol CryptoManagerProtocol {
-    func getTokenInfo(tokenInterface: TokenInterface) async throws -> TokenInfo
+    func getTokenInfo(for type: ConnectionType) async throws -> TokenInfo
 }
 
 enum CryptoManagerError: Error {
@@ -28,22 +28,21 @@ class CryptoManager: CryptoManagerProtocol {
         self.pcscHelper = pcscHelper
     }
 
-    func getTokenInfo(tokenInterface: TokenInterface) throws -> TokenInfo {
+    func getTokenInfo(for type: ConnectionType) throws -> TokenInfo {
         defer {
-            if tokenInterface == .nfc {
+            if type == .nfc {
                 try? pcscHelper.stopNfc()
             }
         }
         do {
-            if tokenInterface == .nfc {
+            if type == .nfc {
                 try pcscHelper.startNfc()
                 try pcscHelper.waitForToken()
             }
-            token = try pkcs11Helper.getConnectedToken(tokenType: tokenInterface)
-            guard let token else {
-                throw CryptoManagerError.tokenNotFound
-            }
-            return try token.getTokenInfo()
+            let token = try pkcs11Helper.getToken(with: type)
+
+            return TokenInfo(label: token.label, serial: token.serial, model: token.model,
+                             connectionType: token.connectionType, type: token.type)
         } catch Pkcs11Error.connectionLost {
             throw CryptoManagerError.connectionLost
         } catch Pkcs11Error.tokenNotFound {

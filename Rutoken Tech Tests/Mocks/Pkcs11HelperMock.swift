@@ -9,12 +9,14 @@
 
 
 class Pkcs11HelperMock: Pkcs11HelperProtocol {
-    func getConnectedToken(tokenType: TokenInterface) throws -> TokenProtocol {
-        try getConnectedTokenCallback(tokenType)
+    func getToken(with type: ConnectionType) throws -> TokenProtocol {
+        switch getTokenResult {
+        case .success(let token):
+            return token
+        case .failure(let err):
+            throw err
+        }
     }
 
-    var getConnectedTokenCallback: (TokenInterface) throws -> TokenProtocol = { _ in
-        return Token()
-    }
-
+    var getTokenResult: Result<TokenProtocol, Error> = .failure(Pkcs11Error.tokenNotFound)
 }

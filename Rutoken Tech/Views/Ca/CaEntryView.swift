@@ -90,11 +90,11 @@ struct CaEntryView: View {
     func connectedTokenView(_ connectedToken: TokenInfo) -> some View {
         VStack(spacing: 0) {
             VStack(alignment: .center) {
-                if connectedToken.supportedInterfaces == [.nfc, .usb] {
+                if connectedToken.type == .dual {
                     Image("token-usb-nfc")
-                } else if connectedToken.supportedInterfaces == [.nfc] {
+                } else if connectedToken.type == .sc {
                     Image("token-nfc")
-                } else if connectedToken.supportedInterfaces == [.usb] {
+                } else if connectedToken.type == .usb {
                     Image("token-usbc")
                 }
             }
@@ -187,7 +187,8 @@ struct CaEntryView_Previews: PreviewProvider {
         let token = TokenInfo(label: "Ivan",
                               serial: "274-10-01",
                               model: .rutoken3Nfc,
-                              supportedInterfaces: [.nfc])
+                              connectionType: .nfc,
+                              type: .sc)
         let state = AppState(caEntryViewState: CaEntryViewState(connectedToken: token))
         let testStore = Store(initialState: state,
                               reducer: AppReducer(),
