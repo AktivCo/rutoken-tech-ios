@@ -18,6 +18,7 @@ protocol TokenProtocol {
     func logout()
     func generateKeyPair(with id: String) throws
     func deleteKeyPair(with id: String) throws
+    func getKeys() throws -> [KeyModel]
 }
 
 enum TokenError: Error {
@@ -162,6 +163,10 @@ class Token: TokenProtocol, Identifiable {
                 throw TokenError.generalError
             }
         }
+    }
+
+    func getKeys() -> [KeyModel] {
+        return [KeyModel(ckaId: "", type: .gostR3410_2012_256)]
     }
 
     // MARK: - Private API

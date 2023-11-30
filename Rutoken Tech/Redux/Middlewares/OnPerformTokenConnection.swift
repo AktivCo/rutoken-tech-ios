@@ -27,8 +27,11 @@ class OnPerformTokenConnection: Middleware {
         return AsyncStream<AppAction> { continuation in
             Task {
                 do {
-                    let info = try await self.cryptoManager.getTokenInfo(for: tokenInterface)
-                    continuation.yield(.tokenSelected(info))
+                    try await self.cryptoManager.withToken(connectionType: tokenInterface,
+                                                           serial: nil, pin: nil) {
+                        let info = try await self.cryptoManager.getTokenInfo()
+                        continuation.yield(.tokenSelected(info))
+                    }
                     continuation.yield(.hideSheet)
                 } catch CryptoManagerError.incorrectPin(let attemptsLeft) {
                     continuation.yield(.showPinInputError("Неверный PIN-код. Осталось попыток: \(attemptsLeft)"))

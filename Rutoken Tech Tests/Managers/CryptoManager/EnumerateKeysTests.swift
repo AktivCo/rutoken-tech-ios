@@ -1,17 +1,16 @@
 //
-//  GetTokenInfoTests.swift
+//  EnumerateKeysTests.swift
 //  Rutoken Tech Tests
 //
-//  Created by Никита Девятых on 22.12.2023.
+//  Created by Ivan Poderegin on 27.12.2023.
 //
 
-import Combine
 import XCTest
 
 @testable import Rutoken_Tech
 
 
-class CryptoManagerGetTokenInfoTests: XCTestCase {
+final class CryptoManagerEnumerateKeysTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: Pkcs11HelperMock!
     var pcscHelper: PcscHelperMock!
@@ -24,20 +23,24 @@ class CryptoManagerGetTokenInfoTests: XCTestCase {
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper)
     }
 
-    func testGetTokenInfoConnectionSuccess() async throws {
+    func testEnumerateKeysConnectionSuccess() async throws {
         let token = TokenMock(serial: "87654321", connectionType: .usb)
+
         pkcs11Helper.tokenPublisher.send([token])
 
-        var result: TokenInfo?
+        let keys = [KeyModel(ckaId: "001", type: .gostR3410_2012_256)]
+        token.getKeysCallback = { keys }
+
+        var result: [KeyModel]?
         try await manager.withToken(connectionType: .usb, serial: "87654321", pin: nil) {
-            result = try await manager.getTokenInfo()
+            result = try await manager.enumerateKeys()
         }
-        XCTAssertEqual(result, token.getInfo())
+        XCTAssertEqual(keys, result)
     }
 
-    func testGetTokenInfoNotFoundError() async {
-        await assertErrorAsync(
-            try await manager.getTokenInfo(),
-            throws: CryptoManagerError.tokenNotFound)
+    func testEnumerateKeysTokenNotFoundError() async {
+        await assertErrorAsync(try await manager.enumerateKeys(),
+                               throws: CryptoManagerError.tokenNotFound)
     }
 }
+

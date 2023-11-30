@@ -34,19 +34,27 @@ class TokenMock: TokenProtocol {
         try loginCallback(pin)
     }
 
+    var loginCallback: (String) throws -> Void = { _ in }
+
     func logout() {
         logoutCallback()
     }
+
+    var logoutCallback: () -> Void = { }
 
     func generateKeyPair(with id: String) throws {
         try generateKeyPairCallback(id)
     }
 
+    var generateKeyPairCallback: (String) throws -> Void = { _ in }
+
     func deleteKeyPair(with id: String) throws {}
 
-    var loginCallback: (String) throws -> Void = { _ in }
+    func getKeys() throws -> [KeyModel] {
+        try getKeysCallback()
+    }
 
-    var logoutCallback: () -> Void = {}
-
-    var generateKeyPairCallback: (String) throws -> Void = { _ in }
+    var getKeysCallback: () throws -> [KeyModel] = {
+        [KeyModel(ckaId: "001", type: .gostR3410_2012_256)]
+    }
 }
