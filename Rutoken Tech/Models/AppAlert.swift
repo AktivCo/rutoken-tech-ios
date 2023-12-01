@@ -47,4 +47,15 @@ enum AppAlert {
                          buttons: [.init(.regular("ОК"))])
         }
     }
+
+    init(from error: CryptoManagerError) {
+        switch error {
+        case .unknown, .incorrectPin, .nfcStopped:
+            self = .unknownError
+        case .connectionLost:
+            self = .connectionLost
+        case .tokenNotFound:
+            self = .tokenNotFound
+        }
+    }
 }

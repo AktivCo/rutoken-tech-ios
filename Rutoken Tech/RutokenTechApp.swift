@@ -16,10 +16,13 @@ struct RutokenTechApp: App {
     let store: Store<AppState, AppAction>
 
     init() {
-        var middlewares: [any Middleware<AppAction>] = []
         let pkcsHelper = Pkcs11Helper(with: RtEngineWrapper())
         let pcscHelper = PcscHelper(pcscWrapper: RtPcscWrapper())
         let cryptoManager = CryptoManager(pkcs11Helper: pkcsHelper, pcscHelper: pcscHelper)
+
+        let middlewares: [any Middleware<AppAction>] = [
+            OnPerformTokenConnection(cryptoManager: cryptoManager)
+        ]
 
         store = Store(initialState: AppState(),
                       reducer: AppReducer(),

@@ -9,6 +9,8 @@ import SwiftUI
 
 import TinyAsyncRedux
 
+import RtUiComponents
+
 
 private struct ListStyle: ViewModifier {
     func body(content: Content) -> some View {
@@ -121,14 +123,22 @@ struct CaEntryView: View {
                 .font(.subheadline)
                 .padding(.bottom, 8)
 
-            Button(action: {
-            }, label: {
+            Button {
+                store.send(.showSheet(
+                    .init(isDraggable: false,
+                          size: UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640),
+                          content: AnyView(
+                            RtAuthView(defaultPinGetter: { "" },
+                                       onSubmit: { tokenType, pin in store.send(.selectToken(tokenType, pin)) },
+                                       onCancel: { store.send(.hideSheet) })
+                            .environmentObject(store.state.routingState.pinInputError)))))
+            } label: {
                 Text("Подключить")
                     .tint(Color("colorsSecondary"))
                     .font(.subheadline)
                     .padding(.horizontal, 15)
                     .padding(.vertical, 7)
-            })
+            }
             .frame(height: 34)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -180,7 +190,6 @@ struct CaEntryView_Previews: PreviewProvider {
             VStack(spacing: 0) {
                 CaEntryView()
                     .environmentObject(store)
-
             }
         }
 

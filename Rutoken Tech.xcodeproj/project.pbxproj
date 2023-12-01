@@ -11,12 +11,14 @@
 		44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */; };
 		447AFBAA2B205A7000A53B0C /* ConnectionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447AFBA92B205A7000A53B0C /* ConnectionType.swift */; };
 		44EED1B62B1F115B0036F8DA /* TokenMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EED1B52B1F115B0036F8DA /* TokenMock.swift */; };
+		5E10D3562B1E7A57009F887E /* SheetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E10D3552B1E7A57009F887E /* SheetData.swift */; };
 		5ED8B92C2ACD8EA100BCFC20 /* TinyAsyncRedux in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B92B2ACD8EA100BCFC20 /* TinyAsyncRedux */; };
-		5ED8B92F2ACD8F1D00BCFC20 /* FlowStacks in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B92E2ACD8F1D00BCFC20 /* FlowStacks */; };
 		5ED8B9322ACD8FAC00BCFC20 /* rtpkcs11ecp in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B9312ACD8FAC00BCFC20 /* rtpkcs11ecp */; };
 		5ED8B9352ACD8FD100BCFC20 /* rtengine in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B9342ACD8FD100BCFC20 /* rtengine */; };
 		5ED8B9382ACD996100BCFC20 /* openssl in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B9372ACD996100BCFC20 /* openssl */; };
 		5ED8B93B2ACDA1C300BCFC20 /* RtPcsc in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B93A2ACDA1C300BCFC20 /* RtPcsc */; };
+		5EF30EDE2B1A823700E48627 /* OnPerformTokenConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF30EDD2B1A823700E48627 /* OnPerformTokenConnection.swift */; };
+		5EF30EE02B1A840800E48627 /* TokenInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D72B0E4F8200AD390F /* TokenInterface.swift */; };
 		5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF75DDE2AC707BD001834BE /* RutokenTechApp.swift */; };
 		5EF75DE12AC707BD001834BE /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF75DE02AC707BD001834BE /* RootView.swift */; };
 		5EF75DE32AC707BD001834BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EF75DE22AC707BD001834BE /* Assets.xcassets */; };
@@ -29,11 +31,10 @@
 		7D9E5A602B0BA55E00E2EAB7 /* CaEntryViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E5A5F2B0BA55E00E2EAB7 /* CaEntryViewState.swift */; };
 		7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */; };
 		D42178032B1F0EAF00D08948 /* RoutingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42178022B1F0EAF00D08948 /* RoutingState.swift */; };
-		D42178142B1F4F4400D08948 /* RtUiComponents in Frameworks */ = {isa = PBXBuildFile; productRef = D42178132B1F4F4400D08948 /* RtUiComponents */; };
-		D42178172B1F53A400D08948 /* RtUiComponents in Frameworks */ = {isa = PBXBuildFile; productRef = D42178162B1F53A400D08948 /* RtUiComponents */; };
 		D42178192B205FD700D08948 /* AppAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42178182B205FD700D08948 /* AppAlert.swift */; };
 		D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */; };
 		D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F52AEA796E00B0AB64 /* RtAppTab.swift */; };
+		D46CC2202B285C1200F28A67 /* RtUiComponents in Frameworks */ = {isa = PBXBuildFile; productRef = D46CC21F2B285C1200F28A67 /* RtUiComponents */; };
 		D4B130A82B0CFD2F00AD390F /* CryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */; };
 		D4B130AB2B0CFD7300AD390F /* TokenInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130AA2B0CFD7300AD390F /* TokenInfo.swift */; };
 		D4B130B02B0CFFCD00AD390F /* TokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130AF2B0CFFCD00AD390F /* TokenModel.swift */; };
@@ -43,7 +44,6 @@
 		D4B130D02B0E3B1600AD390F /* CryptoManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130CF2B0E3B1600AD390F /* CryptoManagerTests.swift */; };
 		D4B130D32B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D22B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift */; };
 		D4B130D62B0E4F2400AD390F /* PcscHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D52B0E4F2400AD390F /* PcscHelper.swift */; };
-		D4B130D82B0E4F8200AD390F /* TokenInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D72B0E4F8200AD390F /* TokenInterface.swift */; };
 		D4B130DA2B0E51FE00AD390F /* PcscHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */; };
 		D4D46A0F2B3038F60005981A /* Atomic+propertywrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */; };
 		D4D9C9DA2B2306F900DA702C /* RtPcscWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = D4D9C9D92B2306F900DA702C /* RtPcscWrapper */; };
@@ -68,6 +68,8 @@
 		44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtEngineWrapper.swift; sourceTree = "<group>"; };
 		447AFBA92B205A7000A53B0C /* ConnectionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionType.swift; sourceTree = "<group>"; };
 		44EED1B52B1F115B0036F8DA /* TokenMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMock.swift; sourceTree = "<group>"; };
+		5E10D3552B1E7A57009F887E /* SheetData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetData.swift; sourceTree = "<group>"; };
+		5EF30EDD2B1A823700E48627 /* OnPerformTokenConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnPerformTokenConnection.swift; sourceTree = "<group>"; };
 		5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rutoken Tech.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EF75DDE2AC707BD001834BE /* RutokenTechApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RutokenTechApp.swift; sourceTree = "<group>"; };
 		5EF75DE02AC707BD001834BE /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -94,7 +96,7 @@
 		D4B130CF2B0E3B1600AD390F /* CryptoManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoManagerTests.swift; sourceTree = "<group>"; };
 		D4B130D22B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+AssertSpecificError.swift"; sourceTree = "<group>"; };
 		D4B130D52B0E4F2400AD390F /* PcscHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcscHelper.swift; sourceTree = "<group>"; };
-		D4B130D72B0E4F8200AD390F /* TokenInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenInterface.swift; sourceTree = "<group>"; };
+		D4B130D72B0E4F8200AD390F /* TokenInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenInterface.swift; sourceTree = "<group>"; };
 		D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcscHelperMock.swift; sourceTree = "<group>"; };
 		D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Atomic+propertywrapper.swift"; sourceTree = "<group>"; };
 		D4D9C9E62B2328B600DA702C /* Rutoken Tech.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Rutoken Tech.entitlements"; sourceTree = "<group>"; };
@@ -108,14 +110,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D42178172B1F53A400D08948 /* RtUiComponents in Frameworks */,
-				D42178142B1F4F4400D08948 /* RtUiComponents in Frameworks */,
 				5ED8B9352ACD8FD100BCFC20 /* rtengine in Frameworks */,
 				5ED8B92C2ACD8EA100BCFC20 /* TinyAsyncRedux in Frameworks */,
 				5ED8B9322ACD8FAC00BCFC20 /* rtpkcs11ecp in Frameworks */,
 				5ED8B9382ACD996100BCFC20 /* openssl in Frameworks */,
 				D4D9C9DA2B2306F900DA702C /* RtPcscWrapper in Frameworks */,
-				5ED8B92F2ACD8F1D00BCFC20 /* FlowStacks in Frameworks */,
+				D46CC2202B285C1200F28A67 /* RtUiComponents in Frameworks */,
 				5ED8B93B2ACDA1C300BCFC20 /* RtPcsc in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -130,6 +130,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5EF30ED92B1A790E00E48627 /* Root */ = {
+			isa = PBXGroup;
+			children = (
+				D44997F52AEA796E00B0AB64 /* RtAppTab.swift */,
+				7D2021462AEC16E8003E2B73 /* IpadRootView.swift */,
+				D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */,
+				5EF75DE02AC707BD001834BE /* RootView.swift */,
+			);
+			path = Root;
+			sourceTree = "<group>";
+		};
+		5EF30EDC2B1A821300E48627 /* Middlewares */ = {
+			isa = PBXGroup;
+			children = (
+				5EF30EDD2B1A823700E48627 /* OnPerformTokenConnection.swift */,
+			);
+			path = Middlewares;
+			sourceTree = "<group>";
+		};
 		5EF75DD22AC707BC001834BE = {
 			isa = PBXGroup;
 			children = (
@@ -179,6 +198,7 @@
 		7D38D6D82B0E2B920045FBAD /* Redux */ = {
 			isa = PBXGroup;
 			children = (
+				5EF30EDC2B1A821300E48627 /* Middlewares */,
 				7D38D6DD2B0E2D7E0045FBAD /* Actions */,
 				7D38D6DE2B0E33620045FBAD /* Reducers */,
 				7D9E5A5E2B0BA51600E2EAB7 /* States */,
@@ -233,11 +253,8 @@
 		D44997F12AEA6EB500B0AB64 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				5EF30ED92B1A790E00E48627 /* Root */,
 				7D5390082B0FA17E00FE4738 /* Ca */,
-				D44997F52AEA796E00B0AB64 /* RtAppTab.swift */,
-				5EF75DE02AC707BD001834BE /* RootView.swift */,
-				D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */,
-				7D2021462AEC16E8003E2B73 /* IpadRootView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -258,6 +275,7 @@
 				D42178182B205FD700D08948 /* AppAlert.swift */,
 				447AFBA92B205A7000A53B0C /* ConnectionType.swift */,
 				D4FC26C82B270C580029060D /* NfcMessages.swift */,
+				5E10D3552B1E7A57009F887E /* SheetData.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -345,14 +363,12 @@
 			name = "Rutoken Tech";
 			packageProductDependencies = (
 				5ED8B92B2ACD8EA100BCFC20 /* TinyAsyncRedux */,
-				5ED8B92E2ACD8F1D00BCFC20 /* FlowStacks */,
 				5ED8B9312ACD8FAC00BCFC20 /* rtpkcs11ecp */,
 				5ED8B9342ACD8FD100BCFC20 /* rtengine */,
 				5ED8B9372ACD996100BCFC20 /* openssl */,
 				5ED8B93A2ACDA1C300BCFC20 /* RtPcsc */,
-				D42178132B1F4F4400D08948 /* RtUiComponents */,
-				D42178162B1F53A400D08948 /* RtUiComponents */,
 				D4D9C9D92B2306F900DA702C /* RtPcscWrapper */,
+				D46CC21F2B285C1200F28A67 /* RtUiComponents */,
 			);
 			productName = "Rutoken Tech";
 			productReference = 5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */;
@@ -406,13 +422,12 @@
 			mainGroup = 5EF75DD22AC707BC001834BE;
 			packageReferences = (
 				5ED8B92A2ACD8EA100BCFC20 /* XCRemoteSwiftPackageReference "tiny-redux" */,
-				5ED8B92D2ACD8F1D00BCFC20 /* XCRemoteSwiftPackageReference "FlowStacks" */,
 				5ED8B9302ACD8FAC00BCFC20 /* XCRemoteSwiftPackageReference "rt-pkcs11ecp" */,
 				5ED8B9332ACD8FD100BCFC20 /* XCRemoteSwiftPackageReference "rt-engine" */,
 				5ED8B9362ACD996100BCFC20 /* XCRemoteSwiftPackageReference "openssl-xcframework" */,
 				5ED8B9392ACDA1C300BCFC20 /* XCRemoteSwiftPackageReference "rt-pcsc" */,
-				D42178152B1F53A400D08948 /* XCRemoteSwiftPackageReference "rt-ui-components" */,
 				D4D9C9D82B2306F900DA702C /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */,
+				D46CC21E2B285C1200F28A67 /* XCRemoteSwiftPackageReference "rt-ui-components" */,
 			);
 			productRefGroup = 5EF75DDC2AC707BD001834BE /* Products */;
 			projectDirPath = "";
@@ -481,7 +496,6 @@
 				D4FC26C92B270C580029060D /* NfcMessages.swift in Sources */,
 				D4D46A0F2B3038F60005981A /* Atomic+propertywrapper.swift in Sources */,
 				D4B130B52B0DDB2200AD390F /* Pkcs11Helper.swift in Sources */,
-				D4B130D82B0E4F8200AD390F /* TokenInterface.swift in Sources */,
 				447AFBAA2B205A7000A53B0C /* ConnectionType.swift in Sources */,
 				443076EF2B1F2D5E0073B406 /* String+getFrom.swift in Sources */,
 				D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */,
@@ -493,7 +507,10 @@
 				7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */,
 				7D9E5A602B0BA55E00E2EAB7 /* CaEntryViewState.swift in Sources */,
 				D42178032B1F0EAF00D08948 /* RoutingState.swift in Sources */,
+				5E10D3562B1E7A57009F887E /* SheetData.swift in Sources */,
+				5EF30EDE2B1A823700E48627 /* OnPerformTokenConnection.swift in Sources */,
 				D4B130B32B0DD52A00AD390F /* Token.swift in Sources */,
+				5EF30EE02B1A840800E48627 /* TokenInterface.swift in Sources */,
 				7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */,
 				D4B130AB2B0CFD7300AD390F /* TokenInfo.swift in Sources */,
 			);
@@ -805,14 +822,6 @@
 				version = 4.0.0;
 			};
 		};
-		5ED8B92D2ACD8F1D00BCFC20 /* XCRemoteSwiftPackageReference "FlowStacks" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/johnpatrickmorgan/FlowStacks.git";
-			requirement = {
-				kind = exactVersion;
-				version = 0.3.2;
-			};
-		};
 		5ED8B9302ACD8FAC00BCFC20 /* XCRemoteSwiftPackageReference "rt-pkcs11ecp" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-pkcs11ecp.git";
@@ -845,7 +854,7 @@
 				version = 5.1.0;
 			};
 		};
-		D42178152B1F53A400D08948 /* XCRemoteSwiftPackageReference "rt-ui-components" */ = {
+		D46CC21E2B285C1200F28A67 /* XCRemoteSwiftPackageReference "rt-ui-components" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-ui-components.git";
 			requirement = {
@@ -869,11 +878,6 @@
 			package = 5ED8B92A2ACD8EA100BCFC20 /* XCRemoteSwiftPackageReference "tiny-redux" */;
 			productName = TinyAsyncRedux;
 		};
-		5ED8B92E2ACD8F1D00BCFC20 /* FlowStacks */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5ED8B92D2ACD8F1D00BCFC20 /* XCRemoteSwiftPackageReference "FlowStacks" */;
-			productName = FlowStacks;
-		};
 		5ED8B9312ACD8FAC00BCFC20 /* rtpkcs11ecp */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 5ED8B9302ACD8FAC00BCFC20 /* XCRemoteSwiftPackageReference "rt-pkcs11ecp" */;
@@ -894,13 +898,9 @@
 			package = 5ED8B9392ACDA1C300BCFC20 /* XCRemoteSwiftPackageReference "rt-pcsc" */;
 			productName = RtPcsc;
 		};
-		D42178132B1F4F4400D08948 /* RtUiComponents */ = {
+		D46CC21F2B285C1200F28A67 /* RtUiComponents */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = RtUiComponents;
-		};
-		D42178162B1F53A400D08948 /* RtUiComponents */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D42178152B1F53A400D08948 /* XCRemoteSwiftPackageReference "rt-ui-components" */;
+			package = D46CC21E2B285C1200F28A67 /* XCRemoteSwiftPackageReference "rt-ui-components" */;
 			productName = RtUiComponents;
 		};
 		D4D9C9D92B2306F900DA702C /* RtPcscWrapper */ = {

@@ -13,11 +13,12 @@ protocol CryptoManagerProtocol {
     func getTokenInfo(for type: ConnectionType) async throws -> TokenInfo
 }
 
-enum CryptoManagerError: Error {
+enum CryptoManagerError: Error, Equatable {
     case tokenNotFound
     case unknown
     case connectionLost
     case nfcStopped
+    case incorrectPin(UInt)
 }
 
 class CryptoManager: CryptoManagerProtocol {
@@ -54,6 +55,10 @@ class CryptoManager: CryptoManagerProtocol {
             throw CryptoManagerError.tokenNotFound
         } catch NfcError.cancelledByUser, NfcError.timeout {
             throw CryptoManagerError.nfcStopped
+        } catch TokenError.incorrectPin(let attemptsLeft) {
+            throw CryptoManagerError.incorrectPin(attemptsLeft)
+        } catch TokenError.lockedPin {
+            throw CryptoManagerError.incorrectPin(0)
         } catch let error as CryptoManagerError {
             throw error
         } catch {
