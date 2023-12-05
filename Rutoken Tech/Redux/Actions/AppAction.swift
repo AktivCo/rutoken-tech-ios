@@ -7,4 +7,6 @@
 
 
 enum AppAction {
+    case showAlert(AppAlert)
+    case hideAlert
 }

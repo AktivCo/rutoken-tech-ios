@@ -25,6 +25,10 @@
 		7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5145402AFBD1DB004B6947 /* CaEntryView.swift */; };
 		7D9E5A602B0BA55E00E2EAB7 /* CaEntryViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E5A5F2B0BA55E00E2EAB7 /* CaEntryViewState.swift */; };
 		7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */; };
+		D42178032B1F0EAF00D08948 /* RoutingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42178022B1F0EAF00D08948 /* RoutingState.swift */; };
+		D42178142B1F4F4400D08948 /* RtUiComponents in Frameworks */ = {isa = PBXBuildFile; productRef = D42178132B1F4F4400D08948 /* RtUiComponents */; };
+		D42178172B1F53A400D08948 /* RtUiComponents in Frameworks */ = {isa = PBXBuildFile; productRef = D42178162B1F53A400D08948 /* RtUiComponents */; };
+		D42178192B205FD700D08948 /* AppAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42178182B205FD700D08948 /* AppAlert.swift */; };
 		D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */; };
 		D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F52AEA796E00B0AB64 /* RtAppTab.swift */; };
 		D4B130A82B0CFD2F00AD390F /* CryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */; };
@@ -66,6 +70,8 @@
 		7D5145402AFBD1DB004B6947 /* CaEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaEntryView.swift; sourceTree = "<group>"; };
 		7D9E5A5F2B0BA55E00E2EAB7 /* CaEntryViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaEntryViewState.swift; sourceTree = "<group>"; };
 		7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+isPhone.swift"; sourceTree = "<group>"; };
+		D42178022B1F0EAF00D08948 /* RoutingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingState.swift; sourceTree = "<group>"; };
+		D42178182B205FD700D08948 /* AppAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlert.swift; sourceTree = "<group>"; };
 		D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IphoneRootView.swift; sourceTree = "<group>"; };
 		D44997F52AEA796E00B0AB64 /* RtAppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtAppTab.swift; sourceTree = "<group>"; };
 		D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoManager.swift; sourceTree = "<group>"; };
@@ -88,6 +94,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D42178172B1F53A400D08948 /* RtUiComponents in Frameworks */,
+				D42178142B1F4F4400D08948 /* RtUiComponents in Frameworks */,
 				5ED8B9352ACD8FD100BCFC20 /* rtengine in Frameworks */,
 				5ED8B92C2ACD8EA100BCFC20 /* TinyAsyncRedux in Frameworks */,
 				5ED8B9322ACD8FAC00BCFC20 /* rtpkcs11ecp in Frameworks */,
@@ -188,6 +196,7 @@
 		7D9E5A5E2B0BA51600E2EAB7 /* States */ = {
 			isa = PBXGroup;
 			children = (
+				D42178022B1F0EAF00D08948 /* RoutingState.swift */,
 				7D38D6D92B0E2C190045FBAD /* AppState.swift */,
 				7D9E5A5F2B0BA55E00E2EAB7 /* CaEntryViewState.swift */,
 			);
@@ -228,6 +237,7 @@
 				D4B130AA2B0CFD7300AD390F /* TokenInfo.swift */,
 				D4B130AF2B0CFFCD00AD390F /* TokenModel.swift */,
 				D4B130D72B0E4F8200AD390F /* TokenInterface.swift */,
+				D42178182B205FD700D08948 /* AppAlert.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -310,6 +320,8 @@
 				5ED8B9342ACD8FD100BCFC20 /* rtengine */,
 				5ED8B9372ACD996100BCFC20 /* openssl */,
 				5ED8B93A2ACDA1C300BCFC20 /* RtPcsc */,
+				D42178132B1F4F4400D08948 /* RtUiComponents */,
+				D42178162B1F53A400D08948 /* RtUiComponents */,
 			);
 			productName = "Rutoken Tech";
 			productReference = 5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */;
@@ -368,6 +380,7 @@
 				5ED8B9332ACD8FD100BCFC20 /* XCRemoteSwiftPackageReference "rt-engine" */,
 				5ED8B9362ACD996100BCFC20 /* XCRemoteSwiftPackageReference "openssl-xcframework" */,
 				5ED8B9392ACDA1C300BCFC20 /* XCRemoteSwiftPackageReference "rt-pcsc" */,
+				D42178152B1F53A400D08948 /* XCRemoteSwiftPackageReference "rt-ui-components" */,
 			);
 			productRefGroup = 5EF75DDC2AC707BD001834BE /* Products */;
 			projectDirPath = "";
@@ -426,6 +439,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4B130D62B0E4F2400AD390F /* PcscHelper.swift in Sources */,
+				D42178192B205FD700D08948 /* AppAlert.swift in Sources */,
 				5EF75DE12AC707BD001834BE /* RootView.swift in Sources */,
 				D4B130A82B0CFD2F00AD390F /* CryptoManager.swift in Sources */,
 				44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */,
@@ -437,10 +451,11 @@
 				D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */,
 				7D38D6DC2B0E2D3F0045FBAD /* AppAction.swift in Sources */,
 				D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */,
-                7D38D6E02B0E33780045FBAD /* AppReducer.swift in Sources */,
-                7D2021472AEC16E8003E2B73 /* IpadRootView.swift in Sources */,
-                7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */,
-                7D9E5A602B0BA55E00E2EAB7 /* CaEntryViewState.swift in Sources */,
+				7D38D6E02B0E33780045FBAD /* AppReducer.swift in Sources */,
+				7D2021472AEC16E8003E2B73 /* IpadRootView.swift in Sources */,
+				7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */,
+				7D9E5A602B0BA55E00E2EAB7 /* CaEntryViewState.swift in Sources */,
+				D42178032B1F0EAF00D08948 /* RoutingState.swift in Sources */,
 				D4B130B32B0DD52A00AD390F /* Token.swift in Sources */,
 				7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */,
 				D4B130AB2B0CFD7300AD390F /* TokenInfo.swift in Sources */,
@@ -786,6 +801,14 @@
 				version = 5.1.0;
 			};
 		};
+		D42178152B1F53A400D08948 /* XCRemoteSwiftPackageReference "rt-ui-components" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-ui-components.git";
+			requirement = {
+				kind = revision;
+				revision = 374c2e261f3b33a4f02cab63868b56f8066927ed;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -818,6 +841,15 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5ED8B9392ACDA1C300BCFC20 /* XCRemoteSwiftPackageReference "rt-pcsc" */;
 			productName = RtPcsc;
+		};
+		D42178132B1F4F4400D08948 /* RtUiComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RtUiComponents;
+		};
+		D42178162B1F53A400D08948 /* RtUiComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D42178152B1F53A400D08948 /* XCRemoteSwiftPackageReference "rt-ui-components" */;
+			productName = RtUiComponents;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

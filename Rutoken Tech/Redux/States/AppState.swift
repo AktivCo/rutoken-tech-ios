@@ -8,4 +8,5 @@
 
 struct AppState {
     var caEntryViewState = CaEntryViewState()
+    var routingState = RoutingState()
 }
