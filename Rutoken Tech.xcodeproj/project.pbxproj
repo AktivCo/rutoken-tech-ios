@@ -45,6 +45,11 @@
 		D4B130D62B0E4F2400AD390F /* PcscHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D52B0E4F2400AD390F /* PcscHelper.swift */; };
 		D4B130D82B0E4F8200AD390F /* TokenInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D72B0E4F8200AD390F /* TokenInterface.swift */; };
 		D4B130DA2B0E51FE00AD390F /* PcscHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */; };
+		D4D46A0F2B3038F60005981A /* Atomic+propertywrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */; };
+		D4D9C9DA2B2306F900DA702C /* RtPcscWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = D4D9C9D92B2306F900DA702C /* RtPcscWrapper */; };
+		D4F4FDEC2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F4FDEB2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift */; };
+		D4F7CD772B32D1DA00764787 /* AnyCancellable+store.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F7CD762B32D1DA00764787 /* AnyCancellable+store.swift */; };
+		D4FC26C92B270C580029060D /* NfcMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FC26C82B270C580029060D /* NfcMessages.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +96,11 @@
 		D4B130D52B0E4F2400AD390F /* PcscHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcscHelper.swift; sourceTree = "<group>"; };
 		D4B130D72B0E4F8200AD390F /* TokenInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenInterface.swift; sourceTree = "<group>"; };
 		D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcscHelperMock.swift; sourceTree = "<group>"; };
+		D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Atomic+propertywrapper.swift"; sourceTree = "<group>"; };
+		D4D9C9E62B2328B600DA702C /* Rutoken Tech.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Rutoken Tech.entitlements"; sourceTree = "<group>"; };
+		D4F4FDEB2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+LinuxFulfillment.swift"; sourceTree = "<group>"; };
+		D4F7CD762B32D1DA00764787 /* AnyCancellable+store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnyCancellable+store.swift"; sourceTree = "<group>"; };
+		D4FC26C82B270C580029060D /* NfcMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NfcMessages.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +114,7 @@
 				5ED8B92C2ACD8EA100BCFC20 /* TinyAsyncRedux in Frameworks */,
 				5ED8B9322ACD8FAC00BCFC20 /* rtpkcs11ecp in Frameworks */,
 				5ED8B9382ACD996100BCFC20 /* openssl in Frameworks */,
+				D4D9C9DA2B2306F900DA702C /* RtPcscWrapper in Frameworks */,
 				5ED8B92F2ACD8F1D00BCFC20 /* FlowStacks in Frameworks */,
 				5ED8B93B2ACDA1C300BCFC20 /* RtPcsc in Frameworks */,
 			);
@@ -140,7 +151,9 @@
 		5EF75DDD2AC707BD001834BE /* Rutoken Tech */ = {
 			isa = PBXGroup;
 			children = (
+				D4D9C9E62B2328B600DA702C /* Rutoken Tech.entitlements */,
 				7DAF6E742AFA35A5003A57D1 /* Extensions */,
+				D4F4FDED2B331D800087A1BB /* Utils */,
 				D4B130D42B0E4F1300AD390F /* Pcsc */,
 				D4B130B12B0DD50F00AD390F /* Pkcs11 */,
 				D4B130A92B0CFD6600AD390F /* Models */,
@@ -212,6 +225,7 @@
 			children = (
 				7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */,
 				443076EE2B1F2D5E0073B406 /* String+getFrom.swift */,
+				D4F7CD762B32D1DA00764787 /* AnyCancellable+store.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -243,6 +257,7 @@
 				D4B130AF2B0CFFCD00AD390F /* TokenModel.swift */,
 				D42178182B205FD700D08948 /* AppAlert.swift */,
 				447AFBA92B205A7000A53B0C /* ConnectionType.swift */,
+				D4FC26C82B270C580029060D /* NfcMessages.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -290,6 +305,7 @@
 			isa = PBXGroup;
 			children = (
 				D4B130D22B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift */,
+				D4F4FDEB2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -300,6 +316,14 @@
 				D4B130D52B0E4F2400AD390F /* PcscHelper.swift */,
 			);
 			path = Pcsc;
+			sourceTree = "<group>";
+		};
+		D4F4FDED2B331D800087A1BB /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -328,6 +352,7 @@
 				5ED8B93A2ACDA1C300BCFC20 /* RtPcsc */,
 				D42178132B1F4F4400D08948 /* RtUiComponents */,
 				D42178162B1F53A400D08948 /* RtUiComponents */,
+				D4D9C9D92B2306F900DA702C /* RtPcscWrapper */,
 			);
 			productName = "Rutoken Tech";
 			productReference = 5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */;
@@ -387,6 +412,7 @@
 				5ED8B9362ACD996100BCFC20 /* XCRemoteSwiftPackageReference "openssl-xcframework" */,
 				5ED8B9392ACDA1C300BCFC20 /* XCRemoteSwiftPackageReference "rt-pcsc" */,
 				D42178152B1F53A400D08948 /* XCRemoteSwiftPackageReference "rt-ui-components" */,
+				D4D9C9D82B2306F900DA702C /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */,
 			);
 			productRefGroup = 5EF75DDC2AC707BD001834BE /* Products */;
 			projectDirPath = "";
@@ -452,6 +478,8 @@
 				D4B130B02B0CFFCD00AD390F /* TokenModel.swift in Sources */,
 				7D38D6DA2B0E2C190045FBAD /* AppState.swift in Sources */,
 				5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */,
+				D4FC26C92B270C580029060D /* NfcMessages.swift in Sources */,
+				D4D46A0F2B3038F60005981A /* Atomic+propertywrapper.swift in Sources */,
 				D4B130B52B0DDB2200AD390F /* Pkcs11Helper.swift in Sources */,
 				D4B130D82B0E4F8200AD390F /* TokenInterface.swift in Sources */,
 				447AFBAA2B205A7000A53B0C /* ConnectionType.swift in Sources */,
@@ -460,6 +488,7 @@
 				7D38D6DC2B0E2D3F0045FBAD /* AppAction.swift in Sources */,
 				D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */,
 				7D38D6E02B0E33780045FBAD /* AppReducer.swift in Sources */,
+				D4F7CD772B32D1DA00764787 /* AnyCancellable+store.swift in Sources */,
 				7D2021472AEC16E8003E2B73 /* IpadRootView.swift in Sources */,
 				7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */,
 				7D9E5A602B0BA55E00E2EAB7 /* CaEntryViewState.swift in Sources */,
@@ -478,6 +507,7 @@
 				D4B130C72B0E37F200AD390F /* Pkcs11HelperMock.swift in Sources */,
 				D4B130D02B0E3B1600AD390F /* CryptoManagerTests.swift in Sources */,
 				44EED1B62B1F115B0036F8DA /* TokenMock.swift in Sources */,
+				D4F4FDEC2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift in Sources */,
 				D4B130D32B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -617,6 +647,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Rutoken Tech/Rutoken Tech.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
@@ -626,6 +657,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = $CONFIGURATION_BUILD_DIR/rtpkcs11ecp.framework/Headers/;
+				INFOPLIST_FILE = info.plist;
+				INFOPLIST_KEY_NFCReaderUsageDescription = "NFC будет использован для работы с устройствами Рутокен";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -654,6 +687,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Rutoken Tech/Rutoken Tech.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
@@ -663,6 +697,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = $CONFIGURATION_BUILD_DIR/rtpkcs11ecp.framework/Headers/;
+				INFOPLIST_FILE = info.plist;
+				INFOPLIST_KEY_NFCReaderUsageDescription = "NFC будет использован для работы с устройствами Рутокен";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -817,6 +853,14 @@
 				revision = 374c2e261f3b33a4f02cab63868b56f8066927ed;
 			};
 		};
+		D4D9C9D82B2306F900DA702C /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-pcsc-wrapper.git";
+			requirement = {
+				kind = revision;
+				revision = cc07520559f21deb9e84d4754849358b32bb1b98;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -858,6 +902,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D42178152B1F53A400D08948 /* XCRemoteSwiftPackageReference "rt-ui-components" */;
 			productName = RtUiComponents;
+		};
+		D4D9C9D92B2306F900DA702C /* RtPcscWrapper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D4D9C9D82B2306F900DA702C /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */;
+			productName = RtPcscWrapper;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

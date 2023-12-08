@@ -26,5 +26,20 @@ extension XCTestCase {
 
         XCTAssertEqual(thrownError as? E, error, file: file, line: line)
     }
+
+    func assertErrorAsync<T, E: Error & Equatable>(
+        _ expression: @autoclosure () async throws -> T,
+        throws error: E,
+        in file: StaticString = #file,
+        line: UInt = #line
+    ) async {
+        do {
+            _ = try await expression()
+            XCTFail("No error thrown")
+        } catch let thrownError {
+            XCTAssertTrue(thrownError is E, "Unexpected error type: \(type(of: thrownError))", file: file, line: line)
+            XCTAssertEqual(thrownError as? E, error, file: file, line: line)
+        }
+    }
 }
 

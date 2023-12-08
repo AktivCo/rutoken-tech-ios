@@ -7,6 +7,7 @@
 
 
 protocol TokenProtocol {
+    var slot: CK_SLOT_ID { get }
     var label: String { get }
     var serial: String { get }
     var model: TokenModel { get }

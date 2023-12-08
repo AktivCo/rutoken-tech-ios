@@ -9,14 +9,16 @@
 
 
 class TokenMock: TokenProtocol {
+    var slot: CK_SLOT_ID
     let label: String
     let serial: String
     let model: TokenModel
     let type: TokenType
     let connectionType: ConnectionType
 
-    init(label: String = "", serial: String = "", model: TokenModel = .rutoken2,
+    init(slot: CK_SLOT_ID = CK_SLOT_ID(), label: String = "", serial: String = "", model: TokenModel = .rutoken2,
          connectionType: ConnectionType = .nfc, type: TokenType = .usb) {
+        self.slot = slot
         self.label = label
         self.serial = serial
         self.model = model

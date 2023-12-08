@@ -5,6 +5,8 @@
 //  Created by Никита Девятых on 22.11.2023.
 //
 
+import Combine
+
 @testable import Rutoken_Tech
 
 
@@ -17,12 +19,14 @@ class PcscHelperMock: PcscHelperProtocol {
         try stopNfcCallback()
     }
 
-    func waitForToken() throws {
-        try waitForTokenCallback()
+    func nfcExchangeIsStopped() -> AnyPublisher<Void, Never> {
+        nfcExchangeIsStoppedCallback()
     }
 
     var startNfcCallback: () throws -> Void = {}
     var stopNfcCallback: () throws -> Void = {}
-    var waitForTokenCallback: () throws -> Void = {}
+    var nfcExchangeIsStoppedCallback: () -> AnyPublisher<Void, Never> = {
+        Empty<Void, Never>().eraseToAnyPublisher()
+    }
 
 }

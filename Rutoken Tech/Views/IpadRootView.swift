@@ -26,16 +26,13 @@ struct IpadRootView: View {
 
                 List(RtAppTab.allCases, id: \.self, selection: $selectedTab) { tab in
                     NavigationLink(value: tab) {
-                        Label(
-                            title: {
-                                Text(tab.rawValue)
-                                    .foregroundStyle(selectedTab == tab ?
-                                                     Color("colorsOnPrimary") : Color("labelPrimary"))
-                            },
-                            icon: {
-                                Image(systemName: tab.imageName)
-                            }
-                        )
+                        Label {
+                            Text(tab.rawValue)
+                                .foregroundStyle(selectedTab == tab ?
+                                                 Color("colorsOnPrimary") : Color("labelPrimary"))
+                        } icon: {
+                            Image(systemName: tab.imageName)
+                        }
                     }
                 }
             }

@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+import RtPcscWrapper
 import TinyAsyncRedux
 
 
@@ -16,6 +17,9 @@ struct RutokenTechApp: App {
 
     init() {
         var middlewares: [any Middleware<AppAction>] = []
+        let pkcsHelper = Pkcs11Helper(with: RtEngineWrapper())
+        let pcscHelper = PcscHelper(pcscWrapper: RtPcscWrapper())
+        let cryptoManager = CryptoManager(pkcs11Helper: pkcsHelper, pcscHelper: pcscHelper)
 
         store = Store(initialState: AppState(),
                       reducer: AppReducer(),

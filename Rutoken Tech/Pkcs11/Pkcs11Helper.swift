@@ -10,7 +10,7 @@ import Foundation
 
 
 protocol Pkcs11HelperProtocol {
-    func getToken(with type: ConnectionType) throws -> TokenProtocol
+    var tokens: AnyPublisher<[TokenProtocol], Never> { get }
 }
 
 enum Pkcs11Error: Error {
@@ -20,12 +20,15 @@ enum Pkcs11Error: Error {
 }
 
 class Pkcs11Helper: Pkcs11HelperProtocol {
-    private var tokens = [Token]()
-
+    private var tokenPublisher = CurrentValueSubject<[TokenProtocol], Never>([])
+    public var tokens: AnyPublisher<[TokenProtocol], Never> {
+        tokenPublisher.eraseToAnyPublisher()
+    }
     private let engine: RtEngineWrapperProtocol
 
     init(with engine: RtEngineWrapperProtocol) {
         self.engine = engine
+
         start()
     }
 
@@ -45,7 +48,7 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
                 return
             }
 
-            tokens = availableTokens
+            tokenPublisher.send(availableTokens)
             while true {
                 var slot = CK_SLOT_ID()
                 let rv = C_WaitForSlotEvent(0, &slot, nil)
@@ -53,24 +56,19 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
                 guard rv != CKR_CRYPTOKI_NOT_INITIALIZED else { return }
                 guard rv == CKR_OK else { continue }
 
+                var tokens = tokenPublisher.value
                 tokens.removeAll(where: { $0.slot == slot })
 
                 if isPresent(slot), let token = Token(with: slot) {
                     tokens.append(token)
                 }
+                tokenPublisher.send(tokens)
             }
         }
     }
 
     func stop() {
         C_Finalize(nil)
-    }
-
-    func getToken(with type: ConnectionType) throws -> TokenProtocol {
-        guard let token = tokens.first(where: { $0.connectionType == type }) else {
-            throw Pkcs11Error.tokenNotFound
-        }
-        return token
     }
 
     // MARK: - Private API
@@ -82,7 +80,7 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
         }
 
         guard ctr != 0 else {
-            throw Pkcs11Error.unknownError
+            return []
         }
 
         var slots = Array(repeating: CK_SLOT_ID(0), count: Int(ctr))
