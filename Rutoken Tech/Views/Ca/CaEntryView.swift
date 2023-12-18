@@ -16,7 +16,7 @@ private struct ListStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
             .background(Color("surfacePrimary"))
-            .cornerRadius(12)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.vertical, 12)
             .frame(maxWidth: .infinity, alignment: .topLeading)
     }
@@ -79,6 +79,11 @@ struct CaEntryView: View {
 
             VStack(spacing: 0) {
                 activeRow("Сгенерировать ключевую пару") {
+                    store.send(.generateKeyId)
+                    store.send(.showSheet(
+                        SheetData(isDraggable: true,
+                                  size: UIDevice.isPhone ? .smallPhone : .ipad(width: 540, height: 640),
+                                  content: AnyView(CaGenerateKeyPairView().environmentObject(store)))))
                 }
                 Divider()
                     .padding(.horizontal, 12)

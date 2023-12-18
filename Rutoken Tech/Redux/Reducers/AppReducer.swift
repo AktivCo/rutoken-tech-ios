@@ -5,6 +5,8 @@
 //  Created by Ivan Poderegin on 22.11.2023.
 //
 
+import Foundation
+
 import TinyAsyncRedux
 
 
@@ -28,6 +30,11 @@ struct AppReducer: Reducer {
             newState.routingState.pinInputError.errorDescription = errorText
         case .hidePinInputError:
             newState.routingState.pinInputError.errorDescription = ""
+        case .generateKeyId:
+            newState.caGenerateKeyPairSate.key = KeyModel(ckaId: String().generateID(),
+                                                          type: .gostR3410_2012_256)
+        case .generateKeyPair:
+            newState.caGenerateKeyPairSate.inProgress = true
         }
         return newState
     }

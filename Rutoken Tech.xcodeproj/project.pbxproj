@@ -27,14 +27,17 @@
 		5EF75DE32AC707BD001834BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EF75DE22AC707BD001834BE /* Assets.xcassets */; };
 		5EF75DE62AC707BD001834BE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EF75DE52AC707BD001834BE /* Preview Assets.xcassets */; };
 		7D2021472AEC16E8003E2B73 /* IpadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2021462AEC16E8003E2B73 /* IpadRootView.swift */; };
+		7D28BD822B3082990079AE1C /* CaGenerateKeyPairState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D28BD812B3082990079AE1C /* CaGenerateKeyPairState.swift */; };
+		7D28BD842B3083460079AE1C /* CaGenerateKeyPairView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D28BD832B3083460079AE1C /* CaGenerateKeyPairView.swift */; };
 		7D38D6DA2B0E2C190045FBAD /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D38D6D92B0E2C190045FBAD /* AppState.swift */; };
 		7D38D6DC2B0E2D3F0045FBAD /* AppAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D38D6DB2B0E2D3F0045FBAD /* AppAction.swift */; };
 		7D38D6E02B0E33780045FBAD /* AppReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D38D6DF2B0E33780045FBAD /* AppReducer.swift */; };
-		7D44250F2B18CE7C00BBBC66 /* KeyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D44250E2B18CE7C00BBBC66 /* KeyModel.swift */; };
+		7D4335892B5567A700A0336A /* String+generateID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4335882B5567A700A0336A /* String+generateID.swift */; };
 		7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5145402AFBD1DB004B6947 /* CaEntryView.swift */; };
 		7D9D3C1B2B3C76F000BF2EE1 /* EnumerateKeysTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9D3C1A2B3C76F000BF2EE1 /* EnumerateKeysTests.swift */; };
 		7D9E5A602B0BA55E00E2EAB7 /* CaEntryViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E5A5F2B0BA55E00E2EAB7 /* CaEntryViewState.swift */; };
 		7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */; };
+		7DCC9AF12B3B2C9A002788B5 /* KeyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCC9AF02B3B2C9A002788B5 /* KeyModel.swift */; };
 		7DEBBDD62B3B1FCE00C35BA5 /* WithTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DEBBDD52B3B1FCE00C35BA5 /* WithTokenTests.swift */; };
 		D42178032B1F0EAF00D08948 /* RoutingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42178022B1F0EAF00D08948 /* RoutingState.swift */; };
 		D42178192B205FD700D08948 /* AppAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42178182B205FD700D08948 /* AppAlert.swift */; };
@@ -86,14 +89,17 @@
 		5EF75DE22AC707BD001834BE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5EF75DE52AC707BD001834BE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		7D2021462AEC16E8003E2B73 /* IpadRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IpadRootView.swift; sourceTree = "<group>"; };
+		7D28BD812B3082990079AE1C /* CaGenerateKeyPairState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaGenerateKeyPairState.swift; sourceTree = "<group>"; };
+		7D28BD832B3083460079AE1C /* CaGenerateKeyPairView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaGenerateKeyPairView.swift; sourceTree = "<group>"; };
 		7D38D6D92B0E2C190045FBAD /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		7D38D6DB2B0E2D3F0045FBAD /* AppAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAction.swift; sourceTree = "<group>"; };
 		7D38D6DF2B0E33780045FBAD /* AppReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReducer.swift; sourceTree = "<group>"; };
-		7D44250E2B18CE7C00BBBC66 /* KeyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyModel.swift; sourceTree = "<group>"; };
+		7D4335882B5567A700A0336A /* String+generateID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+generateID.swift"; sourceTree = "<group>"; };
 		7D5145402AFBD1DB004B6947 /* CaEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaEntryView.swift; sourceTree = "<group>"; };
 		7D9D3C1A2B3C76F000BF2EE1 /* EnumerateKeysTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumerateKeysTests.swift; sourceTree = "<group>"; };
 		7D9E5A5F2B0BA55E00E2EAB7 /* CaEntryViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaEntryViewState.swift; sourceTree = "<group>"; };
 		7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+isPhone.swift"; sourceTree = "<group>"; };
+		7DCC9AF02B3B2C9A002788B5 /* KeyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyModel.swift; sourceTree = "<group>"; };
 		7DEBBDD52B3B1FCE00C35BA5 /* WithTokenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithTokenTests.swift; sourceTree = "<group>"; };
 		D42178022B1F0EAF00D08948 /* RoutingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingState.swift; sourceTree = "<group>"; };
 		D42178182B205FD700D08948 /* AppAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlert.swift; sourceTree = "<group>"; };
@@ -240,6 +246,7 @@
 			isa = PBXGroup;
 			children = (
 				7D5145402AFBD1DB004B6947 /* CaEntryView.swift */,
+				7D28BD832B3083460079AE1C /* CaGenerateKeyPairView.swift */,
 			);
 			path = Ca;
 			sourceTree = "<group>";
@@ -250,6 +257,7 @@
 				D42178022B1F0EAF00D08948 /* RoutingState.swift */,
 				7D38D6D92B0E2C190045FBAD /* AppState.swift */,
 				7D9E5A5F2B0BA55E00E2EAB7 /* CaEntryViewState.swift */,
+				7D28BD812B3082990079AE1C /* CaGenerateKeyPairState.swift */,
 			);
 			path = States;
 			sourceTree = "<group>";
@@ -259,6 +267,7 @@
 			children = (
 				7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */,
 				443076EE2B1F2D5E0073B406 /* String+getFrom.swift */,
+				7D4335882B5567A700A0336A /* String+generateID.swift */,
 				D4F7CD762B32D1DA00764787 /* AnyCancellable+store.swift */,
 			);
 			path = Extensions;
@@ -301,7 +310,7 @@
 				447AFBA92B205A7000A53B0C /* ConnectionType.swift */,
 				D4FC26C82B270C580029060D /* NfcMessages.swift */,
 				5E10D3552B1E7A57009F887E /* SheetData.swift */,
-				7D44250E2B18CE7C00BBBC66 /* KeyModel.swift */,
+				7DCC9AF02B3B2C9A002788B5 /* KeyModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -521,20 +530,24 @@
 				44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */,
 				D4B130B02B0CFFCD00AD390F /* TokenModel.swift in Sources */,
 				7D38D6DA2B0E2C190045FBAD /* AppState.swift in Sources */,
+				7DCC9AF12B3B2C9A002788B5 /* KeyModel.swift in Sources */,
 				5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */,
 				4469F7882B34512E000DCF8B /* AttributeType.swift in Sources */,
 				D4FC26C92B270C580029060D /* NfcMessages.swift in Sources */,
 				D4D46A0F2B3038F60005981A /* Atomic+propertywrapper.swift in Sources */,
 				4464FAA82B359ED5005F732F /* Pkcs11Object.swift in Sources */,
 				D4B130B52B0DDB2200AD390F /* Pkcs11Helper.swift in Sources */,
+				7D4335892B5567A700A0336A /* String+generateID.swift in Sources */,
 				447AFBAA2B205A7000A53B0C /* ConnectionType.swift in Sources */,
 				443076EF2B1F2D5E0073B406 /* String+getFrom.swift in Sources */,
 				D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */,
 				7D38D6DC2B0E2D3F0045FBAD /* AppAction.swift in Sources */,
+				7D28BD822B3082990079AE1C /* CaGenerateKeyPairState.swift in Sources */,
 				D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */,
 				7D38D6E02B0E33780045FBAD /* AppReducer.swift in Sources */,
 				D4F7CD772B32D1DA00764787 /* AnyCancellable+store.swift in Sources */,
 				7D2021472AEC16E8003E2B73 /* IpadRootView.swift in Sources */,
+				7D28BD842B3083460079AE1C /* CaGenerateKeyPairView.swift in Sources */,
 				7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */,
 				7D9E5A602B0BA55E00E2EAB7 /* CaEntryViewState.swift in Sources */,
 				D42178032B1F0EAF00D08948 /* RoutingState.swift in Sources */,
@@ -543,7 +556,6 @@
 				D4B130B32B0DD52A00AD390F /* Token.swift in Sources */,
 				5EF30EE02B1A840800E48627 /* TokenInterface.swift in Sources */,
 				7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */,
-				7D44250F2B18CE7C00BBBC66 /* KeyModel.swift in Sources */,
 				D4B130AB2B0CFD7300AD390F /* TokenInfo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
