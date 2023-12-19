@@ -13,6 +13,10 @@ protocol TokenProtocol {
     var model: TokenModel { get }
     var type: TokenType { get }
     var connectionType: ConnectionType { get }
+
+    func login(with pin: String) throws
+    func generateKeyPair(with id: String) throws
+    func deleteKeyPair(with id: String) throws
 }
 
 enum TokenError: Error {
@@ -63,7 +67,7 @@ class Token: TokenProtocol, Identifiable {
             return nil
         }
 
-        rv = C_OpenSession(self.slot, CK_FLAGS(CKF_SERIAL_SESSION), nil, nil, &self.session)
+        rv = C_OpenSession(self.slot, CK_FLAGS(CKF_SERIAL_SESSION | CKF_RW_SESSION), nil, nil, &self.session)
         guard rv == CKR_OK else {
             return nil
         }
@@ -117,6 +121,48 @@ class Token: TokenProtocol, Identifiable {
         C_Logout(session)
     }
 
+    func generateKeyPair(with id: String) throws {
+        var publicKey = CK_OBJECT_HANDLE()
+        var privateKey = CK_OBJECT_HANDLE()
+
+        var publicKeyTemplate = getPublicKeyTemplate(with: id)
+        var privateKeyTemplate = getPrivateKeyTemplate(with: id)
+
+        var gostR3410_2012_256KeyPairGenMech: CK_MECHANISM = CK_MECHANISM(mechanism: CKM_GOSTR3410_KEY_PAIR_GEN, pParameter: nil, ulParameterLen: 0)
+
+        let rv = C_GenerateKeyPair(session, &gostR3410_2012_256KeyPairGenMech,
+                                   &publicKeyTemplate, CK_ULONG(publicKeyTemplate.count),
+                                   &privateKeyTemplate, CK_ULONG(privateKeyTemplate.count),
+                                   &publicKey, &privateKey)
+        guard rv == CKR_OK else {
+            throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
+        }
+    }
+
+    func deleteKeyPair(with id: String) throws {
+        let template = [
+            id.withCString {
+                AttributeType.ckaId(UnsafeMutableRawPointer(mutating: $0), UInt(id.count))
+            },
+            AttributeType.keyType
+        ].map { $0.attr }
+
+        guard let objects = try? findObjects(template) else {
+            throw TokenError.generalError
+        }
+
+        guard !objects.isEmpty else {
+            throw TokenError.generalError
+        }
+
+        for obj in objects {
+            let rv = C_DestroyObject(session, obj)
+            guard rv == CKR_OK else {
+                throw TokenError.generalError
+            }
+        }
+    }
+
     // MARK: - Private API
     private func checkingToken<T>(_ closure: () throws -> T) throws -> T {
         do {
@@ -144,8 +190,9 @@ class Token: TokenProtocol, Identifiable {
     }
 
     private func getTokenInterfaces() -> (CK_ULONG, CK_ULONG)? {
-        guard let handle = try? findObjects((CK_OBJECT_CLASS(CKO_HW_FEATURE), CKA_CLASS),
-                                             (CK_HW_FEATURE_TYPE(CKH_VENDOR_TOKEN_INFO), CKA_HW_FEATURE_TYPE)).first else {
+        let objectTemplate = [AttributeType.ckaClass(.hwFeature), AttributeType.hwFeatureType].map { $0.attr }
+
+        guard let handle = try? findObjects(objectTemplate).first else {
             return nil
         }
 
@@ -158,7 +205,6 @@ class Token: TokenProtocol, Identifiable {
                                                   ulValueLen: valueSize)
 
         var template = [currentInterfaceAttr, supportedInterfaceAttr]
-
         var rv = C_GetAttributeValue(session, handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             return nil
@@ -184,17 +230,9 @@ class Token: TokenProtocol, Identifiable {
                                        count: Int(template[1].ulValueLen)).load(as: CK_ULONG.self))
     }
 
-    private func findObjects(_ attributes: (CK_ULONG, UInt)...) throws -> [CK_OBJECT_HANDLE] {
-        var values = [CK_ULONG]()
-        var template = attributes.map { value, type in
-            values.append(value)
-            return withUnsafeMutablePointer(to: &(values[values.endIndex - 1])) { pointer in
-                CK_ATTRIBUTE(type: CK_ATTRIBUTE_TYPE(type),
-                             pValue: pointer,
-                             ulValueLen: CK_ULONG(MemoryLayout.size(ofValue: pointer.pointee)))
-            }
-        }
-        var rv = C_FindObjectsInit(self.session, &template, CK_ULONG(template.count))
+    private func findObjects(_ attributes: [CK_ATTRIBUTE]) throws -> [CK_OBJECT_HANDLE] {
+        var template = attributes
+        var rv = C_FindObjectsInit(session, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             throw TokenError.generalError
         }
@@ -218,5 +256,31 @@ class Token: TokenProtocol, Identifiable {
         } while count == maxCount
 
         return objects
+    }
+}
+
+extension Token {
+    func getPublicKeyTemplate(with id: String) -> [CK_ATTRIBUTE] {
+        var template: [AttributeType] = [.ckaClass(.publicKey), .keyType,
+                                         .attrTrue(CKA_TOKEN), .attrFalse(CKA_PRIVATE),
+                                         .gostR3410_2012_256_params, .gostR3411_2012_256_params]
+        id.withCString {
+            template.append(.ckaId(UnsafeMutableRawPointer(mutating: $0), UInt(id.count)))
+        }
+        return template.map {
+            $0.attr
+        }
+    }
+
+    func getPrivateKeyTemplate(with id: String) -> [CK_ATTRIBUTE] {
+        var template: [AttributeType] = [.ckaClass(.privateKey), .keyType,
+                                         .attrTrue(CKA_TOKEN), .attrTrue(CKA_PRIVATE), .attrTrue(CKA_DERIVE),
+                                         .gostR3410_2012_256_params, .gostR3411_2012_256_params]
+        id.withCString {
+            template.append(.ckaId(UnsafeMutableRawPointer(mutating: $0), UInt(id.count)))
+        }
+        return template.map {
+            $0.attr
+        }
     }
 }

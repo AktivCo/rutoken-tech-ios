@@ -47,6 +47,12 @@ class CryptoManager: CryptoManagerProtocol {
                 try pcscHelper.startNfc()
             }
             let token = try await waitForToken(with: type)
+            try token.login(with: "12345678")
+
+            let keyPairId = "some random key pair id"
+            try token.generateKeyPair(with: keyPairId)
+            try token.deleteKeyPair(with: keyPairId)
+
             return TokenInfo(label: token.label, serial: token.serial, model: token.model,
                              connectionType: token.connectionType, type: token.type)
         } catch Pkcs11Error.connectionLost {

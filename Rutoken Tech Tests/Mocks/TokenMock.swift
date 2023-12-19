@@ -29,4 +29,10 @@ class TokenMock: TokenProtocol {
     func getInfo() -> TokenInfo {
         .init(label: self.label, serial: self.serial, model: self.model, connectionType: self.connectionType, type: self.type)
     }
+
+    func login(with pin: String) throws {}
+
+    func generateKeyPair(with id: String) throws {}
+
+    func deleteKeyPair(with id: String) throws {}
 }

@@ -127,7 +127,7 @@ struct CaEntryView: View {
                     .init(isDraggable: false,
                           size: UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640),
                           content: AnyView(
-                            RtAuthView(defaultPinGetter: { "" },
+                            RtAuthView(defaultPinGetter: { "12345678" },
                                        onSubmit: { tokenType, pin in store.send(.selectToken(tokenType, pin)) },
                                        onCancel: { store.send(.hideSheet) })
                             .environmentObject(store.state.routingState.pinInputError)))))

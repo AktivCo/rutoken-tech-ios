@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		443076EF2B1F2D5E0073B406 /* String+getFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443076EE2B1F2D5E0073B406 /* String+getFrom.swift */; };
 		44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */; };
+		4469F7882B34512E000DCF8B /* AttributeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4469F7872B34512E000DCF8B /* AttributeType.swift */; };
 		447AFBAA2B205A7000A53B0C /* ConnectionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447AFBA92B205A7000A53B0C /* ConnectionType.swift */; };
 		44EED1B62B1F115B0036F8DA /* TokenMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EED1B52B1F115B0036F8DA /* TokenMock.swift */; };
 		5E10D3562B1E7A57009F887E /* SheetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E10D3552B1E7A57009F887E /* SheetData.swift */; };
@@ -66,6 +67,7 @@
 		443076EE2B1F2D5E0073B406 /* String+getFrom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+getFrom.swift"; sourceTree = "<group>"; };
 		443AF4DD2B10B40500D34150 /* Rutoken_Tech-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Rutoken_Tech-Bridging-Header.h"; sourceTree = "<group>"; };
 		44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtEngineWrapper.swift; sourceTree = "<group>"; };
+		4469F7872B34512E000DCF8B /* AttributeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeType.swift; sourceTree = "<group>"; };
 		447AFBA92B205A7000A53B0C /* ConnectionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionType.swift; sourceTree = "<group>"; };
 		44EED1B52B1F115B0036F8DA /* TokenMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMock.swift; sourceTree = "<group>"; };
 		5E10D3552B1E7A57009F887E /* SheetData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetData.swift; sourceTree = "<group>"; };
@@ -287,6 +289,7 @@
 				D4B130D72B0E4F8200AD390F /* TokenInterface.swift */,
 				D4B130B42B0DDB2200AD390F /* Pkcs11Helper.swift */,
 				44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */,
+				4469F7872B34512E000DCF8B /* AttributeType.swift */,
 			);
 			path = Pkcs11;
 			sourceTree = "<group>";
@@ -493,6 +496,7 @@
 				D4B130B02B0CFFCD00AD390F /* TokenModel.swift in Sources */,
 				7D38D6DA2B0E2C190045FBAD /* AppState.swift in Sources */,
 				5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */,
+				4469F7882B34512E000DCF8B /* AttributeType.swift in Sources */,
 				D4FC26C92B270C580029060D /* NfcMessages.swift in Sources */,
 				D4D46A0F2B3038F60005981A /* Atomic+propertywrapper.swift in Sources */,
 				D4B130B52B0DDB2200AD390F /* Pkcs11Helper.swift in Sources */,
