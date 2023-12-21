@@ -41,7 +41,8 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
         var initArgs = CK_C_INITIALIZE_ARGS()
         initArgs.flags = UInt(CKF_OS_LOCKING_OK)
 
-        assert(C_Initialize(&initArgs) == CKR_OK)
+        let rv = C_Initialize(&initArgs)
+        assert(rv == CKR_OK)
 
         DispatchQueue.global().async { [unowned self] in
             guard let availableTokens = try? getTokens() else {
