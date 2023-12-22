@@ -56,6 +56,8 @@ enum AppAlert {
             self = .connectionLost
         case .tokenNotFound:
             self = .tokenNotFound
+        case .wrongToken:
+            self = .wrongToken
         }
     }
 }

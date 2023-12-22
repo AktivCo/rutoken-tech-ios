@@ -11,6 +11,7 @@ import Foundation
 
 protocol CryptoManagerProtocol {
     func getTokenInfo(for type: ConnectionType) async throws -> TokenInfo
+    func generateKeyPair(for type: ConnectionType, serial: String, pin: String, keyId: String) async throws
 }
 
 enum CryptoManagerError: Error, Equatable {
@@ -19,6 +20,7 @@ enum CryptoManagerError: Error, Equatable {
     case connectionLost
     case nfcStopped
     case incorrectPin(UInt)
+    case wrongToken
 }
 
 class CryptoManager: CryptoManagerProtocol {
@@ -47,12 +49,6 @@ class CryptoManager: CryptoManagerProtocol {
                 try pcscHelper.startNfc()
             }
             let token = try await waitForToken(with: type)
-            try token.login(with: "12345678")
-
-            let keyPairId = "some random key pair id"
-            try token.generateKeyPair(with: keyPairId)
-            try token.deleteKeyPair(with: keyPairId)
-
             return TokenInfo(label: token.label, serial: token.serial, model: token.model,
                              connectionType: token.connectionType, type: token.type)
         } catch Pkcs11Error.connectionLost {
@@ -61,6 +57,42 @@ class CryptoManager: CryptoManagerProtocol {
             throw CryptoManagerError.tokenNotFound
         } catch NfcError.cancelledByUser, NfcError.timeout {
             throw CryptoManagerError.nfcStopped
+        } catch TokenError.incorrectPin(let attemptsLeft) {
+            throw CryptoManagerError.incorrectPin(attemptsLeft)
+        } catch TokenError.lockedPin {
+            throw CryptoManagerError.incorrectPin(0)
+        } catch let error as CryptoManagerError {
+            throw error
+        } catch {
+            throw CryptoManagerError.unknown
+        }
+    }
+
+    func generateKeyPair(for type: ConnectionType, serial: String, pin: String, keyId: String) async throws {
+        defer {
+            if type == .nfc {
+                try? pcscHelper.stopNfc()
+            }
+        }
+        do {
+            if type == .nfc {
+                try pcscHelper.startNfc()
+            }
+            let token = try await waitForToken(with: type)
+            guard token.serial == serial else {
+                throw CryptoManagerError.wrongToken
+            }
+            try token.login(with: pin)
+            defer { token.logout() }
+            try token.generateKeyPair(with: keyId)
+        } catch Pkcs11Error.connectionLost {
+            throw CryptoManagerError.connectionLost
+        } catch Pkcs11Error.tokenNotFound {
+            throw CryptoManagerError.tokenNotFound
+        } catch NfcError.cancelledByUser, NfcError.timeout {
+            throw CryptoManagerError.nfcStopped
+        } catch TokenError.tokenDisconnected {
+            throw CryptoManagerError.connectionLost
         } catch TokenError.incorrectPin(let attemptsLeft) {
             throw CryptoManagerError.incorrectPin(attemptsLeft)
         } catch TokenError.lockedPin {

@@ -30,9 +30,23 @@ class TokenMock: TokenProtocol {
         .init(label: self.label, serial: self.serial, model: self.model, connectionType: self.connectionType, type: self.type)
     }
 
-    func login(with pin: String) throws {}
+    func login(with pin: String) throws {
+        try loginCallback(pin)
+    }
 
-    func generateKeyPair(with id: String) throws {}
+    func logout() {
+        logoutCallback()
+    }
+
+    func generateKeyPair(with id: String) throws {
+        try generateKeyPairCallback(id)
+    }
 
     func deleteKeyPair(with id: String) throws {}
+
+    var loginCallback: (String) throws -> Void = { _ in }
+
+    var logoutCallback: () -> Void = {}
+
+    var generateKeyPairCallback: (String) throws -> Void = { _ in }
 }

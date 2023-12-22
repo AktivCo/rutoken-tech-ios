@@ -1,8 +1,8 @@
 //
-//  CryptoManagerTests.swift
+//  GetTokenInfoTests.swift
 //  Rutoken Tech Tests
 //
-//  Created by Никита Девятых on 22.11.2023.
+//  Created by Никита Девятых on 22.12.2023.
 //
 
 import Combine
@@ -11,7 +11,7 @@ import XCTest
 @testable import Rutoken_Tech
 
 
-class CryptoManagerTests: XCTestCase {
+class CryptoManagerGetTokenInfoTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper = Pkcs11HelperMock()
     var pcscHelper = PcscHelperMock()

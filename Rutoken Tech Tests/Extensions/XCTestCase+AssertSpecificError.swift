@@ -41,5 +41,17 @@ extension XCTestCase {
             XCTAssertEqual(thrownError as? E, error, file: file, line: line)
         }
     }
+
+    func assertNoThrowAsync<T>(
+        _ expression: @autoclosure () async throws -> T,
+        in file: StaticString = #file,
+        line: UInt = #line
+    ) async {
+        do {
+            _ = try await expression()
+        } catch let error {
+            XCTFail("Unexprected error thrown: \(error.localizedDescription)")
+        }
+    }
 }
 

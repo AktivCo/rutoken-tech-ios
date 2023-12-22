@@ -33,6 +33,8 @@
 		7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */; };
 		D42178032B1F0EAF00D08948 /* RoutingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42178022B1F0EAF00D08948 /* RoutingState.swift */; };
 		D42178192B205FD700D08948 /* AppAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42178182B205FD700D08948 /* AppAlert.swift */; };
+		D423F8BF2B3574BB0058ECDE /* GetTokenInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D423F8BE2B3574BB0058ECDE /* GetTokenInfoTests.swift */; };
+		D423F8C12B3574EC0058ECDE /* GenerateKeyPairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D423F8C02B3574EC0058ECDE /* GenerateKeyPairTests.swift */; };
 		D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */; };
 		D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F52AEA796E00B0AB64 /* RtAppTab.swift */; };
 		D46CC2202B285C1200F28A67 /* RtUiComponents in Frameworks */ = {isa = PBXBuildFile; productRef = D46CC21F2B285C1200F28A67 /* RtUiComponents */; };
@@ -42,7 +44,6 @@
 		D4B130B32B0DD52A00AD390F /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130B22B0DD52A00AD390F /* Token.swift */; };
 		D4B130B52B0DDB2200AD390F /* Pkcs11Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130B42B0DDB2200AD390F /* Pkcs11Helper.swift */; };
 		D4B130C72B0E37F200AD390F /* Pkcs11HelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130C62B0E37F200AD390F /* Pkcs11HelperMock.swift */; };
-		D4B130D02B0E3B1600AD390F /* CryptoManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130CF2B0E3B1600AD390F /* CryptoManagerTests.swift */; };
 		D4B130D32B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D22B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift */; };
 		D4B130D62B0E4F2400AD390F /* PcscHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D52B0E4F2400AD390F /* PcscHelper.swift */; };
 		D4B130DA2B0E51FE00AD390F /* PcscHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */; };
@@ -86,6 +87,8 @@
 		7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+isPhone.swift"; sourceTree = "<group>"; };
 		D42178022B1F0EAF00D08948 /* RoutingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingState.swift; sourceTree = "<group>"; };
 		D42178182B205FD700D08948 /* AppAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlert.swift; sourceTree = "<group>"; };
+		D423F8BE2B3574BB0058ECDE /* GetTokenInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTokenInfoTests.swift; sourceTree = "<group>"; };
+		D423F8C02B3574EC0058ECDE /* GenerateKeyPairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateKeyPairTests.swift; sourceTree = "<group>"; };
 		D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IphoneRootView.swift; sourceTree = "<group>"; };
 		D44997F52AEA796E00B0AB64 /* RtAppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtAppTab.swift; sourceTree = "<group>"; };
 		D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoManager.swift; sourceTree = "<group>"; };
@@ -95,7 +98,6 @@
 		D4B130B42B0DDB2200AD390F /* Pkcs11Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Helper.swift; sourceTree = "<group>"; };
 		D4B130BA2B0E379900AD390F /* Rutoken Tech Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Rutoken Tech Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4B130C62B0E37F200AD390F /* Pkcs11HelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11HelperMock.swift; sourceTree = "<group>"; };
-		D4B130CF2B0E3B1600AD390F /* CryptoManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoManagerTests.swift; sourceTree = "<group>"; };
 		D4B130D22B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+AssertSpecificError.swift"; sourceTree = "<group>"; };
 		D4B130D52B0E4F2400AD390F /* PcscHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcscHelper.swift; sourceTree = "<group>"; };
 		D4B130D72B0E4F8200AD390F /* TokenInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenInterface.swift; sourceTree = "<group>"; };
@@ -252,6 +254,15 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		D423F8BD2B35749E0058ECDE /* CryptoManager */ = {
+			isa = PBXGroup;
+			children = (
+				D423F8BE2B3574BB0058ECDE /* GetTokenInfoTests.swift */,
+				D423F8C02B3574EC0058ECDE /* GenerateKeyPairTests.swift */,
+			);
+			path = CryptoManager;
+			sourceTree = "<group>";
+		};
 		D44997F12AEA6EB500B0AB64 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -317,7 +328,7 @@
 		D4B130CE2B0E3AEF00AD390F /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				D4B130CF2B0E3B1600AD390F /* CryptoManagerTests.swift */,
+				D423F8BD2B35749E0058ECDE /* CryptoManager */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -524,11 +535,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D423F8C12B3574EC0058ECDE /* GenerateKeyPairTests.swift in Sources */,
 				D4B130DA2B0E51FE00AD390F /* PcscHelperMock.swift in Sources */,
 				D4B130C72B0E37F200AD390F /* Pkcs11HelperMock.swift in Sources */,
-				D4B130D02B0E3B1600AD390F /* CryptoManagerTests.swift in Sources */,
 				44EED1B62B1F115B0036F8DA /* TokenMock.swift in Sources */,
 				D4F4FDEC2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift in Sources */,
+				D423F8BF2B3574BB0058ECDE /* GetTokenInfoTests.swift in Sources */,
 				D4B130D32B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -15,6 +15,7 @@ protocol TokenProtocol {
     var connectionType: ConnectionType { get }
 
     func login(with pin: String) throws
+    func logout()
     func generateKeyPair(with id: String) throws
     func deleteKeyPair(with id: String) throws
 }
