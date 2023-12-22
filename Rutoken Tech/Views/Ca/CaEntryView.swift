@@ -100,9 +100,8 @@ struct CaEntryView: View {
                     Image("token-usbc")
                 }
             }
+            .frame(width: 137, height: 88)
             .padding(.vertical, 32)
-            .frame(maxWidth: .infinity)
-            .frame(height: 152)
 
             infoList(for: connectedToken)
             Spacer()
