@@ -25,17 +25,19 @@ final class CryptoManagerEnumerateKeysTests: XCTestCase {
 
     func testEnumerateKeysConnectionSuccess() async throws {
         let token = TokenMock(serial: "87654321", connectionType: .usb)
+        let testId = "some id"
 
         pkcs11Helper.tokenPublisher.send([token])
 
-        let keys = [KeyModel(ckaId: "001", type: .gostR3410_2012_256)]
-        token.getKeysCallback = { keys }
+        token.enumerateKeysCallback = {
+            return [Pkcs11KeyPair(pubKey: Pkcs11ObjectMock(id: testId, body: nil), privateKey: Pkcs11ObjectMock(id: testId, body: nil))]
+        }
 
         var result: [KeyModel]?
         try await manager.withToken(connectionType: .usb, serial: "87654321", pin: nil) {
             result = try await manager.enumerateKeys()
         }
-        XCTAssertEqual(keys, result)
+        XCTAssertEqual(result, [.init(ckaId: testId, type: .gostR3410_2012_256)])
     }
 
     func testEnumerateKeysTokenNotFoundError() async {

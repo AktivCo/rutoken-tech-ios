@@ -56,7 +56,10 @@ class CryptoManager: CryptoManagerProtocol {
         guard let token = connectedToken else {
             throw CryptoManagerError.tokenNotFound
         }
-        return try token.getKeys()
+
+        return try token.enumerateKeys().map {
+            KeyModel(ckaId: $0.privateKey.id, type: .gostR3410_2012_256)
+        }
     }
 
     func generateKeyPair(with id: String) async throws {

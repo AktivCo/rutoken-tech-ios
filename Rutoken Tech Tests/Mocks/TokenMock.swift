@@ -50,11 +50,11 @@ class TokenMock: TokenProtocol {
 
     func deleteKeyPair(with id: String) throws {}
 
-    func getKeys() throws -> [KeyModel] {
-        try getKeysCallback()
-    }
+    func enumerateCerts() throws -> [Pkcs11Cert] { try enumerateCertsCallback() }
 
-    var getKeysCallback: () throws -> [KeyModel] = {
-        [KeyModel(ckaId: "001", type: .gostR3410_2012_256)]
-    }
+    var enumerateCertsCallback: () throws -> [Pkcs11Cert] = { [] }
+
+    func enumerateKeys() throws -> [Pkcs11KeyPair] { try enumerateKeysCallback() }
+
+    var enumerateKeysCallback: () throws -> [Pkcs11KeyPair] = { [] }
 }

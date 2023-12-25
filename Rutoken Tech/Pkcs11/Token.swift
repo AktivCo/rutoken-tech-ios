@@ -16,9 +16,12 @@ protocol TokenProtocol {
 
     func login(with pin: String) throws
     func logout()
+
     func generateKeyPair(with id: String) throws
     func deleteKeyPair(with id: String) throws
-    func getKeys() throws -> [KeyModel]
+
+    func enumerateCerts() throws -> [Pkcs11Cert]
+    func enumerateKeys() throws -> [Pkcs11KeyPair]
 }
 
 enum TokenError: Error {
@@ -123,6 +126,60 @@ class Token: TokenProtocol, Identifiable {
         C_Logout(session)
     }
 
+    func enumerateCerts() throws -> [Pkcs11Cert] {
+        var certs: [Pkcs11Cert] = []
+        let certTemplate = [
+            AttributeType.objectClass(.cert), .attrTrue(CKA_TOKEN), .certType
+        ].map { $0.attr }
+
+        let certObjects = try findObjects(certTemplate)
+
+        for obj in certObjects {
+            guard let cert = Pkcs11Cert(with: obj, session) else {
+                throw TokenError.generalError
+            }
+            certs.append(cert)
+        }
+        return certs
+    }
+
+    func enumerateKeys() throws -> [Pkcs11KeyPair] {
+        var keyPairs: [Pkcs11KeyPair] = []
+
+        // MARK: - Find public keys
+        let pubKeyTemplate = [
+            AttributeType.objectClass(.publicKey), .attrTrue(CKA_TOKEN), .attrFalse(CKA_PRIVATE)
+        ].map { $0.attr }
+
+        let pubKeyObjects = try findObjects(pubKeyTemplate)
+
+        var publicKeys: [Pkcs11PublicKey] = []
+        for obj in pubKeyObjects {
+            guard let pubKey = Pkcs11PublicKey(with: obj, session) else {
+                continue
+            }
+            publicKeys.append(pubKey)
+        }
+
+        // MARK: - Find private keys
+        let privateKeyTemplate = [
+            AttributeType.objectClass(.privateKey), .attrTrue(CKA_TOKEN), .attrTrue(CKA_PRIVATE)
+        ].map { $0.attr }
+
+        let privateKeyObjects = try findObjects(privateKeyTemplate)
+
+        for obj in privateKeyObjects {
+            guard let privateKey = Pkcs11PrivateKey(with: obj, session) else {
+                continue
+            }
+            if let pubKey = publicKeys.first(where: { $0.id == privateKey.id }) {
+                keyPairs.append(.init(pubKey: pubKey, privateKey: privateKey))
+            }
+        }
+
+        return keyPairs
+    }
+
     func generateKeyPair(with id: String) throws {
         var publicKey = CK_OBJECT_HANDLE()
         var privateKey = CK_OBJECT_HANDLE()
@@ -144,14 +201,12 @@ class Token: TokenProtocol, Identifiable {
     func deleteKeyPair(with id: String) throws {
         let template = [
             id.withCString {
-                AttributeType.ckaId(UnsafeMutableRawPointer(mutating: $0), UInt(id.count))
+                AttributeType.id(UnsafeMutableRawPointer(mutating: $0), UInt(id.count))
             },
             AttributeType.keyType
         ].map { $0.attr }
 
-        guard let objects = try? findObjects(template) else {
-            throw TokenError.generalError
-        }
+        let objects = try findObjects(template)
 
         guard !objects.isEmpty else {
             throw TokenError.generalError
@@ -163,10 +218,6 @@ class Token: TokenProtocol, Identifiable {
                 throw TokenError.generalError
             }
         }
-    }
-
-    func getKeys() -> [KeyModel] {
-        return [KeyModel(ckaId: "", type: .gostR3410_2012_256)]
     }
 
     // MARK: - Private API
@@ -196,7 +247,7 @@ class Token: TokenProtocol, Identifiable {
     }
 
     private func getTokenInterfaces() -> (CK_ULONG, CK_ULONG)? {
-        let objectTemplate = [AttributeType.ckaClass(.hwFeature), AttributeType.hwFeatureType].map { $0.attr }
+        let objectTemplate = [AttributeType.objectClass(.hwFeature), AttributeType.hwFeatureType].map { $0.attr }
 
         guard let handle = try? findObjects(objectTemplate).first else {
             return nil
@@ -240,7 +291,7 @@ class Token: TokenProtocol, Identifiable {
         var template = attributes
         var rv = C_FindObjectsInit(session, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
-            throw TokenError.generalError
+            throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
         }
         defer {
             C_FindObjectsFinal(self.session)
@@ -255,7 +306,7 @@ class Token: TokenProtocol, Identifiable {
 
             rv = C_FindObjects(self.session, &handles, maxCount, &count)
             guard rv == CKR_OK else {
-                throw TokenError.generalError
+                throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
             }
 
             objects += handles.prefix(Int(count))
@@ -267,11 +318,11 @@ class Token: TokenProtocol, Identifiable {
 
 extension Token {
     func getPublicKeyTemplate(with id: String) -> [CK_ATTRIBUTE] {
-        var template: [AttributeType] = [.ckaClass(.publicKey), .keyType,
+        var template: [AttributeType] = [.objectClass(.publicKey), .keyType,
                                          .attrTrue(CKA_TOKEN), .attrFalse(CKA_PRIVATE),
                                          .gostR3410_2012_256_params, .gostR3411_2012_256_params]
         id.withCString {
-            template.append(.ckaId(UnsafeMutableRawPointer(mutating: $0), UInt(id.count)))
+            template.append(.id(UnsafeMutableRawPointer(mutating: $0), UInt(id.count)))
         }
         return template.map {
             $0.attr
@@ -279,11 +330,11 @@ extension Token {
     }
 
     func getPrivateKeyTemplate(with id: String) -> [CK_ATTRIBUTE] {
-        var template: [AttributeType] = [.ckaClass(.privateKey), .keyType,
+        var template: [AttributeType] = [.objectClass(.privateKey), .keyType,
                                          .attrTrue(CKA_TOKEN), .attrTrue(CKA_PRIVATE), .attrTrue(CKA_DERIVE),
                                          .gostR3410_2012_256_params, .gostR3411_2012_256_params]
         id.withCString {
-            template.append(.ckaId(UnsafeMutableRawPointer(mutating: $0), UInt(id.count)))
+            template.append(.id(UnsafeMutableRawPointer(mutating: $0), UInt(id.count)))
         }
         return template.map {
             $0.attr

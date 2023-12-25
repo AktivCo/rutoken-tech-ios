@@ -6,6 +6,7 @@
 //
 
 
+private var certObject: CK_OBJECT_CLASS = CKO_CERTIFICATE
 private var publicKeyObject: CK_OBJECT_CLASS = CKO_PUBLIC_KEY
 private var privateKeyObject: CK_OBJECT_CLASS = CKO_PRIVATE_KEY
 private var hwFeatureObject: CK_OBJECT_CLASS = CKO_HW_FEATURE
@@ -13,6 +14,7 @@ private var hwFeatureObject: CK_OBJECT_CLASS = CKO_HW_FEATURE
 var hardwareFeatureType: CK_HW_FEATURE_TYPE = CKH_VENDOR_TOKEN_INFO
 
 var keyTypeGostR3410_2012_256: CK_KEY_TYPE = CKK_GOSTR3410
+var certTypeX509: CK_CERTIFICATE_TYPE = CKC_X_509
 
 private var attributeTrue = CK_BBOOL(CK_TRUE)
 private var attributeFalse = CK_BBOOL(CK_FALSE)
@@ -22,14 +24,17 @@ var parametersGostR3411_2012_256: [CK_BYTE] = [ 0x06, 0x08, 0x2a, 0x85, 0x03, 0x
 
 enum AttributeType {
     enum ObjectClass {
+        case cert
         case publicKey
         case privateKey
         case hwFeature
     }
 
-    case ckaClass(ObjectClass)
-    case ckaId(UnsafeMutableRawPointer, UInt)
+    case objectClass(ObjectClass)
+    case id(UnsafeMutableRawPointer?, UInt)
+    case value(UnsafeMutableRawPointer?, UInt)
     case keyType
+    case certType
     case attrTrue(UInt)
     case attrFalse(UInt)
     case gostR3410_2012_256_params
@@ -38,8 +43,12 @@ enum AttributeType {
 
     var attr: CK_ATTRIBUTE {
         switch self {
-        case .ckaClass(let object):
+        case .objectClass(let object):
             switch object {
+            case .cert:
+                return CK_ATTRIBUTE(type: CKA_CLASS,
+                                    pValue: &certObject,
+                                    ulValueLen: CK_ULONG(MemoryLayout.size(ofValue: certObject)))
             case .publicKey:
                 return CK_ATTRIBUTE(type: CKA_CLASS,
                                     pValue: &publicKeyObject,
@@ -53,14 +62,22 @@ enum AttributeType {
                                     pValue: &hwFeatureObject,
                                     ulValueLen: CK_ULONG(MemoryLayout.size(ofValue: hwFeatureObject)))
             }
-        case .ckaId(let pointer, let len):
+        case .id(let pointer, let len):
             return CK_ATTRIBUTE(type: CKA_ID,
+                                pValue: pointer,
+                                ulValueLen: CK_ULONG(len))
+        case .value(let pointer, let len):
+            return CK_ATTRIBUTE(type: CKA_VALUE,
                                 pValue: pointer,
                                 ulValueLen: CK_ULONG(len))
         case .keyType:
             return CK_ATTRIBUTE(type: CKA_KEY_TYPE,
                                 pValue: &keyTypeGostR3410_2012_256,
                                 ulValueLen: CK_ULONG(MemoryLayout.size(ofValue: keyTypeGostR3410_2012_256)))
+        case .certType:
+            return CK_ATTRIBUTE(type: CKA_CERTIFICATE_TYPE,
+                                pValue: &certTypeX509,
+                                ulValueLen: CK_ULONG(MemoryLayout.size(ofValue: certTypeX509)))
         case let .attrTrue(type):
             return CK_ATTRIBUTE(type: type,
                                 pValue: &attributeTrue,
