@@ -21,8 +21,9 @@ enum AppAction {
 
     // MARK: Token Selection
     case selectToken(RtTokenType, String)
-    case tokenSelected(TokenInfo)
+    case tokenSelected(TokenInfo, String)
 
     case generateKeyId
-    case generateKeyPair
+    case generateKeyPair(ConnectionType, String, String, String)
+    case finishGenerateKeyPair
 }

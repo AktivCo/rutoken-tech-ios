@@ -68,7 +68,13 @@ struct CaGenerateKeyPairView: View {
 
             Spacer()
             Button {
-                store.send(.generateKeyPair)
+                if let connectedToken = store.state.connectedTokenState.connectedToken,
+                   let pin = store.state.connectedTokenState.pin,
+                   let cakId = store.state.caGenerateKeyPairSate.key?.ckaId {
+                    store.send(.generateKeyPair(connectedToken.connectionType, connectedToken.serial, pin, cakId))
+                } else {
+                    store.send(.showAlert(.unknownError))
+                }
             } label: {
                 if store.state.caGenerateKeyPairSate.inProgress {
                     RtLoadingIndicator(.small)

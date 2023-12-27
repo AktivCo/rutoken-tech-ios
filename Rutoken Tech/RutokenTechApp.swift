@@ -21,7 +21,8 @@ struct RutokenTechApp: App {
         let cryptoManager = CryptoManager(pkcs11Helper: pkcsHelper, pcscHelper: pcscHelper)
 
         let middlewares: [any Middleware<AppAction>] = [
-            OnPerformTokenConnection(cryptoManager: cryptoManager)
+            OnPerformTokenConnection(cryptoManager: cryptoManager),
+            OnPerformGenKeyPair(cryptoManager: cryptoManager)
         ]
 
         store = Store(initialState: AppState(),

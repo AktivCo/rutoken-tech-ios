@@ -7,7 +7,7 @@
 
 
 struct AppState {
-    var caEntryViewState = CaEntryViewState()
+    var connectedTokenState = ConnectedTokenState()
     var routingState = RoutingState()
     var caGenerateKeyPairSate = CaGenerateKeyPairState()
 }

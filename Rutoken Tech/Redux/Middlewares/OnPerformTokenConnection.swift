@@ -19,7 +19,7 @@ class OnPerformTokenConnection: Middleware {
     }
 
     func handle(action: AppAction) -> AsyncStream<AppAction>? {
-        guard case let .selectToken(tokenType, _) = action else {
+        guard case let .selectToken(tokenType, pin) = action else {
             return nil
         }
 
@@ -30,7 +30,7 @@ class OnPerformTokenConnection: Middleware {
                     try await self.cryptoManager.withToken(connectionType: tokenInterface,
                                                            serial: nil, pin: nil) {
                         let info = try await self.cryptoManager.getTokenInfo()
-                        continuation.yield(.tokenSelected(info))
+                        continuation.yield(.tokenSelected(info, pin))
                     }
                     continuation.yield(.hideSheet)
                 } catch CryptoManagerError.incorrectPin(let attemptsLeft) {

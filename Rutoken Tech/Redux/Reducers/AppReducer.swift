@@ -28,8 +28,9 @@ struct AppReducer: Reducer {
             newState.routingState.sheet.isPresented = false
         case .selectToken:
             break
-        case let .tokenSelected(info):
-            newState.caEntryViewState.connectedToken = info
+        case let .tokenSelected(info, pin):
+            newState.connectedTokenState.connectedToken = info
+            newState.connectedTokenState.pin = pin
         case let .showPinInputError(errorText):
             newState.routingState.pinInputError.errorDescription = errorText
         case .hidePinInputError:
@@ -39,6 +40,8 @@ struct AppReducer: Reducer {
                                                           type: .gostR3410_2012_256)
         case .generateKeyPair:
             newState.caGenerateKeyPairSate.inProgress = true
+        case .finishGenerateKeyPair:
+            newState.caGenerateKeyPairSate.inProgress = false
         }
         return newState
     }

@@ -34,8 +34,9 @@
 		7D38D6E02B0E33780045FBAD /* AppReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D38D6DF2B0E33780045FBAD /* AppReducer.swift */; };
 		7D4335892B5567A700A0336A /* String+generateID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4335882B5567A700A0336A /* String+generateID.swift */; };
 		7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5145402AFBD1DB004B6947 /* CaEntryView.swift */; };
+		7D9D3C152B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9D3C142B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift */; };
 		7D9D3C1B2B3C76F000BF2EE1 /* EnumerateKeysTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9D3C1A2B3C76F000BF2EE1 /* EnumerateKeysTests.swift */; };
-		7D9E5A602B0BA55E00E2EAB7 /* CaEntryViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E5A5F2B0BA55E00E2EAB7 /* CaEntryViewState.swift */; };
+		7D9E5A602B0BA55E00E2EAB7 /* ConnectedTokenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E5A5F2B0BA55E00E2EAB7 /* ConnectedTokenState.swift */; };
 		7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */; };
 		7DCC9AF12B3B2C9A002788B5 /* KeyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCC9AF02B3B2C9A002788B5 /* KeyModel.swift */; };
 		7DEBBDD62B3B1FCE00C35BA5 /* WithTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DEBBDD52B3B1FCE00C35BA5 /* WithTokenTests.swift */; };
@@ -94,8 +95,9 @@
 		7D38D6DF2B0E33780045FBAD /* AppReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReducer.swift; sourceTree = "<group>"; };
 		7D4335882B5567A700A0336A /* String+generateID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+generateID.swift"; sourceTree = "<group>"; };
 		7D5145402AFBD1DB004B6947 /* CaEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaEntryView.swift; sourceTree = "<group>"; };
+		7D9D3C142B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnPerformGenKeyPair.swift; sourceTree = "<group>"; };
 		7D9D3C1A2B3C76F000BF2EE1 /* EnumerateKeysTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumerateKeysTests.swift; sourceTree = "<group>"; };
-		7D9E5A5F2B0BA55E00E2EAB7 /* CaEntryViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaEntryViewState.swift; sourceTree = "<group>"; };
+		7D9E5A5F2B0BA55E00E2EAB7 /* ConnectedTokenState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedTokenState.swift; sourceTree = "<group>"; };
 		7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+isPhone.swift"; sourceTree = "<group>"; };
 		7DCC9AF02B3B2C9A002788B5 /* KeyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyModel.swift; sourceTree = "<group>"; };
 		7DEBBDD52B3B1FCE00C35BA5 /* WithTokenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithTokenTests.swift; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				5EF30EDD2B1A823700E48627 /* OnPerformTokenConnection.swift */,
+				7D9D3C142B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift */,
 			);
 			path = Middlewares;
 			sourceTree = "<group>";
@@ -254,7 +257,7 @@
 			children = (
 				D42178022B1F0EAF00D08948 /* RoutingState.swift */,
 				7D38D6D92B0E2C190045FBAD /* AppState.swift */,
-				7D9E5A5F2B0BA55E00E2EAB7 /* CaEntryViewState.swift */,
+				7D9E5A5F2B0BA55E00E2EAB7 /* ConnectedTokenState.swift */,
 				7D28BD812B3082990079AE1C /* CaGenerateKeyPairState.swift */,
 			);
 			path = States;
@@ -546,10 +549,11 @@
 				7D2021472AEC16E8003E2B73 /* IpadRootView.swift in Sources */,
 				7D28BD842B3083460079AE1C /* CaGenerateKeyPairView.swift in Sources */,
 				7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */,
-				7D9E5A602B0BA55E00E2EAB7 /* CaEntryViewState.swift in Sources */,
+				7D9E5A602B0BA55E00E2EAB7 /* ConnectedTokenState.swift in Sources */,
 				D42178032B1F0EAF00D08948 /* RoutingState.swift in Sources */,
 				5EF30EDE2B1A823700E48627 /* OnPerformTokenConnection.swift in Sources */,
 				D4B130B32B0DD52A00AD390F /* Token.swift in Sources */,
+				7D9D3C152B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift in Sources */,
 				5EF30EE02B1A840800E48627 /* TokenInterface.swift in Sources */,
 				7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */,
 				D4B130AB2B0CFD7300AD390F /* TokenInfo.swift in Sources */,

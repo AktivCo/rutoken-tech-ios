@@ -147,7 +147,7 @@ struct CaEntryView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 0) {
-                if store.state.caEntryViewState.connectedToken != nil {
+                if store.state.connectedTokenState.connectedToken != nil {
                     Button(action: {
                     }, label: {
                         Text("Выйти")
@@ -167,7 +167,7 @@ struct CaEntryView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.top, 5)
                     .padding(.bottom, 12)
-                if let connectedToken = store.state.caEntryViewState.connectedToken {
+                if let connectedToken = store.state.connectedTokenState.connectedToken {
                     connectedTokenView(connectedToken)
                 } else {
                     disconnectedTokenView()
@@ -198,7 +198,7 @@ struct CaEntryView_Previews: PreviewProvider {
                               model: .rutoken3Nfc,
                               connectionType: .nfc,
                               type: .sc)
-        let state = AppState(caEntryViewState: CaEntryViewState(connectedToken: token))
+        let state = AppState(connectedTokenState: ConnectedTokenState(connectedToken: token))
         let testStore = Store(initialState: state,
                               reducer: AppReducer(),
                               middlewares: [])
