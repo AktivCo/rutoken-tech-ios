@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 import TinyAsyncRedux
 
@@ -18,10 +19,13 @@ struct AppReducer: Reducer {
             newState.routingState.alert = appAlert.alertModel
         case .hideAlert:
             newState.routingState.alert = nil
-        case let .showSheet(sheet):
-            newState.routingState.sheet = sheet
+        case let .showSheet(draggable, size, content):
+            newState.routingState.sheet.isDraggable = draggable
+            newState.routingState.sheet.size = size
+            newState.routingState.sheet.content = AnyView(content)
+            newState.routingState.sheet.isPresented = true
         case .hideSheet:
-            newState.routingState.sheet = nil
+            newState.routingState.sheet.isPresented = false
         case .selectToken:
             break
         case let .tokenSelected(info):

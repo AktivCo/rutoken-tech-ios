@@ -5,6 +5,8 @@
 //  Created by Ivan Poderegin on 22.11.2023.
 //
 
+import SwiftUI
+
 import RtUiComponents
 
 
@@ -12,7 +14,7 @@ enum AppAction {
     // MARK: Errors and Alerts
     case showAlert(AppAlert)
     case hideAlert
-    case showSheet(SheetData)
+    case showSheet(Bool, RtSheetSize, any View)
     case hideSheet
     case showPinInputError(String)
     case hidePinInputError

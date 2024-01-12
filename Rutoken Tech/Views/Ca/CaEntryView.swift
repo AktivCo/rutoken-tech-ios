@@ -47,7 +47,7 @@ struct CaEntryView: View {
         .padding(.horizontal, 12)
     }
 
-    func activeRow(_ label: String, callback: @escaping () -> Void) -> some View {
+    func actionRow(_ label: String, callback: @escaping () -> Void) -> some View {
         HStack(spacing: 0) {
             Text(label)
                 .font(.body)
@@ -78,17 +78,15 @@ struct CaEntryView: View {
             .listStyle()
 
             VStack(spacing: 0) {
-                activeRow("Сгенерировать ключевую пару") {
+                actionRow("Сгенерировать ключевую пару") {
                     store.send(.generateKeyId)
-                    store.send(.showSheet(
-                        SheetData(isDraggable: true,
-                                  size: UIDevice.isPhone ? .smallPhone : .ipad(width: 540, height: 640),
-                                  content: AnyView(CaGenerateKeyPairView().environmentObject(store)))))
+                    store.send(.showSheet(true, UIDevice.isPhone ? .smallPhone : .ipad(width: 540, height: 640), {
+                        CaGenerateKeyPairView().environmentObject(store)
+                    }()))
                 }
                 Divider()
                     .padding(.horizontal, 12)
-                activeRow("Выпустить тестовый сертификат") {
-                }
+                actionRow("Выпустить тестовый сертификат") {}
             }
             .listStyle()
         }
@@ -128,14 +126,12 @@ struct CaEntryView: View {
                 .padding(.bottom, 8)
 
             Button {
-                store.send(.showSheet(
-                    .init(isDraggable: false,
-                          size: UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640),
-                          content: AnyView(
-                            RtAuthView(defaultPinGetter: { "12345678" },
-                                       onSubmit: { tokenType, pin in store.send(.selectToken(tokenType, pin)) },
-                                       onCancel: { store.send(.hideSheet) })
-                            .environmentObject(store.state.routingState.pinInputError)))))
+                store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
+                    RtAuthView(defaultPinGetter: { "12345678" },
+                               onSubmit: { tokenType, pin in store.send(.selectToken(tokenType, pin)) },
+                               onCancel: { store.send(.hideSheet) })
+                    .environmentObject(store.state.routingState.pinInputError)
+                }()))
             } label: {
                 Text("Подключить")
                     .tint(Color("colorsSecondary"))

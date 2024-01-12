@@ -24,26 +24,9 @@ struct RootView: View {
                 IpadRootView()
             }
         }
-        .rtSheet(isPresented: Binding(
-            get: { store.state.routingState.sheet != nil },
-            set: { newValue in
-                if !newValue {
-                    store.send(.hideSheet)
-                }
-            }),
-                 size: store.state.routingState.sheet?.size ?? .largePhone,
-                 isDraggable: store.state.routingState.sheet?.isDraggable ?? true) {
-            store.state.routingState.sheet?.content ?? AnyView(EmptyView())
-        }
-        .rtAlert(isPresented: Binding(
-            get: { store.state.routingState.alert != nil },
-            set: { newValue in
-                if !newValue {
-                    store.send(.hideAlert)
-                }
-            }),
-                 alertData: store.state.routingState.alert ?? AppAlert.unknownError.alertModel
-        )
+        .rtSheet(sheetModel: store.state.routingState.sheet)
+        .rtAlert(alertModel: Binding(get: { store.state.routingState.alert },
+                                     set: { if $0 == nil { store.send(.hideAlert) } }))
     }
 }
 
