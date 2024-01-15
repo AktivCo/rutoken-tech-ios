@@ -33,6 +33,8 @@ class OnPerformGenKeyPair: Middleware {
                                                       serial: serial,
                                                       pin: pin) {
                         try await cryptoManager.generateKeyPair(with: id)
+                        let keys = try await self.cryptoManager.enumerateKeys()
+                        continuation.yield(.updateKeys(keys))
                     }
 
                     continuation.yield(.showAlert(.keyGenerated))

@@ -52,25 +52,51 @@ enum SubjectEntryTitle: String, CaseIterable {
     }
 }
 
+extension SubjectEntryTitle {
+    var defaultValueForModel: String {
+        switch self {
+        case .commonName:
+            return ""
+        case .email:
+            return "ivanova_ekaterina@rutoken.ru"
+        case .organizationName:
+            return "АО \"Актив Софт\""
+        case .ogrn:
+            return "1037700094541"
+        case .organizationUnitName:
+            return "Аналитика"
+        case .title:
+            return "Руководитель отдела"
+        case .snils:
+            return "123-456-789 00"
+        case .inn:
+            return "7729361030"
+        case .countryName:
+            return "Россия"
+        case .stateOrProvinceName:
+            return "Москва"
+        case .localityName:
+            return "г. Москва"
+        case .streetAddress:
+            return "Шарикоподшипниковская ул, д. 1"
+        }
+    }
+}
+
 struct CsrModel {
     var subjects: [SubjectEntryTitle: String]
 }
 
 extension CsrModel {
     static func makeDefaultModel() -> CsrModel {
-        .init(subjects: [
-            .commonName: "Rutech Test Name",
-            .email: "ivanova_ekaterina@rutoken.ru",
-            .organizationName: "АО \"Актив Софт\"",
-            .ogrn: "1037700094541",
-            .organizationUnitName: "Аналитика",
-            .title: "Руководитель отдела",
-            .snils: "12345678900", // "123-456-789 00"
-            .inn: "7729361030",
-            .countryName: "RU",
-            .stateOrProvinceName: "Москва",
-            .localityName: "г. Москва",
-            .streetAddress: "Шарикоподшипниковская ул, д. 1"
-        ])
+        var tmp: [SubjectEntryTitle: String] = [:]
+        SubjectEntryTitle.allCases.forEach {
+            if $0 == .snils {
+                tmp[$0] = $0.defaultValueForModel.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "")
+            } else {
+                tmp[$0] = $0.defaultValueForModel
+            }
+        }
+        return CsrModel(subjects: tmp)
     }
 }

@@ -48,19 +48,20 @@ struct CaEntryView: View {
     }
 
     func actionRow(_ label: String, callback: @escaping () -> Void) -> some View {
-        HStack(spacing: 0) {
-            Text(label)
-                .font(.body)
-                .foregroundStyle(Color("labelPrimary"))
-            Spacer()
-            Image(systemName: "chevron.right")
-                .fontWeight(.semibold)
-                .foregroundStyle(Color("otherChevron"))
-        }
-        .frame(height: 44)
-        .padding(.horizontal, 12)
-        .onTapGesture {
+        Button {
             callback()
+        } label: {
+            HStack(spacing: 0) {
+                Text(label)
+                    .font(.body)
+                    .foregroundStyle(Color("labelPrimary"))
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Color("otherChevron"))
+            }
+            .frame(height: 44)
+            .padding(.horizontal, 12)
         }
     }
 
@@ -86,7 +87,19 @@ struct CaEntryView: View {
                 }
                 Divider()
                     .padding(.horizontal, 12)
-                actionRow("Выпустить тестовый сертификат") {}
+                actionRow("Выпустить тестовый сертификат") {
+                    if store.state.caGenerateCertState.keys.isEmpty {
+                        store.send(.showSheet(true, UIDevice.isPhone ? .smallPhone : .ipad(width: 540, height: 640), {
+                            CaEmptyKeysCertView()
+                                .environmentObject(store)
+                        }()))
+                    } else {
+                        store.send(.showSheet(true, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 720), {
+                            CaCertGenView()
+                                .environmentObject(store)
+                        }()))
+                    }
+                }
             }
             .listStyle()
         }

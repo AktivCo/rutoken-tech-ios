@@ -28,9 +28,11 @@ class OnPerformTokenConnection: Middleware {
             Task {
                 do {
                     try await self.cryptoManager.withToken(connectionType: tokenInterface,
-                                                           serial: nil, pin: nil) {
+                                                           serial: nil, pin: pin) {
                         let info = try await self.cryptoManager.getTokenInfo()
                         continuation.yield(.tokenSelected(info, pin))
+                        let keys = try await self.cryptoManager.enumerateKeys()
+                        continuation.yield(.updateKeys(keys))
                     }
                     continuation.yield(.hideSheet)
                 } catch CryptoManagerError.incorrectPin(let attemptsLeft) {

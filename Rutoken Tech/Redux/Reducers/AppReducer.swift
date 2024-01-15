@@ -42,6 +42,8 @@ struct AppReducer: Reducer {
             newState.caGenerateKeyPairSate.inProgress = true
         case .finishGenerateKeyPair:
             newState.caGenerateKeyPairSate.inProgress = false
+        case .updateKeys(let keys):
+            newState.caGenerateCertState.keys = keys
         }
         return newState
     }

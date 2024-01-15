@@ -26,4 +26,5 @@ enum AppAction {
     case generateKeyId
     case generateKeyPair(ConnectionType, String, String, String)
     case finishGenerateKeyPair
+    case updateKeys([KeyModel])
 }

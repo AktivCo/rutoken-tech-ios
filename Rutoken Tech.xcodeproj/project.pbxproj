@@ -51,8 +51,12 @@
 		D42178192B205FD700D08948 /* AppAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42178182B205FD700D08948 /* AppAlert.swift */; };
 		D423F8BF2B3574BB0058ECDE /* GetTokenInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D423F8BE2B3574BB0058ECDE /* GetTokenInfoTests.swift */; };
 		D423F8C12B3574EC0058ECDE /* GenerateKeyPairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D423F8C02B3574EC0058ECDE /* GenerateKeyPairTests.swift */; };
+		D437117D2B67A70A00441FBC /* SizeReaderViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D437117C2B67A70A00441FBC /* SizeReaderViewModifier.swift */; };
 		D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */; };
 		D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F52AEA796E00B0AB64 /* RtAppTab.swift */; };
+		D455FCAE2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D455FCAD2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift */; };
+		D49953BE2B55209E00E62B5B /* CaCertGenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49953BD2B55209E00E62B5B /* CaCertGenView.swift */; };
+		D49953C52B58343200E62B5B /* CaGenerateCertState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49953C42B58343200E62B5B /* CaGenerateCertState.swift */; };
 		D4B130A82B0CFD2F00AD390F /* CryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */; };
 		D4B130AB2B0CFD7300AD390F /* TokenInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130AA2B0CFD7300AD390F /* TokenInfo.swift */; };
 		D4B130B02B0CFFCD00AD390F /* TokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130AF2B0CFFCD00AD390F /* TokenModel.swift */; };
@@ -68,6 +72,7 @@
 		D4F4FDEC2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F4FDEB2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift */; };
 		D4F7CD772B32D1DA00764787 /* AnyCancellable+store.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F7CD762B32D1DA00764787 /* AnyCancellable+store.swift */; };
 		D4FC26C92B270C580029060D /* NfcMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FC26C82B270C580029060D /* NfcMessages.swift */; };
+		D4FEB5C72B62675400D3BAD2 /* ScrollViewOffset.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FEB5C62B62675400D3BAD2 /* ScrollViewOffset.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -120,8 +125,12 @@
 		D42178182B205FD700D08948 /* AppAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlert.swift; sourceTree = "<group>"; };
 		D423F8BE2B3574BB0058ECDE /* GetTokenInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTokenInfoTests.swift; sourceTree = "<group>"; };
 		D423F8C02B3574EC0058ECDE /* GenerateKeyPairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateKeyPairTests.swift; sourceTree = "<group>"; };
+		D437117C2B67A70A00441FBC /* SizeReaderViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeReaderViewModifier.swift; sourceTree = "<group>"; };
 		D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IphoneRootView.swift; sourceTree = "<group>"; };
 		D44997F52AEA796E00B0AB64 /* RtAppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtAppTab.swift; sourceTree = "<group>"; };
+		D455FCAD2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaEmptyKeysCertView.swift; sourceTree = "<group>"; };
+		D49953BD2B55209E00E62B5B /* CaCertGenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaCertGenView.swift; sourceTree = "<group>"; };
+		D49953C42B58343200E62B5B /* CaGenerateCertState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaGenerateCertState.swift; sourceTree = "<group>"; };
 		D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoManager.swift; sourceTree = "<group>"; };
 		D4B130AA2B0CFD7300AD390F /* TokenInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenInfo.swift; sourceTree = "<group>"; };
 		D4B130AF2B0CFFCD00AD390F /* TokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenModel.swift; sourceTree = "<group>"; };
@@ -139,6 +148,7 @@
 		D4F4FDEB2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+LinuxFulfillment.swift"; sourceTree = "<group>"; };
 		D4F7CD762B32D1DA00764787 /* AnyCancellable+store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnyCancellable+store.swift"; sourceTree = "<group>"; };
 		D4FC26C82B270C580029060D /* NfcMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NfcMessages.swift; sourceTree = "<group>"; };
+		D4FEB5C62B62675400D3BAD2 /* ScrollViewOffset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewOffset.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -295,6 +305,8 @@
 			children = (
 				7D5145402AFBD1DB004B6947 /* CaEntryView.swift */,
 				7D28BD832B3083460079AE1C /* CaGenerateKeyPairView.swift */,
+				D49953BD2B55209E00E62B5B /* CaCertGenView.swift */,
+				D455FCAD2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift */,
 			);
 			path = Ca;
 			sourceTree = "<group>";
@@ -306,6 +318,7 @@
 				7D38D6D92B0E2C190045FBAD /* AppState.swift */,
 				7D9E5A5F2B0BA55E00E2EAB7 /* ConnectedTokenState.swift */,
 				7D28BD812B3082990079AE1C /* CaGenerateKeyPairState.swift */,
+				D49953C42B58343200E62B5B /* CaGenerateCertState.swift */,
 			);
 			path = States;
 			sourceTree = "<group>";
@@ -426,6 +439,8 @@
 			children = (
 				D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */,
 				441658462B5988F000225948 /* WrappedPointer.swift */,
+				D4FEB5C62B62675400D3BAD2 /* ScrollViewOffset.swift */,
+				D437117C2B67A70A00441FBC /* SizeReaderViewModifier.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -582,9 +597,11 @@
 				5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */,
 				4469F7882B34512E000DCF8B /* AttributeType.swift in Sources */,
 				D4FC26C92B270C580029060D /* NfcMessages.swift in Sources */,
+				D437117D2B67A70A00441FBC /* SizeReaderViewModifier.swift in Sources */,
 				44416B2F2B555F4500EC5F66 /* CertRequest.swift in Sources */,
 				D4D46A0F2B3038F60005981A /* Atomic+propertywrapper.swift in Sources */,
 				4464FAA82B359ED5005F732F /* Pkcs11Object.swift in Sources */,
+				D49953BE2B55209E00E62B5B /* CaCertGenView.swift in Sources */,
 				D4B130B52B0DDB2200AD390F /* Pkcs11Helper.swift in Sources */,
 				4413CFAF2B590379000987A8 /* Rutoken_Tech-Bridging-Header.m in Sources */,
 				7D4335892B5567A700A0336A /* String+generateID.swift in Sources */,
@@ -600,6 +617,8 @@
 				D4DC1FCF2B61669800D53AE6 /* String+createPointer.swift in Sources */,
 				D4F7CD772B32D1DA00764787 /* AnyCancellable+store.swift in Sources */,
 				7D2021472AEC16E8003E2B73 /* IpadRootView.swift in Sources */,
+				D4FEB5C72B62675400D3BAD2 /* ScrollViewOffset.swift in Sources */,
+				D49953C52B58343200E62B5B /* CaGenerateCertState.swift in Sources */,
 				7D28BD842B3083460079AE1C /* CaGenerateKeyPairView.swift in Sources */,
 				7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */,
 				7D9E5A602B0BA55E00E2EAB7 /* ConnectedTokenState.swift in Sources */,
@@ -609,6 +628,7 @@
 				D4B130B32B0DD52A00AD390F /* Token.swift in Sources */,
 				7D9D3C152B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift in Sources */,
 				5EF30EE02B1A840800E48627 /* TokenInterface.swift in Sources */,
+				D455FCAE2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift in Sources */,
 				7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */,
 				4413CFB22B592EDE000987A8 /* String+hasCyrillic.swift in Sources */,
 				D4B130AB2B0CFD7300AD390F /* TokenInfo.swift in Sources */,
@@ -925,7 +945,7 @@
 			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-ui-components.git";
 			requirement = {
 				kind = revision;
-				revision = 0f09c22c0ed9509d85f4a2f812421393c6298c86;
+				revision = 3198006c6fad1929f4a56d08bf0de91a52abdc71;
 			};
 		};
 		5ED8B92A2ACD8EA100BCFC20 /* XCRemoteSwiftPackageReference "tiny-redux" */ = {

@@ -10,4 +10,5 @@ struct AppState {
     var connectedTokenState = ConnectedTokenState()
     var routingState = RoutingState()
     var caGenerateKeyPairSate = CaGenerateKeyPairState()
+    var caGenerateCertState = CaGenerateCertState()
 }

@@ -33,6 +33,7 @@ struct CaGenerateKeyPairView: View {
                 Text("Ключевая пара")
                     .font(.title3)
                     .fontWeight(.semibold)
+                    .padding(.top, 2.5)
                 Spacer()
                 Button {
                     store.send(.hideSheet)
@@ -48,6 +49,7 @@ struct CaGenerateKeyPairView: View {
             }
             .padding(.horizontal, 20)
             .padding(.bottom, 12)
+            .padding(.top, 14)
 
             VStack(spacing: 0) {
                 infoRow(label: "ID",
@@ -87,7 +89,7 @@ struct CaGenerateKeyPairView: View {
                         .padding(.vertical, 15)
                 }
             }
-            .frame(width: 350, alignment: .center)
+            .frame(maxWidth: UIDevice.isPhone ? .infinity : 350)
             .background { Color("colorsPrimary100") }
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.horizontal, 20)
