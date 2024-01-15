@@ -86,8 +86,10 @@ class CryptoManager: CryptoManagerProtocol {
             connectedToken = try await waitForToken(with: connectionType)
             defer { connectedToken = nil }
 
-            guard connectedToken?.serial == serial else {
-                throw CryptoManagerError.wrongToken
+            if let serial {
+                guard connectedToken?.serial == serial else {
+                    throw CryptoManagerError.wrongToken
+                }
             }
 
             if let pin {
