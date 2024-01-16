@@ -14,6 +14,7 @@ enum OpenSslError: Error {
 
 protocol OpenSslHelperProtocol {
     func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String
+    func createCert(for csr: String, with key: String) throws -> String
 }
 
 class OpenSslHelper: OpenSslHelperProtocol {
@@ -108,6 +109,9 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         return bioToString(bio: bio)
+    }
+    func createCert(for csr: String, with key: String) throws -> String {
+        return ""
     }
 
     private func bioToString(bio: OpaquePointer) -> String {

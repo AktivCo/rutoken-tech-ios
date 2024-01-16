@@ -29,11 +29,12 @@ protocol TokenProtocol {
     func importCert(_ cert: String, for id: String) throws
 }
 
-enum TokenError: Error {
+enum TokenError: Error, Equatable {
     case incorrectPin(attemptsLeft: UInt)
     case lockedPin
     case generalError
     case tokenDisconnected
+    case keyNotFound
 }
 
 class Token: TokenProtocol, Identifiable {
@@ -204,7 +205,7 @@ class Token: TokenProtocol, Identifiable {
 
     func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer> {
         guard let keyPair = try enumerateKeys(by: id).first else {
-            throw TokenError.generalError
+            throw TokenError.keyNotFound
         }
 
         guard let evpPKey = try? engine.wrapKeys(with: session,
@@ -289,7 +290,7 @@ class Token: TokenProtocol, Identifiable {
         var certHandle = CK_OBJECT_HANDLE()
         let rv = C_CreateObject(session, &certTemplate, CK_ULONG(certTemplate.count), &certHandle)
         guard rv == CKR_OK else {
-            throw TokenError.generalError
+            throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
         }
     }
 

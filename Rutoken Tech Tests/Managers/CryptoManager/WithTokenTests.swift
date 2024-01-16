@@ -244,4 +244,18 @@ final class CryptoManagerWithTokenTests: XCTestCase {
              throws: CryptoManagerError.wrongToken)
          await fulfillment(of: [exp1, exp2], timeout: 0.3)
      }
+
+    func testWithTokenKeyNotFoundError() async {
+        let token = TokenMock(serial: "12345678", connectionType: .usb)
+        token.loginCallback = { pin in
+            XCTAssertEqual(pin, "123456")
+        }
+        pkcs11Helper.tokenPublisher.send([token])
+
+        await assertErrorAsync(
+            try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "123456") {
+                throw TokenError.keyNotFound
+            },
+            throws: CryptoManagerError.unknown)
+    }
 }

@@ -77,19 +77,6 @@ class CryptoManager: CryptoManagerProtocol {
         return try token.generateKeyPair(with: id)
     }
 
-    func createCert(for id: String, with info: CsrModel) async throws {
-        guard let token = connectedToken else {
-            throw CryptoManagerError.tokenNotFound
-        }
-
-        guard let keyPair = try token.enumerateKeys(by: id).first else {
-            throw CryptoManagerError.unknown
-        }
-
-        _ = try openSslHelper.createCsr(with: try token.getWrappedKey(with: keyPair.privateKey.id), for: info)
-        // ...
-    }
-
     func importCert(_ cert: String) async throws {}
 
     func withToken(connectionType: ConnectionType,
@@ -141,6 +128,21 @@ class CryptoManager: CryptoManagerProtocol {
         } catch {
             throw CryptoManagerError.unknown
         }
+    }
+
+    func createCert(for id: String, with info: CsrModel) async throws {
+        guard let token = connectedToken else {
+            throw CryptoManagerError.tokenNotFound
+        }
+        let wrappedPrivateKey = try token.getWrappedKey(with: id)
+        let csr = try openSslHelper.createCsr(with: wrappedPrivateKey, for: info)
+
+        guard let caKey = fileHelper.getContent(of: .caKey) else {
+            throw CryptoManagerError.unknown
+        }
+        let cert = try openSslHelper.createCert(for: caKey, with: csr)
+
+        try token.importCert(cert, for: id)
     }
 
     private func waitForToken(with type: ConnectionType) async throws -> TokenProtocol {
