@@ -11,6 +11,7 @@ import Foundation
 protocol Pkcs11Object {
     var id: String { get }
     var body: Data? { get }
+    var handle: CK_OBJECT_HANDLE { get }
 }
 
 extension Pkcs11Object {
@@ -39,8 +40,11 @@ extension Pkcs11Object {
 struct Pkcs11Cert: Pkcs11Object {
     private(set) var id: String = ""
     private(set) var body: Data?
+    private(set) var handle: CK_OBJECT_HANDLE
 
     init?(with handle: CK_OBJECT_HANDLE, _ session: CK_SESSION_HANDLE) {
+        self.handle = handle
+
         guard let dataId = try? getValue(for: AttributeType.id(nil, 0), with: handle, with: session) else {
             return nil
         }
@@ -56,8 +60,10 @@ struct Pkcs11Cert: Pkcs11Object {
 struct Pkcs11PrivateKey: Pkcs11Object {
     private(set) var id: String = ""
     private(set) var body: Data?
+    private(set) var handle: CK_OBJECT_HANDLE
 
     init?(with handle: CK_OBJECT_HANDLE, _ session: CK_SESSION_HANDLE) {
+        self.handle = handle
         guard let dataId = try? getValue(for: AttributeType.id(nil, 0), with: handle, with: session) else {
             return nil
         }
@@ -68,8 +74,10 @@ struct Pkcs11PrivateKey: Pkcs11Object {
 struct Pkcs11PublicKey: Pkcs11Object {
     private(set) var id: String = ""
     private(set) var body: Data?
+    private(set) var handle: CK_OBJECT_HANDLE
 
     init?(with handle: CK_OBJECT_HANDLE, _ session: CK_SESSION_HANDLE) {
+        self.handle = handle
         guard let dataId = try? getValue(for: AttributeType.id(nil, 0), with: handle, with: session) else {
             return nil
         }

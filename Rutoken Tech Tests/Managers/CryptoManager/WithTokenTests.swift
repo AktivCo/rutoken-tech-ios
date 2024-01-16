@@ -16,13 +16,16 @@ final class CryptoManagerWithTokenTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: Pkcs11HelperMock!
     var pcscHelper: PcscHelperMock!
+    var openSslHelper: OpenSslHelperMock!
 
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
         pkcs11Helper = Pkcs11HelperMock()
         pcscHelper = PcscHelperMock()
-        manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper)
+        openSslHelper = OpenSslHelperMock()
+
+        manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper, openSslHelper: openSslHelper)
     }
 
     func testWithTokenUsbSuccess() async {

@@ -31,13 +31,15 @@ enum CryptoManagerError: Error, Equatable {
 class CryptoManager: CryptoManagerProtocol {
     private let pkcs11Helper: Pkcs11HelperProtocol
     private let pcscHelper: PcscHelperProtocol
+    private let openSslHelper: OpenSslHelperProtocol
     private var cancellable = [UUID: AnyCancellable]()
     @Atomic var tokens: [TokenProtocol] = []
     private var connectedToken: TokenProtocol?
 
-    init(pkcs11Helper: Pkcs11HelperProtocol, pcscHelper: PcscHelperProtocol) {
+    init(pkcs11Helper: Pkcs11HelperProtocol, pcscHelper: PcscHelperProtocol, openSslHelper: OpenSslHelperProtocol) {
         self.pkcs11Helper = pkcs11Helper
         self.pcscHelper = pcscHelper
+        self.openSslHelper = openSslHelper
 
         pkcs11Helper.tokens
             .assign(to: \.tokens, on: self)
@@ -57,9 +59,7 @@ class CryptoManager: CryptoManagerProtocol {
             throw CryptoManagerError.tokenNotFound
         }
 
-        return try token.enumerateKeys().map {
-            KeyModel(ckaId: $0.privateKey.id, type: .gostR3410_2012_256)
-        }
+        return try token.enumerateKeys().map { KeyModel(ckaId: $0.privateKey.id, type: .gostR3410_2012_256) }
     }
 
     func generateKeyPair(with id: String) async throws {

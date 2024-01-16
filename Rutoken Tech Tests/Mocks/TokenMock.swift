@@ -9,16 +9,19 @@
 
 
 class TokenMock: TokenProtocol {
-    var slot: CK_SLOT_ID
+    let slot: CK_SLOT_ID
+    let session: CK_SESSION_HANDLE
     let label: String
     let serial: String
     let model: TokenModel
     let type: TokenType
     let connectionType: ConnectionType
 
-    init(slot: CK_SLOT_ID = CK_SLOT_ID(), label: String = "", serial: String = "", model: TokenModel = .rutoken2,
+    init(slot: CK_SLOT_ID = CK_SLOT_ID(), session: CK_SESSION_HANDLE = CK_SESSION_HANDLE(),
+         label: String = "", serial: String = "", model: TokenModel = .rutoken2,
          connectionType: ConnectionType = .nfc, type: TokenType = .usb) {
         self.slot = slot
+        self.session = session
         self.label = label
         self.serial = serial
         self.model = model
@@ -57,4 +60,10 @@ class TokenMock: TokenProtocol {
     func enumerateKeys() throws -> [Pkcs11KeyPair] { try enumerateKeysCallback() }
 
     var enumerateKeysCallback: () throws -> [Pkcs11KeyPair] = { [] }
+
+    func getWrappedKey(with id: String) throws -> WrappedPointer {
+        try getWrappedKeyCallback(id)
+    }
+
+    var getWrappedKeyCallback: (String) throws -> WrappedPointer = { _ in WrappedPointer(ptr: OpaquePointer.init(bitPattern: 1)!, {_ in})}
 }

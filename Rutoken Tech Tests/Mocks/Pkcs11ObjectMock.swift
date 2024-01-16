@@ -13,4 +13,5 @@ import Foundation
 struct Pkcs11ObjectMock: Pkcs11Object {
     let id: String
     let body: Data?
+    let handle: CK_OBJECT_HANDLE
 }

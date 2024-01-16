@@ -14,13 +14,16 @@ final class CryptoManagerEnumerateKeysTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: Pkcs11HelperMock!
     var pcscHelper: PcscHelperMock!
+    var openSslHelper: OpenSslHelperMock!
 
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
         pkcs11Helper = Pkcs11HelperMock()
         pcscHelper = PcscHelperMock()
-        manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper)
+        openSslHelper = OpenSslHelperMock()
+
+        manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper, openSslHelper: openSslHelper)
     }
 
     func testEnumerateKeysConnectionSuccess() async throws {
@@ -30,7 +33,8 @@ final class CryptoManagerEnumerateKeysTests: XCTestCase {
         pkcs11Helper.tokenPublisher.send([token])
 
         token.enumerateKeysCallback = {
-            return [Pkcs11KeyPair(pubKey: Pkcs11ObjectMock(id: testId, body: nil), privateKey: Pkcs11ObjectMock(id: testId, body: nil))]
+            return [Pkcs11KeyPair(pubKey: Pkcs11ObjectMock(id: testId, body: nil, handle: CK_OBJECT_HANDLE()),
+                                  privateKey: Pkcs11ObjectMock(id: testId, body: nil, handle: CK_OBJECT_HANDLE()))]
         }
 
         var result: [KeyModel]?

@@ -24,6 +24,7 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
     public var tokens: AnyPublisher<[TokenProtocol], Never> {
         tokenPublisher.eraseToAnyPublisher()
     }
+
     private let engine: RtEngineWrapperProtocol
 
     init(with engine: RtEngineWrapperProtocol) {
@@ -60,7 +61,7 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
                 var tokens = tokenPublisher.value
                 tokens.removeAll(where: { $0.slot == slot })
 
-                if isPresent(slot), let token = Token(with: slot) {
+                if isPresent(slot), let token = Token(with: slot, engine) {
                     tokens.append(token)
                 }
                 tokenPublisher.send(tokens)
@@ -90,7 +91,7 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
             throw Pkcs11Error.unknownError
         }
 
-        return slots.compactMap { Token(with: $0) }
+        return slots.compactMap { Token(with: $0, engine) }
     }
 
     private func isPresent(_ slot: CK_SLOT_ID) -> Bool {

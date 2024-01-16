@@ -13,6 +13,7 @@ protocol TokenProtocol {
     var model: TokenModel { get }
     var type: TokenType { get }
     var connectionType: ConnectionType { get }
+    var session: CK_SESSION_HANDLE { get }
 
     func login(with pin: String) throws
     func logout()
@@ -22,6 +23,8 @@ protocol TokenProtocol {
 
     func enumerateCerts() throws -> [Pkcs11Cert]
     func enumerateKeys() throws -> [Pkcs11KeyPair]
+
+    func getWrappedKey(with id: String) throws -> WrappedPointer
 }
 
 enum TokenError: Error {
@@ -39,11 +42,13 @@ class Token: TokenProtocol, Identifiable {
     private(set) var model: TokenModel = .rutoken2
     private(set) var connectionType: ConnectionType = .nfc
     private(set) var type: TokenType = .usb
+    private(set) var session = CK_SESSION_HANDLE(NULL_PTR)
 
-    private var session = CK_SESSION_HANDLE(NULL_PTR)
+    private let engine: RtEngineWrapperProtocol
 
-    init?(with slot: CK_SLOT_ID) {
+    init?(with slot: CK_SLOT_ID, _ engine: RtEngineWrapperProtocol) {
         self.slot = slot
+        self.engine = engine
 
         var tokenInfo = CK_TOKEN_INFO()
         var rv = C_GetTokenInfo(slot, &tokenInfo)
@@ -178,6 +183,19 @@ class Token: TokenProtocol, Identifiable {
         }
 
         return keyPairs
+    }
+
+    func getWrappedKey(with id: String) throws -> WrappedPointer {
+        guard let keyPair = try enumerateKeys().first(where: { $0.privateKey.id == id }) else {
+            throw TokenError.generalError
+        }
+
+        guard let evpPKey = try? engine.wrapKeys(with: session,
+                                                 privateKeyHandle: keyPair.privateKey.handle,
+                                                 pubKeyHandle: keyPair.pubKey.handle) else {
+            throw TokenError.generalError
+        }
+        return WrappedPointer(ptr: evpPKey, EVP_PKEY_free)
     }
 
     func generateKeyPair(with id: String) throws {
