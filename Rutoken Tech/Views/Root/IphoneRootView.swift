@@ -26,10 +26,12 @@ struct IphoneRootView: View {
                             Color("surfaceSecondary")
                                 .ignoresSafeArea()
                         }
+                        .ignoresSafeArea(.keyboard)
                 default:
                     Text(tab.rawValue)
                         .tabItem { Label(tab.rawValue, systemImage: tab.imageName) }
                         .tag(tab)
+                        .ignoresSafeArea(.keyboard)
                 }
             }
         }

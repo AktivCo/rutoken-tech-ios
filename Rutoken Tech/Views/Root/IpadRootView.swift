@@ -51,9 +51,11 @@ struct IpadRootView: View {
                         }
                     }
                     .toolbar(.hidden, for: .navigationBar)
+                    .ignoresSafeArea(.keyboard)
                 default:
                     Text(selectedTab.rawValue)
                         .foregroundStyle(Color("labelPrimary"))
+                        .ignoresSafeArea(.keyboard)
                 }
             }
         }
