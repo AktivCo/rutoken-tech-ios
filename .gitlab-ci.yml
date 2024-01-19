@@ -25,7 +25,7 @@ variables:
   VAULT_ADDR: "https://vault.aktivco.ru"
   FOLDER_ARTIFACTS: "artifacts"
   RT_CI_VAGRANT_BOX_NAME: rutoken/macos
-  RT_CI_VAGRANT_BOX_VERSION: 1.6.1
+  RT_CI_VAGRANT_BOX_VERSION: 1.6.3
 
   MATCH_PASSWORD: ""
   KEYCHAIN_PASSWORD: "vagrant"
