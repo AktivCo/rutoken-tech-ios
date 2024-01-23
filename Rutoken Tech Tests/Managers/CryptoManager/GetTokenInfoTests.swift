@@ -16,6 +16,7 @@ class CryptoManagerGetTokenInfoTests: XCTestCase {
     var pkcs11Helper: Pkcs11HelperMock!
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
+    var fileHelper: FileHelperMock!
 
     override func setUp() {
         super.setUp()
@@ -23,8 +24,10 @@ class CryptoManagerGetTokenInfoTests: XCTestCase {
         pkcs11Helper = Pkcs11HelperMock()
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
+        fileHelper = FileHelperMock()
 
-        manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper, openSslHelper: openSslHelper)
+        manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
+                                openSslHelper: openSslHelper, fileHelper: fileHelper)
     }
 
     func testGetTokenInfoConnectionSuccess() async throws {

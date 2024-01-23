@@ -1,0 +1,10 @@
+openssl_conf = openssl_def
+
+[ openssl_def ]
+    engines = engine_section
+
+[ engine_section ]
+    rtengine = gost_section
+
+[ gost_section ]
+    dynamic_path = /path/to/rtengine.xcframework/macos-arm64_x86_64/rtengine.framework/rtengine

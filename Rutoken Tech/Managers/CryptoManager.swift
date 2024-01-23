@@ -32,14 +32,20 @@ class CryptoManager: CryptoManagerProtocol {
     private let pkcs11Helper: Pkcs11HelperProtocol
     private let pcscHelper: PcscHelperProtocol
     private let openSslHelper: OpenSslHelperProtocol
+    private let fileHelper: FileHelperProtocol
+
     private var cancellable = [UUID: AnyCancellable]()
     @Atomic var tokens: [TokenProtocol] = []
     private var connectedToken: TokenProtocol?
 
-    init(pkcs11Helper: Pkcs11HelperProtocol, pcscHelper: PcscHelperProtocol, openSslHelper: OpenSslHelperProtocol) {
+    init(pkcs11Helper: Pkcs11HelperProtocol,
+         pcscHelper: PcscHelperProtocol,
+         openSslHelper: OpenSslHelperProtocol,
+         fileHelper: FileHelperProtocol) {
         self.pkcs11Helper = pkcs11Helper
         self.pcscHelper = pcscHelper
         self.openSslHelper = openSslHelper
+        self.fileHelper = fileHelper
 
         pkcs11Helper.tokens
             .assign(to: \.tokens, on: self)

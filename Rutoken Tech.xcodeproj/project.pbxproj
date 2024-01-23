@@ -18,8 +18,14 @@
 		4464FAA82B359ED5005F732F /* Pkcs11Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464FAA72B359ED5005F732F /* Pkcs11Object.swift */; };
 		44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */; };
 		4469F7882B34512E000DCF8B /* AttributeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4469F7872B34512E000DCF8B /* AttributeType.swift */; };
+		446F71042B62511F00684E0D /* FileHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446F71032B62511F00684E0D /* FileHelperMock.swift */; };
 		447714FC2B57BC04009532DE /* RtUiComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 447714FB2B57BC04009532DE /* RtUiComponents */; };
 		447AFBAA2B205A7000A53B0C /* ConnectionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447AFBA92B205A7000A53B0C /* ConnectionType.swift */; };
+		44A415042B60F67600D78653 /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A415032B60F67600D78653 /* FileHelper.swift */; };
+		44A415252B6106AD00D78653 /* bank.key in Resources */ = {isa = PBXBuildFile; fileRef = 44A415212B6106AD00D78653 /* bank.key */; };
+		44A415262B6106AD00D78653 /* ca.key in Resources */ = {isa = PBXBuildFile; fileRef = 44A415222B6106AD00D78653 /* ca.key */; };
+		44A415272B6106AD00D78653 /* bank.pem in Resources */ = {isa = PBXBuildFile; fileRef = 44A415232B6106AD00D78653 /* bank.pem */; };
+		44A415282B6106AD00D78653 /* ca.pem in Resources */ = {isa = PBXBuildFile; fileRef = 44A415242B6106AD00D78653 /* ca.pem */; };
 		44EED1B62B1F115B0036F8DA /* TokenMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EED1B52B1F115B0036F8DA /* TokenMock.swift */; };
 		44F0323A2B5125BC00466080 /* Pkcs11ObjectMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F032392B5125BC00466080 /* Pkcs11ObjectMock.swift */; };
 		5ED8B92C2ACD8EA100BCFC20 /* TinyAsyncRedux in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B92B2ACD8EA100BCFC20 /* TinyAsyncRedux */; };
@@ -98,7 +104,13 @@
 		4464FAA72B359ED5005F732F /* Pkcs11Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Object.swift; sourceTree = "<group>"; };
 		44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtEngineWrapper.swift; sourceTree = "<group>"; };
 		4469F7872B34512E000DCF8B /* AttributeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeType.swift; sourceTree = "<group>"; };
+		446F71032B62511F00684E0D /* FileHelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHelperMock.swift; sourceTree = "<group>"; };
 		447AFBA92B205A7000A53B0C /* ConnectionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionType.swift; sourceTree = "<group>"; };
+		44A415032B60F67600D78653 /* FileHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
+		44A415212B6106AD00D78653 /* bank.key */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bank.key; sourceTree = "<group>"; };
+		44A415222B6106AD00D78653 /* ca.key */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ca.key; sourceTree = "<group>"; };
+		44A415232B6106AD00D78653 /* bank.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bank.pem; sourceTree = "<group>"; };
+		44A415242B6106AD00D78653 /* ca.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ca.pem; sourceTree = "<group>"; };
 		44EED1B52B1F115B0036F8DA /* TokenMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMock.swift; sourceTree = "<group>"; };
 		44F032392B5125BC00466080 /* Pkcs11ObjectMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11ObjectMock.swift; sourceTree = "<group>"; };
 		5EF30EDD2B1A823700E48627 /* OnPerformTokenConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnPerformTokenConnection.swift; sourceTree = "<group>"; };
@@ -204,6 +216,25 @@
 			path = Engine;
 			sourceTree = "<group>";
 		};
+		446F71022B624F7A00684E0D /* FileHelper */ = {
+			isa = PBXGroup;
+			children = (
+				44A415032B60F67600D78653 /* FileHelper.swift */,
+			);
+			path = FileHelper;
+			sourceTree = "<group>";
+		};
+		44A4151C2B60FDFA00D78653 /* Credentials */ = {
+			isa = PBXGroup;
+			children = (
+				44A415212B6106AD00D78653 /* bank.key */,
+				44A415232B6106AD00D78653 /* bank.pem */,
+				44A415222B6106AD00D78653 /* ca.key */,
+				44A415242B6106AD00D78653 /* ca.pem */,
+			);
+			path = Credentials;
+			sourceTree = "<group>";
+		};
 		5EF30ED92B1A790E00E48627 /* Root */ = {
 			isa = PBXGroup;
 			children = (
@@ -252,6 +283,7 @@
 				D4B130B12B0DD50F00AD390F /* Pkcs11 */,
 				44416B2D2B552CFC00EC5F66 /* OpenSSL */,
 				44435FE32B5EACFC0072A1DD /* Engine */,
+				446F71022B624F7A00684E0D /* FileHelper */,
 				D4B130A92B0CFD6600AD390F /* Models */,
 				D4B130A62B0CFD1B00AD390F /* Managers */,
 				D44997F12AEA6EB500B0AB64 /* Views */,
@@ -259,6 +291,7 @@
 				5EF75DDE2AC707BD001834BE /* RutokenTechApp.swift */,
 				5EF75DE22AC707BD001834BE /* Assets.xcassets */,
 				5EF75DE42AC707BD001834BE /* Preview Content */,
+				44A4151C2B60FDFA00D78653 /* Credentials */,
 				443AF4DD2B10B40500D34150 /* Rutoken_Tech-Bridging-Header.h */,
 				4413CFAE2B590379000987A8 /* Rutoken_Tech-Bridging-Header.m */,
 			);
@@ -405,6 +438,7 @@
 				44EED1B52B1F115B0036F8DA /* TokenMock.swift */,
 				44F032392B5125BC00466080 /* Pkcs11ObjectMock.swift */,
 				4413CFB72B597206000987A8 /* OpenSslHelperMock.swift */,
+				446F71032B62511F00684E0D /* FileHelperMock.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -545,7 +579,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44A415282B6106AD00D78653 /* ca.pem in Resources */,
 				5EF75DE62AC707BD001834BE /* Preview Assets.xcassets in Resources */,
+				44A415262B6106AD00D78653 /* ca.key in Resources */,
+				44A415272B6106AD00D78653 /* bank.pem in Resources */,
+				44A415252B6106AD00D78653 /* bank.key in Resources */,
 				5EF75DE32AC707BD001834BE /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -596,6 +634,7 @@
 				7DCC9AF12B3B2C9A002788B5 /* KeyModel.swift in Sources */,
 				5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */,
 				4469F7882B34512E000DCF8B /* AttributeType.swift in Sources */,
+				44A415042B60F67600D78653 /* FileHelper.swift in Sources */,
 				D4FC26C92B270C580029060D /* NfcMessages.swift in Sources */,
 				D437117D2B67A70A00441FBC /* SizeReaderViewModifier.swift in Sources */,
 				44416B2F2B555F4500EC5F66 /* CertRequest.swift in Sources */,
@@ -640,6 +679,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D423F8C12B3574EC0058ECDE /* GenerateKeyPairTests.swift in Sources */,
+				446F71042B62511F00684E0D /* FileHelperMock.swift in Sources */,
 				D4B130DA2B0E51FE00AD390F /* PcscHelperMock.swift in Sources */,
 				D4B130C72B0E37F200AD390F /* Pkcs11HelperMock.swift in Sources */,
 				44EED1B62B1F115B0036F8DA /* TokenMock.swift in Sources */,
