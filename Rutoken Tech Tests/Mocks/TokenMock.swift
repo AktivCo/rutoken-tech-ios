@@ -53,15 +53,15 @@ class TokenMock: TokenProtocol {
 
     func deleteKeyPair(with id: String) throws {}
 
-    func enumerateCerts() throws -> [Pkcs11Cert] { try enumerateCertsCallback() }
+    func enumerateCerts(by id: String?) throws -> [Pkcs11Cert] { try enumerateCertsCallback(nil) }
 
-    var enumerateCertsCallback: () throws -> [Pkcs11Cert] = { [] }
+    var enumerateCertsCallback: (_ id: String?) throws -> [Pkcs11Cert] = { _ in [] }
 
-    func enumerateKeys() throws -> [Pkcs11KeyPair] { try enumerateKeysCallback() }
+    func enumerateKeys(by id: String?) throws -> [Pkcs11KeyPair] { try enumerateKeysCallback(nil) }
 
-    var enumerateKeysCallback: () throws -> [Pkcs11KeyPair] = { [] }
+    var enumerateKeysCallback: (_ id: String?) throws -> [Pkcs11KeyPair] = { _ in [] }
 
-    func getWrappedKey(with id: String) throws -> WrappedPointer {
+    func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer> {
         try getWrappedKeyCallback(id)
     }
 

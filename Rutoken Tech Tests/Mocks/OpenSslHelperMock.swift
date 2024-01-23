@@ -9,9 +9,9 @@
 
 
 class OpenSslHelperMock: OpenSslHelperProtocol {
-    func createCsr(with wrappedKey: WrappedPointer, for request: CsrModel) throws -> String {
+    func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String {
         try createCsrCallback(wrappedKey, request)
     }
 
-    var createCsrCallback: (WrappedPointer, CsrModel) throws -> String = { _, _ in "" }
+    var createCsrCallback: (WrappedPointer<OpaquePointer>, CsrModel) throws -> String = { _, _ in "" }
 }

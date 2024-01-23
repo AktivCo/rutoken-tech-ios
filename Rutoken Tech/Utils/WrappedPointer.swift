@@ -5,11 +5,11 @@
 //  Created by Vova Badyaev on 18.01.2024.
 //
 
-class WrappedPointer {
-    let pointer: OpaquePointer
-    private let destructor: (OpaquePointer) -> Void
+class WrappedPointer<T> {
+    let pointer: T
+    private let destructor: (T) -> Void
 
-    init(ptr: OpaquePointer, _ destructor: @escaping (OpaquePointer) -> Void) {
+    init(ptr: T, _ destructor: @escaping (T) -> Void) {
         self.pointer = ptr
         self.destructor = destructor
     }

@@ -64,6 +64,7 @@
 		D4B130DA2B0E51FE00AD390F /* PcscHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */; };
 		D4D46A0F2B3038F60005981A /* Atomic+propertywrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */; };
 		D4D9C9DA2B2306F900DA702C /* RtPcscWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = D4D9C9D92B2306F900DA702C /* RtPcscWrapper */; };
+		D4DC1FCF2B61669800D53AE6 /* String+createPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC1FCE2B61669800D53AE6 /* String+createPointer.swift */; };
 		D4F4FDEC2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F4FDEB2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift */; };
 		D4F7CD772B32D1DA00764787 /* AnyCancellable+store.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F7CD762B32D1DA00764787 /* AnyCancellable+store.swift */; };
 		D4FC26C92B270C580029060D /* NfcMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FC26C82B270C580029060D /* NfcMessages.swift */; };
@@ -134,6 +135,7 @@
 		D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcscHelperMock.swift; sourceTree = "<group>"; };
 		D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Atomic+propertywrapper.swift"; sourceTree = "<group>"; };
 		D4D9C9E62B2328B600DA702C /* Rutoken Tech.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Rutoken Tech.entitlements"; sourceTree = "<group>"; };
+		D4DC1FCE2B61669800D53AE6 /* String+createPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+createPointer.swift"; sourceTree = "<group>"; };
 		D4F4FDEB2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+LinuxFulfillment.swift"; sourceTree = "<group>"; };
 		D4F7CD762B32D1DA00764787 /* AnyCancellable+store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnyCancellable+store.swift"; sourceTree = "<group>"; };
 		D4FC26C82B270C580029060D /* NfcMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NfcMessages.swift; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 				7D4335882B5567A700A0336A /* String+generateID.swift */,
 				4413CFB12B592EDE000987A8 /* String+hasCyrillic.swift */,
 				4413CFB32B592F13000987A8 /* String+isNumber.swift */,
+				D4DC1FCE2B61669800D53AE6 /* String+createPointer.swift */,
 			);
 			path = String;
 			sourceTree = "<group>";
@@ -594,6 +597,7 @@
 				7D28BD822B3082990079AE1C /* CaGenerateKeyPairState.swift in Sources */,
 				D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */,
 				7D38D6E02B0E33780045FBAD /* AppReducer.swift in Sources */,
+				D4DC1FCF2B61669800D53AE6 /* String+createPointer.swift in Sources */,
 				D4F7CD772B32D1DA00764787 /* AnyCancellable+store.swift in Sources */,
 				7D2021472AEC16E8003E2B73 /* IpadRootView.swift in Sources */,
 				7D28BD842B3083460079AE1C /* CaGenerateKeyPairView.swift in Sources */,

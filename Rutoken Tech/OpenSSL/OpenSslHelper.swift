@@ -13,7 +13,7 @@ enum OpenSslError: Error {
 }
 
 protocol OpenSslHelperProtocol {
-    func createCsr(with wrappedKey: WrappedPointer, for request: CsrModel) throws -> String
+    func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String
 }
 
 class OpenSslHelper: OpenSslHelperProtocol {
@@ -30,7 +30,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
         OPENSSL_cleanup()
     }
 
-    func createCsr(with wrappedKey: WrappedPointer, for request: CsrModel) throws -> String {
+    func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String {
         guard let bio = BIO_new(BIO_s_mem()) else { throw OpenSslError.generalError(#line, getLastError()) }
         defer {
             BIO_free(bio)

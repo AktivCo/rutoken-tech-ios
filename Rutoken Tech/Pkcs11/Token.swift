@@ -21,10 +21,10 @@ protocol TokenProtocol {
     func generateKeyPair(with id: String) throws
     func deleteKeyPair(with id: String) throws
 
-    func enumerateCerts() throws -> [Pkcs11Cert]
-    func enumerateKeys() throws -> [Pkcs11KeyPair]
+    func enumerateCerts(by id: String?) throws -> [Pkcs11Cert]
+    func enumerateKeys(by id: String?) throws -> [Pkcs11KeyPair]
 
-    func getWrappedKey(with id: String) throws -> WrappedPointer
+    func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer>
 }
 
 enum TokenError: Error {
@@ -131,11 +131,17 @@ class Token: TokenProtocol, Identifiable {
         C_Logout(session)
     }
 
-    func enumerateCerts() throws -> [Pkcs11Cert] {
+    func enumerateCerts(by id: String?) throws -> [Pkcs11Cert] {
         var certs: [Pkcs11Cert] = []
-        let certTemplate = [
+        var certTemplate = [
             AttributeType.objectClass(.cert), .attrTrue(CKA_TOKEN), .certType
         ].map { $0.attr }
+
+        var idPointer: WrappedPointer<UnsafeMutablePointer<UInt8>>
+        if let id {
+            idPointer = id.createPointer()
+            certTemplate.append(AttributeType.id(idPointer.pointer, UInt(id.count)).attr)
+        }
 
         let certObjects = try findObjects(certTemplate)
 
@@ -148,14 +154,25 @@ class Token: TokenProtocol, Identifiable {
         return certs
     }
 
-    func enumerateKeys() throws -> [Pkcs11KeyPair] {
+    func enumerateKeys(by id: String?) throws -> [Pkcs11KeyPair] {
         var keyPairs: [Pkcs11KeyPair] = []
 
-        // MARK: - Find public keys
-        let pubKeyTemplate = [
+        // MARK: - Prepare key templates
+        var pubKeyTemplate = [
             AttributeType.objectClass(.publicKey), .attrTrue(CKA_TOKEN), .attrFalse(CKA_PRIVATE)
         ].map { $0.attr }
+        var privateKeyTemplate = [
+            AttributeType.objectClass(.privateKey), .attrTrue(CKA_TOKEN), .attrTrue(CKA_PRIVATE)
+        ].map { $0.attr }
 
+        var idPointer: WrappedPointer<UnsafeMutablePointer<UInt8>>
+        if let id {
+            idPointer = id.createPointer()
+            pubKeyTemplate.append(AttributeType.id(idPointer.pointer, UInt(id.count)).attr)
+            privateKeyTemplate.append(AttributeType.id(idPointer.pointer, UInt(id.count)).attr)
+        }
+
+        // MARK: - Find public keys
         let pubKeyObjects = try findObjects(pubKeyTemplate)
 
         var publicKeys: [Pkcs11PublicKey] = []
@@ -167,10 +184,6 @@ class Token: TokenProtocol, Identifiable {
         }
 
         // MARK: - Find private keys
-        let privateKeyTemplate = [
-            AttributeType.objectClass(.privateKey), .attrTrue(CKA_TOKEN), .attrTrue(CKA_PRIVATE)
-        ].map { $0.attr }
-
         let privateKeyObjects = try findObjects(privateKeyTemplate)
 
         for obj in privateKeyObjects {
@@ -185,8 +198,8 @@ class Token: TokenProtocol, Identifiable {
         return keyPairs
     }
 
-    func getWrappedKey(with id: String) throws -> WrappedPointer {
-        guard let keyPair = try enumerateKeys().first(where: { $0.privateKey.id == id }) else {
+    func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer> {
+        guard let keyPair = try enumerateKeys(by: id).first else {
             throw TokenError.generalError
         }
 
