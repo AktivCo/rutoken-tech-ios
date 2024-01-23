@@ -24,12 +24,11 @@ class OnPerformGenKeyPair: Middleware {
 
         return AsyncStream<AppAction> { continuation in
             Task {
+                defer {
+                    continuation.yield(.finishGenerateKeyPair)
+                    continuation.finish()
+                }
                 do {
-                    defer {
-                        continuation.yield(.finishGenerateKeyPair)
-                        continuation.yield(.hideSheet)
-                        continuation.finish()
-                    }
                     try await cryptoManager.withToken(connectionType: connectionType,
                                                       serial: serial,
                                                       pin: pin) {
@@ -37,6 +36,7 @@ class OnPerformGenKeyPair: Middleware {
                     }
 
                     continuation.yield(.showAlert(.keyGenerated))
+                    continuation.yield(.hideSheet)
                 } catch CryptoManagerError.connectionLost {
                     continuation.yield(.showAlert(.connectionLost))
                 } catch CryptoManagerError.wrongToken {
