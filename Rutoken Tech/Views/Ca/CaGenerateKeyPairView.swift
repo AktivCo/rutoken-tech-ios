@@ -19,10 +19,10 @@ struct CaGenerateKeyPairView: View {
             Text(label)
                 .font(.body)
                 .padding(.bottom, 4)
-                .foregroundStyle(Color("labelPrimary"))
+                .foregroundStyle(Color.RtColors.rtLabelPrimary)
             Text(value)
                 .font(.body)
-                .foregroundStyle(Color("labelSecondary"))
+                .foregroundStyle(Color.RtColors.rtLabelSecondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -85,12 +85,12 @@ struct CaGenerateKeyPairView: View {
                     Text("Сгенерировать")
                         .frame(maxWidth: .infinity, alignment: .center)
                         .font(.headline)
-                        .foregroundStyle(Color("colorsOnPrimary"))
+                        .foregroundStyle(Color.RtColors.rtColorsOnPrimary)
                         .padding(.vertical, 15)
                 }
             }
             .frame(maxWidth: UIDevice.isPhone ? .infinity : 350)
-            .background { Color("colorsPrimary100") }
+            .background { Color.RtColors.rtColorsPrimary100 }
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.horizontal, 20)
             .padding(.bottom, UIDevice.isPhone ? 34 : 24)
@@ -111,6 +111,6 @@ struct CaGenKeyPairView_Previews: PreviewProvider {
 
         CaGenerateKeyPairView()
             .environmentObject(testStore)
-            .background(Color("surfaceSecondary"))
+            .background(Color.RtColors.rtSurfaceSecondary)
     }
 }

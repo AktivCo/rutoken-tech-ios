@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+import RtUiComponents
 import TinyAsyncRedux
 
 
@@ -23,7 +24,7 @@ struct IphoneRootView: View {
                         .tabItem { Label(tab.rawValue, systemImage: tab.imageName) }
                         .tag(tab)
                         .background {
-                            Color("surfaceSecondary")
+                            Color.RtColors.rtSurfaceSecondary
                                 .ignoresSafeArea()
                         }
                         .ignoresSafeArea(.keyboard)
@@ -35,7 +36,7 @@ struct IphoneRootView: View {
                 }
             }
         }
-        .tint(Color("colorsSecondary"))
+        .tint(Color.RtColors.rtColorsSecondary)
     }
 }
 

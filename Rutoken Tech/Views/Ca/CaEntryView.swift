@@ -37,11 +37,11 @@ struct CaEntryView: View {
         HStack(spacing: 0) {
             Text(label)
                 .font(.body)
-                .foregroundStyle(Color("labelPrimary"))
+                .foregroundStyle(Color.RtColors.rtLabelPrimary)
             Spacer()
             Text(value)
                 .font(.body)
-                .foregroundStyle(Color("labelSecondary"))
+                .foregroundStyle(Color.RtColors.rtLabelSecondary)
         }
         .frame(height: 44)
         .padding(.horizontal, 12)
@@ -54,7 +54,7 @@ struct CaEntryView: View {
             HStack(spacing: 0) {
                 Text(label)
                     .font(.body)
-                    .foregroundStyle(Color("labelPrimary"))
+                    .foregroundStyle(Color.RtColors.rtLabelPrimary)
                 Spacer()
                 Image(systemName: "chevron.right")
                     .fontWeight(.semibold)
@@ -127,13 +127,13 @@ struct CaEntryView: View {
     func disconnectedTokenView() -> some View {
         VStack(alignment: .center, spacing: 0) {
             Text("Подключите Рутокен")
-                .foregroundStyle(Color("labelPrimary"))
+                .foregroundStyle(Color.RtColors.rtLabelPrimary)
                 .font(.title2)
                 .fontWeight(.bold)
                 .padding(.bottom, 4)
 
             Text("Чтобы воспользоваться\n«Удостоверяющим центром»")
-                .foregroundStyle(Color("labelSecondary"))
+                .foregroundStyle(Color.RtColors.rtLabelSecondary)
                 .multilineTextAlignment(.center)
                 .font(.subheadline)
                 .padding(.bottom, 8)
@@ -147,7 +147,7 @@ struct CaEntryView: View {
                 }()))
             } label: {
                 Text("Подключить")
-                    .tint(Color("colorsSecondary"))
+                    .tint(Color.RtColors.rtColorsSecondary)
                     .font(.subheadline)
                     .padding(.horizontal, 15)
                     .padding(.vertical, 7)
@@ -166,7 +166,7 @@ struct CaEntryView: View {
                         Text("Выйти")
                             .padding(.leading, 20)
                     })
-                    .foregroundStyle(Color("colorsSecondary"))
+                    .foregroundStyle(Color.RtColors.rtColorsSecondary)
                     Spacer()
                 }
             }
@@ -176,7 +176,7 @@ struct CaEntryView: View {
                 Text("Удостоверяющий центр")
                     .font(.largeTitle)
                     .fontWeight(.bold)
-                    .foregroundStyle(Color("labelPrimary"))
+                    .foregroundStyle(Color.RtColors.rtLabelPrimary)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.top, 5)
                     .padding(.bottom, 12)
@@ -198,7 +198,7 @@ struct CaEntryView_Previews: PreviewProvider {
                           reducer: AppReducer(),
                           middlewares: [])
         ZStack {
-            Color("surfaceSecondary")
+            Color.RtColors.rtSurfaceSecondary
                 .ignoresSafeArea()
             VStack(spacing: 0) {
                 CaEntryView()
@@ -216,7 +216,7 @@ struct CaEntryView_Previews: PreviewProvider {
                               reducer: AppReducer(),
                               middlewares: [])
         ZStack {
-            Color("surfaceSecondary")
+            Color.RtColors.rtSurfaceSecondary
                 .ignoresSafeArea()
             VStack(spacing: 0) {
                 CaEntryView()

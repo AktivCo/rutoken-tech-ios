@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+import RtUiComponents
 import TinyAsyncRedux
 
 
@@ -18,7 +19,7 @@ struct IpadRootView: View {
         NavigationSplitView(columnVisibility: .constant(.doubleColumn)) {
             VStack(spacing: 0) {
                 Text("Рутокен Технологии").font(.largeTitle).fontWeight(.bold)
-                    .foregroundStyle(Color("labelPrimary"))
+                    .foregroundStyle(Color.RtColors.rtLabelPrimary)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading, 24)
                     .padding(.top, 5+44)
@@ -29,7 +30,8 @@ struct IpadRootView: View {
                         Label {
                             Text(tab.rawValue)
                                 .foregroundStyle(selectedTab == tab ?
-                                                 Color("colorsOnPrimary") : Color("labelPrimary"))
+                                                 Color.RtColors.rtColorsOnPrimary :
+                                                 Color.RtColors.rtLabelPrimary)
                         } icon: {
                             Image(systemName: tab.imageName)
                         }
@@ -44,7 +46,7 @@ struct IpadRootView: View {
                 switch selectedTab {
                 case .ca:
                     ZStack {
-                        Color("surfaceSecondary")
+                        Color.RtColors.rtSurfaceSecondary
                             .ignoresSafeArea()
                         VStack(spacing: 0) {
                             CaEntryView()
@@ -54,13 +56,13 @@ struct IpadRootView: View {
                     .ignoresSafeArea(.keyboard)
                 default:
                     Text(selectedTab.rawValue)
-                        .foregroundStyle(Color("labelPrimary"))
+                        .foregroundStyle(Color.RtColors.rtLabelPrimary)
                         .ignoresSafeArea(.keyboard)
                 }
             }
         }
         .navigationSplitViewStyle(.balanced)
-        .tint(Color("colorsSecondary"))
+        .tint(Color.RtColors.rtColorsSecondary)
     }
 }
 
