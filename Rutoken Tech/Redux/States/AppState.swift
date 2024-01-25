@@ -9,6 +9,6 @@
 struct AppState {
     var connectedTokenState = ConnectedTokenState()
     var routingState = RoutingState()
-    var caGenerateKeyPairSate = CaGenerateKeyPairState()
+    var caGenerateKeyPairState = CaGenerateKeyPairState()
     var caGenerateCertState = CaGenerateCertState()
 }

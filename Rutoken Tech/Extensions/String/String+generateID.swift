@@ -9,7 +9,7 @@ import Foundation
 
 
 extension String {
-    func generateID() -> String {
+    static func generateID() -> String {
         return String(format: "%08x-%08x", UInt32.random(in: 0...UInt32.max), UInt32.random(in: 0...UInt32.max))
     }
 }

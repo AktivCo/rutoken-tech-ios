@@ -1,14 +1,14 @@
 //
-//  OnPerformGenKeyPair.swift
+//  OnPerformGenCert.swift
 //  Rutoken Tech
 //
-//  Created by Ivan Poderegin on 25.12.2023.
+//  Created by Vova Badyaev on 25.01.2024.
 //
 
 import TinyAsyncRedux
 
 
-class OnPerformGenKeyPair: Middleware {
+class OnPerformGenCert: Middleware {
     private let cryptoManager: CryptoManagerProtocol
 
     init(cryptoManager: CryptoManagerProtocol) {
@@ -16,26 +16,27 @@ class OnPerformGenKeyPair: Middleware {
     }
 
     func handle(action: AppAction) -> AsyncStream<AppAction>? {
-        guard case let .generateKeyPair(connectionType, serial, pin, id) = action else {
+        guard case let .generateCert(connectionType, serial, pin, id, commonName) = action else {
             return nil
         }
 
         return AsyncStream<AppAction> { continuation in
             Task {
                 defer {
-                    continuation.yield(.finishGenerateKeyPair)
+                    continuation.yield(.finishGenerateCert)
                     continuation.finish()
                 }
+                var model = CsrModel.makeDefaultModel()
+                model.subjects[.commonName] = commonName
+
                 do {
                     try await cryptoManager.withToken(connectionType: connectionType,
                                                       serial: serial,
                                                       pin: pin) {
-                        try await cryptoManager.generateKeyPair(with: id)
-                        let keys = try await self.cryptoManager.enumerateKeys()
-                        continuation.yield(.updateKeys(keys))
+                        try await cryptoManager.createCert(for: id, with: model)
                     }
 
-                    continuation.yield(.showAlert(.keyGenerated))
+                    continuation.yield(.showAlert(.certGenerated))
                     continuation.yield(.hideSheet)
                 } catch CryptoManagerError.connectionLost {
                     continuation.yield(.showAlert(.connectionLost))

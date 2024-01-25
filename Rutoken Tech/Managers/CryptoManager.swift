@@ -10,13 +10,15 @@ import Foundation
 
 
 protocol CryptoManagerProtocol {
-    func getTokenInfo() async throws -> TokenInfo
-    func enumerateKeys() async throws -> [KeyModel]
-    func generateKeyPair(with id: String) async throws
     func withToken(connectionType: ConnectionType,
                    serial: String?,
                    pin: String?,
                    callback: () async throws -> Void) async throws
+
+    func getTokenInfo() async throws -> TokenInfo
+    func enumerateKeys() async throws -> [KeyModel]
+    func generateKeyPair(with id: String) async throws
+    func createCert(for id: String, with info: CsrModel) async throws
 }
 
 enum CryptoManagerError: Error, Equatable {
@@ -74,6 +76,21 @@ class CryptoManager: CryptoManagerProtocol {
         }
         return try token.generateKeyPair(with: id)
     }
+
+    func createCert(for id: String, with info: CsrModel) async throws {
+        guard let token = connectedToken else {
+            throw CryptoManagerError.tokenNotFound
+        }
+
+        guard let keyPair = try token.enumerateKeys(by: id).first else {
+            throw CryptoManagerError.unknown
+        }
+
+        _ = try openSslHelper.createCsr(with: try token.getWrappedKey(with: keyPair.privateKey.id), for: info)
+        // ...
+    }
+
+    func importCert(_ cert: String) async throws {}
 
     func withToken(connectionType: ConnectionType,
                    serial: String?,

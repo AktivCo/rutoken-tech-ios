@@ -36,14 +36,18 @@ struct AppReducer: Reducer {
         case .hidePinInputError:
             newState.routingState.pinInputError.errorDescription = ""
         case .generateKeyId:
-            newState.caGenerateKeyPairSate.key = KeyModel(ckaId: String().generateID(),
-                                                          type: .gostR3410_2012_256)
+            newState.caGenerateKeyPairState.key = KeyModel(ckaId: String.generateID(),
+                                                           type: .gostR3410_2012_256)
         case .generateKeyPair:
-            newState.caGenerateKeyPairSate.inProgress = true
+            newState.caGenerateKeyPairState.inProgress = true
         case .finishGenerateKeyPair:
-            newState.caGenerateKeyPairSate.inProgress = false
+            newState.caGenerateKeyPairState.inProgress = false
         case .updateKeys(let keys):
             newState.caGenerateCertState.keys = keys
+        case .generateCert:
+            newState.caGenerateCertState.inProgress = true
+        case .finishGenerateCert:
+            newState.caGenerateCertState.inProgress = false
         }
         return newState
     }

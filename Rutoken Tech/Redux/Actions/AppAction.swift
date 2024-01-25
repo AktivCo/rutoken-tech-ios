@@ -11,7 +11,7 @@ import RtUiComponents
 
 
 enum AppAction {
-    // MARK: Errors and Alerts
+    // MARK: Errors, Alerts & Sheets
     case showAlert(AppAlert)
     case hideAlert
     case showSheet(Bool, RtSheetSize, any View)
@@ -23,6 +23,11 @@ enum AppAction {
     case selectToken(RtTokenType, String)
     case tokenSelected(TokenInfo, String)
 
+    // MARK: Cert generation
+    case generateCert(ConnectionType, String, String, String, String)
+    case finishGenerateCert
+
+    // MARK: Key Pair generation
     case generateKeyId
     case generateKeyPair(ConnectionType, String, String, String)
     case finishGenerateKeyPair

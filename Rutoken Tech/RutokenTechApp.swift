@@ -30,7 +30,8 @@ struct RutokenTechApp: App {
 
         let middlewares: [any Middleware<AppAction>] = [
             OnPerformTokenConnection(cryptoManager: cryptoManager),
-            OnPerformGenKeyPair(cryptoManager: cryptoManager)
+            OnPerformGenKeyPair(cryptoManager: cryptoManager),
+            OnPerformGenCert(cryptoManager: cryptoManager)
         ]
 
         store = Store(initialState: AppState(),

@@ -167,8 +167,15 @@ struct CaCertGenView: View {
                 .overlay(Color("IOSElementsTitleBarSeparator"))
                 .opacity(isBottomViewShown ? 1 : 0)
             Button {
+                if let token = store.state.connectedTokenState.connectedToken,
+                   let pin = store.state.connectedTokenState.pin,
+                   !selectedKey.isEmpty {
+                    store.send(.generateCert(token.connectionType, token.serial, pin, selectedKey, nameInput))
+                } else {
+                    store.send(.showAlert(.unknownError))
+                }
             } label: {
-                if store.state.caGenerateKeyPairSate.inProgress {
+                if store.state.caGenerateKeyPairState.inProgress {
                     RtLoadingIndicator(.small)
                         .frame(height: 50)
                         .frame(maxWidth: 350)

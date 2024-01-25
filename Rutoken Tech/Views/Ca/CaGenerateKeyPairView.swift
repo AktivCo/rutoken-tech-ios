@@ -53,13 +53,13 @@ struct CaGenerateKeyPairView: View {
 
             VStack(spacing: 0) {
                 infoRow(label: "ID",
-                        value: store.state.caGenerateKeyPairSate.key?.ckaId ?? "")
+                        value: store.state.caGenerateKeyPairState.key?.ckaId ?? "")
                 .padding(12)
                 Divider()
                     .overlay(Color("otherSeparator"))
                     .padding(.horizontal, 12)
                 infoRow(label: "Алгоритм",
-                        value: store.state.caGenerateKeyPairSate.key?.type.description ?? "")
+                        value: store.state.caGenerateKeyPairState.key?.type.description ?? "")
                 .padding(12)
             }
             .background(Color("surfacePrimary"))
@@ -72,13 +72,13 @@ struct CaGenerateKeyPairView: View {
             Button {
                 if let connectedToken = store.state.connectedTokenState.connectedToken,
                    let pin = store.state.connectedTokenState.pin,
-                   let cakId = store.state.caGenerateKeyPairSate.key?.ckaId {
-                    store.send(.generateKeyPair(connectedToken.connectionType, connectedToken.serial, pin, cakId))
+                   let id = store.state.caGenerateKeyPairState.key?.ckaId {
+                    store.send(.generateKeyPair(connectedToken.connectionType, connectedToken.serial, pin, id))
                 } else {
                     store.send(.showAlert(.unknownError))
                 }
             } label: {
-                if store.state.caGenerateKeyPairSate.inProgress {
+                if store.state.caGenerateKeyPairState.inProgress {
                     RtLoadingIndicator(.small)
                         .padding(.vertical, 15)
                 } else {
@@ -101,7 +101,7 @@ struct CaGenerateKeyPairView: View {
 struct CaGenKeyPairView_Previews: PreviewProvider {
     static var previews: some View {
 
-        let state = AppState(caGenerateKeyPairSate: CaGenerateKeyPairState(
+        let state = AppState(caGenerateKeyPairState: CaGenerateKeyPairState(
             key: KeyModel(ckaId: "12345678-90abcdef",
                           type: .gostR3410_2012_256)))
 

@@ -91,9 +91,12 @@ extension CsrModel {
     static func makeDefaultModel() -> CsrModel {
         var tmp: [SubjectEntryTitle: String] = [:]
         SubjectEntryTitle.allCases.forEach {
-            if $0 == .snils {
+            switch $0 {
+            case .snils:
                 tmp[$0] = $0.defaultValueForModel.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "")
-            } else {
+            case .countryName:
+                tmp[$0] = "RU"
+            default:
                 tmp[$0] = $0.defaultValueForModel
             }
         }
