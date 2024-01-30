@@ -118,7 +118,7 @@ struct CaCertGenView: View {
                         .padding(.bottom, 12)
                     if field != SubjectEntryTitle.allCases.last {
                         Divider()
-                            .overlay(Color.RtColors.rtLabelSecondary)
+                            .overlay(Color("otherSeparator"))
                     }
                 }
             }

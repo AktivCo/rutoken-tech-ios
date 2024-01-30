@@ -55,14 +55,17 @@ struct CaGenerateKeyPairView: View {
                 infoRow(label: "ID",
                         value: store.state.caGenerateKeyPairState.key?.ckaId ?? "")
                 .padding(12)
-                Divider()
-                    .overlay(Color("otherSeparator"))
+                // Cant use Divider() here, because it changes below infoRow background color
+                // when scrolling down sheet with this view
+                Rectangle()
+                    .fill(Color("otherSeparator"))
+                    .frame(height: 0.33)
                     .padding(.horizontal, 12)
                 infoRow(label: "Алгоритм",
                         value: store.state.caGenerateKeyPairState.key?.type.description ?? "")
                 .padding(12)
             }
-            .background(Color("surfacePrimary"))
+            .background(Color.RtColors.rtSurfaceQuaternary)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.vertical, 12)
             .padding(.horizontal, 20)
@@ -111,6 +114,7 @@ struct CaGenKeyPairView_Previews: PreviewProvider {
 
         CaGenerateKeyPairView()
             .environmentObject(testStore)
-            .background(Color.RtColors.rtSurfaceSecondary)
+            .background(.ultraThinMaterial)
+            .background(Color.RtColors.rtSurfaceTertiary)
     }
 }
