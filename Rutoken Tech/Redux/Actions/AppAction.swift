@@ -22,6 +22,7 @@ enum AppAction {
     // MARK: Token Selection
     case selectToken(RtTokenType, String)
     case tokenSelected(TokenInfo, String)
+    case logoutCa
 
     // MARK: Cert generation
     case generateCert(ConnectionType, String, String, String, String)

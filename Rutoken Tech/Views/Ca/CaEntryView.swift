@@ -162,6 +162,7 @@ struct CaEntryView: View {
             HStack(spacing: 0) {
                 if store.state.connectedTokenState.connectedToken != nil {
                     Button(action: {
+                        store.send(.logoutCa)
                     }, label: {
                         Text("Выйти")
                             .padding(.leading, 20)

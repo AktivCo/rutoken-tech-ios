@@ -48,6 +48,13 @@ struct AppReducer: Reducer {
             newState.caGenerateCertState.inProgress = true
         case .finishGenerateCert:
             newState.caGenerateCertState.inProgress = false
+        case .logoutCa:
+            newState.connectedTokenState.connectedToken = nil
+            newState.connectedTokenState.pin = nil
+            newState.caGenerateKeyPairState.inProgress = false
+            newState.caGenerateKeyPairState.key = nil
+            newState.caGenerateCertState.inProgress = false
+            newState.caGenerateCertState.keys = []
         }
         return newState
     }

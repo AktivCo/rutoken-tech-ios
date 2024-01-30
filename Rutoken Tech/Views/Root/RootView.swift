@@ -27,6 +27,9 @@ struct RootView: View {
         .rtSheet(sheetModel: store.state.routingState.sheet)
         .rtAlert(alertModel: Binding(get: { store.state.routingState.alert },
                                      set: { if $0 == nil { store.send(.hideAlert) } }))
+        .onChange(of: selectedTab) { _ in
+            store.send(.logoutCa)
+        }
     }
 }
 
