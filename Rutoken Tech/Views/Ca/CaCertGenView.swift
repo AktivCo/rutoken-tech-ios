@@ -13,7 +13,7 @@ import TinyAsyncRedux
 
 struct CaCertGenView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
-    @State private var selectedKey: String = ""
+    @State private var selectedKey: Int = 0
     @State private var nameInput: String = ""
     @GestureState private var dragOffset: CGSize = .zero
     @State private var isTopViewShown = false
@@ -70,8 +70,8 @@ struct CaCertGenView: View {
 
     private var picker: some View {
         Picker("", selection: $selectedKey) {
-            ForEach(store.state.caGenerateCertState.keys, id: \.ckaId) { key in
-                Text(key.ckaId)
+            ForEach(0..<store.state.caGenerateCertState.keys.count, id: \.self) {
+                Text(store.state.caGenerateCertState.keys[$0].ckaId)
             }
         }
         .frame(height: 44)
@@ -168,9 +168,9 @@ struct CaCertGenView: View {
                 .opacity(isBottomViewShown ? 1 : 0)
             Button {
                 if let token = store.state.connectedTokenState.connectedToken,
-                   let pin = store.state.connectedTokenState.pin,
-                   !selectedKey.isEmpty {
-                    store.send(.generateCert(token.connectionType, token.serial, pin, selectedKey, nameInput))
+                   let pin = store.state.connectedTokenState.pin {
+                    let id = store.state.caGenerateCertState.keys[selectedKey].ckaId
+                    store.send(.generateCert(token.connectionType, token.serial, pin, id, nameInput))
                 } else {
                     store.send(.showAlert(.unknownError))
                 }

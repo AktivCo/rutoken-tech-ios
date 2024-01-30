@@ -219,7 +219,7 @@ class Token: TokenProtocol, Identifiable {
         var publicKey = CK_OBJECT_HANDLE()
         var privateKey = CK_OBJECT_HANDLE()
 
-        var idPointer = id.createPointer()
+        let idPointer = id.createPointer()
         var publicKeyTemplate = [
             AttributeType.objectClass(.publicKey),
             .id(idPointer.pointer, UInt(id.count)),
