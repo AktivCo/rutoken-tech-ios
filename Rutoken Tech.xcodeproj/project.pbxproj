@@ -76,6 +76,7 @@
 		D4D46A0F2B3038F60005981A /* Atomic+propertywrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */; };
 		D4D9C9DA2B2306F900DA702C /* RtPcscWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = D4D9C9D92B2306F900DA702C /* RtPcscWrapper */; };
 		D4DC1FCF2B61669800D53AE6 /* String+createPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC1FCE2B61669800D53AE6 /* String+createPointer.swift */; };
+		D4F27DD32B6A5752003D8AE6 /* Bundle+readInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F27DD22B6A5752003D8AE6 /* Bundle+readInfo.swift */; };
 		D4F4FDEC2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F4FDEB2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift */; };
 		D4F7CD772B32D1DA00764787 /* AnyCancellable+store.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F7CD762B32D1DA00764787 /* AnyCancellable+store.swift */; };
 		D4FC26C92B270C580029060D /* NfcMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FC26C82B270C580029060D /* NfcMessages.swift */; };
@@ -159,6 +160,7 @@
 		D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Atomic+propertywrapper.swift"; sourceTree = "<group>"; };
 		D4D9C9E62B2328B600DA702C /* Rutoken Tech.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Rutoken Tech.entitlements"; sourceTree = "<group>"; };
 		D4DC1FCE2B61669800D53AE6 /* String+createPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+createPointer.swift"; sourceTree = "<group>"; };
+		D4F27DD22B6A5752003D8AE6 /* Bundle+readInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+readInfo.swift"; sourceTree = "<group>"; };
 		D4F4FDEB2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+LinuxFulfillment.swift"; sourceTree = "<group>"; };
 		D4F7CD762B32D1DA00764787 /* AnyCancellable+store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnyCancellable+store.swift"; sourceTree = "<group>"; };
 		D4FC26C82B270C580029060D /* NfcMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NfcMessages.swift; sourceTree = "<group>"; };
@@ -365,6 +367,7 @@
 				4413CFB02B592EC8000987A8 /* String */,
 				7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */,
 				D4F7CD762B32D1DA00764787 /* AnyCancellable+store.swift */,
+				D4F27DD22B6A5752003D8AE6 /* Bundle+readInfo.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -492,6 +495,7 @@
 				5EF75DD72AC707BD001834BE /* Sources */,
 				5EF75DD82AC707BD001834BE /* Frameworks */,
 				5EF75DD92AC707BD001834BE /* Resources */,
+				D4F27DD12B6A53FA003D8AE6 /* Set Commit Hash */,
 				7D98BD802AE1233400B6A281 /* Run Swiftlint */,
 			);
 			buildRules = (
@@ -620,6 +624,26 @@
 			shellPath = /bin/sh;
 			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n  swiftlint lint --strict\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
+		D4F27DD12B6A53FA003D8AE6 /* Set Commit Hash */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				$TARGET_BUILD_DIR/$INFOPLIST_PATH,
+			);
+			name = "Set Commit Hash";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "INFO_PLIST=\"${SCRIPT_INPUT_FILE_0}\"\n\n# Query and save the value; suppress any error message, if key not found.\nvalue=$(/usr/libexec/PlistBuddy -c 'print :GitCommitHash' \"${INFO_PLIST}\" 2>/dev/null)\n\n# Check if value is empty\nif [ -z \"$value\" ] \nthen\n   /usr/libexec/PlistBuddy -c \"Add :GitCommitHash string\" \"${INFO_PLIST}\"\nfi\n\n/usr/libexec/PlistBuddy -c \"Set :GitCommitHash `git rev-parse --short=8 HEAD`\" \"${INFO_PLIST}\"\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -628,12 +652,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4B130D62B0E4F2400AD390F /* PcscHelper.swift in Sources */,
-				446F71082B62762C00684E0D /* CaGenerateCertState.swift in Sources */,
 				D42178192B205FD700D08948 /* AppAlert.swift in Sources */,
 				5EF75DE12AC707BD001834BE /* RootView.swift in Sources */,
 				D4B130A82B0CFD2F00AD390F /* CryptoManager.swift in Sources */,
 				446F71062B6271C400684E0D /* OnPerformGenCert.swift in Sources */,
 				44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */,
+				D4F27DD32B6A5752003D8AE6 /* Bundle+readInfo.swift in Sources */,
 				D4B130B02B0CFFCD00AD390F /* TokenModel.swift in Sources */,
 				7D38D6DA2B0E2C190045FBAD /* AppState.swift in Sources */,
 				7DCC9AF12B3B2C9A002788B5 /* KeyModel.swift in Sources */,
