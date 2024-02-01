@@ -106,22 +106,20 @@ struct CaEntryView: View {
     }
 
     func connectedTokenView(_ connectedToken: TokenInfo) -> some View {
-        VStack(spacing: 0) {
+        ScrollView {
             VStack(alignment: .center) {
-                if connectedToken.type == .dual {
-                    Image("token-usb-nfc")
-                } else if connectedToken.type == .sc {
-                    Image("token-nfc")
-                } else if connectedToken.type == .usb {
-                    Image("token-usbc")
+                switch connectedToken.type {
+                case .dual: Image("token-usb-nfc")
+                case .sc: Image("token-nfc")
+                case .usb: Image("token-usbc")
                 }
             }
             .frame(width: 137, height: 88)
             .padding(.vertical, 32)
 
             infoList(for: connectedToken)
-            Spacer()
         }
+        .scrollDisabled(true)
     }
 
     func disconnectedTokenView() -> some View {
@@ -201,10 +199,8 @@ struct CaEntryView_Previews: PreviewProvider {
         ZStack {
             Color.RtColors.rtSurfaceSecondary
                 .ignoresSafeArea()
-            VStack(spacing: 0) {
-                CaEntryView()
-                    .environmentObject(store)
-            }
+            CaEntryView()
+                .environmentObject(store)
         }
 
         let token = TokenInfo(label: "Ivan",
@@ -219,10 +215,8 @@ struct CaEntryView_Previews: PreviewProvider {
         ZStack {
             Color.RtColors.rtSurfaceSecondary
                 .ignoresSafeArea()
-            VStack(spacing: 0) {
-                CaEntryView()
-                    .environmentObject(testStore)
-            }
+            CaEntryView()
+                .environmentObject(testStore)
         }
     }
 }
