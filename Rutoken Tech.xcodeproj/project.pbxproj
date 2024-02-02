@@ -12,6 +12,9 @@
 		4413CFB42B592F13000987A8 /* String+isNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4413CFB32B592F13000987A8 /* String+isNumber.swift */; };
 		4413CFB82B597206000987A8 /* OpenSslHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4413CFB72B597206000987A8 /* OpenSslHelperMock.swift */; };
 		441658472B5988F000225948 /* WrappedPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 441658462B5988F000225948 /* WrappedPointer.swift */; };
+		4416A2752B70F95E00645800 /* View+appIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416A2742B70F95E00645800 /* View+appIcon.swift */; };
+		4416A2772B70F9A500645800 /* View+InfoListStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416A2762B70F9A500645800 /* View+InfoListStyle.swift */; };
+		4416A27A2B70F9F600645800 /* View+createLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416A2792B70F9F600645800 /* View+createLabel.swift */; };
 		443076EF2B1F2D5E0073B406 /* String+getFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443076EE2B1F2D5E0073B406 /* String+getFrom.swift */; };
 		44416B2C2B552CCE00EC5F66 /* OpenSslHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44416B2B2B552CCE00EC5F66 /* OpenSslHelper.swift */; };
 		44416B2F2B555F4500EC5F66 /* CertRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44416B2E2B555F4500EC5F66 /* CertRequest.swift */; };
@@ -27,6 +30,7 @@
 		44A415262B6106AD00D78653 /* ca.key in Resources */ = {isa = PBXBuildFile; fileRef = 44A415222B6106AD00D78653 /* ca.key */; };
 		44A415272B6106AD00D78653 /* bank.pem in Resources */ = {isa = PBXBuildFile; fileRef = 44A415232B6106AD00D78653 /* bank.pem */; };
 		44A415282B6106AD00D78653 /* ca.pem in Resources */ = {isa = PBXBuildFile; fileRef = 44A415242B6106AD00D78653 /* ca.pem */; };
+		44B4A81C2B6CD15D00E59F63 /* AboutAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B4A81B2B6CD15D00E59F63 /* AboutAppView.swift */; };
 		44EED1B62B1F115B0036F8DA /* TokenMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EED1B52B1F115B0036F8DA /* TokenMock.swift */; };
 		44F0323A2B5125BC00466080 /* Pkcs11ObjectMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F032392B5125BC00466080 /* Pkcs11ObjectMock.swift */; };
 		5ED8B92C2ACD8EA100BCFC20 /* TinyAsyncRedux in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B92B2ACD8EA100BCFC20 /* TinyAsyncRedux */; };
@@ -100,6 +104,9 @@
 		4413CFB32B592F13000987A8 /* String+isNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+isNumber.swift"; sourceTree = "<group>"; };
 		4413CFB72B597206000987A8 /* OpenSslHelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSslHelperMock.swift; sourceTree = "<group>"; };
 		441658462B5988F000225948 /* WrappedPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedPointer.swift; sourceTree = "<group>"; };
+		4416A2742B70F95E00645800 /* View+appIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+appIcon.swift"; sourceTree = "<group>"; };
+		4416A2762B70F9A500645800 /* View+InfoListStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+InfoListStyle.swift"; sourceTree = "<group>"; };
+		4416A2792B70F9F600645800 /* View+createLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+createLabel.swift"; sourceTree = "<group>"; };
 		443076EE2B1F2D5E0073B406 /* String+getFrom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+getFrom.swift"; sourceTree = "<group>"; };
 		443AF4DD2B10B40500D34150 /* Rutoken_Tech-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Rutoken_Tech-Bridging-Header.h"; sourceTree = "<group>"; };
 		44416B2B2B552CCE00EC5F66 /* OpenSslHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSslHelper.swift; sourceTree = "<group>"; };
@@ -115,6 +122,7 @@
 		44A415222B6106AD00D78653 /* ca.key */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ca.key; sourceTree = "<group>"; };
 		44A415232B6106AD00D78653 /* bank.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bank.pem; sourceTree = "<group>"; };
 		44A415242B6106AD00D78653 /* ca.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ca.pem; sourceTree = "<group>"; };
+		44B4A81B2B6CD15D00E59F63 /* AboutAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutAppView.swift; sourceTree = "<group>"; };
 		44EED1B52B1F115B0036F8DA /* TokenMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMock.swift; sourceTree = "<group>"; };
 		44F032392B5125BC00466080 /* Pkcs11ObjectMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11ObjectMock.swift; sourceTree = "<group>"; };
 		5EF30EDD2B1A823700E48627 /* OnPerformTokenConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnPerformTokenConnection.swift; sourceTree = "<group>"; };
@@ -206,6 +214,16 @@
 			path = String;
 			sourceTree = "<group>";
 		};
+		4416A2782B70F9E100645800 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4416A2742B70F95E00645800 /* View+appIcon.swift */,
+				4416A2762B70F9A500645800 /* View+InfoListStyle.swift */,
+				4416A2792B70F9F600645800 /* View+createLabel.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		44416B2D2B552CFC00EC5F66 /* OpenSSL */ = {
 			isa = PBXGroup;
 			children = (
@@ -239,6 +257,14 @@
 				44A415242B6106AD00D78653 /* ca.pem */,
 			);
 			path = Credentials;
+			sourceTree = "<group>";
+		};
+		44B4A81D2B6CD16100E59F63 /* AboutApp */ = {
+			isa = PBXGroup;
+			children = (
+				44B4A81B2B6CD15D00E59F63 /* AboutAppView.swift */,
+			);
+			path = AboutApp;
 			sourceTree = "<group>";
 		};
 		5EF30ED92B1A790E00E48627 /* Root */ = {
@@ -366,6 +392,7 @@
 		7DAF6E742AFA35A5003A57D1 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				4416A2782B70F9E100645800 /* View */,
 				4413CFB02B592EC8000987A8 /* String */,
 				7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */,
 				D4F7CD762B32D1DA00764787 /* AnyCancellable+store.swift */,
@@ -391,6 +418,7 @@
 			children = (
 				5EF30ED92B1A790E00E48627 /* Root */,
 				7D5390082B0FA17E00FE4738 /* Ca */,
+				44B4A81D2B6CD16100E59F63 /* AboutApp */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -657,6 +685,7 @@
 				D4B130D62B0E4F2400AD390F /* PcscHelper.swift in Sources */,
 				D42178192B205FD700D08948 /* AppAlert.swift in Sources */,
 				5EF75DE12AC707BD001834BE /* RootView.swift in Sources */,
+				4416A27A2B70F9F600645800 /* View+createLabel.swift in Sources */,
 				D4B130A82B0CFD2F00AD390F /* CryptoManager.swift in Sources */,
 				446F71062B6271C400684E0D /* OnPerformGenCert.swift in Sources */,
 				44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */,
@@ -674,6 +703,7 @@
 				4464FAA82B359ED5005F732F /* Pkcs11Object.swift in Sources */,
 				D49953BE2B55209E00E62B5B /* CaCertGenView.swift in Sources */,
 				D4B130B52B0DDB2200AD390F /* Pkcs11Helper.swift in Sources */,
+				4416A2772B70F9A500645800 /* View+InfoListStyle.swift in Sources */,
 				4413CFAF2B590379000987A8 /* Rutoken_Tech-Bridging-Header.m in Sources */,
 				7D4335892B5567A700A0336A /* String+generateID.swift in Sources */,
 				4413CFB42B592F13000987A8 /* String+isNumber.swift in Sources */,
@@ -692,6 +722,8 @@
 				D49953C52B58343200E62B5B /* CaGenerateCertState.swift in Sources */,
 				7D28BD842B3083460079AE1C /* CaGenerateKeyPairView.swift in Sources */,
 				7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */,
+				4416A2752B70F95E00645800 /* View+appIcon.swift in Sources */,
+				44B4A81C2B6CD15D00E59F63 /* AboutAppView.swift in Sources */,
 				7D9E5A602B0BA55E00E2EAB7 /* ConnectedTokenState.swift in Sources */,
 				D42178032B1F0EAF00D08948 /* RoutingState.swift in Sources */,
 				441658472B5988F000225948 /* WrappedPointer.swift in Sources */,
@@ -1018,7 +1050,7 @@
 			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-ui-components.git";
 			requirement = {
 				kind = revision;
-				revision = 3198006c6fad1929f4a56d08bf0de91a52abdc71;
+				revision = 5ea51918a27273ac5bc58a31c2671b31bb0f87a3;
 			};
 		};
 		5ED8B92A2ACD8EA100BCFC20 /* XCRemoteSwiftPackageReference "tiny-redux" */ = {

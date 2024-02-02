@@ -43,21 +43,23 @@ struct IpadRootView: View {
             .toolbar(.hidden, for: .navigationBar)
         } detail: {
             if let selectedTab {
-                switch selectedTab {
-                case .ca:
-                    ZStack {
-                        Color.RtColors.rtSurfaceSecondary
-                            .ignoresSafeArea()
-                        VStack(spacing: 0) {
+                Group {
+                    VStack(spacing: 0) {
+                        switch selectedTab {
+                        case .ca:
                             CaEntryView()
+                        case .about:
+                            AboutAppView()
+                        default:
+                            Text(selectedTab.rawValue)
                         }
                     }
-                    .toolbar(.hidden, for: .navigationBar)
-                    .ignoresSafeArea(.keyboard)
-                default:
-                    Text(selectedTab.rawValue)
-                        .foregroundStyle(Color.RtColors.rtLabelPrimary)
-                        .ignoresSafeArea(.keyboard)
+                }
+                .toolbar(.hidden, for: .navigationBar)
+                .ignoresSafeArea(.keyboard)
+                .background {
+                    Color.RtColors.rtSurfaceSecondary
+                        .ignoresSafeArea()
                 }
             }
         }

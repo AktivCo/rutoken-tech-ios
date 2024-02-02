@@ -18,19 +18,25 @@ struct IphoneRootView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             ForEach(RtAppTab.allCases, id: \.rawValue) { tab in
-                switch tab {
-                case .ca:
-                    CaEntryView()
-                        .tabItem { Label(tab.rawValue, systemImage: tab.imageName) }
-                        .tag(tab)
-                        .background {
-                            Color.RtColors.rtSurfaceSecondary
-                                .ignoresSafeArea()
-                        }
-                default:
-                    Text(tab.rawValue)
-                        .tabItem { Label(tab.rawValue, systemImage: tab.imageName) }
-                        .tag(tab)
+                Group {
+                    switch tab {
+                    case .ca:
+                        CaEntryView()
+                            .tabItem { Label(tab.rawValue, systemImage: tab.imageName) }
+                            .tag(tab)
+                    case .about:
+                        AboutAppView()
+                            .tabItem { Label(tab.rawValue, systemImage: tab.imageName) }
+                            .tag(tab)
+                    case .bank:
+                        Text(tab.rawValue)
+                            .tabItem { Label(tab.rawValue, systemImage: tab.imageName) }
+                            .tag(tab)
+                    }
+                }
+                .background {
+                    Color.RtColors.rtSurfaceSecondary
+                        .ignoresSafeArea()
                 }
             }
         }

@@ -7,87 +7,53 @@
 
 import SwiftUI
 
+import RtUiComponents
 import TinyAsyncRedux
 
-import RtUiComponents
-
-
-private struct ListStyle: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .background(Color("surfacePrimary"))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .padding(.vertical, 12)
-            .frame(maxWidth: .infinity, alignment: .topLeading)
-    }
-}
-
-private extension View {
-    func listStyle() -> some View {
-        modifier(
-            ListStyle()
-        )
-    }
-}
 
 struct CaEntryView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
 
-    func infoRow(_ label: String, _ value: String) -> some View {
+    func createLabel(_ text: String) -> some View {
         HStack(spacing: 0) {
-            Text(label)
+            Text(text)
                 .font(.body)
                 .foregroundStyle(Color.RtColors.rtLabelPrimary)
             Spacer()
-            Text(value)
-                .font(.body)
-                .foregroundStyle(Color.RtColors.rtLabelSecondary)
+            Image(systemName: "chevron.right")
+                .fontWeight(.semibold)
+                .foregroundStyle(Color("otherChevron"))
         }
         .frame(height: 44)
         .padding(.horizontal, 12)
     }
 
-    func actionRow(_ label: String, callback: @escaping () -> Void) -> some View {
-        Button {
-            callback()
-        } label: {
-            HStack(spacing: 0) {
-                Text(label)
-                    .font(.body)
-                    .foregroundStyle(Color.RtColors.rtLabelPrimary)
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .fontWeight(.semibold)
-                    .foregroundStyle(Color("otherChevron"))
-            }
-            .frame(height: 44)
-            .padding(.horizontal, 12)
-        }
-    }
-
     func infoList(for token: TokenInfo) -> some View {
         Group {
             VStack(spacing: 0) {
-                infoRow("Метка", token.label)
+                createLabel("Метка", token.label)
                 Divider()
                     .padding(.horizontal, 12)
-                infoRow("Модель", token.model.rawValue)
+                createLabel("Модель", token.model.rawValue)
                 Divider()
                     .padding(.horizontal, 12)
-                infoRow("Серийный номер", token.serial)
+                createLabel("Серийный номер", token.serial)
             }
-            .listStyle()
+            .infoListStyle()
+            .padding(.vertical, 12)
 
             VStack(spacing: 0) {
-                actionRow("Сгенерировать ключевую пару") {
+                Button {
                     store.send(.generateKeyId)
                     store.send(.showSheet(true, UIDevice.isPhone ? .smallPhone : .ipad(width: 540, height: 640), {
                         CaGenerateKeyPairView().environmentObject(store)
                     }()))
+                } label: {
+                    createLabel("Сгенерировать ключевую пару")
                 }
                 Divider()
                     .padding(.horizontal, 12)
-                actionRow("Выпустить тестовый сертификат") {
+                Button {
                     if store.state.caGenerateCertState.keys.isEmpty {
                         store.send(.showSheet(true, UIDevice.isPhone ? .smallPhone : .ipad(width: 540, height: 640), {
                             CaEmptyKeysCertView()
@@ -99,9 +65,12 @@ struct CaEntryView: View {
                                 .environmentObject(store)
                         }()))
                     }
+                } label: {
+                    createLabel("Выпустить тестовый сертификат")
                 }
             }
-            .listStyle()
+            .infoListStyle()
+            .padding(.vertical, 12)
         }
     }
 
