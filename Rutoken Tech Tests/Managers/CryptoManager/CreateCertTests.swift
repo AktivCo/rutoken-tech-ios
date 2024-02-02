@@ -30,10 +30,8 @@ final class CreateCertTests: XCTestCase {
 
         token = TokenMock(serial: "87654321", connectionType: .usb)
         token.enumerateKeysCallback = { _ in
-            return [Pkcs11KeyPair(pubKey: Pkcs11ObjectMock(id: "001", body: nil,
-                                                           handle: CK_OBJECT_HANDLE()),
-                                  privateKey: Pkcs11ObjectMock(id: "001", body: nil,
-                                                               handle: CK_OBJECT_HANDLE()))]
+            return [Pkcs11KeyPair(pubKey: Pkcs11ObjectMock(id: "001", body: nil),
+                                  privateKey: Pkcs11ObjectMock(id: "001", body: nil))]
         }
         pkcs11Helper.tokenPublisher.send([token])
     }

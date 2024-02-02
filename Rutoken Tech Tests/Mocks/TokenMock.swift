@@ -10,18 +10,19 @@
 
 class TokenMock: TokenProtocol {
     let slot: CK_SLOT_ID
-    let session: CK_SESSION_HANDLE
     let label: String
     let serial: String
     let model: TokenModel
     let type: TokenType
     let connectionType: ConnectionType
 
-    init(slot: CK_SLOT_ID = CK_SLOT_ID(), session: CK_SESSION_HANDLE = CK_SESSION_HANDLE(),
-         label: String = "", serial: String = "", model: TokenModel = .rutoken2,
-         connectionType: ConnectionType = .nfc, type: TokenType = .usb) {
+    init(slot: CK_SLOT_ID = CK_SLOT_ID(),
+         label: String = "",
+         serial: String = "",
+         model: TokenModel = .rutoken2,
+         connectionType: ConnectionType = .nfc,
+         type: TokenType = .usb) {
         self.slot = slot
-        self.session = session
         self.label = label
         self.serial = serial
         self.model = model
@@ -51,11 +52,9 @@ class TokenMock: TokenProtocol {
 
     var generateKeyPairCallback: (String) throws -> Void = { _ in }
 
-    func deleteKeyPair(with id: String) throws {}
+    func enumerateCerts(by id: String?) throws -> [Pkcs11ObjectProtocol] { try enumerateCertsCallback(nil) }
 
-    func enumerateCerts(by id: String?) throws -> [Pkcs11Cert] { try enumerateCertsCallback(nil) }
-
-    var enumerateCertsCallback: (_ id: String?) throws -> [Pkcs11Cert] = { _ in [] }
+    var enumerateCertsCallback: (_ id: String?) throws -> [Pkcs11ObjectProtocol] = { _ in [] }
 
     func enumerateKeys(by id: String?) throws -> [Pkcs11KeyPair] { try enumerateKeysCallback(nil) }
 

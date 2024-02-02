@@ -8,16 +8,43 @@
 import Foundation
 
 
-protocol Pkcs11Object {
-    var id: String { get }
+protocol Pkcs11ObjectProtocol {
+    var id: String? { get }
     var body: Data? { get }
     var handle: CK_OBJECT_HANDLE { get }
 }
 
-extension Pkcs11Object {
-    func getValue(for attr: AttributeType, with handle: CK_OBJECT_HANDLE, with session: CK_SESSION_HANDLE) throws -> Data {
+
+class Pkcs11Object: Pkcs11ObjectProtocol {
+    private(set) var handle: CK_OBJECT_HANDLE
+    private weak var session: Pkcs11Session?
+
+    init(with handle: CK_OBJECT_HANDLE, _ session: Pkcs11Session) {
+        self.handle = handle
+        self.session = session
+    }
+
+    lazy var id: String? = {
+        guard let dataId = try? getValue(for: AttributeType.id(nil, 0), with: handle, with: session) else {
+            return nil
+        }
+        return String(decoding: dataId, as: UTF8.self)
+    }()
+
+    lazy var body: Data? = {
+        guard let value = try? getValue(for: AttributeType.value(nil, 0), with: handle, with: session) else {
+            return nil
+        }
+        return value
+    }()
+
+    private func getValue(for attr: AttributeType, with handle: CK_OBJECT_HANDLE, with session: Pkcs11Session?) throws -> Data {
+        guard let session else {
+            throw TokenError.generalError
+        }
+
         var template = [attr].map { $0.attr }
-        var rv = C_GetAttributeValue(session, handle, &template, CK_ULONG(template.count))
+        var rv = C_GetAttributeValue(session.handle, handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             throw TokenError.generalError
         }
@@ -27,7 +54,7 @@ extension Pkcs11Object {
             template[0].pValue.deallocate()
         }
 
-        rv = C_GetAttributeValue(session, handle, &template, CK_ULONG(template.count))
+        rv = C_GetAttributeValue(session.handle, handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             throw TokenError.generalError
         }
@@ -37,60 +64,7 @@ extension Pkcs11Object {
     }
 }
 
-struct Pkcs11Cert: Pkcs11Object {
-    private(set) var id: String = ""
-    private(set) var body: Data?
-    private(set) var handle: CK_OBJECT_HANDLE
-
-    init?(with handle: CK_OBJECT_HANDLE, _ session: CK_SESSION_HANDLE) {
-        self.handle = handle
-
-        guard let dataId = try? getValue(for: AttributeType.id(nil, 0), with: handle, with: session) else {
-            return nil
-        }
-        self.id = String(decoding: dataId, as: UTF8.self)
-
-        guard let value = try? getValue(for: AttributeType.value(nil, 0), with: handle, with: session) else {
-            return nil
-        }
-        self.body = value
-    }
-}
-
-struct Pkcs11PrivateKey: Pkcs11Object {
-    private(set) var id: String = ""
-    private(set) var body: Data?
-    private(set) var handle: CK_OBJECT_HANDLE
-
-    init?(with handle: CK_OBJECT_HANDLE, _ session: CK_SESSION_HANDLE) {
-        self.handle = handle
-        guard let dataId = try? getValue(for: AttributeType.id(nil, 0), with: handle, with: session) else {
-            return nil
-        }
-        self.id = String(decoding: dataId, as: UTF8.self)
-    }
-}
-
-struct Pkcs11PublicKey: Pkcs11Object {
-    private(set) var id: String = ""
-    private(set) var body: Data?
-    private(set) var handle: CK_OBJECT_HANDLE
-
-    init?(with handle: CK_OBJECT_HANDLE, _ session: CK_SESSION_HANDLE) {
-        self.handle = handle
-        guard let dataId = try? getValue(for: AttributeType.id(nil, 0), with: handle, with: session) else {
-            return nil
-        }
-        self.id = String(decoding: dataId, as: UTF8.self)
-
-        guard let value = try? getValue(for: AttributeType.value(nil, 0), with: handle, with: session) else {
-            return nil
-        }
-        self.body = value
-    }
-}
-
 struct Pkcs11KeyPair {
-    let pubKey: Pkcs11Object
-    let privateKey: Pkcs11Object
+    let pubKey: Pkcs11ObjectProtocol
+    let privateKey: Pkcs11ObjectProtocol
 }

@@ -13,15 +13,13 @@ protocol TokenProtocol {
     var model: TokenModel { get }
     var type: TokenType { get }
     var connectionType: ConnectionType { get }
-    var session: CK_SESSION_HANDLE { get }
 
     func login(with pin: String) throws
     func logout()
 
     func generateKeyPair(with id: String) throws
-    func deleteKeyPair(with id: String) throws
 
-    func enumerateCerts(by id: String?) throws -> [Pkcs11Cert]
+    func enumerateCerts(by id: String?) throws -> [Pkcs11ObjectProtocol]
     func enumerateKeys(by id: String?) throws -> [Pkcs11KeyPair]
 
     func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer>
@@ -45,7 +43,7 @@ class Token: TokenProtocol, Identifiable {
     private(set) var model: TokenModel = .rutoken2
     private(set) var connectionType: ConnectionType = .nfc
     private(set) var type: TokenType = .usb
-    private(set) var session = CK_SESSION_HANDLE(NULL_PTR)
+    private(set) var session: Pkcs11Session
 
     private let engine: RtEngineWrapperProtocol
 
@@ -80,10 +78,11 @@ class Token: TokenProtocol, Identifiable {
             return nil
         }
 
-        rv = C_OpenSession(self.slot, CK_FLAGS(CKF_SERIAL_SESSION | CKF_RW_SESSION), nil, nil, &self.session)
-        guard rv == CKR_OK else {
+        guard let session = Pkcs11Session(slot: self.slot) else {
             return nil
         }
+        self.session = session
+
         guard let (currentInterfaceBits, supportedInterfacesBits) = getTokenInterfaces() else {
             return nil
         }
@@ -115,27 +114,16 @@ class Token: TokenProtocol, Identifiable {
     // MARK: - Public API
     func login(with pin: String) throws {
         try checkingToken {
-            var rawPin: [UInt8] = Array(pin.utf8)
-            let rv = C_Login(session, CK_USER_TYPE(CKU_USER), &rawPin, CK_ULONG(rawPin.count))
-            guard rv == CKR_OK || rv == CKR_USER_ALREADY_LOGGED_IN else {
-                switch rv {
-                case CKR_PIN_INCORRECT:
-                    throw TokenError.incorrectPin(attemptsLeft: try getPinAttempts())
-                case CKR_PIN_LOCKED:
-                    throw TokenError.lockedPin
-                default:
-                    throw TokenError.generalError
-                }
-            }
+            try session.login(pin: pin)
         }
     }
 
     func logout() {
-        C_Logout(session)
+        session.logout()
     }
 
-    func enumerateCerts(by id: String?) throws -> [Pkcs11Cert] {
-        var certs: [Pkcs11Cert] = []
+    func enumerateCerts(by id: String?) throws -> [Pkcs11ObjectProtocol] {
+        var certs: [Pkcs11Object] = []
         var certTemplate = [
             AttributeType.objectClass(.cert),
             .attrTrue(CKA_TOKEN),
@@ -151,10 +139,7 @@ class Token: TokenProtocol, Identifiable {
         let certObjects = try findObjects(certTemplate)
 
         for obj in certObjects {
-            guard let cert = Pkcs11Cert(with: obj, session) else {
-                throw TokenError.generalError
-            }
-            certs.append(cert)
+            certs.append(Pkcs11Object(with: obj, session))
         }
         return certs
     }
@@ -162,7 +147,7 @@ class Token: TokenProtocol, Identifiable {
     func enumerateKeys(by id: String?) throws -> [Pkcs11KeyPair] {
         var keyPairs: [Pkcs11KeyPair] = []
 
-        // MARK: - Prepare key templates
+        // MARK: Prepare key templates
         var pubKeyTemplate = [
             AttributeType.objectClass(.publicKey), .attrTrue(CKA_TOKEN), .attrFalse(CKA_PRIVATE)
         ].map { $0.attr }
@@ -177,24 +162,19 @@ class Token: TokenProtocol, Identifiable {
             privateKeyTemplate.append(AttributeType.id(idPointer.pointer, UInt(id.count)).attr)
         }
 
-        // MARK: - Find public keys
+        // MARK: Find public keys
         let pubKeyObjects = try findObjects(pubKeyTemplate)
 
-        var publicKeys: [Pkcs11PublicKey] = []
+        var publicKeys: [Pkcs11Object] = []
         for obj in pubKeyObjects {
-            guard let pubKey = Pkcs11PublicKey(with: obj, session) else {
-                continue
-            }
-            publicKeys.append(pubKey)
+            publicKeys.append(Pkcs11Object(with: obj, session))
         }
 
-        // MARK: - Find private keys
+        // MARK: Find private keys
         let privateKeyObjects = try findObjects(privateKeyTemplate)
 
         for obj in privateKeyObjects {
-            guard let privateKey = Pkcs11PrivateKey(with: obj, session) else {
-                continue
-            }
+            let privateKey = Pkcs11Object(with: obj, session)
             if let pubKey = publicKeys.first(where: { $0.id == privateKey.id }) {
                 keyPairs.append(.init(pubKey: pubKey, privateKey: privateKey))
             }
@@ -208,7 +188,7 @@ class Token: TokenProtocol, Identifiable {
             throw TokenError.keyNotFound
         }
 
-        guard let evpPKey = try? engine.wrapKeys(with: session,
+        guard let evpPKey = try? engine.wrapKeys(with: session.handle,
                                                  privateKeyHandle: keyPair.privateKey.handle,
                                                  pubKeyHandle: keyPair.pubKey.handle) else {
             throw TokenError.generalError
@@ -239,7 +219,7 @@ class Token: TokenProtocol, Identifiable {
 
         var gostR3410_2012_256KeyPairGenMech: CK_MECHANISM = CK_MECHANISM(mechanism: CKM_GOSTR3410_KEY_PAIR_GEN, pParameter: nil, ulParameterLen: 0)
 
-        let rv = C_GenerateKeyPair(session, &gostR3410_2012_256KeyPairGenMech,
+        let rv = C_GenerateKeyPair(session.handle, &gostR3410_2012_256KeyPairGenMech,
                                    &publicKeyTemplate, CK_ULONG(publicKeyTemplate.count),
                                    &privateKeyTemplate, CK_ULONG(privateKeyTemplate.count),
                                    &publicKey, &privateKey)
@@ -262,7 +242,7 @@ class Token: TokenProtocol, Identifiable {
         }
 
         for obj in objects {
-            let rv = C_DestroyObject(session, obj)
+            let rv = C_DestroyObject(session.handle, obj)
             guard rv == CKR_OK else {
                 throw TokenError.generalError
             }
@@ -276,7 +256,7 @@ class Token: TokenProtocol, Identifiable {
 
         let idPointer = id.createPointer()
 
-        // MARK: - Prepare cert template
+        // MARK: Prepare cert template
         var certTemplate = [
             AttributeType.value(idPointer.pointer, UInt(id.count)),
             .objectClass(.cert),
@@ -288,7 +268,7 @@ class Token: TokenProtocol, Identifiable {
         ].map { $0.attr }
 
         var certHandle = CK_OBJECT_HANDLE()
-        let rv = C_CreateObject(session, &certTemplate, CK_ULONG(certTemplate.count), &certHandle)
+        let rv = C_CreateObject(session.handle, &certTemplate, CK_ULONG(certTemplate.count), &certHandle)
         guard rv == CKR_OK else {
             throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
         }
@@ -309,17 +289,6 @@ class Token: TokenProtocol, Identifiable {
         }
     }
 
-    private func getPinAttempts() throws -> UInt {
-        var exInfo = CK_TOKEN_INFO_EXTENDED()
-        exInfo.ulSizeofThisStructure = UInt(MemoryLayout.size(ofValue: exInfo))
-        let rv = C_EX_GetTokenInfoExtended(slot, &exInfo)
-        guard rv == CKR_OK else {
-            throw TokenError.generalError
-        }
-
-        return exInfo.ulUserRetryCountLeft
-    }
-
     private func getTokenInterfaces() -> (CK_ULONG, CK_ULONG)? {
         let objectTemplate = [AttributeType.objectClass(.hwFeature), AttributeType.hwFeatureType].map { $0.attr }
 
@@ -336,7 +305,7 @@ class Token: TokenProtocol, Identifiable {
                                                   ulValueLen: valueSize)
 
         var template = [currentInterfaceAttr, supportedInterfaceAttr]
-        var rv = C_GetAttributeValue(session, handle, &template, CK_ULONG(template.count))
+        var rv = C_GetAttributeValue(session.handle, handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             return nil
         }
@@ -350,7 +319,7 @@ class Token: TokenProtocol, Identifiable {
             }
         }
 
-        rv = C_GetAttributeValue(session, handle, &template, CK_ULONG(template.count))
+        rv = C_GetAttributeValue(session.handle, handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             return nil
         }
@@ -363,12 +332,12 @@ class Token: TokenProtocol, Identifiable {
 
     private func findObjects(_ attributes: [CK_ATTRIBUTE]) throws -> [CK_OBJECT_HANDLE] {
         var template = attributes
-        var rv = C_FindObjectsInit(session, &template, CK_ULONG(template.count))
+        var rv = C_FindObjectsInit(session.handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
         }
         defer {
-            C_FindObjectsFinal(self.session)
+            C_FindObjectsFinal(session.handle)
         }
 
         var count: CK_ULONG = 0
@@ -378,7 +347,7 @@ class Token: TokenProtocol, Identifiable {
         repeat {
             var handles: [CK_OBJECT_HANDLE] = Array(repeating: 0x00, count: Int(maxCount))
 
-            rv = C_FindObjects(self.session, &handles, maxCount, &count)
+            rv = C_FindObjects(session.handle, &handles, maxCount, &count)
             guard rv == CKR_OK else {
                 throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
             }

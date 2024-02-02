@@ -33,6 +33,7 @@
 		44B4A81C2B6CD15D00E59F63 /* AboutAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B4A81B2B6CD15D00E59F63 /* AboutAppView.swift */; };
 		44EED1B62B1F115B0036F8DA /* TokenMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EED1B52B1F115B0036F8DA /* TokenMock.swift */; };
 		44F0323A2B5125BC00466080 /* Pkcs11ObjectMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F032392B5125BC00466080 /* Pkcs11ObjectMock.swift */; };
+		5E7331A72B6D71D400E96C06 /* Pkcs11Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E7331A62B6D71D400E96C06 /* Pkcs11Session.swift */; };
 		5ED8B92C2ACD8EA100BCFC20 /* TinyAsyncRedux in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B92B2ACD8EA100BCFC20 /* TinyAsyncRedux */; };
 		5ED8B9322ACD8FAC00BCFC20 /* rtpkcs11ecp in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B9312ACD8FAC00BCFC20 /* rtpkcs11ecp */; };
 		5ED8B9352ACD8FD100BCFC20 /* rtengine in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B9342ACD8FD100BCFC20 /* rtengine */; };
@@ -125,6 +126,7 @@
 		44B4A81B2B6CD15D00E59F63 /* AboutAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutAppView.swift; sourceTree = "<group>"; };
 		44EED1B52B1F115B0036F8DA /* TokenMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMock.swift; sourceTree = "<group>"; };
 		44F032392B5125BC00466080 /* Pkcs11ObjectMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11ObjectMock.swift; sourceTree = "<group>"; };
+		5E7331A62B6D71D400E96C06 /* Pkcs11Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Session.swift; sourceTree = "<group>"; };
 		5EF30EDD2B1A823700E48627 /* OnPerformTokenConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnPerformTokenConnection.swift; sourceTree = "<group>"; };
 		5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rutoken Tech.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EF75DDE2AC707BD001834BE /* RutokenTechApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RutokenTechApp.swift; sourceTree = "<group>"; };
@@ -453,6 +455,7 @@
 				D4B130B42B0DDB2200AD390F /* Pkcs11Helper.swift */,
 				4469F7872B34512E000DCF8B /* AttributeType.swift */,
 				4464FAA72B359ED5005F732F /* Pkcs11Object.swift */,
+				5E7331A62B6D71D400E96C06 /* Pkcs11Session.swift */,
 			);
 			path = Pkcs11;
 			sourceTree = "<group>";
@@ -690,6 +693,7 @@
 				446F71062B6271C400684E0D /* OnPerformGenCert.swift in Sources */,
 				44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */,
 				D4F27DD32B6A5752003D8AE6 /* Bundle+readInfo.swift in Sources */,
+				5E7331A72B6D71D400E96C06 /* Pkcs11Session.swift in Sources */,
 				D4B130B02B0CFFCD00AD390F /* TokenModel.swift in Sources */,
 				7D38D6DA2B0E2C190045FBAD /* AppState.swift in Sources */,
 				7DCC9AF12B3B2C9A002788B5 /* KeyModel.swift in Sources */,

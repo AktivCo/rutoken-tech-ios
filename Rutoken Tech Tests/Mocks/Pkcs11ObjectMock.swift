@@ -10,8 +10,9 @@ import Foundation
 @testable import Rutoken_Tech
 
 
-struct Pkcs11ObjectMock: Pkcs11Object {
-    let id: String
+struct Pkcs11ObjectMock: Pkcs11ObjectProtocol {
+    let id: String?
     let body: Data?
-    let handle: CK_OBJECT_HANDLE
+    let handle = CK_OBJECT_HANDLE(NULL_PTR)
 }
+
