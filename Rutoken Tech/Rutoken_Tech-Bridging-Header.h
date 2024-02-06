@@ -24,4 +24,8 @@ void exposed_sk_X509_EXTENSION_pop_free(STACK_OF(X509_EXTENSION) *sk, void(*free
 
 const EVP_MD * exposed_EVP_get_digestbynid(int type);
 
+int exposed_sk_X509_EXTENSION_num(STACK_OF(X509_EXTENSION) *sk);
+
+X509_EXTENSION * exposed_sk_X509_EXTENSION_value(STACK_OF(X509_EXTENSION) *sk, int idx);
+
 #endif /* Rutoken_Tech_Bridging_Header_h */

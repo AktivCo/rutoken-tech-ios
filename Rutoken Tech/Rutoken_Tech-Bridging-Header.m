@@ -15,3 +15,12 @@ void exposed_sk_X509_EXTENSION_pop_free(STACK_OF(X509_EXTENSION) *sk, void(*free
 const EVP_MD * exposed_EVP_get_digestbynid(int type) {
     return EVP_get_digestbynid(type);
 }
+
+int exposed_sk_X509_EXTENSION_num(STACK_OF(X509_EXTENSION) *sk) {
+    return sk_X509_EXTENSION_num(sk);
+}
+
+X509_EXTENSION * exposed_sk_X509_EXTENSION_value(STACK_OF(X509_EXTENSION) *sk, int idx) {
+    return sk_X509_EXTENSION_value(sk, idx);
+}
+
