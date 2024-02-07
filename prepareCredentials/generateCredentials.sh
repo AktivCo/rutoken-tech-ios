@@ -18,5 +18,5 @@ $openssl_path \
 
 $openssl_path \
   req -engine rtengine -utf8 -new -x509 -md_gost12_256 \
-  -utf8 -config "$script_dir/cert.conf" -days 365 -key "$credentials_dir/$sec.key" -out "$credentials_dir/$sec.pem"
+  -utf8 -config "$script_dir/cert.conf" -days 3650 -key "$credentials_dir/$sec.key" -out "$credentials_dir/$sec.pem"
 done
