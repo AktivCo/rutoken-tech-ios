@@ -55,6 +55,8 @@ struct AppReducer: Reducer {
             newState.caGenerateKeyPairState.key = nil
             newState.caGenerateCertState.inProgress = false
             newState.caGenerateCertState.keys = []
+        case .openLink:
+            break
         }
         return newState
     }

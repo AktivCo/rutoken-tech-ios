@@ -64,6 +64,8 @@
 		D42178192B205FD700D08948 /* AppAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42178182B205FD700D08948 /* AppAlert.swift */; };
 		D423F8BF2B3574BB0058ECDE /* GetTokenInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D423F8BE2B3574BB0058ECDE /* GetTokenInfoTests.swift */; };
 		D423F8C12B3574EC0058ECDE /* GenerateKeyPairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D423F8C02B3574EC0058ECDE /* GenerateKeyPairTests.swift */; };
+		D433144A2B767E2700442809 /* OnHandleOpenLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43314492B767E2600442809 /* OnHandleOpenLink.swift */; };
+		D433144C2B76848900442809 /* LinkType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D433144B2B76848900442809 /* LinkType.swift */; };
 		D437117D2B67A70A00441FBC /* SizeReaderViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D437117C2B67A70A00441FBC /* SizeReaderViewModifier.swift */; };
 		D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */; };
 		D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F52AEA796E00B0AB64 /* RtAppTab.swift */; };
@@ -152,6 +154,8 @@
 		D42178182B205FD700D08948 /* AppAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlert.swift; sourceTree = "<group>"; };
 		D423F8BE2B3574BB0058ECDE /* GetTokenInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTokenInfoTests.swift; sourceTree = "<group>"; };
 		D423F8C02B3574EC0058ECDE /* GenerateKeyPairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateKeyPairTests.swift; sourceTree = "<group>"; };
+		D43314492B767E2600442809 /* OnHandleOpenLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnHandleOpenLink.swift; sourceTree = "<group>"; };
+		D433144B2B76848900442809 /* LinkType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkType.swift; sourceTree = "<group>"; };
 		D437117C2B67A70A00441FBC /* SizeReaderViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeReaderViewModifier.swift; sourceTree = "<group>"; };
 		D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IphoneRootView.swift; sourceTree = "<group>"; };
 		D44997F52AEA796E00B0AB64 /* RtAppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtAppTab.swift; sourceTree = "<group>"; };
@@ -286,6 +290,7 @@
 				5EF30EDD2B1A823700E48627 /* OnPerformTokenConnection.swift */,
 				7D9D3C142B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift */,
 				446F71052B6271C400684E0D /* OnPerformGenCert.swift */,
+				D43314492B767E2600442809 /* OnHandleOpenLink.swift */,
 			);
 			path = Middlewares;
 			sourceTree = "<group>";
@@ -443,6 +448,7 @@
 				D4FC26C82B270C580029060D /* NfcMessages.swift */,
 				7DCC9AF02B3B2C9A002788B5 /* KeyModel.swift */,
 				44416B2E2B555F4500EC5F66 /* CertRequest.swift */,
+				D433144B2B76848900442809 /* LinkType.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -689,6 +695,7 @@
 				D42178192B205FD700D08948 /* AppAlert.swift in Sources */,
 				5EF75DE12AC707BD001834BE /* RootView.swift in Sources */,
 				4416A27A2B70F9F600645800 /* View+createLabel.swift in Sources */,
+				D433144C2B76848900442809 /* LinkType.swift in Sources */,
 				D4B130A82B0CFD2F00AD390F /* CryptoManager.swift in Sources */,
 				446F71062B6271C400684E0D /* OnPerformGenCert.swift in Sources */,
 				44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */,
@@ -696,6 +703,7 @@
 				5E7331A72B6D71D400E96C06 /* Pkcs11Session.swift in Sources */,
 				D4B130B02B0CFFCD00AD390F /* TokenModel.swift in Sources */,
 				7D38D6DA2B0E2C190045FBAD /* AppState.swift in Sources */,
+				D433144A2B767E2700442809 /* OnHandleOpenLink.swift in Sources */,
 				7DCC9AF12B3B2C9A002788B5 /* KeyModel.swift in Sources */,
 				5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */,
 				4469F7882B34512E000DCF8B /* AttributeType.swift in Sources */,

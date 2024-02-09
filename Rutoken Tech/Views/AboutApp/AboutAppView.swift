@@ -15,6 +15,8 @@ struct AboutAppView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
 
     private let phoneNumber = "+7 (495) 925-77-90"
+    private let privacyPolicyURL = "rutoken.ru"
+    private let appLicenseURL = "rutoken.ru"
 
     func createLabel(_ text: String) -> some View {
         HStack(spacing: 0) {
@@ -72,12 +74,14 @@ struct AboutAppView: View {
     var linkList: some View {
         VStack(spacing: 0) {
             Button {
+                store.send(.openLink(.browser(privacyPolicyURL)))
             } label: {
                 createLabel("Политика конфиденциальности")
             }
             Divider()
                 .padding(.horizontal, 12)
             Button {
+                store.send(.openLink(.browser(appLicenseURL)))
             } label: {
                 createLabel("Лицензионное соглашение Рутокен")
             }
@@ -95,8 +99,7 @@ struct AboutAppView: View {
                 .padding(.top, 6)
                 .padding(.bottom, 7)
             Button {
-                guard let number = URL(string: "tel://" + phoneNumber) else { return }
-                UIApplication.shared.open(number)
+                store.send(.openLink(.phone(phoneNumber)))
             } label: {
                 HStack(spacing: 0) {
                     Text("Телефон")
@@ -145,4 +148,3 @@ struct AboutAppView_Previews: PreviewProvider {
         }
     }
 }
-

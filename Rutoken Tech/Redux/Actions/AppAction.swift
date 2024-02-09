@@ -33,4 +33,7 @@ enum AppAction {
     case generateKeyPair(ConnectionType, String, String, String)
     case finishGenerateKeyPair
     case updateKeys([KeyModel])
+
+    // MARK: Other
+    case openLink(LinkType)
 }

@@ -93,7 +93,9 @@ extension CsrModel {
         SubjectEntryTitle.allCases.forEach {
             switch $0 {
             case .snils:
-                tmp[$0] = $0.defaultValueForModel.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "")
+                var snilsValue = $0.defaultValueForModel
+                snilsValue.removeAll(where: { "- ".contains($0) })
+                tmp[$0] = snilsValue
             case .countryName:
                 tmp[$0] = "RU"
             default:
