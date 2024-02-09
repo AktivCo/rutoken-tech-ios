@@ -20,6 +20,7 @@ enum Pkcs11Error: Error {
 }
 
 class Pkcs11Helper: Pkcs11HelperProtocol {
+    private var availableTokens: [CK_SLOT_ID: Token] = [:]
     private var tokenPublisher = CurrentValueSubject<[TokenProtocol], Never>([])
     public var tokens: AnyPublisher<[TokenProtocol], Never> {
         tokenPublisher.eraseToAnyPublisher()
@@ -46,11 +47,9 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
         assert(rv == CKR_OK)
 
         DispatchQueue.global().async { [unowned self] in
-            guard let availableTokens = try? getTokens() else {
-                return
-            }
+            availableTokens = getTokens()
+            tokenPublisher.send(Array(availableTokens.values))
 
-            tokenPublisher.send(availableTokens)
             while true {
                 var slot = CK_SLOT_ID()
                 let rv = C_WaitForSlotEvent(0, &slot, nil)
@@ -58,13 +57,12 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
                 guard rv != CKR_CRYPTOKI_NOT_INITIALIZED else { return }
                 guard rv == CKR_OK else { continue }
 
-                var tokens = tokenPublisher.value
-                tokens.removeAll(where: { $0.slot == slot })
+                availableTokens.removeValue(forKey: slot)
 
                 if isPresent(slot), let token = Token(with: slot, engine) {
-                    tokens.append(token)
+                    availableTokens[slot] = token
                 }
-                tokenPublisher.send(tokens)
+                tokenPublisher.send(Array(availableTokens.values))
             }
         }
     }
@@ -74,24 +72,28 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
     }
 
     // MARK: - Private API
-    private func getTokens() throws -> [Token] {
+    private func getTokens() -> [CK_SLOT_ID: Token] {
         var ctr: UInt = 0
         var rv = C_GetSlotList(CK_BBOOL(CK_TRUE), nil, &ctr)
         guard rv == CKR_OK else {
-            throw Pkcs11Error.unknownError
+            return [:]
         }
 
         guard ctr != 0 else {
-            return []
+            return [:]
         }
 
         var slots = Array(repeating: CK_SLOT_ID(0), count: Int(ctr))
         rv = C_GetSlotList(CK_BBOOL(CK_TRUE), &slots, &ctr)
         guard rv == CKR_OK else {
-            throw Pkcs11Error.unknownError
+            return [:]
         }
 
-        return slots.compactMap { Token(with: $0, engine) }
+        return slots.reduce([CK_SLOT_ID: Token]()) { (dict, slot) -> [CK_SLOT_ID: Token] in
+            var dict = dict
+            dict[slot] = Token(with: slot, engine)
+            return dict
+        }
     }
 
     private func isPresent(_ slot: CK_SLOT_ID) -> Bool {

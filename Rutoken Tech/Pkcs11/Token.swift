@@ -7,7 +7,6 @@
 
 
 protocol TokenProtocol {
-    var slot: CK_SLOT_ID { get }
     var label: String { get }
     var serial: String { get }
     var model: TokenModel { get }
@@ -36,16 +35,15 @@ enum TokenError: Error, Equatable {
 }
 
 class Token: TokenProtocol, Identifiable {
-    let slot: CK_SLOT_ID
+    private let slot: CK_SLOT_ID
+    private let session: Pkcs11Session
+    private let engine: RtEngineWrapperProtocol
 
     let label: String
     let serial: String
-    private(set) var model: TokenModel = .rutoken2
-    private(set) var connectionType: ConnectionType = .nfc
-    private(set) var type: TokenType = .usb
-    private(set) var session: Pkcs11Session
-
-    private let engine: RtEngineWrapperProtocol
+    let model: TokenModel
+    let connectionType: ConnectionType
+    let type: TokenType
 
     init?(with slot: CK_SLOT_ID, _ engine: RtEngineWrapperProtocol) {
         self.slot = slot
@@ -71,19 +69,12 @@ class Token: TokenProtocol, Identifiable {
         self.label = label
 
         // MARK: Get supported interfaces
-        var extendedTokenInfo = CK_TOKEN_INFO_EXTENDED()
-        extendedTokenInfo.ulSizeofThisStructure = UInt(MemoryLayout.size(ofValue: extendedTokenInfo))
-        rv = C_EX_GetTokenInfoExtended(slot, &extendedTokenInfo)
-        guard rv == CKR_OK else {
-            return nil
-        }
-
         guard let session = Pkcs11Session(slot: self.slot) else {
             return nil
         }
         self.session = session
 
-        guard let (currentInterfaceBits, supportedInterfacesBits) = getTokenInterfaces() else {
+        guard let (currentInterfaceBits, supportedInterfacesBits) = Token.getTokenInterfaces(session: session.handle) else {
             return nil
         }
 
@@ -102,6 +93,14 @@ class Token: TokenProtocol, Identifiable {
         case .usb:
             type = supportedInterfaces.contains(.nfc) ? .dual : .usb
             connectionType = .usb
+        }
+
+        // MARK: Get model
+        var extendedTokenInfo = CK_TOKEN_INFO_EXTENDED()
+        extendedTokenInfo.ulSizeofThisStructure = UInt(MemoryLayout.size(ofValue: extendedTokenInfo))
+        rv = C_EX_GetTokenInfoExtended(slot, &extendedTokenInfo)
+        guard rv == CKR_OK else {
+            return nil
         }
 
         guard let model = TokenModel(tokenInfo.hardwareVersion, tokenInfo.firmwareVersion,
@@ -136,7 +135,7 @@ class Token: TokenProtocol, Identifiable {
             certTemplate.append(AttributeType.id(idPointer.pointer, UInt(id.count)).attr)
         }
 
-        let certObjects = try findObjects(certTemplate)
+        let certObjects = try Token.findObjects(certTemplate, in: session.handle)
 
         for obj in certObjects {
             certs.append(Pkcs11Object(with: obj, session))
@@ -163,7 +162,7 @@ class Token: TokenProtocol, Identifiable {
         }
 
         // MARK: Find public keys
-        let pubKeyObjects = try findObjects(pubKeyTemplate)
+        let pubKeyObjects = try Token.findObjects(pubKeyTemplate, in: session.handle)
 
         var publicKeys: [Pkcs11Object] = []
         for obj in pubKeyObjects {
@@ -171,7 +170,7 @@ class Token: TokenProtocol, Identifiable {
         }
 
         // MARK: Find private keys
-        let privateKeyObjects = try findObjects(privateKeyTemplate)
+        let privateKeyObjects = try Token.findObjects(privateKeyTemplate, in: session.handle)
 
         for obj in privateKeyObjects {
             let privateKey = Pkcs11Object(with: obj, session)
@@ -235,7 +234,7 @@ class Token: TokenProtocol, Identifiable {
             .keyType(&keyTypeGostR3410_2012_256, UInt(MemoryLayout.size(ofValue: keyTypeGostR3410_2012_256)))
         ].map { $0.attr }
 
-        let objects = try findObjects(template)
+        let objects = try Token.findObjects(template, in: session.handle)
 
         guard !objects.isEmpty else {
             throw TokenError.generalError
@@ -289,10 +288,10 @@ class Token: TokenProtocol, Identifiable {
         }
     }
 
-    private func getTokenInterfaces() -> (CK_ULONG, CK_ULONG)? {
+    class private func getTokenInterfaces(session: CK_SESSION_HANDLE) -> (CK_ULONG, CK_ULONG)? {
         let objectTemplate = [AttributeType.objectClass(.hwFeature), AttributeType.hwFeatureType].map { $0.attr }
 
-        guard let handle = try? findObjects(objectTemplate).first else {
+        guard let handle = try? Token.findObjects(objectTemplate, in: session).first else {
             return nil
         }
 
@@ -305,7 +304,7 @@ class Token: TokenProtocol, Identifiable {
                                                   ulValueLen: valueSize)
 
         var template = [currentInterfaceAttr, supportedInterfaceAttr]
-        var rv = C_GetAttributeValue(session.handle, handle, &template, CK_ULONG(template.count))
+        var rv = C_GetAttributeValue(session, handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             return nil
         }
@@ -319,7 +318,7 @@ class Token: TokenProtocol, Identifiable {
             }
         }
 
-        rv = C_GetAttributeValue(session.handle, handle, &template, CK_ULONG(template.count))
+        rv = C_GetAttributeValue(session, handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             return nil
         }
@@ -330,14 +329,14 @@ class Token: TokenProtocol, Identifiable {
                                        count: Int(template[1].ulValueLen)).load(as: CK_ULONG.self))
     }
 
-    private func findObjects(_ attributes: [CK_ATTRIBUTE]) throws -> [CK_OBJECT_HANDLE] {
+    class private func findObjects(_ attributes: [CK_ATTRIBUTE], in session: CK_SESSION_HANDLE) throws -> [CK_OBJECT_HANDLE] {
         var template = attributes
-        var rv = C_FindObjectsInit(session.handle, &template, CK_ULONG(template.count))
+        var rv = C_FindObjectsInit(session, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
         }
         defer {
-            C_FindObjectsFinal(session.handle)
+            C_FindObjectsFinal(session)
         }
 
         var count: CK_ULONG = 0
@@ -347,7 +346,7 @@ class Token: TokenProtocol, Identifiable {
         repeat {
             var handles: [CK_OBJECT_HANDLE] = Array(repeating: 0x00, count: Int(maxCount))
 
-            rv = C_FindObjects(session.handle, &handles, maxCount, &count)
+            rv = C_FindObjects(session, &handles, maxCount, &count)
             guard rv == CKR_OK else {
                 throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
             }
