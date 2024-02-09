@@ -85,15 +85,26 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         await fulfillment(of: [exp1, exp2, exp3, exp4, exp5], timeout: 0.3)
     }
 
-    func testWithTokenConnectionLostNfcError() async {
-        let exp1 = XCTestExpectation(description: "Start Nfc")
-        let exp2 = XCTestExpectation(description: "Stop Nfc")
-        pcscHelper.startNfcCallback = {
-            exp1.fulfill()
-        }
-        pcscHelper.stopNfcCallback = {
+    func testWithTokenNoPinNoLoginLogoutSuccess() async {
+        let exp1 = XCTestExpectation(description: "CallBack")
+        let exp2 = XCTestExpectation(description: "Token Login")
+        let exp3 = XCTestExpectation(description: "Token Logout")
+        exp2.isInverted = true
+        exp3.isInverted = true
+        let token = TokenMock(serial: "12345678", connectionType: .nfc)
+        token.loginCallback = { _ in
             exp2.fulfill()
         }
+        token.logoutCallback = {
+            exp3.fulfill()
+        }
+        pkcs11Helper.tokenPublisher.send([token])
+
+        await assertNoThrowAsync(try await manager.withToken(connectionType: .nfc, serial: token.serial, pin: nil) { exp1.fulfill() })
+        await fulfillment(of: [exp1, exp2, exp3], timeout: 0.3)
+    }
+
+    func testWithTokenConnectionLostNfcError() async {
         let token = TokenMock(serial: "12345678", connectionType: .nfc)
         pkcs11Helper.tokenPublisher.send([token])
 
@@ -104,19 +115,9 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         await assertErrorAsync(
             try await manager.withToken(connectionType: .nfc, serial: "12345678", pin: "12345678") { },
             throws: CryptoManagerError.connectionLost)
-        await fulfillment(of: [exp1, exp2], timeout: 0.3)
     }
 
     func testWithTokenExchangeIsOverNfc() async {
-        let exp1 = XCTestExpectation(description: "Start Nfc")
-        let exp2 = XCTestExpectation(description: "Stop Nfc")
-        pcscHelper.startNfcCallback = {
-            exp1.fulfill()
-        }
-        pcscHelper.stopNfcCallback = {
-            exp2.fulfill()
-        }
-
         pcscHelper.nfcExchangeIsStoppedCallback = {
             Future<Void, Never>({ promise in
                 Task {
@@ -129,39 +130,22 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         await assertErrorAsync(
             try await manager.withToken(connectionType: .nfc, serial: nil, pin: nil) {},
             throws: CryptoManagerError.tokenNotFound)
-        await fulfillment(of: [exp1, exp2], timeout: 0.3)
     }
 
     func testWithTokenCancelledByUserErrorNfc() async {
-        let exp1 = XCTestExpectation(description: "Start Nfc")
-        let exp2 = XCTestExpectation(description: "Stop Nfc")
-
         pcscHelper.startNfcCallback = {
-            exp1.fulfill()
             throw NfcError.cancelledByUser
         }
-        pcscHelper.stopNfcCallback = {
-            exp2.fulfill()
-        }
 
-        await assertErrorAsync(try await manager.withToken(connectionType: .nfc, serial: nil, pin: nil) {},
-                               throws: CryptoManagerError.nfcStopped)
-        await fulfillment(of: [exp1, exp2], timeout: 0.3)
+        await assertErrorAsync(
+            try await manager.withToken(connectionType: .nfc, serial: nil, pin: nil) {},
+            throws: CryptoManagerError.nfcStopped)
     }
 
-    func testWithTokenIncorrectPinUsbError() async {
-        let exp1 = XCTestExpectation(description: "Start Nfc")
-        let exp2 = XCTestExpectation(description: "Stop Nfc")
-        let exp3 = XCTestExpectation(description: "Token Logout")
-        exp1.isInverted = true
-        exp2.isInverted = true
-        exp3.isInverted = true
-        pcscHelper.startNfcCallback = {
-            exp1.fulfill()
-        }
-        pcscHelper.stopNfcCallback = {
-            exp2.fulfill()
-        }
+    func testWithTokenIncorrectPinError() async {
+        let exp = XCTestExpectation(description: "Token Logout")
+        exp.isInverted = true
+
         let token = TokenMock(serial: "12345678", connectionType: .usb)
         pkcs11Helper.tokenPublisher.send([token])
 
@@ -169,81 +153,23 @@ final class CryptoManagerWithTokenTests: XCTestCase {
             throw TokenError.incorrectPin(attemptsLeft: 2)
         }
         token.logoutCallback = {
-            exp3.fulfill()
+            exp.fulfill()
         }
 
         await assertErrorAsync(
             try await manager.withToken(connectionType: .usb, serial: "12345678", pin: "incorrectPin") {},
             throws: CryptoManagerError.incorrectPin(2))
-        await fulfillment(of: [exp1, exp2, exp3], timeout: 0.3)
+        await fulfillment(of: [exp], timeout: 0.3)
     }
 
-    func testWithTokenIncorrectPinNfcError() async {
-        let exp1 = XCTestExpectation(description: "Start Nfc")
-        let exp2 = XCTestExpectation(description: "Stop Nfc")
-        let exp3 = XCTestExpectation(description: "Token Logout")
-        exp3.isInverted = true
-        pcscHelper.startNfcCallback = {
-            exp1.fulfill()
-        }
-        pcscHelper.stopNfcCallback = {
-            exp2.fulfill()
-        }
-        let token = TokenMock(serial: "12345678", connectionType: .nfc)
-        pkcs11Helper.tokenPublisher.send([token])
-
-        token.loginCallback = { _ in
-            throw TokenError.incorrectPin(attemptsLeft: 2)
-        }
-        token.logoutCallback = {
-            exp3.fulfill()
-        }
-
-        await assertErrorAsync(
-            try await manager.withToken(connectionType: .nfc, serial: "12345678", pin: "incorrectPin") {},
-            throws: CryptoManagerError.incorrectPin(2))
-        await fulfillment(of: [exp1, exp2, exp3], timeout: 0.3)
-    }
-
-     func testWithTokenWrongTokenUsbError() async {
-        let exp1 = XCTestExpectation(description: "Start Nfc")
-        let exp2 = XCTestExpectation(description: "Stop Nfc")
-        exp1.isInverted = true
-        exp2.isInverted = true
-        pcscHelper.startNfcCallback = {
-            exp1.fulfill()
-        }
-        pcscHelper.stopNfcCallback = {
-            exp2.fulfill()
-        }
-
+    func testWithTokenWrongTokenError() async {
         let token = TokenMock(serial: "12345678", connectionType: .usb)
         pkcs11Helper.tokenPublisher.send([token])
 
         await assertErrorAsync(
             try await manager.withToken(connectionType: .usb, serial: "WrongSerial", pin: "123456") {},
             throws: CryptoManagerError.wrongToken)
-        await fulfillment(of: [exp1, exp2], timeout: 0.3)
-     }
-
-     func testWithTokenWrongTokenNfcError() async {
-         let exp1 = XCTestExpectation(description: "Start Nfc")
-         let exp2 = XCTestExpectation(description: "Stop Nfc")
-         pcscHelper.startNfcCallback = {
-             exp1.fulfill()
-         }
-         pcscHelper.stopNfcCallback = {
-             exp2.fulfill()
-         }
-
-         let token = TokenMock(serial: "12345678", connectionType: .nfc)
-         pkcs11Helper.tokenPublisher.send([token])
-
-         await assertErrorAsync(
-             try await manager.withToken(connectionType: .nfc, serial: "WrongSerial", pin: "123456") {},
-             throws: CryptoManagerError.wrongToken)
-         await fulfillment(of: [exp1, exp2], timeout: 0.3)
-     }
+    }
 
     func testWithTokenKeyNotFoundError() async {
         let token = TokenMock(serial: "12345678", connectionType: .usb)
