@@ -9,29 +9,22 @@
 
 
 class TokenMock: TokenProtocol {
-    let slot: CK_SLOT_ID
     let label: String
     let serial: String
     let model: TokenModel
-    let type: TokenType
-    let connectionType: ConnectionType
+    let currentInterface: TokenInterface
+    let supportedInterfaces: Set<TokenInterface>
 
-    init(slot: CK_SLOT_ID = CK_SLOT_ID(),
-         label: String = "",
+    init(label: String = "",
          serial: String = "",
          model: TokenModel = .rutoken2,
-         connectionType: ConnectionType = .nfc,
-         type: TokenType = .usb) {
-        self.slot = slot
+         currentInterface: TokenInterface = .nfc,
+         supportedInterfaces: Set<TokenInterface> = [.nfc]) {
         self.label = label
         self.serial = serial
         self.model = model
-        self.type = type
-        self.connectionType = connectionType
-    }
-
-    func getInfo() -> TokenInfo {
-        .init(label: self.label, serial: self.serial, model: self.model, connectionType: self.connectionType, type: self.type)
+        self.currentInterface = currentInterface
+        self.supportedInterfaces = supportedInterfaces
     }
 
     func login(with pin: String) throws {

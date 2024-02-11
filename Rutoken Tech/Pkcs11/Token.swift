@@ -10,8 +10,9 @@ protocol TokenProtocol {
     var label: String { get }
     var serial: String { get }
     var model: TokenModel { get }
-    var type: TokenType { get }
-    var connectionType: ConnectionType { get }
+
+    var currentInterface: TokenInterface { get }
+    var supportedInterfaces: Set<TokenInterface> { get }
 
     func login(with pin: String) throws
     func logout()
@@ -42,8 +43,8 @@ class Token: TokenProtocol, Identifiable {
     let label: String
     let serial: String
     let model: TokenModel
-    let connectionType: ConnectionType
-    let type: TokenType
+    let currentInterface: TokenInterface
+    let supportedInterfaces: Set<TokenInterface>
 
     init?(with slot: CK_SLOT_ID, _ engine: RtEngineWrapperProtocol) {
         self.slot = slot
@@ -78,22 +79,12 @@ class Token: TokenProtocol, Identifiable {
             return nil
         }
 
-        guard let interface = TokenInterface(currentInterfaceBits) else {
+        guard let currentInterface = TokenInterface(currentInterfaceBits) else {
             return nil
         }
-        let supportedInterfaces = Set([TokenInterface](bits: supportedInterfacesBits))
+        self.currentInterface = currentInterface
 
-        switch interface {
-        case .nfc:
-            type = supportedInterfaces.contains(.usb) ? .dual : .sc
-            connectionType = .nfc
-        case .sc:
-            type = .sc
-            connectionType = .usb
-        case .usb:
-            type = supportedInterfaces.contains(.nfc) ? .dual : .usb
-            connectionType = .usb
-        }
+        self.supportedInterfaces = Set([TokenInterface](bits: supportedInterfacesBits))
 
         // MARK: Get model
         var extendedTokenInfo = CK_TOKEN_INFO_EXTENDED()
@@ -104,7 +95,7 @@ class Token: TokenProtocol, Identifiable {
         }
 
         guard let model = TokenModel(tokenInfo.hardwareVersion, tokenInfo.firmwareVersion,
-                                     extendedTokenInfo.ulTokenClass, type: self.type) else {
+                                     extendedTokenInfo.ulTokenClass, supportedInterfaces: supportedInterfaces) else {
             return nil
         }
         self.model = model

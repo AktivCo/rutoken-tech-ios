@@ -45,7 +45,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         pcscHelper.stopNfcCallback = {
             exp2.fulfill()
         }
-        let token = TokenMock(serial: "12345678", connectionType: .usb)
+        let token = TokenMock(serial: "12345678", currentInterface: .usb)
         token.loginCallback = { pin in
             XCTAssertEqual(pin, "123456")
             exp3.fulfill()
@@ -71,7 +71,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         pcscHelper.stopNfcCallback = {
             exp2.fulfill()
         }
-        let token = TokenMock(serial: "12345678", connectionType: .nfc)
+        let token = TokenMock(serial: "12345678", currentInterface: .nfc)
         token.loginCallback = { pin in
             XCTAssertEqual(pin, "123456")
             exp3.fulfill()
@@ -91,7 +91,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         let exp3 = XCTestExpectation(description: "Token Logout")
         exp2.isInverted = true
         exp3.isInverted = true
-        let token = TokenMock(serial: "12345678", connectionType: .nfc)
+        let token = TokenMock(serial: "12345678", currentInterface: .nfc)
         token.loginCallback = { _ in
             exp2.fulfill()
         }
@@ -105,7 +105,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
     }
 
     func testWithTokenConnectionLostNfcError() async {
-        let token = TokenMock(serial: "12345678", connectionType: .nfc)
+        let token = TokenMock(serial: "12345678", currentInterface: .nfc)
         pkcs11Helper.tokenPublisher.send([token])
 
         token.loginCallback = { _ in
@@ -146,7 +146,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         let exp = XCTestExpectation(description: "Token Logout")
         exp.isInverted = true
 
-        let token = TokenMock(serial: "12345678", connectionType: .usb)
+        let token = TokenMock(serial: "12345678", currentInterface: .usb)
         pkcs11Helper.tokenPublisher.send([token])
 
         token.loginCallback = { _ in
@@ -163,7 +163,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
     }
 
     func testWithTokenWrongTokenError() async {
-        let token = TokenMock(serial: "12345678", connectionType: .usb)
+        let token = TokenMock(serial: "12345678", currentInterface: .usb)
         pkcs11Helper.tokenPublisher.send([token])
 
         await assertErrorAsync(
@@ -172,7 +172,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
     }
 
     func testWithTokenKeyNotFoundError() async {
-        let token = TokenMock(serial: "12345678", connectionType: .usb)
+        let token = TokenMock(serial: "12345678", currentInterface: .usb)
         token.loginCallback = { pin in
             XCTAssertEqual(pin, "123456")
         }

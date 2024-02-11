@@ -30,7 +30,7 @@ final class CryptoManagerEnumerateKeysTests: XCTestCase {
     }
 
     func testEnumerateKeysConnectionSuccess() async throws {
-        let token = TokenMock(serial: "87654321", connectionType: .usb)
+        let token = TokenMock(serial: "87654321", currentInterface: .usb)
         let testId = "some id"
 
         pkcs11Helper.tokenPublisher.send([token])

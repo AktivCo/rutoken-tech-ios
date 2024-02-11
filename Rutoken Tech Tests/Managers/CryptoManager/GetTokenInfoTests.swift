@@ -30,15 +30,49 @@ class CryptoManagerGetTokenInfoTests: XCTestCase {
                                 openSslHelper: openSslHelper, fileHelper: fileHelper)
     }
 
-    func testGetTokenInfoConnectionSuccess() async throws {
-        let token = TokenMock(serial: "87654321", connectionType: .usb)
+    func testGetTokenInfoUsbSuccess() async throws {
+        let token = TokenMock(serial: "87654321", currentInterface: .usb, supportedInterfaces: [.usb])
         pkcs11Helper.tokenPublisher.send([token])
 
         var result: TokenInfo?
         try await manager.withToken(connectionType: .usb, serial: "87654321", pin: nil) {
             result = try await manager.getTokenInfo()
         }
-        XCTAssertEqual(result, token.getInfo())
+        XCTAssertEqual(result?.serial, token.serial)
+        XCTAssertEqual(result?.label, token.label)
+        XCTAssertEqual(result?.model, token.model)
+        XCTAssertEqual(result?.type, .usb)
+        XCTAssertEqual(result?.connectionType, .usb)
+    }
+
+    func testGetTokenInfoNfcSuccess() async throws {
+        let token = TokenMock(serial: "87654321", currentInterface: .nfc, supportedInterfaces: [.nfc])
+        pkcs11Helper.tokenPublisher.send([token])
+
+        var result: TokenInfo?
+        try await manager.withToken(connectionType: .nfc, serial: "87654321", pin: nil) {
+            result = try await manager.getTokenInfo()
+        }
+        XCTAssertEqual(result?.serial, token.serial)
+        XCTAssertEqual(result?.label, token.label)
+        XCTAssertEqual(result?.model, token.model)
+        XCTAssertEqual(result?.type, .sc)
+        XCTAssertEqual(result?.connectionType, .nfc)
+    }
+
+    func testGetTokenInfoDualSuccess() async throws {
+        let token = TokenMock(serial: "87654321", currentInterface: .usb, supportedInterfaces: [.nfc, .usb])
+        pkcs11Helper.tokenPublisher.send([token])
+
+        var result: TokenInfo?
+        try await manager.withToken(connectionType: .usb, serial: "87654321", pin: nil) {
+            result = try await manager.getTokenInfo()
+        }
+        XCTAssertEqual(result?.serial, token.serial)
+        XCTAssertEqual(result?.label, token.label)
+        XCTAssertEqual(result?.model, token.model)
+        XCTAssertEqual(result?.type, .dual)
+        XCTAssertEqual(result?.connectionType, .usb)
     }
 
     func testGetTokenInfoNotFoundError() async {

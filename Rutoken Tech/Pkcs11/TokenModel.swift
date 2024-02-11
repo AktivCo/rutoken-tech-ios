@@ -12,7 +12,7 @@ enum TokenModel: String {
 }
 
 extension TokenModel {
-    init?(_ hardwareVersion: CK_VERSION, _ firmwareVersion: CK_VERSION, _ tokenClass: CK_ULONG, type: TokenType) {
+    init?(_ hardwareVersion: CK_VERSION, _ firmwareVersion: CK_VERSION, _ tokenClass: CK_ULONG, supportedInterfaces: Set<TokenInterface>) {
         guard tokenClass == TOKEN_CLASS_ECP || tokenClass == TOKEN_CLASS_ECPDUAL else {
             return nil
         }
@@ -38,7 +38,11 @@ extension TokenModel {
             return nil
         case (_, _, 30...31, _),
              (60, _, 28, _):
-            self = type == .dual ? .rutoken3 : .rutoken3Nfc
+            if supportedInterfaces.contains(.nfc) && supportedInterfaces.contains(.usb) {
+                self = .rutoken3
+            } else {
+                self = .rutoken3Nfc
+            }
         default:
             return nil
         }

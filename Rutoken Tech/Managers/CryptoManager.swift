@@ -58,8 +58,24 @@ class CryptoManager: CryptoManagerProtocol {
         guard let token = connectedToken else {
             throw CryptoManagerError.tokenNotFound
         }
+
+        let type: TokenType
+        let connectionType: ConnectionType
+
+        switch token.currentInterface {
+        case .nfc:
+            type = token.supportedInterfaces.contains(.usb) ? .dual : .sc
+            connectionType = .nfc
+        case .sc:
+            type = .sc
+            connectionType = .usb
+        case .usb:
+            type = token.supportedInterfaces.contains(.nfc) ? .dual : .usb
+            connectionType = .usb
+        }
+
         return TokenInfo(label: token.label, serial: token.serial, model: token.model,
-                         connectionType: token.connectionType, type: token.type)
+                         connectionType: connectionType, type: type)
     }
 
     func enumerateKeys() async throws -> [KeyModel] {
@@ -153,7 +169,7 @@ class CryptoManager: CryptoManagerProtocol {
             switch type {
             case .nfc:
                 let nfcTokenFind = pkcs11Helper.tokens
-                    .compactMap { $0.first(where: { $0.connectionType == .nfc }) }
+                    .compactMap { $0.first(where: { $0.currentInterface == .nfc }) }
                     .map { Optional($0) }
                     .eraseToAnyPublisher()
 
@@ -171,7 +187,7 @@ class CryptoManager: CryptoManagerProtocol {
                     }
                     .store(in: &cancellable, for: uuid)
             case .usb:
-                guard let usbToken = tokens.first(where: { $0.connectionType == .usb }) else {
+                guard let usbToken = tokens.first(where: { $0.currentInterface == .usb }) else {
                     continuation.resume(throwing: CryptoManagerError.tokenNotFound)
                     return
                 }

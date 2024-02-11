@@ -31,7 +31,7 @@ class CryptoManagerGenerateKeyPairTests: XCTestCase {
     }
 
     func testGenerateKeyPairSuccess() async throws {
-        let token = TokenMock(serial: "12345678", connectionType: .usb)
+        let token = TokenMock(serial: "12345678", currentInterface: .usb)
         pkcs11Helper.tokenPublisher.send([token])
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "123456") {
@@ -40,7 +40,7 @@ class CryptoManagerGenerateKeyPairTests: XCTestCase {
     }
 
     func testGenerateKeyPairTokenDisconnectedError() async {
-        let token = TokenMock(serial: "12345678", connectionType: .usb)
+        let token = TokenMock(serial: "12345678", currentInterface: .usb)
         pkcs11Helper.tokenPublisher.send([token])
         token.generateKeyPairCallback = { _ in
             throw TokenError.tokenDisconnected

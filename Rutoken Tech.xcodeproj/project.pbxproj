@@ -442,7 +442,6 @@
 			isa = PBXGroup;
 			children = (
 				D4B130AA2B0CFD7300AD390F /* TokenInfo.swift */,
-				D4B130AF2B0CFFCD00AD390F /* TokenModel.swift */,
 				D42178182B205FD700D08948 /* AppAlert.swift */,
 				447AFBA92B205A7000A53B0C /* ConnectionType.swift */,
 				D4FC26C82B270C580029060D /* NfcMessages.swift */,
@@ -457,6 +456,7 @@
 			isa = PBXGroup;
 			children = (
 				D4B130B22B0DD52A00AD390F /* Token.swift */,
+				D4B130AF2B0CFFCD00AD390F /* TokenModel.swift */,
 				D4B130D72B0E4F8200AD390F /* TokenInterface.swift */,
 				D4B130B42B0DDB2200AD390F /* Pkcs11Helper.swift */,
 				4469F7872B34512E000DCF8B /* AttributeType.swift */,
