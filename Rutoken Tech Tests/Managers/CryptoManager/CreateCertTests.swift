@@ -10,7 +10,7 @@ import XCTest
 @testable import Rutoken_Tech
 
 
-final class CreateCertTests: XCTestCase {
+final class CryptoManagerCreateCertTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: Pkcs11HelperMock!
     var pcscHelper: PcscHelperMock!

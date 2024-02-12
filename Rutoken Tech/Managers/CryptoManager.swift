@@ -19,6 +19,7 @@ protocol CryptoManagerProtocol {
     func enumerateKeys() async throws -> [KeyModel]
     func generateKeyPair(with id: String) async throws
     func createCert(for id: String, with info: CsrModel) async throws
+    func startMonitoring() throws
 }
 
 enum CryptoManagerError: Error, Equatable {
@@ -52,6 +53,14 @@ class CryptoManager: CryptoManagerProtocol {
         pkcs11Helper.tokens
             .assign(to: \.tokens, on: self)
             .store(in: &cancellable, for: UUID())
+    }
+
+    func startMonitoring() throws {
+        do {
+            try pkcs11Helper.startMonitoring()
+        } catch {
+            throw CryptoManagerError.unknown
+        }
     }
 
     func getTokenInfo() async throws -> TokenInfo {

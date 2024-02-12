@@ -19,6 +19,9 @@ enum AppAction {
     case showPinInputError(String)
     case hidePinInputError
 
+    // MARK: Initialization
+    case appLoaded
+
     // MARK: Token Selection
     case selectToken(RtTokenType, String)
     case tokenSelected(TokenInfo, String)

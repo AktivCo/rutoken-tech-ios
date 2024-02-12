@@ -25,6 +25,8 @@
 		446F71062B6271C400684E0D /* OnPerformGenCert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446F71052B6271C400684E0D /* OnPerformGenCert.swift */; };
 		447714FC2B57BC04009532DE /* RtUiComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 447714FB2B57BC04009532DE /* RtUiComponents */; };
 		447AFBAA2B205A7000A53B0C /* ConnectionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447AFBA92B205A7000A53B0C /* ConnectionType.swift */; };
+		4483F18C2B7A29420039EF3F /* OnStartMonitoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483F18B2B7A29420039EF3F /* OnStartMonitoring.swift */; };
+		4483F18E2B7A4F4A0039EF3F /* StartMonitoringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483F18D2B7A4F4A0039EF3F /* StartMonitoringTests.swift */; };
 		44A415042B60F67600D78653 /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A415032B60F67600D78653 /* FileHelper.swift */; };
 		44A415252B6106AD00D78653 /* bank.key in Resources */ = {isa = PBXBuildFile; fileRef = 44A415212B6106AD00D78653 /* bank.key */; };
 		44A415262B6106AD00D78653 /* ca.key in Resources */ = {isa = PBXBuildFile; fileRef = 44A415222B6106AD00D78653 /* ca.key */; };
@@ -120,6 +122,8 @@
 		446F71032B62511F00684E0D /* FileHelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHelperMock.swift; sourceTree = "<group>"; };
 		446F71052B6271C400684E0D /* OnPerformGenCert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnPerformGenCert.swift; sourceTree = "<group>"; };
 		447AFBA92B205A7000A53B0C /* ConnectionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionType.swift; sourceTree = "<group>"; };
+		4483F18B2B7A29420039EF3F /* OnStartMonitoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnStartMonitoring.swift; sourceTree = "<group>"; };
+		4483F18D2B7A4F4A0039EF3F /* StartMonitoringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartMonitoringTests.swift; sourceTree = "<group>"; };
 		44A415032B60F67600D78653 /* FileHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
 		44A415212B6106AD00D78653 /* bank.key */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bank.key; sourceTree = "<group>"; };
 		44A415222B6106AD00D78653 /* ca.key */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ca.key; sourceTree = "<group>"; };
@@ -291,6 +295,7 @@
 				7D9D3C142B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift */,
 				446F71052B6271C400684E0D /* OnPerformGenCert.swift */,
 				D43314492B767E2600442809 /* OnHandleOpenLink.swift */,
+				4483F18B2B7A29420039EF3F /* OnStartMonitoring.swift */,
 			);
 			path = Middlewares;
 			sourceTree = "<group>";
@@ -416,6 +421,7 @@
 				7DEBBDD52B3B1FCE00C35BA5 /* WithTokenTests.swift */,
 				7D9D3C1A2B3C76F000BF2EE1 /* EnumerateKeysTests.swift */,
 				7DACCE252B569CCF00FB3F2C /* CreateCertTests.swift */,
+				4483F18D2B7A4F4A0039EF3F /* StartMonitoringTests.swift */,
 			);
 			path = CryptoManager;
 			sourceTree = "<group>";
@@ -455,10 +461,10 @@
 		D4B130B12B0DD50F00AD390F /* Pkcs11 */ = {
 			isa = PBXGroup;
 			children = (
+				D4B130B42B0DDB2200AD390F /* Pkcs11Helper.swift */,
 				D4B130B22B0DD52A00AD390F /* Token.swift */,
 				D4B130AF2B0CFFCD00AD390F /* TokenModel.swift */,
 				D4B130D72B0E4F8200AD390F /* TokenInterface.swift */,
-				D4B130B42B0DDB2200AD390F /* Pkcs11Helper.swift */,
 				4469F7872B34512E000DCF8B /* AttributeType.swift */,
 				4464FAA72B359ED5005F732F /* Pkcs11Object.swift */,
 				5E7331A62B6D71D400E96C06 /* Pkcs11Session.swift */,
@@ -739,6 +745,7 @@
 				7D9E5A602B0BA55E00E2EAB7 /* ConnectedTokenState.swift in Sources */,
 				D42178032B1F0EAF00D08948 /* RoutingState.swift in Sources */,
 				441658472B5988F000225948 /* WrappedPointer.swift in Sources */,
+				4483F18C2B7A29420039EF3F /* OnStartMonitoring.swift in Sources */,
 				5EF30EDE2B1A823700E48627 /* OnPerformTokenConnection.swift in Sources */,
 				D4B130B32B0DD52A00AD390F /* Token.swift in Sources */,
 				7D9D3C152B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift in Sources */,
@@ -754,6 +761,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4483F18E2B7A4F4A0039EF3F /* StartMonitoringTests.swift in Sources */,
 				D423F8C12B3574EC0058ECDE /* GenerateKeyPairTests.swift in Sources */,
 				446F71042B62511F00684E0D /* FileHelperMock.swift in Sources */,
 				7DACCE262B569CCF00FB3F2C /* CreateCertTests.swift in Sources */,

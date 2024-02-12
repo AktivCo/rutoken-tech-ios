@@ -32,7 +32,8 @@ struct RutokenTechApp: App {
             OnPerformTokenConnection(cryptoManager: cryptoManager),
             OnPerformGenKeyPair(cryptoManager: cryptoManager),
             OnPerformGenCert(cryptoManager: cryptoManager),
-            OnHandleOpenLink()
+            OnHandleOpenLink(),
+            OnStartMonitoring(cryptoManager: cryptoManager)
         ]
 
         store = Store(initialState: AppState(),
@@ -44,6 +45,9 @@ struct RutokenTechApp: App {
         WindowGroup {
             RootView()
                 .environmentObject(store)
+                .onAppear {
+                    store.send(.appLoaded)
+                }
         }
     }
 }

@@ -15,6 +15,8 @@ struct AppReducer: Reducer {
     func reduce(state: AppState, withAction action: AppAction) -> AppState {
         var newState = state
         switch action {
+        case .appLoaded:
+            break
         case let .showAlert(appAlert):
             newState.routingState.alert = appAlert.alertModel
         case .hideAlert:

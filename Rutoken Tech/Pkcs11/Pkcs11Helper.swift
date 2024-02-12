@@ -11,6 +11,7 @@ import Foundation
 
 protocol Pkcs11HelperProtocol {
     var tokens: AnyPublisher<[TokenProtocol], Never> { get }
+    func startMonitoring() throws
 }
 
 enum Pkcs11Error: Error {
@@ -30,8 +31,6 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
 
     init(with engine: RtEngineWrapperProtocol) {
         self.engine = engine
-
-        start()
     }
 
     deinit {
@@ -39,17 +38,18 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
     }
 
     // MARK: - Public API
-    func start() {
+    func startMonitoring() throws {
         var initArgs = CK_C_INITIALIZE_ARGS()
         initArgs.flags = UInt(CKF_OS_LOCKING_OK)
 
-        let rv = C_Initialize(&initArgs)
-        assert(rv == CKR_OK)
+        guard CKR_OK == C_Initialize(&initArgs) else {
+            throw Pkcs11Error.unknownError
+        }
+
+        availableTokens = try getTokens()
+        tokenPublisher.send(Array(availableTokens.values))
 
         DispatchQueue.global().async { [unowned self] in
-            availableTokens = getTokens()
-            tokenPublisher.send(Array(availableTokens.values))
-
             while true {
                 var slot = CK_SLOT_ID()
                 let rv = C_WaitForSlotEvent(0, &slot, nil)
@@ -72,11 +72,11 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
     }
 
     // MARK: - Private API
-    private func getTokens() -> [CK_SLOT_ID: Token] {
+    private func getTokens() throws -> [CK_SLOT_ID: Token] {
         var ctr: UInt = 0
         var rv = C_GetSlotList(CK_BBOOL(CK_TRUE), nil, &ctr)
         guard rv == CKR_OK else {
-            return [:]
+            throw Pkcs11Error.unknownError
         }
 
         guard ctr != 0 else {
@@ -86,7 +86,7 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
         var slots = Array(repeating: CK_SLOT_ID(0), count: Int(ctr))
         rv = C_GetSlotList(CK_BBOOL(CK_TRUE), &slots, &ctr)
         guard rv == CKR_OK else {
-            return [:]
+            throw Pkcs11Error.unknownError
         }
 
         return slots.reduce([CK_SLOT_ID: Token]()) { (dict, slot) -> [CK_SLOT_ID: Token] in

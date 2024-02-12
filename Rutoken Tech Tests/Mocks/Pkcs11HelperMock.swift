@@ -11,6 +11,12 @@ import Combine
 
 
 class Pkcs11HelperMock: Pkcs11HelperProtocol {
+    func startMonitoring() throws {
+        try startMonitoringCallback()
+    }
+
+    var startMonitoringCallback: () throws -> Void = {}
+
     var tokens: AnyPublisher<[TokenProtocol], Never> {
         tokenPublisher.eraseToAnyPublisher()
     }
