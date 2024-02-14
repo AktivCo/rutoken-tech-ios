@@ -29,7 +29,7 @@ struct IphoneRootView: View {
                             .tabItem { Label(tab.rawValue, systemImage: tab.imageName) }
                             .tag(tab)
                     case .bank:
-                        Text(tab.rawValue)
+                        BankSelectUserView()
                             .tabItem { Label(tab.rawValue, systemImage: tab.imageName) }
                             .tag(tab)
                     }

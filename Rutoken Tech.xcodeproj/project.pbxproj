@@ -83,12 +83,17 @@
 		D4B130D32B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D22B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift */; };
 		D4B130D62B0E4F2400AD390F /* PcscHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D52B0E4F2400AD390F /* PcscHelper.swift */; };
 		D4B130DA2B0E51FE00AD390F /* PcscHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */; };
+		D4C38F3A2B84CADE00BA50EC /* HeaderTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C38F392B84CADE00BA50EC /* HeaderTitleView.swift */; };
 		D4D46A0F2B3038F60005981A /* Atomic+propertywrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */; };
 		D4D9C9DA2B2306F900DA702C /* RtPcscWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = D4D9C9D92B2306F900DA702C /* RtPcscWrapper */; };
 		D4DC1FCF2B61669800D53AE6 /* String+createPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC1FCE2B61669800D53AE6 /* String+createPointer.swift */; };
 		D4F27DD32B6A5752003D8AE6 /* Bundle+readInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F27DD22B6A5752003D8AE6 /* Bundle+readInfo.swift */; };
 		D4F4FDEC2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F4FDEB2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift */; };
 		D4F7CD772B32D1DA00764787 /* AnyCancellable+store.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F7CD762B32D1DA00764787 /* AnyCancellable+store.swift */; };
+		D4F7D8182B7CBC300055A3FD /* BankSelectUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F7D8172B7CBC300055A3FD /* BankSelectUserView.swift */; };
+		D4FAF1752B8338E50024EFDA /* UserListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FAF1742B8338E50024EFDA /* UserListItem.swift */; };
+		D4FAF1772B8347530024EFDA /* BankSelectUserState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FAF1762B8347530024EFDA /* BankSelectUserState.swift */; };
+		D4FAF1792B8347960024EFDA /* BankUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FAF1782B8347960024EFDA /* BankUser.swift */; };
 		D4FC26C92B270C580029060D /* NfcMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FC26C82B270C580029060D /* NfcMessages.swift */; };
 		D4FEB5C72B62675400D3BAD2 /* ScrollViewOffset.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FEB5C62B62675400D3BAD2 /* ScrollViewOffset.swift */; };
 /* End PBXBuildFile section */
@@ -177,12 +182,17 @@
 		D4B130D52B0E4F2400AD390F /* PcscHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcscHelper.swift; sourceTree = "<group>"; };
 		D4B130D72B0E4F8200AD390F /* TokenInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenInterface.swift; sourceTree = "<group>"; };
 		D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcscHelperMock.swift; sourceTree = "<group>"; };
+		D4C38F392B84CADE00BA50EC /* HeaderTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderTitleView.swift; sourceTree = "<group>"; };
 		D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Atomic+propertywrapper.swift"; sourceTree = "<group>"; };
 		D4D9C9E62B2328B600DA702C /* Rutoken Tech.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Rutoken Tech.entitlements"; sourceTree = "<group>"; };
 		D4DC1FCE2B61669800D53AE6 /* String+createPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+createPointer.swift"; sourceTree = "<group>"; };
 		D4F27DD22B6A5752003D8AE6 /* Bundle+readInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+readInfo.swift"; sourceTree = "<group>"; };
 		D4F4FDEB2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+LinuxFulfillment.swift"; sourceTree = "<group>"; };
 		D4F7CD762B32D1DA00764787 /* AnyCancellable+store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnyCancellable+store.swift"; sourceTree = "<group>"; };
+		D4F7D8172B7CBC300055A3FD /* BankSelectUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankSelectUserView.swift; sourceTree = "<group>"; };
+		D4FAF1742B8338E50024EFDA /* UserListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListItem.swift; sourceTree = "<group>"; };
+		D4FAF1762B8347530024EFDA /* BankSelectUserState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankSelectUserState.swift; sourceTree = "<group>"; };
+		D4FAF1782B8347960024EFDA /* BankUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankUser.swift; sourceTree = "<group>"; };
 		D4FC26C82B270C580029060D /* NfcMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NfcMessages.swift; sourceTree = "<group>"; };
 		D4FEB5C62B62675400D3BAD2 /* ScrollViewOffset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewOffset.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -397,6 +407,7 @@
 				7D9E5A5F2B0BA55E00E2EAB7 /* ConnectedTokenState.swift */,
 				7D28BD812B3082990079AE1C /* CaGenerateKeyPairState.swift */,
 				D49953C42B58343200E62B5B /* CaGenerateCertState.swift */,
+				D4FAF1762B8347530024EFDA /* BankSelectUserState.swift */,
 			);
 			path = States;
 			sourceTree = "<group>";
@@ -429,8 +440,10 @@
 		D44997F12AEA6EB500B0AB64 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D4C38F382B84CAD100BA50EC /* Common */,
 				5EF30ED92B1A790E00E48627 /* Root */,
 				7D5390082B0FA17E00FE4738 /* Ca */,
+				D4F7D8162B7CBC080055A3FD /* Bank */,
 				44B4A81D2B6CD16100E59F63 /* AboutApp */,
 			);
 			path = Views;
@@ -454,6 +467,7 @@
 				7DCC9AF02B3B2C9A002788B5 /* KeyModel.swift */,
 				44416B2E2B555F4500EC5F66 /* CertRequest.swift */,
 				D433144B2B76848900442809 /* LinkType.swift */,
+				D4FAF1782B8347960024EFDA /* BankUser.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -520,6 +534,14 @@
 			path = Pcsc;
 			sourceTree = "<group>";
 		};
+		D4C38F382B84CAD100BA50EC /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				D4C38F392B84CADE00BA50EC /* HeaderTitleView.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		D4F4FDED2B331D800087A1BB /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -529,6 +551,15 @@
 				D437117C2B67A70A00441FBC /* SizeReaderViewModifier.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		D4F7D8162B7CBC080055A3FD /* Bank */ = {
+			isa = PBXGroup;
+			children = (
+				D4F7D8172B7CBC300055A3FD /* BankSelectUserView.swift */,
+				D4FAF1742B8338E50024EFDA /* UserListItem.swift */,
+			);
+			path = Bank;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -704,6 +735,8 @@
 				D433144C2B76848900442809 /* LinkType.swift in Sources */,
 				D4B130A82B0CFD2F00AD390F /* CryptoManager.swift in Sources */,
 				446F71062B6271C400684E0D /* OnPerformGenCert.swift in Sources */,
+				D4FAF1752B8338E50024EFDA /* UserListItem.swift in Sources */,
+				D4FAF1792B8347960024EFDA /* BankUser.swift in Sources */,
 				44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */,
 				D4F27DD32B6A5752003D8AE6 /* Bundle+readInfo.swift in Sources */,
 				5E7331A72B6D71D400E96C06 /* Pkcs11Session.swift in Sources */,
@@ -721,6 +754,7 @@
 				4464FAA82B359ED5005F732F /* Pkcs11Object.swift in Sources */,
 				D49953BE2B55209E00E62B5B /* CaCertGenView.swift in Sources */,
 				D4B130B52B0DDB2200AD390F /* Pkcs11Helper.swift in Sources */,
+				D4C38F3A2B84CADE00BA50EC /* HeaderTitleView.swift in Sources */,
 				4416A2772B70F9A500645800 /* View+InfoListStyle.swift in Sources */,
 				4413CFAF2B590379000987A8 /* Rutoken_Tech-Bridging-Header.m in Sources */,
 				7D4335892B5567A700A0336A /* String+generateID.swift in Sources */,
@@ -742,6 +776,7 @@
 				7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */,
 				4416A2752B70F95E00645800 /* View+appIcon.swift in Sources */,
 				44B4A81C2B6CD15D00E59F63 /* AboutAppView.swift in Sources */,
+				D4FAF1772B8347530024EFDA /* BankSelectUserState.swift in Sources */,
 				7D9E5A602B0BA55E00E2EAB7 /* ConnectedTokenState.swift in Sources */,
 				D42178032B1F0EAF00D08948 /* RoutingState.swift in Sources */,
 				441658472B5988F000225948 /* WrappedPointer.swift in Sources */,
@@ -750,6 +785,7 @@
 				D4B130B32B0DD52A00AD390F /* Token.swift in Sources */,
 				7D9D3C152B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift in Sources */,
 				5EF30EE02B1A840800E48627 /* TokenInterface.swift in Sources */,
+				D4F7D8182B7CBC300055A3FD /* BankSelectUserView.swift in Sources */,
 				D455FCAE2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift in Sources */,
 				7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */,
 				4413CFB22B592EDE000987A8 /* String+hasCyrillic.swift in Sources */,
@@ -1070,7 +1106,7 @@
 			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-ui-components.git";
 			requirement = {
 				kind = revision;
-				revision = 5ea51918a27273ac5bc58a31c2671b31bb0f87a3;
+				revision = 1baed2cec11c4ff77574c305cf1f74ab1d60934b;
 			};
 		};
 		5ED8B92A2ACD8EA100BCFC20 /* XCRemoteSwiftPackageReference "tiny-redux" */ = {

@@ -50,8 +50,8 @@ struct IpadRootView: View {
                             CaEntryView()
                         case .about:
                             AboutAppView()
-                        default:
-                            Text(selectedTab.rawValue)
+                        case .bank:
+                            BankSelectUserView()
                         }
                     }
                 }

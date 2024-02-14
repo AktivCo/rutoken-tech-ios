@@ -59,6 +59,10 @@ struct AppReducer: Reducer {
             newState.caGenerateCertState.keys = []
         case .openLink:
             break
+        case .removeUser:
+            break
+        case .selectUser:
+            break
         }
         return newState
     }

@@ -37,6 +37,8 @@ enum AppAction {
     case finishGenerateKeyPair
     case updateKeys([KeyModel])
 
+    case removeUser(BankUser)
+    case selectUser(BankUser)
     // MARK: Other
     case openLink(LinkType)
 }

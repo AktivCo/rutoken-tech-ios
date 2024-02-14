@@ -141,13 +141,7 @@ struct CaEntryView: View {
             .frame(height: 44)
 
             VStack(spacing: 0) {
-                Text("Удостоверяющий центр")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .foregroundStyle(Color.RtColors.rtLabelPrimary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.top, 5)
-                    .padding(.bottom, 12)
+                HeaderTitleView(title: "Удостоверяющий центр")
                 if let connectedToken = store.state.connectedTokenState.connectedToken {
                     connectedTokenView(connectedToken)
                 } else {

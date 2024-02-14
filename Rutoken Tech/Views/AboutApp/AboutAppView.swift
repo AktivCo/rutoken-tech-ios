@@ -29,18 +29,6 @@ struct AboutAppView: View {
         .frame(height: 44)
     }
 
-    var header: some View {
-        HStack(spacing: 0) {
-            Text("О приложении")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .foregroundStyle(Color.RtColors.rtLabelPrimary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.top, 5)
-                .padding(.bottom, 12)
-        }
-    }
-
     var logoView: some View {
         VStack(spacing: 0) {
             Image(uiImage: appIcon)
@@ -120,7 +108,7 @@ struct AboutAppView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            header
+            HeaderTitleView(title: "О приложении")
             logoView
             infoList
             linkList
