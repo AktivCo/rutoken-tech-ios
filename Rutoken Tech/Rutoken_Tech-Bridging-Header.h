@@ -28,4 +28,8 @@ int exposed_sk_X509_EXTENSION_num(STACK_OF(X509_EXTENSION) *sk);
 
 X509_EXTENSION * exposed_sk_X509_EXTENSION_value(STACK_OF(X509_EXTENSION) *sk, int idx);
 
+STACK_OF(POLICYINFO)* create_stack_of_policyinfo(POLICYINFO** array, int count);
+
+void exposed_sk_POLICYINFO_free(STACK_OF(POLICYINFO)* sk);
+
 #endif /* Rutoken_Tech_Bridging_Header_h */

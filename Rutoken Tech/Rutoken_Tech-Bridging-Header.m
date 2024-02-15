@@ -24,3 +24,20 @@ X509_EXTENSION * exposed_sk_X509_EXTENSION_value(STACK_OF(X509_EXTENSION) *sk, i
     return sk_X509_EXTENSION_value(sk, idx);
 }
 
+STACK_OF(POLICYINFO)* create_stack_of_policyinfo(POLICYINFO** array, int count) {
+    STACK_OF(POLICYINFO)* stack = sk_POLICYINFO_new_null();
+    if (stack == NULL) {
+        return NULL;
+    }
+    for (int i = 0; i < count; i++) {
+        if (!sk_POLICYINFO_push(stack, (POLICYINFO*)array[i])) {
+            sk_POLICYINFO_free(stack);
+            return NULL;
+        }
+    }
+    return stack;
+}
+
+void exposed_sk_POLICYINFO_free(STACK_OF(POLICYINFO)* sk) {
+    sk_POLICYINFO_free(sk);
+}
