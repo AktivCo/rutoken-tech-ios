@@ -18,12 +18,12 @@
 		443076EF2B1F2D5E0073B406 /* String+getFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443076EE2B1F2D5E0073B406 /* String+getFrom.swift */; };
 		44416B2C2B552CCE00EC5F66 /* OpenSslHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44416B2B2B552CCE00EC5F66 /* OpenSslHelper.swift */; };
 		44416B2F2B555F4500EC5F66 /* CertRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44416B2E2B555F4500EC5F66 /* CertRequest.swift */; };
+		444D9F5F2B8E087E00C1EB0B /* RtUiComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 444D9F5E2B8E087E00C1EB0B /* RtUiComponents */; };
 		4464FAA82B359ED5005F732F /* Pkcs11Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464FAA72B359ED5005F732F /* Pkcs11Object.swift */; };
 		44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */; };
 		4469F7882B34512E000DCF8B /* AttributeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4469F7872B34512E000DCF8B /* AttributeType.swift */; };
 		446F71042B62511F00684E0D /* FileHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446F71032B62511F00684E0D /* FileHelperMock.swift */; };
 		446F71062B6271C400684E0D /* OnPerformGenCert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446F71052B6271C400684E0D /* OnPerformGenCert.swift */; };
-		447714FC2B57BC04009532DE /* RtUiComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 447714FB2B57BC04009532DE /* RtUiComponents */; };
 		447AFBAA2B205A7000A53B0C /* ConnectionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447AFBA92B205A7000A53B0C /* ConnectionType.swift */; };
 		44A415042B60F67600D78653 /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A415032B60F67600D78653 /* FileHelper.swift */; };
 		44A415252B6106AD00D78653 /* bank.key in Resources */ = {isa = PBXBuildFile; fileRef = 44A415212B6106AD00D78653 /* bank.key */; };
@@ -188,7 +188,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				447714FC2B57BC04009532DE /* RtUiComponents in Frameworks */,
+				444D9F5F2B8E087E00C1EB0B /* RtUiComponents in Frameworks */,
 				5ED8B9352ACD8FD100BCFC20 /* rtengine in Frameworks */,
 				5ED8B92C2ACD8EA100BCFC20 /* TinyAsyncRedux in Frameworks */,
 				5ED8B9322ACD8FAC00BCFC20 /* rtpkcs11ecp in Frameworks */,
@@ -550,7 +550,7 @@
 				5ED8B9372ACD996100BCFC20 /* openssl */,
 				5ED8B93A2ACDA1C300BCFC20 /* RtPcsc */,
 				D4D9C9D92B2306F900DA702C /* RtPcscWrapper */,
-				447714FB2B57BC04009532DE /* RtUiComponents */,
+				444D9F5E2B8E087E00C1EB0B /* RtUiComponents */,
 			);
 			productName = "Rutoken Tech";
 			productReference = 5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */;
@@ -609,7 +609,7 @@
 				5ED8B9362ACD996100BCFC20 /* XCRemoteSwiftPackageReference "openssl-xcframework" */,
 				5ED8B9392ACDA1C300BCFC20 /* XCRemoteSwiftPackageReference "rt-pcsc" */,
 				D4D9C9D82B2306F900DA702C /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */,
-				445275EB2B57B97A00A8F6D1 /* XCRemoteSwiftPackageReference "rt-ui-components" */,
+				444D9F5D2B8E087E00C1EB0B /* XCRemoteSwiftPackageReference "swift-ui-components" */,
 			);
 			productRefGroup = 5EF75DDC2AC707BD001834BE /* Products */;
 			projectDirPath = "";
@@ -1057,9 +1057,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		445275EB2B57B97A00A8F6D1 /* XCRemoteSwiftPackageReference "rt-ui-components" */ = {
+		444D9F5D2B8E087E00C1EB0B /* XCRemoteSwiftPackageReference "swift-ui-components" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-ui-components.git";
+			repositoryURL = "https://github.com/AktivCo/swift-ui-components";
 			requirement = {
 				kind = revision;
 				revision = 5ea51918a27273ac5bc58a31c2671b31bb0f87a3;
@@ -1116,9 +1116,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		447714FB2B57BC04009532DE /* RtUiComponents */ = {
+		444D9F5E2B8E087E00C1EB0B /* RtUiComponents */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 445275EB2B57B97A00A8F6D1 /* XCRemoteSwiftPackageReference "rt-ui-components" */;
+			package = 444D9F5D2B8E087E00C1EB0B /* XCRemoteSwiftPackageReference "swift-ui-components" */;
 			productName = RtUiComponents;
 		};
 		5ED8B92B2ACD8EA100BCFC20 /* TinyAsyncRedux */ = {
