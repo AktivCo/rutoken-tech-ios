@@ -12,4 +12,5 @@ struct AppState {
     var caGenerateKeyPairState = CaGenerateKeyPairState()
     var caGenerateCertState = CaGenerateCertState()
     var bankSelectUserState = BankSelectUsersState()
+    var bankCertListState = BankCertListState()
 }

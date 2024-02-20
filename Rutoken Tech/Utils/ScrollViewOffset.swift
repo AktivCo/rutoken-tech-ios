@@ -14,7 +14,7 @@ struct ScrollViewOffset<Content: View>: View {
     private let scrollCoordinateSpace = "scrollCoordinateSpace"
 
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             VStack(spacing: 0) {
                 offsetReader
                 content()
