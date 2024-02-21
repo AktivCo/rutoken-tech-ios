@@ -51,6 +51,12 @@ struct BankSelectUserView: View {
             if store.state.bankSelectUserState.users.count < 3 {
                 Spacer()
                 Button {
+                    store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
+                        RtAuthView(defaultPinGetter: { "12345678" },
+                                   onSubmit: { tokenType, pin in store.send(.readCerts(tokenType, pin)) },
+                                   onCancel: { store.send(.hideSheet) })
+                        .environmentObject(store.state.routingState.pinInputError)
+                    }()))
                 } label: {
                     Text("Добавить пользователя")
                 }

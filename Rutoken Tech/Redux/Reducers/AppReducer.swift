@@ -59,6 +59,10 @@ struct AppReducer: Reducer {
             newState.caGenerateCertState.keys = []
         case .openLink:
             break
+        case .readCerts:
+            break
+        case .updateCerts(let certs):
+            newState.bankCertListState.certs = certs
         case .removeUser:
             break
         case .selectUser:

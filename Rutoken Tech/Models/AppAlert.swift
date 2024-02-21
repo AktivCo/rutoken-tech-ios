@@ -15,6 +15,7 @@ enum AppAlert {
     case connectionLost
     case wrongToken
     case tokenNotFound
+    case noCerts
     case unknownError
 
     var alertModel: RtAlertModel {
@@ -40,6 +41,9 @@ enum AppAlert {
         case .tokenNotFound:
             return .init(title: .titleOnly("Рутокен не обнаружен"),
                          subTitle: "Убедитесь, что Рутокен подключен к мобильному устройству",
+                         buttons: [.init(.regular("ОК"))])
+        case .noCerts:
+            return .init(title: .titleOnly("На Рутокене нет сертификатов"),
                          buttons: [.init(.regular("ОК"))])
         case .unknownError:
             return .init(title: .titleOnly("Неизвестная ошибка"),

@@ -37,8 +37,11 @@ enum AppAction {
     case finishGenerateKeyPair
     case updateKeys([KeyModel])
 
+    case readCerts(RtTokenType, String)
+    case updateCerts([CertModel])
     case removeUser(BankUser)
     case selectUser(BankUser)
+
     // MARK: Other
     case openLink(LinkType)
 }
