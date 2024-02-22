@@ -27,6 +27,7 @@
 		447AFBAA2B205A7000A53B0C /* ConnectionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447AFBA92B205A7000A53B0C /* ConnectionType.swift */; };
 		4483F18C2B7A29420039EF3F /* OnStartMonitoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483F18B2B7A29420039EF3F /* OnStartMonitoring.swift */; };
 		4483F18E2B7A4F4A0039EF3F /* StartMonitoringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483F18D2B7A4F4A0039EF3F /* StartMonitoringTests.swift */; };
+		44868B092B87306D00EA274D /* EnumerateCertsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44868B082B87306D00EA274D /* EnumerateCertsTests.swift */; };
 		44A415042B60F67600D78653 /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A415032B60F67600D78653 /* FileHelper.swift */; };
 		44A415252B6106AD00D78653 /* bank.key in Resources */ = {isa = PBXBuildFile; fileRef = 44A415212B6106AD00D78653 /* bank.key */; };
 		44A415262B6106AD00D78653 /* ca.key in Resources */ = {isa = PBXBuildFile; fileRef = 44A415222B6106AD00D78653 /* ca.key */; };
@@ -133,6 +134,7 @@
 		447AFBA92B205A7000A53B0C /* ConnectionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionType.swift; sourceTree = "<group>"; };
 		4483F18B2B7A29420039EF3F /* OnStartMonitoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnStartMonitoring.swift; sourceTree = "<group>"; };
 		4483F18D2B7A4F4A0039EF3F /* StartMonitoringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartMonitoringTests.swift; sourceTree = "<group>"; };
+		44868B082B87306D00EA274D /* EnumerateCertsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumerateCertsTests.swift; sourceTree = "<group>"; };
 		44A415032B60F67600D78653 /* FileHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
 		44A415212B6106AD00D78653 /* bank.key */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bank.key; sourceTree = "<group>"; };
 		44A415222B6106AD00D78653 /* ca.key */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ca.key; sourceTree = "<group>"; };
@@ -436,12 +438,13 @@
 		D423F8BD2B35749E0058ECDE /* CryptoManager */ = {
 			isa = PBXGroup;
 			children = (
+				4483F18D2B7A4F4A0039EF3F /* StartMonitoringTests.swift */,
+				7DEBBDD52B3B1FCE00C35BA5 /* WithTokenTests.swift */,
 				D423F8BE2B3574BB0058ECDE /* GetTokenInfoTests.swift */,
 				D423F8C02B3574EC0058ECDE /* GenerateKeyPairTests.swift */,
-				7DEBBDD52B3B1FCE00C35BA5 /* WithTokenTests.swift */,
-				7D9D3C1A2B3C76F000BF2EE1 /* EnumerateKeysTests.swift */,
 				7DACCE252B569CCF00FB3F2C /* CreateCertTests.swift */,
-				4483F18D2B7A4F4A0039EF3F /* StartMonitoringTests.swift */,
+				7D9D3C1A2B3C76F000BF2EE1 /* EnumerateKeysTests.swift */,
+				44868B082B87306D00EA274D /* EnumerateCertsTests.swift */,
 			);
 			path = CryptoManager;
 			sourceTree = "<group>";
@@ -816,6 +819,7 @@
 				4483F18E2B7A4F4A0039EF3F /* StartMonitoringTests.swift in Sources */,
 				D423F8C12B3574EC0058ECDE /* GenerateKeyPairTests.swift in Sources */,
 				446F71042B62511F00684E0D /* FileHelperMock.swift in Sources */,
+				44868B092B87306D00EA274D /* EnumerateCertsTests.swift in Sources */,
 				7DACCE262B569CCF00FB3F2C /* CreateCertTests.swift in Sources */,
 				D4B130DA2B0E51FE00AD390F /* PcscHelperMock.swift in Sources */,
 				D4B130C72B0E37F200AD390F /* Pkcs11HelperMock.swift in Sources */,

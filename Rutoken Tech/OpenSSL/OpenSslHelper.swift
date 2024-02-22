@@ -8,13 +8,14 @@
 import Foundation
 
 
-enum OpenSslError: Error {
+enum OpenSslError: Error, Equatable {
     case generalError(UInt32, String?)
 }
 
 protocol OpenSslHelperProtocol {
     func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String
     func createCert(for csr: String, with caKeyStr: String, and caCertStr: String) throws -> String
+    func parseCert(_ cert: String) throws -> CertModel
 }
 
 class OpenSslHelper: OpenSslHelperProtocol {
@@ -340,6 +341,16 @@ class OpenSslHelper: OpenSslHelperProtocol {
             throw OpenSslError.generalError(#line, getLastError())
         }
         return bioToString(bio: bio)
+    }
+
+    func parseCert(_ cert: String) throws -> CertModel {
+        .init(id: UUID().uuidString,
+              name: "Иванов Михаил Романович",
+              jobTitle: "Дизайнер",
+              companyName: "Рутокен",
+              keyAlgo: .gostR3410_2012_256,
+              expiryDate: "07.03.2024",
+              causeOfInvalid: nil)
     }
 
     private func bioToString(bio: OpaquePointer) -> String {

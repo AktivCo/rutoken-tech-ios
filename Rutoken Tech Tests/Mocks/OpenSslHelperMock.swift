@@ -7,6 +7,8 @@
 
 @testable import Rutoken_Tech
 
+import Foundation
+
 
 class OpenSslHelperMock: OpenSslHelperProtocol {
     func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String {
@@ -20,4 +22,18 @@ class OpenSslHelperMock: OpenSslHelperProtocol {
     }
 
     var createCertCallback: () throws -> String = { return "" }
+
+    func parseCert(_ cert: String) throws -> CertModel {
+        try parseCertCallback(cert)
+    }
+
+    var parseCertCallback: (String) throws -> CertModel = { _ in
+        .init(id: UUID().uuidString,
+              name: "Иванов Михаил Романович",
+              jobTitle: "Дизайнер",
+              companyName: "Рутокен",
+              keyAlgo: .gostR3410_2012_256,
+              expiryDate: "07.03.2024",
+              causeOfInvalid: nil)
+    }
 }

@@ -17,6 +17,7 @@ protocol CryptoManagerProtocol {
 
     func getTokenInfo() async throws -> TokenInfo
     func enumerateKeys() async throws -> [KeyModel]
+    func enumerateCerts() async throws -> [CertModel]
     func generateKeyPair(with id: String) async throws
     func createCert(for id: String, with info: CsrModel) async throws
     func startMonitoring() throws
@@ -105,6 +106,23 @@ class CryptoManager: CryptoManagerProtocol {
             throw CryptoManagerError.tokenNotFound
         }
         return try token.generateKeyPair(with: id)
+    }
+
+    func enumerateCerts() async throws -> [CertModel] {
+        guard let token = connectedToken else {
+            throw CryptoManagerError.tokenNotFound
+        }
+
+        return try token.enumerateCerts(by: nil).compactMap {
+            guard let certData = $0.body,
+                  let id = $0.id else {
+                return nil
+            }
+            var model = try openSslHelper.parseCert(String(decoding: certData, as: UTF8.self))
+            model.id = id
+            model.tokenSerial = token.serial
+            return model
+        }
     }
 
     func withToken(connectionType: ConnectionType,

@@ -26,8 +26,9 @@ enum CertInvalidReason {
     }
 }
 
-struct CertModel: Hashable {
-    let id = UUID()
+struct CertModel: Identifiable, Equatable {
+    var id: String
+    var tokenSerial: String?
 
     let name: String
     let jobTitle: String
@@ -38,13 +39,11 @@ struct CertModel: Hashable {
     let causeOfInvalid: CertInvalidReason?
 
     static func == (lhs: CertModel, rhs: CertModel) -> Bool {
-        return lhs.name == rhs.name &&
+        return lhs.id == rhs.id &&
+        lhs.tokenSerial == rhs.tokenSerial &&
+        lhs.name == rhs.name &&
         lhs.jobTitle == rhs.jobTitle &&
         lhs.companyName == rhs.companyName &&
         lhs.expiryDate == rhs.expiryDate
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        return hasher.combine(id)
     }
 }

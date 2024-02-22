@@ -18,7 +18,7 @@ public struct CertListView: View {
 
     var certList: some View {
         VStack(spacing: 12) {
-            ForEach(store.state.bankCertListState.certs, id: \.self) { cert in
+            ForEach(store.state.bankCertListState.certs, id: \.id) { cert in
                 Button {
                 } label: {
                     CertView(cert: cert)
@@ -81,15 +81,18 @@ public struct CertListView: View {
 struct CertListView_Previews: PreviewProvider {
     static var previews: some View {
         let certListState = BankCertListState(certs: [
-            .init(name: "Иванов Михаил Романович",
+            .init(id: UUID().uuidString,
+                  name: "Иванов Михаил Романович",
                   jobTitle: "Дизайнер", companyName: "Рутокен",
                   keyAlgo: .gostR3410_2012_256, expiryDate: "07.03.2024",
                   causeOfInvalid: nil),
-            .init(name: "Иванов Михаил Романович",
+            .init(id: UUID().uuidString,
+                  name: "Иванов Михаил Романович",
                   jobTitle: "Дизайнер", companyName: "Рутокен",
                   keyAlgo: .gostR3410_2012_256, expiryDate: "07.03.2024",
                   causeOfInvalid: .alreadyExist),
-            .init(name: "Иванов Михаил Романович",
+            .init(id: UUID().uuidString,
+                  name: "Иванов Михаил Романович",
                   jobTitle: "Дизайнер", companyName: "Рутокен",
                   keyAlgo: .gostR3410_2012_256, expiryDate: "07.03.2024",
                   causeOfInvalid: .notStartedBefore("30.10.2023"))
