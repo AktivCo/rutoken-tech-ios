@@ -12,22 +12,20 @@ enum CertInvalidReason {
     case alreadyExist
     case expired
     case noKeyPair
-    case invalidAlgo
-    case notStartedBefore(String)
+    case notStartedBefore(Date)
 
     var rawValue: String {
         switch self {
         case .alreadyExist: return "Пользователь с таким сертификатом уже добавлен"
         case .expired: return "Сертификат истек"
         case .noKeyPair: return "Работа с сертификатом без ключевой пары в приложении невозможна"
-        case .invalidAlgo: return "Данный алгоритм не поддерживается приложением"
-        case .notStartedBefore(let date): return "Сертификат начнет действовать \(date)"
+        case .notStartedBefore(let date): return "Сертификат начнет действовать \(date.getString(with: "dd.MM.YYYY"))"
         }
     }
 }
 
 struct CertModel: Identifiable, Equatable {
-    var id: String
+    var id: String?
     var tokenSerial: String?
 
     let name: String
@@ -36,7 +34,7 @@ struct CertModel: Identifiable, Equatable {
     let keyAlgo: KeyAlgorithm
     let expiryDate: String
 
-    let causeOfInvalid: CertInvalidReason?
+    var causeOfInvalid: CertInvalidReason?
 
     static func == (lhs: CertModel, rhs: CertModel) -> Bool {
         return lhs.id == rhs.id &&

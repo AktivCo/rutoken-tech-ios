@@ -81,21 +81,18 @@ public struct CertListView: View {
 struct CertListView_Previews: PreviewProvider {
     static var previews: some View {
         let certListState = BankCertListState(certs: [
-            .init(id: UUID().uuidString,
-                  name: "Иванов Михаил Романович",
+            .init(name: "Иванов Михаил Романович",
                   jobTitle: "Дизайнер", companyName: "Рутокен",
                   keyAlgo: .gostR3410_2012_256, expiryDate: "07.03.2024",
                   causeOfInvalid: nil),
-            .init(id: UUID().uuidString,
-                  name: "Иванов Михаил Романович",
+            .init(name: "Иванов Михаил Романович",
                   jobTitle: "Дизайнер", companyName: "Рутокен",
                   keyAlgo: .gostR3410_2012_256, expiryDate: "07.03.2024",
                   causeOfInvalid: .alreadyExist),
-            .init(id: UUID().uuidString,
-                  name: "Иванов Михаил Романович",
+            .init(name: "Иванов Михаил Романович",
                   jobTitle: "Дизайнер", companyName: "Рутокен",
                   keyAlgo: .gostR3410_2012_256, expiryDate: "07.03.2024",
-                  causeOfInvalid: .notStartedBefore("30.10.2023"))
+                  causeOfInvalid: .notStartedBefore(Date()))
         ])
 
         let state = AppState(bankCertListState: certListState)

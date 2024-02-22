@@ -139,10 +139,12 @@ class Token: TokenProtocol, Identifiable {
 
         // MARK: Prepare key templates
         var pubKeyTemplate = [
-            AttributeType.objectClass(.publicKey), .attrTrue(CKA_TOKEN), .attrFalse(CKA_PRIVATE)
+            AttributeType.objectClass(.publicKey), .attrTrue(CKA_TOKEN), .attrFalse(CKA_PRIVATE),
+            .keyType(&keyTypeGostR3410_2012_256, UInt(MemoryLayout.size(ofValue: keyTypeGostR3410_2012_256)))
         ].map { $0.attr }
         var privateKeyTemplate = [
-            AttributeType.objectClass(.privateKey), .attrTrue(CKA_TOKEN), .attrTrue(CKA_PRIVATE)
+            AttributeType.objectClass(.privateKey), .attrTrue(CKA_TOKEN), .attrTrue(CKA_PRIVATE),
+            .keyType(&keyTypeGostR3410_2012_256, UInt(MemoryLayout.size(ofValue: keyTypeGostR3410_2012_256)))
         ].map { $0.attr }
 
         var idPointer: WrappedPointer<UnsafeMutablePointer<UInt8>>

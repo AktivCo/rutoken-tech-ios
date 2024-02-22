@@ -344,13 +344,33 @@ class OpenSslHelper: OpenSslHelperProtocol {
     }
 
     func parseCert(_ cert: String) throws -> CertModel {
-        .init(id: UUID().uuidString,
-              name: "Иванов Михаил Романович",
-              jobTitle: "Дизайнер",
-              companyName: "Рутокен",
-              keyAlgo: .gostR3410_2012_256,
-              expiryDate: "07.03.2024",
-              causeOfInvalid: nil)
+        guard let wrappedX509 = WrappedX509(from: cert) else {
+            throw OpenSslError.generalError(#line, getLastError())
+        }
+
+        guard let commonName = wrappedX509.commonName,
+              let title = wrappedX509.title,
+              let organizationName = wrappedX509.organizationName,
+              let notBefore = wrappedX509.notBefore,
+              let notAfter = wrappedX509.notAfter,
+              let algorithm = wrappedX509.publicKeyAlgorithm
+        else {
+            throw OpenSslError.generalError(#line, getLastError())
+        }
+
+        var reason: CertInvalidReason?
+        if Date() > notAfter {
+            reason = .expired
+        } else if notBefore > Date() {
+            reason = .notStartedBefore(notBefore)
+        }
+
+        return .init(name: commonName,
+                     jobTitle: title,
+                     companyName: organizationName,
+                     keyAlgo: algorithm,
+                     expiryDate: notAfter.getString(with: "dd.MM.YYYY"),
+                     causeOfInvalid: reason)
     }
 
     private func bioToString(bio: OpaquePointer) -> String {

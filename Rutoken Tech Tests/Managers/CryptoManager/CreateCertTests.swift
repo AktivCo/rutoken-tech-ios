@@ -81,11 +81,11 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         }
         fileHelper.getContentResult = "file"
 
-            try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
-                await assertErrorAsync(
-                    try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
-                    throws: TokenError.tokenDisconnected)
-            }
+        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
+            await assertErrorAsync(
+                try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
+                throws: TokenError.tokenDisconnected)
+        }
     }
 
     func testCreateCertFileHelperError() async throws {

@@ -111,9 +111,15 @@ class CryptoManager: CryptoManagerProtocol {
                   let id = $0.id else {
                 return nil
             }
+
             var model = try openSslHelper.parseCert(String(decoding: certData, as: UTF8.self))
             model.id = id
             model.tokenSerial = token.serial
+
+            if model.causeOfInvalid == nil,
+               try token.enumerateKeys(by: id).isEmpty {
+                model.causeOfInvalid = .noKeyPair
+            }
             return model
         }
     }

@@ -28,12 +28,11 @@ class OpenSslHelperMock: OpenSslHelperProtocol {
     }
 
     var parseCertCallback: (String) throws -> CertModel = { _ in
-        .init(id: UUID().uuidString,
-              name: "Иванов Михаил Романович",
-              jobTitle: "Дизайнер",
-              companyName: "Рутокен",
-              keyAlgo: .gostR3410_2012_256,
-              expiryDate: "07.03.2024",
-              causeOfInvalid: nil)
+            .init(name: "Иванов Михаил Романович",
+                  jobTitle: "Дизайнер",
+                  companyName: "Рутокен",
+                  keyAlgo: .gostR3410_2012_256,
+                  expiryDate: "07.03.2024",
+                  causeOfInvalid: nil)
     }
 }
