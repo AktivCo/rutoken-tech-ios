@@ -5,6 +5,7 @@
 //  Created by Андрей Трифонов on 2023-09-29.
 //
 
+import CoreData
 import SwiftUI
 
 import RtPcscWrapper
@@ -17,6 +18,7 @@ struct RutokenTechApp: App {
     let store: Store<AppState, AppAction>
 
     init() {
+        let userManager = UserManager()
         let fileHelper = FileHelper()
         let engineWrapper = RtEngineWrapper()
         let openSslHelper = OpenSslHelper(engine: engineWrapper)
@@ -39,7 +41,7 @@ struct RutokenTechApp: App {
             // Bank
             OnPerformReadCerts(cryptoManager: cryptoManager),
             OnSaveTokenPin(pinCodeManager: pinCodeManager),
-            OnSelectCert(),
+            OnSelectCert(userManager: userManager),
             OnDeletePin(pinCodeManager: pinCodeManager),
             // About
             OnHandleOpenLink()

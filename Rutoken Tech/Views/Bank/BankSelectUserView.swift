@@ -5,7 +5,9 @@
 //  Created by Никита Девятых on 14.02.2024.
 //
 
+import CoreData
 import SwiftUI
+import UIKit
 
 import RtUiComponents
 import TinyAsyncRedux
@@ -89,18 +91,23 @@ struct BankSelectUserView: View {
 
 struct UserSelectView_Previews: PreviewProvider {
     static var previews: some View {
-        let user1 = BankUser(fullname: "Иванов Михаил Романович",
-                             title: "Дизайнер",
-                             expiryDate: "07.03.2024")
+        let userManager = UserManager(inMemory: true)
+        let user1 = try? userManager.createUser(
+            fullname: "Иванов Михаил Романович",
+            title: "Дизайнер",
+            expiryDate: Date(), certId: "", tokenSerial: "")
 
-        let user2 = BankUser(fullname: "Иванов Роман Михайлович",
-                             title: "Дизайнер",
-                             expiryDate: "07.03.2024")
+        let user2 = try? userManager.createUser(
+            fullname: "Иванов Михаил Романович",
+            title: "Дизайнер",
+            expiryDate: Date(), certId: "", tokenSerial: "")
 
-        let user3 = BankUser(fullname: "Романов Иван Михайлович",
-                             title: "Дизайнер",
-                             expiryDate: "07.03.2024")
-        let state = AppState(bankSelectUserState: BankSelectUsersState(users: [user1, user2, user3]))
+        let user3 = try? userManager.createUser(
+            fullname: "Иванов Михаил Романович",
+            title: "Дизайнер",
+            expiryDate: Date(), certId: "", tokenSerial: "")
+
+        let state = AppState(bankSelectUserState: BankSelectUsersState(users: [user1!, user2!, user3!]))
         let store = Store(initialState: state,
                           reducer: AppReducer(),
                           middlewares: [])
@@ -109,6 +116,7 @@ struct UserSelectView_Previews: PreviewProvider {
                 .ignoresSafeArea()
             BankSelectUserView()
                 .environmentObject(store)
+                .environment(\.managedObjectContext, userManager.context)
         }
     }
 }

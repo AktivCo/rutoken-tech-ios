@@ -78,9 +78,13 @@
 		D42178192B205FD700D08948 /* AppAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42178182B205FD700D08948 /* AppAlert.swift */; };
 		D423F8BF2B3574BB0058ECDE /* GetTokenInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D423F8BE2B3574BB0058ECDE /* GetTokenInfoTests.swift */; };
 		D423F8C12B3574EC0058ECDE /* GenerateKeyPairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D423F8C02B3574EC0058ECDE /* GenerateKeyPairTests.swift */; };
+		D4246A942B876CD500B5F737 /* AppStorage.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D4246A922B876CD500B5F737 /* AppStorage.xcdatamodeld */; };
+		D43250362BA1BAA800493ACE /* String+getDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43250352BA1BAA800493ACE /* String+getDate.swift */; };
 		D433144A2B767E2700442809 /* OnHandleOpenLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43314492B767E2600442809 /* OnHandleOpenLink.swift */; };
 		D433144C2B76848900442809 /* LinkType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D433144B2B76848900442809 /* LinkType.swift */; };
 		D437117D2B67A70A00441FBC /* SizeReaderViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D437117C2B67A70A00441FBC /* SizeReaderViewModifier.swift */; };
+		D44833A22B8C78A800A9B7A2 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44833A12B8C78A800A9B7A2 /* UserManager.swift */; };
+		D44833A42B8C7B8B00A9B7A2 /* UserManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44833A32B8C7B8B00A9B7A2 /* UserManagerMock.swift */; };
 		D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */; };
 		D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F52AEA796E00B0AB64 /* RtAppTab.swift */; };
 		D453F5F52B8CD8F1008DD9E1 /* OnSaveTokenPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D453F5F42B8CD8F1008DD9E1 /* OnSaveTokenPin.swift */; };
@@ -191,9 +195,13 @@
 		D42178182B205FD700D08948 /* AppAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlert.swift; sourceTree = "<group>"; };
 		D423F8BE2B3574BB0058ECDE /* GetTokenInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTokenInfoTests.swift; sourceTree = "<group>"; };
 		D423F8C02B3574EC0058ECDE /* GenerateKeyPairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateKeyPairTests.swift; sourceTree = "<group>"; };
+		D4246A932B876CD500B5F737 /* BankUser.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BankUser.xcdatamodel; sourceTree = "<group>"; };
+		D43250352BA1BAA800493ACE /* String+getDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+getDate.swift"; sourceTree = "<group>"; };
 		D43314492B767E2600442809 /* OnHandleOpenLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnHandleOpenLink.swift; sourceTree = "<group>"; };
 		D433144B2B76848900442809 /* LinkType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkType.swift; sourceTree = "<group>"; };
 		D437117C2B67A70A00441FBC /* SizeReaderViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeReaderViewModifier.swift; sourceTree = "<group>"; };
+		D44833A12B8C78A800A9B7A2 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
+		D44833A32B8C7B8B00A9B7A2 /* UserManagerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagerMock.swift; sourceTree = "<group>"; };
 		D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IphoneRootView.swift; sourceTree = "<group>"; };
 		D44997F52AEA796E00B0AB64 /* RtAppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtAppTab.swift; sourceTree = "<group>"; };
 		D453F5F42B8CD8F1008DD9E1 /* OnSaveTokenPin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSaveTokenPin.swift; sourceTree = "<group>"; };
@@ -262,6 +270,7 @@
 				4413CFB12B592EDE000987A8 /* String+hasCyrillic.swift */,
 				4413CFB32B592F13000987A8 /* String+isNumber.swift */,
 				D4DC1FCE2B61669800D53AE6 /* String+createPointer.swift */,
+				D43250352BA1BAA800493ACE /* String+getDate.swift */,
 			);
 			path = String;
 			sourceTree = "<group>";
@@ -411,6 +420,7 @@
 		5EF75DDD2AC707BD001834BE /* Rutoken Tech */ = {
 			isa = PBXGroup;
 			children = (
+				D43250302BA0592100493ACE /* CoreData */,
 				D4D9C9E62B2328B600DA702C /* Rutoken Tech.entitlements */,
 				7DAF6E742AFA35A5003A57D1 /* Extensions */,
 				D4F4FDED2B331D800087A1BB /* Utils */,
@@ -518,6 +528,14 @@
 			path = CryptoManager;
 			sourceTree = "<group>";
 		};
+		D43250302BA0592100493ACE /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				D4246A922B876CD500B5F737 /* AppStorage.xcdatamodeld */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		D44997F12AEA6EB500B0AB64 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -543,6 +561,7 @@
 			children = (
 				D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */,
 				D453F5F62B8CD94D008DD9E1 /* PinCodeManager.swift */,
+				D44833A12B8C78A800A9B7A2 /* UserManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -598,6 +617,7 @@
 				4413CFB72B597206000987A8 /* OpenSslHelperMock.swift */,
 				446F71032B62511F00684E0D /* FileHelperMock.swift */,
 				D47302C42B91E2000049E8F8 /* KeychainManagerMock.swift */,
+				D44833A32B8C7B8B00A9B7A2 /* UserManagerMock.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -864,6 +884,7 @@
 				443076EF2B1F2D5E0073B406 /* String+getFrom.swift in Sources */,
 				44E9C0422B837FA90001E63F /* CertModel.swift in Sources */,
 				D453F5F72B8CD94D008DD9E1 /* PinCodeManager.swift in Sources */,
+				D43250362BA1BAA800493ACE /* String+getDate.swift in Sources */,
 				D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */,
 				4443EA0B2B96F5160003436D /* KeyAlgorithm.swift in Sources */,
 				7D38D6DC2B0E2D3F0045FBAD /* AppAction.swift in Sources */,
@@ -874,11 +895,13 @@
 				D4DC1FCF2B61669800D53AE6 /* String+createPointer.swift in Sources */,
 				D4F7CD772B32D1DA00764787 /* AnyCancellable+store.swift in Sources */,
 				7D2021472AEC16E8003E2B73 /* IpadRootView.swift in Sources */,
+				D44833A22B8C78A800A9B7A2 /* UserManager.swift in Sources */,
 				D4FEB5C72B62675400D3BAD2 /* ScrollViewOffset.swift in Sources */,
 				D49953C52B58343200E62B5B /* CaGenerateCertState.swift in Sources */,
 				7D28BD842B3083460079AE1C /* CaGenerateKeyPairView.swift in Sources */,
 				7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */,
 				44B4A81C2B6CD15D00E59F63 /* AboutAppView.swift in Sources */,
+				D4246A942B876CD500B5F737 /* AppStorage.xcdatamodeld in Sources */,
 				D4FAF1772B8347530024EFDA /* BankSelectUserState.swift in Sources */,
 				7D9E5A602B0BA55E00E2EAB7 /* ConnectedTokenState.swift in Sources */,
 				D42178032B1F0EAF00D08948 /* RoutingState.swift in Sources */,
@@ -916,6 +939,7 @@
 				D4B130C72B0E37F200AD390F /* Pkcs11HelperMock.swift in Sources */,
 				44EED1B62B1F115B0036F8DA /* TokenMock.swift in Sources */,
 				D4F4FDEC2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift in Sources */,
+				D44833A42B8C7B8B00A9B7A2 /* UserManagerMock.swift in Sources */,
 				D423F8BF2B3574BB0058ECDE /* GetTokenInfoTests.swift in Sources */,
 				D47302C52B91E2000049E8F8 /* KeychainManagerMock.swift in Sources */,
 				D4B130D32B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift in Sources */,
@@ -1310,6 +1334,19 @@
 			productName = RutokenKeychainManager;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		D4246A922B876CD500B5F737 /* AppStorage.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				D4246A932B876CD500B5F737 /* BankUser.xcdatamodel */,
+			);
+			currentVersion = D4246A932B876CD500B5F737 /* BankUser.xcdatamodel */;
+			path = AppStorage.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 5EF75DD32AC707BC001834BE /* Project object */;
 }

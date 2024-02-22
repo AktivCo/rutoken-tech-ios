@@ -21,7 +21,7 @@ struct UserListItem: View {
                     .foregroundStyle(Color.RtColors.rtLabelPrimary)
                 VStack(alignment: .leading, spacing: 8) {
                     infoField(for: "Должность", with: user.title)
-                    infoField(for: "Сертификат истекает", with: user.expiryDate)
+                    infoField(for: "Сертификат истекает", with: user.expiryDate.getString(with: "dd.MM.yyyy"))
                 }
             }
             Spacer()

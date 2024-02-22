@@ -9,6 +9,12 @@ import TinyAsyncRedux
 
 
 class OnSelectCert: Middleware {
+    private let userManager: UserManagerProtocol
+
+    init(userManager: UserManagerProtocol) {
+        self.userManager = userManager
+    }
+
     func handle(action: AppAction) -> AsyncStream<AppAction>? {
         guard case let .selectCert(cert) = action else {
             return nil
@@ -19,7 +25,12 @@ class OnSelectCert: Middleware {
                 continuation.finish()
             }
 
-            continuation.yield(.addUser(.init(fullname: cert.name, title: cert.jobTitle, expiryDate: cert.expiryDate)))
+            let user = try? userManager.createUser(from: cert)
+            guard let user else {
+                continuation.yield(.showAlert(.unknownError))
+                return
+            }
+            continuation.yield(.addUser(user))
             continuation.yield(.hideSheet)
         }
     }

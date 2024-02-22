@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22522" systemVersion="23D60" minimumToolsVersion="Xcode 13.0" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="BankUser" representedClassName="BankUser" syncable="YES">
+        <attribute name="certId" attributeType="String"/>
+        <attribute name="expiryDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="fullname" attributeType="String"/>
+        <attribute name="title" attributeType="String"/>
+        <attribute name="tokenSerial" attributeType="String"/>
+    </entity>
+</model>
