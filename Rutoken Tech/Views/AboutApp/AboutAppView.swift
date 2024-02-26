@@ -16,7 +16,7 @@ struct AboutAppView: View {
 
     private let phoneNumber = "+7 (495) 925-77-90"
     private let privacyPolicyURL = "rutoken.ru"
-    private let appLicenseURL = "rutoken.ru"
+    private let appLicenseURL = "www.rutoken.ru/support/download/license-agreement/"
 
     func createLabel(_ text: String) -> some View {
         HStack(spacing: 0) {

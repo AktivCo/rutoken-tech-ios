@@ -168,8 +168,10 @@ class CryptoManager: CryptoManagerProtocol {
         guard let caKey = fileHelper.getContent(of: .caKey) else {
             throw CryptoManagerError.unknown
         }
-        let cert = try openSslHelper.createCert(for: caKey, with: csr)
-
+        guard let caCert = fileHelper.getContent(of: .caCert) else {
+            throw CryptoManagerError.unknown
+        }
+        let cert = try openSslHelper.createCert(for: csr, with: caKey, and: caCert)
         try token.importCert(cert, for: id)
     }
 
