@@ -77,6 +77,8 @@
 		D437117D2B67A70A00441FBC /* SizeReaderViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D437117C2B67A70A00441FBC /* SizeReaderViewModifier.swift */; };
 		D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */; };
 		D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F52AEA796E00B0AB64 /* RtAppTab.swift */; };
+		D453F5F52B8CD8F1008DD9E1 /* OnSaveTokenPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D453F5F42B8CD8F1008DD9E1 /* OnSaveTokenPin.swift */; };
+		D453F5F72B8CD94D008DD9E1 /* PinCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D453F5F62B8CD94D008DD9E1 /* PinCodeManager.swift */; };
 		D455FCAE2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D455FCAD2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift */; };
 		D49953BE2B55209E00E62B5B /* CaCertGenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49953BD2B55209E00E62B5B /* CaCertGenView.swift */; };
 		D49953C52B58343200E62B5B /* CaGenerateCertState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49953C42B58343200E62B5B /* CaGenerateCertState.swift */; };
@@ -180,6 +182,8 @@
 		D437117C2B67A70A00441FBC /* SizeReaderViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeReaderViewModifier.swift; sourceTree = "<group>"; };
 		D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IphoneRootView.swift; sourceTree = "<group>"; };
 		D44997F52AEA796E00B0AB64 /* RtAppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtAppTab.swift; sourceTree = "<group>"; };
+		D453F5F42B8CD8F1008DD9E1 /* OnSaveTokenPin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSaveTokenPin.swift; sourceTree = "<group>"; };
+		D453F5F62B8CD94D008DD9E1 /* PinCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCodeManager.swift; sourceTree = "<group>"; };
 		D455FCAD2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaEmptyKeysCertView.swift; sourceTree = "<group>"; };
 		D49953BD2B55209E00E62B5B /* CaCertGenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaCertGenView.swift; sourceTree = "<group>"; };
 		D49953C42B58343200E62B5B /* CaGenerateCertState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaGenerateCertState.swift; sourceTree = "<group>"; };
@@ -319,6 +323,7 @@
 				446F71052B6271C400684E0D /* OnPerformGenCert.swift */,
 				D43314492B767E2600442809 /* OnHandleOpenLink.swift */,
 				446E136B2B85D3AC0060ECEE /* OnPerformReadCerts.swift */,
+				D453F5F42B8CD8F1008DD9E1 /* OnSaveTokenPin.swift */,
 			);
 			path = Middlewares;
 			sourceTree = "<group>";
@@ -468,6 +473,7 @@
 			isa = PBXGroup;
 			children = (
 				D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */,
+				D453F5F62B8CD94D008DD9E1 /* PinCodeManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -782,6 +788,7 @@
 				44416B2C2B552CCE00EC5F66 /* OpenSslHelper.swift in Sources */,
 				443076EF2B1F2D5E0073B406 /* String+getFrom.swift in Sources */,
 				44E9C0422B837FA90001E63F /* CertModel.swift in Sources */,
+				D453F5F72B8CD94D008DD9E1 /* PinCodeManager.swift in Sources */,
 				D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */,
 				7D38D6DC2B0E2D3F0045FBAD /* AppAction.swift in Sources */,
 				7D28BD822B3082990079AE1C /* CaGenerateKeyPairState.swift in Sources */,
@@ -808,6 +815,7 @@
 				44E9C0462B8387A20001E63F /* BankCertListState.swift in Sources */,
 				5EF30EE02B1A840800E48627 /* TokenInterface.swift in Sources */,
 				D4F7D8182B7CBC300055A3FD /* BankSelectUserView.swift in Sources */,
+				D453F5F52B8CD8F1008DD9E1 /* OnSaveTokenPin.swift in Sources */,
 				D455FCAE2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift in Sources */,
 				7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */,
 				4413CFB22B592EDE000987A8 /* String+hasCyrillic.swift in Sources */,

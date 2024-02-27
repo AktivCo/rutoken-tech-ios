@@ -22,6 +22,7 @@ struct RutokenTechApp: App {
 
         let pkcsHelper = Pkcs11Helper(with: engineWrapper)
         let pcscHelper = PcscHelper(pcscWrapper: RtPcscWrapper())
+        let pinCodeManager = PinCodeManager()
 
         let cryptoManager = CryptoManager(pkcs11Helper: pkcsHelper,
                                           pcscHelper: pcscHelper,
@@ -36,6 +37,7 @@ struct RutokenTechApp: App {
             OnPerformGenCert(cryptoManager: cryptoManager),
             // Bank
             OnPerformReadCerts(cryptoManager: cryptoManager),
+            OnSaveTokenPin(pinCodeManager: pinCodeManager),
             // About
             OnHandleOpenLink()
         ]

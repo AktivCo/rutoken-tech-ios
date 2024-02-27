@@ -67,6 +67,8 @@ struct AppReducer: Reducer {
             break
         case .selectUser:
             break
+        case .savePin:
+            break
         }
         return newState
     }
