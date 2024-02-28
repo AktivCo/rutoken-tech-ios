@@ -81,7 +81,10 @@
 		D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F52AEA796E00B0AB64 /* RtAppTab.swift */; };
 		D453F5F52B8CD8F1008DD9E1 /* OnSaveTokenPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D453F5F42B8CD8F1008DD9E1 /* OnSaveTokenPin.swift */; };
 		D453F5F72B8CD94D008DD9E1 /* PinCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D453F5F62B8CD94D008DD9E1 /* PinCodeManager.swift */; };
+		D453F5FA2B8F2760008DD9E1 /* RutokenKeychainManager in Frameworks */ = {isa = PBXBuildFile; productRef = D453F5F92B8F2760008DD9E1 /* RutokenKeychainManager */; };
 		D455FCAE2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D455FCAD2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift */; };
+		D47302C32B91E07F0049E8F8 /* PinCodeManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47302C22B91E07F0049E8F8 /* PinCodeManagerTests.swift */; };
+		D47302C52B91E2000049E8F8 /* KeychainManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47302C42B91E2000049E8F8 /* KeychainManagerMock.swift */; };
 		D49953BE2B55209E00E62B5B /* CaCertGenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49953BD2B55209E00E62B5B /* CaCertGenView.swift */; };
 		D49953C52B58343200E62B5B /* CaGenerateCertState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49953C42B58343200E62B5B /* CaGenerateCertState.swift */; };
 		D4B130A82B0CFD2F00AD390F /* CryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */; };
@@ -189,6 +192,8 @@
 		D453F5F42B8CD8F1008DD9E1 /* OnSaveTokenPin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSaveTokenPin.swift; sourceTree = "<group>"; };
 		D453F5F62B8CD94D008DD9E1 /* PinCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCodeManager.swift; sourceTree = "<group>"; };
 		D455FCAD2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaEmptyKeysCertView.swift; sourceTree = "<group>"; };
+		D47302C22B91E07F0049E8F8 /* PinCodeManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCodeManagerTests.swift; sourceTree = "<group>"; };
+		D47302C42B91E2000049E8F8 /* KeychainManagerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManagerMock.swift; sourceTree = "<group>"; };
 		D49953BD2B55209E00E62B5B /* CaCertGenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaCertGenView.swift; sourceTree = "<group>"; };
 		D49953C42B58343200E62B5B /* CaGenerateCertState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaGenerateCertState.swift; sourceTree = "<group>"; };
 		D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoManager.swift; sourceTree = "<group>"; };
@@ -227,6 +232,7 @@
 				5ED8B92C2ACD8EA100BCFC20 /* TinyAsyncRedux in Frameworks */,
 				5ED8B9322ACD8FAC00BCFC20 /* rtpkcs11ecp in Frameworks */,
 				5ED8B9382ACD996100BCFC20 /* openssl in Frameworks */,
+				D453F5FA2B8F2760008DD9E1 /* RutokenKeychainManager in Frameworks */,
 				D4D9C9DA2B2306F900DA702C /* RtPcscWrapper in Frameworks */,
 				5ED8B93B2ACDA1C300BCFC20 /* RtPcsc in Frameworks */,
 			);
@@ -475,6 +481,14 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		D47302C12B91E06B0049E8F8 /* PinCodeManager */ = {
+			isa = PBXGroup;
+			children = (
+				D47302C22B91E07F0049E8F8 /* PinCodeManagerTests.swift */,
+			);
+			path = PinCodeManager;
+			sourceTree = "<group>";
+		};
 		D4B130A62B0CFD1B00AD390F /* Managers */ = {
 			isa = PBXGroup;
 			children = (
@@ -533,6 +547,7 @@
 				44F032392B5125BC00466080 /* Pkcs11ObjectMock.swift */,
 				4413CFB72B597206000987A8 /* OpenSslHelperMock.swift */,
 				446F71032B62511F00684E0D /* FileHelperMock.swift */,
+				D47302C42B91E2000049E8F8 /* KeychainManagerMock.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -540,6 +555,7 @@
 		D4B130CE2B0E3AEF00AD390F /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				D47302C12B91E06B0049E8F8 /* PinCodeManager */,
 				D423F8BD2B35749E0058ECDE /* CryptoManager */,
 			);
 			path = Managers;
@@ -618,6 +634,7 @@
 				5ED8B93A2ACDA1C300BCFC20 /* RtPcsc */,
 				D4D9C9D92B2306F900DA702C /* RtPcscWrapper */,
 				447714FB2B57BC04009532DE /* RtUiComponents */,
+				D453F5F92B8F2760008DD9E1 /* RutokenKeychainManager */,
 			);
 			productName = "Rutoken Tech";
 			productReference = 5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */;
@@ -677,6 +694,7 @@
 				5ED8B9392ACDA1C300BCFC20 /* XCRemoteSwiftPackageReference "rt-pcsc" */,
 				D4D9C9D82B2306F900DA702C /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */,
 				445275EB2B57B97A00A8F6D1 /* XCRemoteSwiftPackageReference "rt-ui-components" */,
+				D453F5F82B8F2760008DD9E1 /* XCRemoteSwiftPackageReference "keychainmanager" */,
 			);
 			productRefGroup = 5EF75DDC2AC707BD001834BE /* Products */;
 			projectDirPath = "";
@@ -840,12 +858,14 @@
 				D423F8C12B3574EC0058ECDE /* GenerateKeyPairTests.swift in Sources */,
 				446F71042B62511F00684E0D /* FileHelperMock.swift in Sources */,
 				44868B092B87306D00EA274D /* EnumerateCertsTests.swift in Sources */,
+				D47302C32B91E07F0049E8F8 /* PinCodeManagerTests.swift in Sources */,
 				7DACCE262B569CCF00FB3F2C /* CreateCertTests.swift in Sources */,
 				D4B130DA2B0E51FE00AD390F /* PcscHelperMock.swift in Sources */,
 				D4B130C72B0E37F200AD390F /* Pkcs11HelperMock.swift in Sources */,
 				44EED1B62B1F115B0036F8DA /* TokenMock.swift in Sources */,
 				D4F4FDEC2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift in Sources */,
 				D423F8BF2B3574BB0058ECDE /* GetTokenInfoTests.swift in Sources */,
+				D47302C52B91E2000049E8F8 /* KeychainManagerMock.swift in Sources */,
 				D4B130D32B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift in Sources */,
 				4413CFB82B597206000987A8 /* OpenSslHelperMock.swift in Sources */,
 				7DEBBDD62B3B1FCE00C35BA5 /* WithTokenTests.swift in Sources */,
@@ -1191,6 +1211,14 @@
 				version = 5.1.0;
 			};
 		};
+		D453F5F82B8F2760008DD9E1 /* XCRemoteSwiftPackageReference "keychainmanager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/keychainmanager.git";
+			requirement = {
+				kind = revision;
+				revision = 99454f840d016cc386add7cf4f8ff5cec07f440b;
+			};
+		};
 		D4D9C9D82B2306F900DA702C /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-pcsc-wrapper.git";
@@ -1231,6 +1259,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5ED8B9392ACDA1C300BCFC20 /* XCRemoteSwiftPackageReference "rt-pcsc" */;
 			productName = RtPcsc;
+		};
+		D453F5F92B8F2760008DD9E1 /* RutokenKeychainManager */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D453F5F82B8F2760008DD9E1 /* XCRemoteSwiftPackageReference "keychainmanager" */;
+			productName = RutokenKeychainManager;
 		};
 		D4D9C9D92B2306F900DA702C /* RtPcscWrapper */ = {
 			isa = XCSwiftPackageProductDependency;
