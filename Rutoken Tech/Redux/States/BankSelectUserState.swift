@@ -8,4 +8,5 @@
 
 struct BankSelectUsersState {
     var users: [BankUser] = []
+    var pin: String?
 }

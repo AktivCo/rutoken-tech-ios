@@ -11,6 +11,7 @@ import RutokenKeychainManager
 protocol PinCodeManagerProtocol {
     func savePin(pin: String, for serial: String, withBio: Bool)
     func deletePin(for serial: String)
+    func getPin(for serial: String) -> String?
 }
 
 class PinCodeManager: PinCodeManagerProtocol {
@@ -26,5 +27,9 @@ class PinCodeManager: PinCodeManagerProtocol {
 
     func deletePin(for serial: String) {
         _ = keychainManager.delete(serial)
+    }
+
+    func getPin(for serial: String) -> String? {
+        keychainManager.get(serial)
     }
 }

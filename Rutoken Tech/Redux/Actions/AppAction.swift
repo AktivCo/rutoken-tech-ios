@@ -45,4 +45,6 @@ enum AppAction {
     // MARK: Other
     case openLink(LinkType)
     case savePin(String, String, Bool)
+    case getPin(String)
+    case updatePin(String?)
 }

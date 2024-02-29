@@ -69,6 +69,10 @@ struct AppReducer: Reducer {
             break
         case .savePin:
             break
+        case let .updatePin(pin):
+            newState.bankSelectUserState.pin = pin
+        case .getPin:
+            break
         }
         return newState
     }

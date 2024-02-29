@@ -82,6 +82,7 @@
 		D453F5F52B8CD8F1008DD9E1 /* OnSaveTokenPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D453F5F42B8CD8F1008DD9E1 /* OnSaveTokenPin.swift */; };
 		D453F5F72B8CD94D008DD9E1 /* PinCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D453F5F62B8CD94D008DD9E1 /* PinCodeManager.swift */; };
 		D453F5FA2B8F2760008DD9E1 /* RutokenKeychainManager in Frameworks */ = {isa = PBXBuildFile; productRef = D453F5F92B8F2760008DD9E1 /* RutokenKeychainManager */; };
+		D453F5FC2B9074E8008DD9E1 /* OnGetTokenPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D453F5FB2B9074E8008DD9E1 /* OnGetTokenPin.swift */; };
 		D455FCAE2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D455FCAD2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift */; };
 		D47302C32B91E07F0049E8F8 /* PinCodeManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47302C22B91E07F0049E8F8 /* PinCodeManagerTests.swift */; };
 		D47302C52B91E2000049E8F8 /* KeychainManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47302C42B91E2000049E8F8 /* KeychainManagerMock.swift */; };
@@ -192,6 +193,7 @@
 		D44997F52AEA796E00B0AB64 /* RtAppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtAppTab.swift; sourceTree = "<group>"; };
 		D453F5F42B8CD8F1008DD9E1 /* OnSaveTokenPin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSaveTokenPin.swift; sourceTree = "<group>"; };
 		D453F5F62B8CD94D008DD9E1 /* PinCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCodeManager.swift; sourceTree = "<group>"; };
+		D453F5FB2B9074E8008DD9E1 /* OnGetTokenPin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnGetTokenPin.swift; sourceTree = "<group>"; };
 		D455FCAD2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaEmptyKeysCertView.swift; sourceTree = "<group>"; };
 		D47302C22B91E07F0049E8F8 /* PinCodeManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCodeManagerTests.swift; sourceTree = "<group>"; };
 		D47302C42B91E2000049E8F8 /* KeychainManagerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManagerMock.swift; sourceTree = "<group>"; };
@@ -334,6 +336,7 @@
 				D43314492B767E2600442809 /* OnHandleOpenLink.swift */,
 				446E136B2B85D3AC0060ECEE /* OnPerformReadCerts.swift */,
 				D453F5F42B8CD8F1008DD9E1 /* OnSaveTokenPin.swift */,
+				D453F5FB2B9074E8008DD9E1 /* OnGetTokenPin.swift */,
 			);
 			path = Middlewares;
 			sourceTree = "<group>";
@@ -827,6 +830,7 @@
 				D49953C52B58343200E62B5B /* CaGenerateCertState.swift in Sources */,
 				7D28BD842B3083460079AE1C /* CaGenerateKeyPairView.swift in Sources */,
 				7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */,
+				D453F5FC2B9074E8008DD9E1 /* OnGetTokenPin.swift in Sources */,
 				44B4A81C2B6CD15D00E59F63 /* AboutAppView.swift in Sources */,
 				D4FAF1772B8347530024EFDA /* BankSelectUserState.swift in Sources */,
 				7D9E5A602B0BA55E00E2EAB7 /* ConnectedTokenState.swift in Sources */,

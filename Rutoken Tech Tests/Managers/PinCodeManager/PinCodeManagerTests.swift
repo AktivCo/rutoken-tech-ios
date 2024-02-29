@@ -67,4 +67,14 @@ class PinCodeManagerTests: XCTestCase {
         manager.deletePin(for: serial)
         wait(for: [exp], timeout: 0.3)
     }
+
+    func testGetPinSuccess() throws {
+        let tokenSerial = "qwerty1234"
+        let pin = "12345678"
+        keychainManager.getCallback = { serial in
+            XCTAssertEqual(serial, tokenSerial)
+            return pin
+        }
+        XCTAssertEqual(pin, manager.getPin(for: tokenSerial))
+    }
 }
