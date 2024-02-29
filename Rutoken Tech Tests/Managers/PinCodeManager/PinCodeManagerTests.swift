@@ -53,4 +53,18 @@ class PinCodeManagerTests: XCTestCase {
         manager.savePin(pin: pin, for: serial, withBio: false)
         wait(for: [exp], timeout: 0.3)
     }
+
+    func testDeleteSuccess() {
+        let serial = "qwerty1234"
+
+        let exp = XCTestExpectation(description: "pin is deleted")
+        keychainManager.deleteCallback = { key in
+            XCTAssertEqual(serial, key)
+            exp.fulfill()
+            return true
+        }
+
+        manager.deletePin(for: serial)
+        wait(for: [exp], timeout: 0.3)
+    }
 }

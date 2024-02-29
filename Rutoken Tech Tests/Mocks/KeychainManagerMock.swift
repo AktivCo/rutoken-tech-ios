@@ -28,7 +28,7 @@ class RutokenKeychainManagerMock: RutokenKeychainManagerProtocol {
     var clearResult: Bool = false
 
     func delete(_ key: String) -> Bool {
-        true
+        deleteCallback(key)
     }
 
     var deleteCallback: (String) -> Bool = { _ in true }

@@ -10,6 +10,7 @@ import RutokenKeychainManager
 
 protocol PinCodeManagerProtocol {
     func savePin(pin: String, for serial: String, withBio: Bool)
+    func deletePin(for serial: String)
 }
 
 class PinCodeManager: PinCodeManagerProtocol {
@@ -21,5 +22,9 @@ class PinCodeManager: PinCodeManagerProtocol {
 
     func savePin(pin: String, for serial: String, withBio: Bool) {
         _ = keychainManager.set(pin, forKey: serial, with: withBio ? .biometryOrPasscode : .any)
+    }
+
+    func deletePin(for serial: String) {
+        _ = keychainManager.delete(serial)
     }
 }
