@@ -69,8 +69,8 @@ struct AppReducer: Reducer {
             newState.bankSelectUserState.users.append(user)
         case .removeUser:
             break
-        case .selectUser:
-            break
+        case .selectUser(let user):
+            newState.bankSelectUserState.selectedUser = user
         case .savePin:
             break
         case let .updatePin(pin):

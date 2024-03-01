@@ -13,18 +13,25 @@ import TinyAsyncRedux
 
 struct BankSelectUserView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
+
     var body: some View {
-        VStack(spacing: 0) {
-            HeaderTitleView(title: "Пользователи")
-            if store.state.bankSelectUserState.users.isEmpty {
-                noUsersView
-            } else {
-                usersListView
+        NavigationStack {
+            ZStack {
+                Color.RtColors.rtSurfaceSecondary
+                    .ignoresSafeArea()
+                VStack(spacing: 0) {
+                    HeaderTitleView(title: "Пользователи")
+                    if store.state.bankSelectUserState.users.isEmpty {
+                        noUsersView
+                    } else {
+                        usersListView
+                    }
+                    bottomView
+                }
+                .padding(.top, 44)
+                .padding(.horizontal, 20)
             }
-            bottomView
         }
-        .padding(.top, 44)
-        .padding(.horizontal, 20)
     }
 
     private var noUsersView: some View {
@@ -38,9 +45,14 @@ struct BankSelectUserView: View {
     private var usersListView: some View {
         VStack(spacing: 12) {
             ForEach(store.state.bankSelectUserState.users, id: \.id) { user in
-                UserListItem(user: user, onRemoveUser: {
-                    store.send(.removeUser(user))
-                }, onSelectUser: { store.send(.selectUser(user))})
+                UserListItem(user: user,
+                             onRemoveUser: { store.send(.removeUser(user)) },
+                             onSelectUser: { store.send(.selectUser(user)) })
+                .navigationDestination(isPresented: Binding(
+                    get: { store.state.bankSelectUserState.selectedUser != nil },
+                    set: { _ in store.send(.selectUser(nil)) })) {
+                        EmptyView()
+                    }
             }
         }
         .padding(.top, 12)

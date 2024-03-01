@@ -45,7 +45,7 @@ enum AppAction {
     // MARK: User handling
     case addUser(BankUser)
     case removeUser(BankUser)
-    case selectUser(BankUser)
+    case selectUser(BankUser?)
 
     // MARK: Other
     case openLink(LinkType)
