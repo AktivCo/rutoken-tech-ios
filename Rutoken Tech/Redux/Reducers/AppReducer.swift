@@ -77,6 +77,8 @@ struct AppReducer: Reducer {
             newState.bankSelectUserState.pin = pin
         case .getPin:
             break
+        case .deletePin:
+            newState.bankSelectUserState.pin = nil
         }
         return newState
     }

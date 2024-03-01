@@ -310,7 +310,6 @@ class OpenSslHelper: OpenSslHelperProtocol {
 
         // MARK: Add subject key identifier
         var ctx = X509V3_CTX()
-        ctx.db = nil
         X509V3_set_ctx(&ctx, caCert, generatedCert, nil, nil, 0)
 
         guard let exKey = X509V3_EXT_conf_nid(nil, &ctx, NID_subject_key_identifier, "hash"),

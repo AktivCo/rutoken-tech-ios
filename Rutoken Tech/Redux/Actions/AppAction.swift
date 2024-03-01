@@ -52,4 +52,5 @@ enum AppAction {
     case savePin(String, String, Bool)
     case getPin(String)
     case updatePin(String?)
+    case deletePin(String)
 }

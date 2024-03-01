@@ -67,6 +67,7 @@
 		7D9D3C152B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9D3C142B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift */; };
 		7D9D3C1B2B3C76F000BF2EE1 /* EnumerateKeysTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9D3C1A2B3C76F000BF2EE1 /* EnumerateKeysTests.swift */; };
 		7D9E5A602B0BA55E00E2EAB7 /* ConnectedTokenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E5A5F2B0BA55E00E2EAB7 /* ConnectedTokenState.swift */; };
+		7DA94A482B91D6E500B6FE3E /* OnDeletePin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA94A472B91D6E500B6FE3E /* OnDeletePin.swift */; };
 		7DACCE262B569CCF00FB3F2C /* CreateCertTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DACCE252B569CCF00FB3F2C /* CreateCertTests.swift */; };
 		7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */; };
 		7DCC9AF12B3B2C9A002788B5 /* KeyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCC9AF02B3B2C9A002788B5 /* KeyModel.swift */; };
@@ -180,6 +181,7 @@
 		7D9D3C142B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnPerformGenKeyPair.swift; sourceTree = "<group>"; };
 		7D9D3C1A2B3C76F000BF2EE1 /* EnumerateKeysTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumerateKeysTests.swift; sourceTree = "<group>"; };
 		7D9E5A5F2B0BA55E00E2EAB7 /* ConnectedTokenState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedTokenState.swift; sourceTree = "<group>"; };
+		7DA94A472B91D6E500B6FE3E /* OnDeletePin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDeletePin.swift; sourceTree = "<group>"; };
 		7DACCE252B569CCF00FB3F2C /* CreateCertTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCertTests.swift; sourceTree = "<group>"; };
 		7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+isPhone.swift"; sourceTree = "<group>"; };
 		7DCC9AF02B3B2C9A002788B5 /* KeyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyModel.swift; sourceTree = "<group>"; };
@@ -340,6 +342,7 @@
 				D453F5F42B8CD8F1008DD9E1 /* OnSaveTokenPin.swift */,
 				D453F5FB2B9074E8008DD9E1 /* OnGetTokenPin.swift */,
 				44E8C2E82B91FDD9008A77AE /* OnSelectCert.swift */,
+				7DA94A472B91D6E500B6FE3E /* OnDeletePin.swift */,
 			);
 			path = Middlewares;
 			sourceTree = "<group>";
@@ -850,6 +853,7 @@
 				D4F7D8182B7CBC300055A3FD /* BankSelectUserView.swift in Sources */,
 				D453F5F52B8CD8F1008DD9E1 /* OnSaveTokenPin.swift in Sources */,
 				D455FCAE2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift in Sources */,
+				7DA94A482B91D6E500B6FE3E /* OnDeletePin.swift in Sources */,
 				7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */,
 				4413CFB22B592EDE000987A8 /* String+hasCyrillic.swift in Sources */,
 				D4B130AB2B0CFD7300AD390F /* TokenInfo.swift in Sources */,
