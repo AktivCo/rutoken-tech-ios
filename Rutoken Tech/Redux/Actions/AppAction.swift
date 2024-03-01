@@ -37,8 +37,13 @@ enum AppAction {
     case finishGenerateKeyPair
     case updateKeys([KeyModel])
 
+    // MARK: Reading certs from token
     case readCerts(RtTokenType, String)
     case updateCerts([CertModel])
+    case selectCert(CertModel)
+
+    // MARK: User handling
+    case addUser(BankUser)
     case removeUser(BankUser)
     case selectUser(BankUser)
 

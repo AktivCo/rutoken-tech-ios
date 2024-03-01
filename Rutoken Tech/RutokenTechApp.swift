@@ -39,6 +39,7 @@ struct RutokenTechApp: App {
             // Bank
             OnPerformReadCerts(cryptoManager: cryptoManager),
             OnSaveTokenPin(pinCodeManager: pinCodeManager),
+            OnSelectCert(),
             // About
             OnHandleOpenLink()
         ]

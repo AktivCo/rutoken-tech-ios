@@ -20,6 +20,7 @@ public struct CertListView: View {
         VStack(spacing: 12) {
             ForEach(store.state.bankCertListState.certs, id: \.id) { cert in
                 Button {
+                    store.send(.selectCert(cert))
                 } label: {
                     CertView(cert: cert)
                 }
