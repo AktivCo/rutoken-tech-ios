@@ -83,11 +83,11 @@ class CryptoManager: CryptoManagerProtocol {
             throw CryptoManagerError.tokenNotFound
         }
 
-        return try token.enumerateKeys(by: nil).compactMap {
+        return try token.enumerateKeys(by: nil, with: .gostR3410_2012_256).compactMap {
             guard let ckaId = $0.privateKey.id else {
                 return nil
             }
-            return KeyModel(ckaId: ckaId, type: .gostR3410_2012_256)
+            return KeyModel(ckaId: ckaId, type: $0.algorithm)
         }
     }
 

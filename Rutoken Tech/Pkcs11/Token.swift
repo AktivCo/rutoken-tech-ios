@@ -20,7 +20,7 @@ protocol TokenProtocol {
     func generateKeyPair(with id: String) throws
 
     func enumerateCerts(by id: String?) throws -> [Pkcs11ObjectProtocol]
-    func enumerateKeys(by id: String?) throws -> [Pkcs11KeyPair]
+    func enumerateKeys(by id: String?, with type: KeyAlgorithm?) throws -> [Pkcs11KeyPair]
 
     func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer>
 
@@ -134,16 +134,33 @@ class Token: TokenProtocol, Identifiable {
         return certs
     }
 
-    func enumerateKeys(by id: String?) throws -> [Pkcs11KeyPair] {
+    func enumerateKeys(by id: String?, with type: KeyAlgorithm?) throws -> [Pkcs11KeyPair] {
         var keyPairs: [Pkcs11KeyPair] = []
 
         // MARK: Prepare key templates
         var pubKeyTemplate = [
-            AttributeType.objectClass(.publicKey), .attrTrue(CKA_TOKEN), .attrFalse(CKA_PRIVATE)
+            AttributeType.objectClass(.publicKey),
+            .attrTrue(CKA_TOKEN),
+            .attrFalse(CKA_PRIVATE)
         ].map { $0.attr }
         var privateKeyTemplate = [
-            AttributeType.objectClass(.privateKey), .attrTrue(CKA_TOKEN), .attrTrue(CKA_PRIVATE)
+            AttributeType.objectClass(.privateKey),
+            .attrTrue(CKA_TOKEN),
+            .attrTrue(CKA_PRIVATE)
         ].map { $0.attr }
+
+        switch type {
+        case .gostR3410_2012_256:
+            pubKeyTemplate.append(
+                AttributeType.keyType(&keyTypeGostR3410_2012_256,
+                                      UInt(MemoryLayout.size(ofValue: keyTypeGostR3410_2012_256))).attr
+            )
+            privateKeyTemplate.append(
+                AttributeType.keyType(&keyTypeGostR3410_2012_256,
+                                      UInt(MemoryLayout.size(ofValue: keyTypeGostR3410_2012_256))).attr
+            )
+        case .none: break
+        }
 
         var idPointer: WrappedPointer<UnsafeMutablePointer<UInt8>>
         if let id {
@@ -174,7 +191,7 @@ class Token: TokenProtocol, Identifiable {
     }
 
     func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer> {
-        guard let keyPair = try enumerateKeys(by: id).first else {
+        guard let keyPair = try enumerateKeys(by: id, with: .gostR3410_2012_256).first else {
             throw TokenError.keyNotFound
         }
 
@@ -240,7 +257,7 @@ class Token: TokenProtocol, Identifiable {
     }
 
     func importCert(_ cert: String, for id: String) throws {
-        guard (try enumerateKeys(by: id).first) != nil else {
+        guard (try enumerateKeys(by: id, with: .gostR3410_2012_256).first) != nil else {
             throw TokenError.generalError
         }
 

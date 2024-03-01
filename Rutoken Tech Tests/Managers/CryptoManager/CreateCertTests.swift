@@ -29,7 +29,7 @@ final class CreateCertTests: XCTestCase {
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper, openSslHelper: openSslHelper, fileHelper: fileHelper)
 
         token = TokenMock(serial: "87654321", currentInterface: .usb)
-        token.enumerateKeysCallback = { _ in
+        token.enumerateKeysCallback = { _, _ in
             return [Pkcs11KeyPair(pubKey: Pkcs11ObjectMock(id: "001", body: nil),
                                   privateKey: Pkcs11ObjectMock(id: "001", body: nil))]
         }

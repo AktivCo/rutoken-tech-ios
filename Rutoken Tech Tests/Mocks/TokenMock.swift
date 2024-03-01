@@ -45,13 +45,13 @@ class TokenMock: TokenProtocol {
 
     var generateKeyPairCallback: (String) throws -> Void = { _ in }
 
-    func enumerateCerts(by id: String?) throws -> [Pkcs11ObjectProtocol] { try enumerateCertsCallback(nil) }
+    func enumerateCerts(by id: String?) throws -> [Pkcs11ObjectProtocol] { try enumerateCertsCallback(id) }
 
     var enumerateCertsCallback: (_ id: String?) throws -> [Pkcs11ObjectProtocol] = { _ in [] }
 
-    func enumerateKeys(by id: String?) throws -> [Pkcs11KeyPair] { try enumerateKeysCallback(nil) }
+    func enumerateKeys(by id: String?, with type: KeyAlgorithm?) throws -> [Pkcs11KeyPair] { try enumerateKeysCallback(id, type) }
 
-    var enumerateKeysCallback: (_ id: String?) throws -> [Pkcs11KeyPair] = { _ in [] }
+    var enumerateKeysCallback: (String?, KeyAlgorithm?) throws -> [Pkcs11KeyPair] = { _, _ in [] }
 
     func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer> {
         try getWrappedKeyCallback(id)

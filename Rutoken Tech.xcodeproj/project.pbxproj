@@ -18,6 +18,8 @@
 		443076EF2B1F2D5E0073B406 /* String+getFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443076EE2B1F2D5E0073B406 /* String+getFrom.swift */; };
 		44416B2C2B552CCE00EC5F66 /* OpenSslHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44416B2B2B552CCE00EC5F66 /* OpenSslHelper.swift */; };
 		44416B2F2B555F4500EC5F66 /* CertRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44416B2E2B555F4500EC5F66 /* CertRequest.swift */; };
+		4443EA0B2B96F5160003436D /* KeyAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4443EA0A2B96F5160003436D /* KeyAlgorithm.swift */; };
+		4443EA0D2B96F59A0003436D /* KeyAlgorithm+description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4443EA0C2B96F59A0003436D /* KeyAlgorithm+description.swift */; };
 		444D9F5F2B8E087E00C1EB0B /* RtUiComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 444D9F5E2B8E087E00C1EB0B /* RtUiComponents */; };
 		4464FAA82B359ED5005F732F /* Pkcs11Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464FAA72B359ED5005F732F /* Pkcs11Object.swift */; };
 		44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */; };
@@ -114,6 +116,8 @@
 		443AF4DD2B10B40500D34150 /* Rutoken_Tech-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Rutoken_Tech-Bridging-Header.h"; sourceTree = "<group>"; };
 		44416B2B2B552CCE00EC5F66 /* OpenSslHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSslHelper.swift; sourceTree = "<group>"; };
 		44416B2E2B555F4500EC5F66 /* CertRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertRequest.swift; sourceTree = "<group>"; };
+		4443EA0A2B96F5160003436D /* KeyAlgorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyAlgorithm.swift; sourceTree = "<group>"; };
+		4443EA0C2B96F59A0003436D /* KeyAlgorithm+description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyAlgorithm+description.swift"; sourceTree = "<group>"; };
 		4464FAA72B359ED5005F732F /* Pkcs11Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Object.swift; sourceTree = "<group>"; };
 		44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtEngineWrapper.swift; sourceTree = "<group>"; };
 		4469F7872B34512E000DCF8B /* AttributeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeType.swift; sourceTree = "<group>"; };
@@ -404,6 +408,7 @@
 				7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */,
 				D4F7CD762B32D1DA00764787 /* AnyCancellable+store.swift */,
 				D4F27DD22B6A5752003D8AE6 /* Bundle+readInfo.swift */,
+				4443EA0C2B96F59A0003436D /* KeyAlgorithm+description.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -462,6 +467,7 @@
 				4469F7872B34512E000DCF8B /* AttributeType.swift */,
 				4464FAA72B359ED5005F732F /* Pkcs11Object.swift */,
 				5E7331A62B6D71D400E96C06 /* Pkcs11Session.swift */,
+				4443EA0A2B96F5160003436D /* KeyAlgorithm.swift */,
 			);
 			path = Pkcs11;
 			sourceTree = "<group>";
@@ -723,9 +729,11 @@
 				44416B2C2B552CCE00EC5F66 /* OpenSslHelper.swift in Sources */,
 				443076EF2B1F2D5E0073B406 /* String+getFrom.swift in Sources */,
 				D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */,
+				4443EA0B2B96F5160003436D /* KeyAlgorithm.swift in Sources */,
 				7D38D6DC2B0E2D3F0045FBAD /* AppAction.swift in Sources */,
 				7D28BD822B3082990079AE1C /* CaGenerateKeyPairState.swift in Sources */,
 				D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */,
+				4443EA0D2B96F59A0003436D /* KeyAlgorithm+description.swift in Sources */,
 				7D38D6E02B0E33780045FBAD /* AppReducer.swift in Sources */,
 				D4DC1FCF2B61669800D53AE6 /* String+createPointer.swift in Sources */,
 				D4F7CD772B32D1DA00764787 /* AnyCancellable+store.swift in Sources */,

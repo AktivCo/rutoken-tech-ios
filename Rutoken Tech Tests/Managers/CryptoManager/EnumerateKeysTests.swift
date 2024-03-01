@@ -35,7 +35,7 @@ final class CryptoManagerEnumerateKeysTests: XCTestCase {
 
         pkcs11Helper.tokenPublisher.send([token])
 
-        token.enumerateKeysCallback = { _ in
+        token.enumerateKeysCallback = { _, _ in
             return [Pkcs11KeyPair(pubKey: Pkcs11ObjectMock(id: testId, body: nil),
                                   privateKey: Pkcs11ObjectMock(id: testId, body: nil))]
         }
