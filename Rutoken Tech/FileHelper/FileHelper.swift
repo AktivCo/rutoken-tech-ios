@@ -15,9 +15,22 @@ enum RtFile: String {
     case bankCert = "bank.pem"
 }
 
+enum BundleSubdir: String {
+    case credentials = "Credentials"
+    case bankDocuments = "BankDocuments"
+}
+
 protocol FileHelperProtocol {
-    func getContent(of file: RtFile) -> String?
-    func resetTempDir() throws
+    func clearTempDir() throws
+    func readFile(from url: URL) throws -> Data
+    func saveFileToTempDir(with name: String, content: Data) throws
+    func copyFilesToTempDir(from source: [URL]) throws
+}
+
+func createBundleUrl(for file: String, in subdir: BundleSubdir) -> URL? {
+    Bundle.main.url(forResource: file,
+                    withExtension: nil,
+                    subdirectory: subdir.rawValue)
 }
 
 class FileHelper: FileHelperProtocol {
@@ -29,27 +42,31 @@ class FileHelper: FileHelperProtocol {
         }
         tempDir = documentsUrl.appendingPathComponent(dirName)
         do {
-            try resetTempDir()
+            try clearTempDir()
         } catch {
             fatalError("Failed to initialize FileHelper with error: \(error.localizedDescription)")
         }
     }
 
-    func resetTempDir() throws {
+    // MARK: - Public API
+    func readFile(from url: URL) throws -> Data {
+        try Data(contentsOf: url)
+    }
+
+    func clearTempDir() throws {
         if FileManager.default.fileExists(atPath: tempDir.path()) {
             try FileManager.default.removeItem(at: tempDir)
         }
         try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: false)
     }
 
-    func getContent(of file: RtFile) -> String? {
-        let arr = file.rawValue.components(separatedBy: ".")
-
-        guard arr.count == 2,
-              let filepath = Bundle.main.path(forResource: arr[0], ofType: arr[1]) else {
-            return nil
+    func copyFilesToTempDir(from source: [URL]) throws {
+        for url in source {
+            try FileManager.default.copyItem(at: url, to: tempDir.appendingPathComponent(url.lastPathComponent))
         }
+    }
 
-        return try? String(contentsOfFile: filepath)
+    func saveFileToTempDir(with name: String, content: Data) throws {
+        try content.write(to: tempDir.appendingPathComponent(name))
     }
 }

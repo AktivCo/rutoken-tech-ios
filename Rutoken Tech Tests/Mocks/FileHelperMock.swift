@@ -7,17 +7,23 @@
 
 @testable import Rutoken_Tech
 
+import Foundation
+
+
+enum FileHelperMockError: Error {
+    case general
+}
 
 class FileHelperMock: FileHelperProtocol {
-    func getContent(of file: RtFile) -> String? {
-        getContentResult
-    }
+    func clearTempDir() throws { try clearTempDirCallback() }
+    var clearTempDirCallback: () throws -> Void = {}
 
-    var getContentResult: String?
+    func readFile(from url: URL) throws -> Data { try readFileCallback(url) }
+    var readFileCallback: (URL) throws -> Data = { _ in Data() }
 
-    func resetTempDir() throws {
-        try resetTempDirCallback()
-    }
+    func saveFileToTempDir(with name: String, content: Data) throws { try saveFileToTempDirCallback(name, content) }
+    var saveFileToTempDirCallback: (String, Data) throws -> Void = { _, _ in }
 
-    var resetTempDirCallback: () throws -> Void = {}
+    func copyFilesToTempDir(from source: [URL]) throws { try copyFilesToTempDirCallback(source) }
+    var copyFilesToTempDirCallback: ([URL]) throws -> Void = { _ in }
 }

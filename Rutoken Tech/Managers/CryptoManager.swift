@@ -138,12 +138,15 @@ class CryptoManager: CryptoManagerProtocol {
         let wrappedPrivateKey = try token.getWrappedKey(with: id)
         let csr = try openSslHelper.createCsr(with: wrappedPrivateKey, for: info)
 
-        guard let caKey = fileHelper.getContent(of: .caKey) else {
+        guard let caKeyUrl = createBundleUrl(for: RtFile.caKey.rawValue, in: .credentials),
+              let caCertUrl = createBundleUrl(for: RtFile.caCert.rawValue, in: .credentials),
+              let caKeyData = try? fileHelper.readFile(from: caKeyUrl),
+              let caCertData = try? fileHelper.readFile(from: caCertUrl),
+              let caKey = String(data: caKeyData, encoding: .utf8),
+              let caCert = String(data: caCertData, encoding: .utf8) else {
             throw CryptoManagerError.unknown
         }
-        guard let caCert = fileHelper.getContent(of: .caCert) else {
-            throw CryptoManagerError.unknown
-        }
+
         let cert = try openSslHelper.createCert(for: csr, with: caKey, and: caCert)
         try token.importCert(cert, for: id)
     }

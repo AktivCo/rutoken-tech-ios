@@ -37,8 +37,6 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     }
 
     func testCreateCertSuccess() async throws {
-        fileHelper.getContentResult = "file"
-
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertNoThrowAsync(try await manager.createCert(for: "001",
                                                                   with: CsrModel.makeDefaultModel()))
@@ -79,7 +77,6 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         token.importCertCallback = { _, _ in
             throw TokenError.tokenDisconnected
         }
-        fileHelper.getContentResult = "file"
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
@@ -88,8 +85,8 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         }
     }
 
-    func testCreateCertFileHelperError() async throws {
-        fileHelper.getContentResult = nil
+    func testCreateCertReadFileFromBundleError() async throws {
+        fileHelper.readFileCallback = { _ in throw FileHelperMockError.general }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
