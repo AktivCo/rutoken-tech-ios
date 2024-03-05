@@ -21,6 +21,8 @@ struct CaCertGenView: View {
     @State var wholeContentSize: CGSize = .zero
     @State var scrollContentSize: CGSize = .zero
 
+    @State var bottomPadding: CGFloat = UIDevice.isPhone ? 34 : 24
+
     var body: some View {
         VStack(spacing: 0) {
             certViewHeader
@@ -58,7 +60,9 @@ struct CaCertGenView: View {
             .scrollIndicators(.hidden)
             certViewBottom
         }
-        .rtAdaptToKeyboard()
+        .rtAdaptToKeyboard(onAppear: { if UIDevice.isPhone { bottomPadding = 12 }},
+                           onDisappear: { if UIDevice.isPhone { bottomPadding = 34 }})
+
     }
 
     private func inputTextLabel(_ text: String) -> some View {
@@ -199,7 +203,7 @@ struct CaCertGenView: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.horizontal, 20)
             .padding(.top, 12)
-            .padding(.bottom, UIDevice.isPhone ? 34 : 24)
+            .padding(.bottom, bottomPadding)
             .frame(maxWidth: .infinity)
             .background {
                 Color("IOSElementsTitleBarSurface")
