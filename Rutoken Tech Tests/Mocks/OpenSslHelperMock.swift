@@ -5,6 +5,8 @@
 //  Created by Vova Badyaev on 18.01.2024.
 //
 
+import Foundation
+
 @testable import Rutoken_Tech
 
 
@@ -15,9 +17,9 @@ class OpenSslHelperMock: OpenSslHelperProtocol {
 
     var createCsrCallback: (WrappedPointer<OpaquePointer>, CsrModel) throws -> String = { _, _ in "" }
 
-    func createCert(for csr: String, with caKeyStr: String, and caCertStr: String) throws -> String {
+    func createCert(for csr: String, with caKeyStr: String, and caCertStr: String) throws -> Data {
         try createCertCallback()
     }
 
-    var createCertCallback: () throws -> String = { return "" }
+    var createCertCallback: () throws -> Data = { return Data() }
 }

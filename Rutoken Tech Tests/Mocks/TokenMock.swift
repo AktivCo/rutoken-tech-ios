@@ -5,6 +5,8 @@
 //  Created by Vova Badyaev on 05.12.2023.
 //
 
+import Foundation
+
 @testable import Rutoken_Tech
 
 
@@ -59,9 +61,9 @@ class TokenMock: TokenProtocol {
 
     var getWrappedKeyCallback: (String) throws -> WrappedPointer = { _ in WrappedPointer(ptr: OpaquePointer.init(bitPattern: 1)!, {_ in})}
 
-    func importCert(_ cert: String, for id: String) throws {
+    func importCert(_ cert: Data, for id: String) throws {
         try importCertCallback(cert, id)
     }
 
-    var importCertCallback: (String, String) throws -> Void = { _, _ in }
+    var importCertCallback: (Data, String) throws -> Void = { _, _ in }
 }

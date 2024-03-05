@@ -14,7 +14,7 @@ enum OpenSslError: Error {
 
 protocol OpenSslHelperProtocol {
     func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String
-    func createCert(for csr: String, with caKeyStr: String, and caCertStr: String) throws -> String
+    func createCert(for csr: String, with caKeyStr: String, and caCertStr: String) throws -> Data
 }
 
 class OpenSslHelper: OpenSslHelperProtocol {
@@ -174,7 +174,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
         return bioToString(bio: bio)
     }
 
-    func createCert(for csr: String, with caKeyStr: String, and caCertStr: String) throws -> String {
+    func createCert(for csr: String, with caKeyStr: String, and caCertStr: String) throws -> Data {
         // MARK: Load the CSR
         let csrPointer = csr.cString(using: .utf8)
         guard let csrBio = BIO_new(BIO_s_mem()) else {
@@ -336,10 +336,21 @@ class OpenSslHelper: OpenSslHelperProtocol {
         defer {
             BIO_free(bio)
         }
-        guard PEM_write_bio_X509(bio, generatedCert) != 0 else {
+        guard i2d_X509_bio(bio, generatedCert) > 0 else {
             throw OpenSslError.generalError(#line, getLastError())
         }
-        return bioToString(bio: bio)
+        guard let generatedCertData = bioToData(bio) else {
+            throw OpenSslError.generalError(#line, "Something went wrong during converting BIO to Data")
+        }
+        return generatedCertData
+    }
+
+    func bioToData(_ bio: OpaquePointer) -> Data? {
+        let len = BIO_ctrl(bio, BIO_CTRL_PENDING, 0, nil)
+        var buffer = [UInt8](repeating: 0, count: len + 1)
+        let bytesRead = BIO_read(bio, &buffer, Int32(buffer.count))
+        guard bytesRead > 0 else { return nil }
+        return Data(bytes: buffer, count: Int(bytesRead))
     }
 
     private func bioToString(bio: OpaquePointer) -> String {

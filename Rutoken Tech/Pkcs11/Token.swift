@@ -5,6 +5,8 @@
 //  Created by Никита Девятых on 21.11.2023.
 //
 
+import Foundation
+
 
 protocol TokenProtocol {
     var label: String { get }
@@ -24,7 +26,7 @@ protocol TokenProtocol {
 
     func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer>
 
-    func importCert(_ cert: String, for id: String) throws
+    func importCert(_ cert: Data, for id: String) throws
 }
 
 enum TokenError: Error, Equatable {
@@ -256,28 +258,28 @@ class Token: TokenProtocol, Identifiable {
         }
     }
 
-    func importCert(_ cert: String, for id: String) throws {
+    func importCert(_ cert: Data, for id: String) throws {
         guard (try enumerateKeys(by: id, with: .gostR3410_2012_256).first) != nil else {
             throw TokenError.generalError
         }
+        try cert.withUnsafeBytes { ptr in
+            let idPointer = id.createPointer()
+            // MARK: Prepare cert template
+            var certTemplate = [
+                AttributeType.value(UnsafeMutableRawPointer(mutating: ptr.baseAddress), UInt(cert.count)),
+                .objectClass(.cert),
+                .id(idPointer.pointer, UInt(id.count)),
+                .attrTrue(CKA_TOKEN),
+                .attrFalse(CKA_PRIVATE),
+                .certX509(&certTypeX509, UInt(MemoryLayout.size(ofValue: certTypeX509))),
+                .certCategory(&certCategoryUser, UInt(MemoryLayout.size(ofValue: certCategoryUser)))
+            ].map { $0.attr }
 
-        let idPointer = id.createPointer()
-
-        // MARK: Prepare cert template
-        var certTemplate = [
-            AttributeType.value(idPointer.pointer, UInt(id.count)),
-            .objectClass(.cert),
-            .id(idPointer.pointer, UInt(id.count)),
-            .attrTrue(CKA_TOKEN),
-            .attrFalse(CKA_PRIVATE),
-            .certX509(&certTypeX509, UInt(MemoryLayout.size(ofValue: certTypeX509))),
-            .certCategory(&certCategoryUser, UInt(MemoryLayout.size(ofValue: certCategoryUser)))
-        ].map { $0.attr }
-
-        var certHandle = CK_OBJECT_HANDLE()
-        let rv = C_CreateObject(session.handle, &certTemplate, CK_ULONG(certTemplate.count), &certHandle)
-        guard rv == CKR_OK else {
-            throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
+            var certHandle = CK_OBJECT_HANDLE()
+            let rv = C_CreateObject(session.handle, &certTemplate, CK_ULONG(certTemplate.count), &certHandle)
+            guard rv == CKR_OK else {
+                throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
+            }
         }
     }
 
