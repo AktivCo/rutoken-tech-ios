@@ -12,7 +12,6 @@
 		4413CFB42B592F13000987A8 /* String+isNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4413CFB32B592F13000987A8 /* String+isNumber.swift */; };
 		4413CFB82B597206000987A8 /* OpenSslHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4413CFB72B597206000987A8 /* OpenSslHelperMock.swift */; };
 		441658472B5988F000225948 /* WrappedPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 441658462B5988F000225948 /* WrappedPointer.swift */; };
-		4416A2752B70F95E00645800 /* View+appIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416A2742B70F95E00645800 /* View+appIcon.swift */; };
 		4416A2772B70F9A500645800 /* View+InfoListStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416A2762B70F9A500645800 /* View+InfoListStyle.swift */; };
 		4416A27A2B70F9F600645800 /* View+createLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416A2792B70F9F600645800 /* View+createLabel.swift */; };
 		443076EF2B1F2D5E0073B406 /* String+getFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443076EE2B1F2D5E0073B406 /* String+getFrom.swift */; };
@@ -109,7 +108,6 @@
 		4413CFB32B592F13000987A8 /* String+isNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+isNumber.swift"; sourceTree = "<group>"; };
 		4413CFB72B597206000987A8 /* OpenSslHelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSslHelperMock.swift; sourceTree = "<group>"; };
 		441658462B5988F000225948 /* WrappedPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedPointer.swift; sourceTree = "<group>"; };
-		4416A2742B70F95E00645800 /* View+appIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+appIcon.swift"; sourceTree = "<group>"; };
 		4416A2762B70F9A500645800 /* View+InfoListStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+InfoListStyle.swift"; sourceTree = "<group>"; };
 		4416A2792B70F9F600645800 /* View+createLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+createLabel.swift"; sourceTree = "<group>"; };
 		443076EE2B1F2D5E0073B406 /* String+getFrom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+getFrom.swift"; sourceTree = "<group>"; };
@@ -227,7 +225,6 @@
 		4416A2782B70F9E100645800 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				4416A2742B70F95E00645800 /* View+appIcon.swift */,
 				4416A2762B70F9A500645800 /* View+InfoListStyle.swift */,
 				4416A2792B70F9F600645800 /* View+createLabel.swift */,
 			);
@@ -742,7 +739,6 @@
 				D49953C52B58343200E62B5B /* CaGenerateCertState.swift in Sources */,
 				7D28BD842B3083460079AE1C /* CaGenerateKeyPairView.swift in Sources */,
 				7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */,
-				4416A2752B70F95E00645800 /* View+appIcon.swift in Sources */,
 				44B4A81C2B6CD15D00E59F63 /* AboutAppView.swift in Sources */,
 				7D9E5A602B0BA55E00E2EAB7 /* ConnectedTokenState.swift in Sources */,
 				D42178032B1F0EAF00D08948 /* RoutingState.swift in Sources */,
