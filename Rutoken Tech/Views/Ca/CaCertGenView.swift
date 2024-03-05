@@ -18,8 +18,9 @@ struct CaCertGenView: View {
     @GestureState private var dragOffset: CGSize = .zero
     @State private var isTopViewShown = false
     @State private var isBottomViewShown = true
-    @State var wholeContentSize: CGSize = .zero
-    @State var scrollContentSize: CGSize = .zero
+    @State private var inProgress: Bool = false
+    @State private var wholeContentSize: CGSize = .zero
+    @State private var scrollContentSize: CGSize = .zero
 
     @State var bottomPadding: CGFloat = UIDevice.isPhone ? 34 : 24
 
@@ -62,7 +63,9 @@ struct CaCertGenView: View {
         }
         .rtAdaptToKeyboard(onAppear: { if UIDevice.isPhone { bottomPadding = 12 }},
                            onDisappear: { if UIDevice.isPhone { bottomPadding = 34 }})
-
+        .onChange(of: store.state.caGenerateCertState.inProgress) { newValue in
+            inProgress = newValue
+        }
     }
 
     private func inputTextLabel(_ text: String) -> some View {
@@ -150,6 +153,7 @@ struct CaCertGenView: View {
                         .foregroundStyle(Color("iOSElementsCloseButtonIcon"),
                                          Color("iOSElementsCloseButtonSurface"))
                 }
+                .disabled(inProgress)
             }
             .padding(.horizontal, 20)
             .padding(.bottom, 12)
@@ -179,23 +183,11 @@ struct CaCertGenView: View {
                     store.send(.showAlert(.unknownError))
                 }
             } label: {
-                if store.state.caGenerateKeyPairState.inProgress {
-                    RtLoadingIndicator(.small)
-                        .frame(height: 50)
-                        .frame(maxWidth: 350)
-                } else {
-                    Text("Сгенерировать")
-                        .font(.system(size: 17))
-                        .fontWeight(.semibold)
-                        .foregroundStyle(nameInput.isEmpty
-                                         ? Color.RtColors.rtLabelTertiary
-                                         : Color.RtColors.rtColorsOnPrimary
-                        )
-                        .frame(height: 50)
-                        .frame(maxWidth: 350)
-                }
+                buttonLabel
+                    .frame(height: 50)
+                    .frame(maxWidth: UIDevice.isPhone ? .infinity : 350)
             }
-            .disabled(nameInput.isEmpty)
+            .disabled(nameInput.isEmpty || inProgress)
             .background(nameInput.isEmpty
                         ? Color.RtColors.rtOtherDisabled
                         : Color.RtColors.rtColorsPrimary100
@@ -210,6 +202,22 @@ struct CaCertGenView: View {
                     .background(.ultraThinMaterial)
                     .opacity(isBottomViewShown ? 1 : 0)
             }
+        }
+    }
+
+    @ViewBuilder
+    private var buttonLabel: some View {
+        if inProgress {
+            RtLoadingIndicator(.small)
+                .padding(.vertical, 13)
+        } else {
+            Text("Сгенерировать")
+                .font(.headline)
+                .foregroundStyle(nameInput.isEmpty
+                                 ? Color.RtColors.rtLabelTertiary
+                                 : Color.RtColors.rtColorsOnPrimary
+                )
+                .padding(.vertical, 15)
         }
     }
 }

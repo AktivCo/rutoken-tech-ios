@@ -13,6 +13,7 @@ import TinyAsyncRedux
 
 struct CaGenerateKeyPairView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
+    @State private var inProgress: Bool = false
 
     func infoRow(label: String, value: String) -> some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -46,6 +47,7 @@ struct CaGenerateKeyPairView: View {
                             Color("iOSElementsCloseButtonSurface")
                         )
                 }
+                .disabled(inProgress)
             }
             .padding(.horizontal, 20)
             .padding(.bottom, 12)
@@ -81,22 +83,31 @@ struct CaGenerateKeyPairView: View {
                     store.send(.showAlert(.unknownError))
                 }
             } label: {
-                if store.state.caGenerateKeyPairState.inProgress {
-                    RtLoadingIndicator(.small)
-                        .padding(.vertical, 15)
-                } else {
-                    Text("Сгенерировать")
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .font(.headline)
-                        .foregroundStyle(Color.RtColors.rtColorsOnPrimary)
-                        .padding(.vertical, 15)
-                }
+                buttonLabel
+                    .frame(height: 50)
+                    .frame(maxWidth: UIDevice.isPhone ? .infinity : 350)
             }
-            .frame(maxWidth: UIDevice.isPhone ? .infinity : 350)
+            .disabled(inProgress)
             .background { Color.RtColors.rtColorsPrimary100 }
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.horizontal, 20)
             .padding(.bottom, UIDevice.isPhone ? 34 : 24)
+        }
+        .onChange(of: store.state.caGenerateKeyPairState.inProgress) { newValue in
+            inProgress = newValue
+        }
+    }
+
+    @ViewBuilder
+    private var buttonLabel: some View {
+        if inProgress {
+            RtLoadingIndicator(.small)
+                .padding(.vertical, 13)
+        } else {
+            Text("Сгенерировать")
+                .font(.headline)
+                .foregroundStyle(Color.RtColors.rtColorsOnPrimary)
+                .padding(.vertical, 15)
         }
     }
 }
