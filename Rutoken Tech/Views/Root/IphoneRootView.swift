@@ -24,6 +24,7 @@ struct IphoneRootView: View {
                         CaEntryView()
                             .tabItem { Label(tab.rawValue, systemImage: tab.imageName) }
                             .tag(tab)
+                            .ignoresSafeArea(.keyboard)
                     case .about:
                         AboutAppView()
                             .tabItem { Label(tab.rawValue, systemImage: tab.imageName) }
@@ -32,6 +33,7 @@ struct IphoneRootView: View {
                         Text(tab.rawValue)
                             .tabItem { Label(tab.rawValue, systemImage: tab.imageName) }
                             .tag(tab)
+                            .ignoresSafeArea(.keyboard)
                     }
                 }
                 .background {
