@@ -38,6 +38,7 @@ class OnPerformGenCert: Middleware {
 
                     continuation.yield(.showAlert(.certGenerated))
                     continuation.yield(.hideSheet)
+                } catch CryptoManagerError.nfcStopped {
                 } catch CryptoManagerError.connectionLost {
                     continuation.yield(.showAlert(.connectionLost))
                 } catch CryptoManagerError.wrongToken {

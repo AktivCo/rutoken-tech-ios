@@ -67,4 +67,8 @@ class Pkcs11Object: Pkcs11ObjectProtocol {
 struct Pkcs11KeyPair {
     let pubKey: Pkcs11ObjectProtocol
     let privateKey: Pkcs11ObjectProtocol
+
+    var algorithm: KeyAlgorithm {
+        .gostR3410_2012_256
+    }
 }

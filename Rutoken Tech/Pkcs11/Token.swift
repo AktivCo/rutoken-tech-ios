@@ -5,6 +5,8 @@
 //  Created by Никита Девятых on 21.11.2023.
 //
 
+import Foundation
+
 
 protocol TokenProtocol {
     var label: String { get }
@@ -20,11 +22,11 @@ protocol TokenProtocol {
     func generateKeyPair(with id: String) throws
 
     func enumerateCerts(by id: String?) throws -> [Pkcs11ObjectProtocol]
-    func enumerateKeys(by id: String?) throws -> [Pkcs11KeyPair]
+    func enumerateKeys(by id: String?, with type: KeyAlgorithm?) throws -> [Pkcs11KeyPair]
 
     func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer>
 
-    func importCert(_ cert: String, for id: String) throws
+    func importCert(_ cert: Data, for id: String) throws
 }
 
 enum TokenError: Error, Equatable {
@@ -134,18 +136,33 @@ class Token: TokenProtocol, Identifiable {
         return certs
     }
 
-    func enumerateKeys(by id: String?) throws -> [Pkcs11KeyPair] {
+    func enumerateKeys(by id: String?, with type: KeyAlgorithm?) throws -> [Pkcs11KeyPair] {
         var keyPairs: [Pkcs11KeyPair] = []
 
         // MARK: Prepare key templates
         var pubKeyTemplate = [
-            AttributeType.objectClass(.publicKey), .attrTrue(CKA_TOKEN), .attrFalse(CKA_PRIVATE),
-            .keyType(&keyTypeGostR3410_2012_256, UInt(MemoryLayout.size(ofValue: keyTypeGostR3410_2012_256)))
+            AttributeType.objectClass(.publicKey),
+            .attrTrue(CKA_TOKEN),
+            .attrFalse(CKA_PRIVATE)
         ].map { $0.attr }
         var privateKeyTemplate = [
-            AttributeType.objectClass(.privateKey), .attrTrue(CKA_TOKEN), .attrTrue(CKA_PRIVATE),
-            .keyType(&keyTypeGostR3410_2012_256, UInt(MemoryLayout.size(ofValue: keyTypeGostR3410_2012_256)))
+            AttributeType.objectClass(.privateKey),
+            .attrTrue(CKA_TOKEN),
+            .attrTrue(CKA_PRIVATE)
         ].map { $0.attr }
+
+        switch type {
+        case .gostR3410_2012_256:
+            pubKeyTemplate.append(
+                AttributeType.keyType(&keyTypeGostR3410_2012_256,
+                                      UInt(MemoryLayout.size(ofValue: keyTypeGostR3410_2012_256))).attr
+            )
+            privateKeyTemplate.append(
+                AttributeType.keyType(&keyTypeGostR3410_2012_256,
+                                      UInt(MemoryLayout.size(ofValue: keyTypeGostR3410_2012_256))).attr
+            )
+        case .none: break
+        }
 
         var idPointer: WrappedPointer<UnsafeMutablePointer<UInt8>>
         if let id {
@@ -176,7 +193,7 @@ class Token: TokenProtocol, Identifiable {
     }
 
     func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer> {
-        guard let keyPair = try enumerateKeys(by: id).first else {
+        guard let keyPair = try enumerateKeys(by: id, with: .gostR3410_2012_256).first else {
             throw TokenError.keyNotFound
         }
 
@@ -241,28 +258,28 @@ class Token: TokenProtocol, Identifiable {
         }
     }
 
-    func importCert(_ cert: String, for id: String) throws {
-        guard (try enumerateKeys(by: id).first) != nil else {
+    func importCert(_ cert: Data, for id: String) throws {
+        guard (try enumerateKeys(by: id, with: .gostR3410_2012_256).first) != nil else {
             throw TokenError.generalError
         }
+        try cert.withUnsafeBytes { ptr in
+            let idPointer = id.createPointer()
+            // MARK: Prepare cert template
+            var certTemplate = [
+                AttributeType.value(UnsafeMutableRawPointer(mutating: ptr.baseAddress), UInt(cert.count)),
+                .objectClass(.cert),
+                .id(idPointer.pointer, UInt(id.count)),
+                .attrTrue(CKA_TOKEN),
+                .attrFalse(CKA_PRIVATE),
+                .certX509(&certTypeX509, UInt(MemoryLayout.size(ofValue: certTypeX509))),
+                .certCategory(&certCategoryUser, UInt(MemoryLayout.size(ofValue: certCategoryUser)))
+            ].map { $0.attr }
 
-        let idPointer = id.createPointer()
-
-        // MARK: Prepare cert template
-        var certTemplate = [
-            AttributeType.value(idPointer.pointer, UInt(id.count)),
-            .objectClass(.cert),
-            .id(idPointer.pointer, UInt(id.count)),
-            .attrTrue(CKA_TOKEN),
-            .attrFalse(CKA_PRIVATE),
-            .certX509(&certTypeX509, UInt(MemoryLayout.size(ofValue: certTypeX509))),
-            .certCategory(&certCategoryUser, UInt(MemoryLayout.size(ofValue: certCategoryUser)))
-        ].map { $0.attr }
-
-        var certHandle = CK_OBJECT_HANDLE()
-        let rv = C_CreateObject(session.handle, &certTemplate, CK_ULONG(certTemplate.count), &certHandle)
-        guard rv == CKR_OK else {
-            throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
+            var certHandle = CK_OBJECT_HANDLE()
+            let rv = C_CreateObject(session.handle, &certTemplate, CK_ULONG(certTemplate.count), &certHandle)
+            guard rv == CKR_OK else {
+                throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
+            }
         }
     }
 

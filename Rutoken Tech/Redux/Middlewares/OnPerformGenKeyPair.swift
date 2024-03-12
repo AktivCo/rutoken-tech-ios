@@ -37,6 +37,7 @@ class OnPerformGenKeyPair: Middleware {
 
                     continuation.yield(.showAlert(.keyGenerated))
                     continuation.yield(.hideSheet)
+                } catch CryptoManagerError.nfcStopped {
                 } catch CryptoManagerError.connectionLost {
                     continuation.yield(.showAlert(.connectionLost))
                 } catch CryptoManagerError.wrongToken {

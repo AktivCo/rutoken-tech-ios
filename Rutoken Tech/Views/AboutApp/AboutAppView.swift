@@ -16,7 +16,7 @@ struct AboutAppView: View {
 
     private let phoneNumber = "+7 (495) 925-77-90"
     private let privacyPolicyURL = "rutoken.ru"
-    private let appLicenseURL = "www.rutoken.ru/support/download/license-agreement/"
+    private let appLicenseURL = "www.rutoken.ru/download/license/License_Agreement_Rutoken.pdf"
 
     func createLabel(_ text: String) -> some View {
         HStack(spacing: 0) {
@@ -31,11 +31,13 @@ struct AboutAppView: View {
 
     var logoView: some View {
         VStack(spacing: 0) {
-            Image(uiImage: appIcon)
-                .resizable()
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-                .frame(width: 96, height: 96)
-                .padding(.vertical, 12)
+            if let image = UIImage(named: "AppIcon") {
+                Image(uiImage: image)
+                    .resizable()
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .frame(width: 96, height: 96)
+                    .padding(.vertical, 12)
+            }
             Text("Рутокен Технологии")
                 .font(.title2)
                 .fontWeight(.bold)
