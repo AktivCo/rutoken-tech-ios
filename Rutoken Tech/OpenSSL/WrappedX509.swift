@@ -25,6 +25,34 @@ class WrappedX509 {
 
     private let x509: OpaquePointer
 
+    init?(from cert: Data) {
+        var x509: OpaquePointer? = cert.withUnsafeBytes {
+            guard let bytes = $0.baseAddress?.assumingMemoryBound(to: UInt8.self),
+                  let bio = BIO_new(BIO_s_mem()) else {
+                return nil
+            }
+            defer {
+                BIO_free(bio)
+            }
+
+            var accumulated: Int32 = 0
+            var bytesReaded: Int32 = 0
+            repeat {
+                bytesReaded = BIO_write(bio, bytes.advanced(by: Int(bytesReaded)), Int32($0.count) - accumulated)
+                accumulated += bytesReaded
+
+                guard bytesReaded >= 0 else {
+                    return nil
+                }
+            } while bytesReaded > 0
+
+            return d2i_X509_bio(bio, nil)
+        }
+
+        guard let x509 else { return nil }
+        self.x509 = x509
+    }
+
     init?(from cert: String) {
         guard let certPtr = cert.cString(using: .utf8),
               let certBio = BIO_new(BIO_s_mem()) else {

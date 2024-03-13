@@ -14,7 +14,7 @@ enum OpenSslError: Error, Equatable {
 
 protocol OpenSslHelperProtocol {
     func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String
-    func parseCert(_ cert: String) throws -> CertModel
+    func parseCert(_ cert: Data) throws -> CertModel
     func createCert(for csr: String, with caKeyStr: String, and caCertStr: String) throws -> Data
 }
 
@@ -353,7 +353,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
         return Data(bytes: buffer, count: Int(bytesRead))
     }
 
-    func parseCert(_ cert: String) throws -> CertModel {
+    func parseCert(_ cert: Data) throws -> CertModel {
         guard let wrappedX509 = WrappedX509(from: cert) else {
             throw OpenSslError.generalError(#line, getLastError())
         }

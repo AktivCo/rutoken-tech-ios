@@ -51,7 +51,7 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
             return [Pkcs11ObjectMock(id: self.certModel.id, body: certData)]
         }
         openSslHelper.parseCertCallback = { cert in
-            XCTAssertEqual(cert, String(decoding: certData, as: UTF8.self))
+            XCTAssertEqual(cert, certData)
             return self.certModel
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {

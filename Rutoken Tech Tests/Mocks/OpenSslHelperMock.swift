@@ -23,11 +23,11 @@ class OpenSslHelperMock: OpenSslHelperProtocol {
 
     var createCertCallback: () throws -> Data = { return Data() }
 
-    func parseCert(_ cert: String) throws -> CertModel {
+    func parseCert(_ cert: Data) throws -> CertModel {
         try parseCertCallback(cert)
     }
 
-    var parseCertCallback: (String) throws -> CertModel = { _ in
+    var parseCertCallback: (Data) throws -> CertModel = { _ in
             .init(name: "Иванов Михаил Романович",
                   jobTitle: "Дизайнер",
                   companyName: "Рутокен",

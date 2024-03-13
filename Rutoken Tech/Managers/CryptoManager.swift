@@ -112,7 +112,7 @@ class CryptoManager: CryptoManagerProtocol {
                 return nil
             }
 
-            var model = try openSslHelper.parseCert(String(decoding: certData, as: UTF8.self))
+            var model = try openSslHelper.parseCert(certData)
             model.id = id
             model.tokenSerial = token.serial
 
