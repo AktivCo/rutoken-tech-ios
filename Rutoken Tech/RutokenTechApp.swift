@@ -35,7 +35,7 @@ struct RutokenTechApp: App {
                                           fileHelper: fileHelper)
 
         let middlewares: [any Middleware<AppAction>] = [
-            OnStartMonitoring(cryptoManager: cryptoManager),
+            OnStartMonitoring(cryptoManager: cryptoManager, userManager: userManager),
             // CA
             OnPerformTokenConnection(cryptoManager: cryptoManager),
             OnPerformGenKeyPair(cryptoManager: cryptoManager),

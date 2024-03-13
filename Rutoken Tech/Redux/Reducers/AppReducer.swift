@@ -67,8 +67,8 @@ struct AppReducer: Reducer {
             newState.bankCertListState.certs = certs
         case .selectCert:
             break
-        case .addUser(let user):
-            newState.bankSelectUserState.users.append(user)
+        case .updateUsers(let users):
+            newState.bankSelectUserState.users = users
         case .removeUser:
             break
         case .selectUser(let user):

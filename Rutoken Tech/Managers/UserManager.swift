@@ -5,12 +5,13 @@
 //  Created by Никита Девятых on 20.02.2024.
 //
 
+import Combine
 import CoreData
 import Foundation
 
 
 protocol UserManagerProtocol {
-    func getAllUsers() throws -> [BankUser]
+    var users: AnyPublisher<[BankUser], Never> { get }
     func deleteUser(user: BankUser) throws
     func createUser(fullname: String, title: String, expiryDate: Date, certId: String, tokenSerial: String) throws -> BankUser?
     func createUser(from cert: CertModel) throws -> BankUser?
@@ -18,6 +19,12 @@ protocol UserManagerProtocol {
 
 class UserManager: UserManagerProtocol {
     let context: NSManagedObjectContext
+    var users: AnyPublisher<[BankUser], Never> {
+        usersPublisher.eraseToAnyPublisher()
+    }
+
+    private let usersPublisher = CurrentValueSubject<[BankUser], Never>([])
+
     init(inMemory: Bool = false) {
         let container = NSPersistentContainer(name: "AppStorage")
         if inMemory {
@@ -29,15 +36,17 @@ class UserManager: UserManagerProtocol {
             }
         })
         self.context = container.viewContext
+        updateUsers()
     }
 
-    func getAllUsers() throws -> [BankUser] {
-        return try context.fetch(BankUser.fetchRequest())
+    private func updateUsers() {
+        usersPublisher.send((try? context.fetch(BankUser.fetchRequest())) ?? [])
     }
 
     func deleteUser(user: BankUser) throws {
         context.delete(user)
         try context.save()
+        updateUsers()
     }
 
     func createUser(fullname: String, title: String, expiryDate: Date, certId: String, tokenSerial: String) throws -> BankUser? {
@@ -51,6 +60,7 @@ class UserManager: UserManagerProtocol {
         newUser.certId = certId
         newUser.tokenSerial = tokenSerial
         try context.save()
+        updateUsers()
         return newUser
     }
 
@@ -70,6 +80,7 @@ class UserManager: UserManagerProtocol {
         newUser.certId = certId
         newUser.tokenSerial = tokenSerial
         try context.save()
+        updateUsers()
         return newUser
     }
 }

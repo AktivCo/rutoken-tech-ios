@@ -30,7 +30,6 @@ class OnSelectCert: Middleware {
                 continuation.yield(.showAlert(.unknownError))
                 return
             }
-            continuation.yield(.addUser(user))
             continuation.yield(.hideSheet)
         }
     }

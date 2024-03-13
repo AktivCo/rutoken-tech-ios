@@ -43,9 +43,9 @@ enum AppAction {
     case selectCert(CertModel)
 
     // MARK: User handling
-    case addUser(BankUser)
     case removeUser(BankUser)
     case selectUser(BankUser?)
+    case updateUsers([BankUser])
 
     // MARK: Other
     case openLink(LinkType)

@@ -5,17 +5,18 @@
 //  Created by Никита Девятых on 26.02.2024.
 //
 
+import Combine
 import Foundation
 
 @testable import Rutoken_Tech
 
 
 class UserManagerMock: UserManagerProtocol {
-    func getAllUsers() throws -> [BankUser] {
-        try getAllUsersCallBack()
+    var users: AnyPublisher<[Rutoken_Tech.BankUser], Never> {
+        usersPublisher.eraseToAnyPublisher()
     }
 
-    var getAllUsersCallBack: () throws -> [BankUser] = { [] }
+    var usersPublisher = CurrentValueSubject<[BankUser], Never>([])
 
     func deleteUser(user: BankUser) throws {
         try deleteUserCallback(user)
