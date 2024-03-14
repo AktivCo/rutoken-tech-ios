@@ -45,6 +45,7 @@
 		44E9C0462B8387A20001E63F /* BankCertListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E9C0452B8387A20001E63F /* BankCertListState.swift */; };
 		44EED1B62B1F115B0036F8DA /* TokenMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EED1B52B1F115B0036F8DA /* TokenMock.swift */; };
 		44F0323A2B5125BC00466080 /* Pkcs11ObjectMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F032392B5125BC00466080 /* Pkcs11ObjectMock.swift */; };
+		5E1F3AA22BA34617008158EF /* RtPcscWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 5E1F3AA12BA34617008158EF /* RtPcscWrapper */; };
 		5E7331A72B6D71D400E96C06 /* Pkcs11Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E7331A62B6D71D400E96C06 /* Pkcs11Session.swift */; };
 		5ED8B92C2ACD8EA100BCFC20 /* TinyAsyncRedux in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B92B2ACD8EA100BCFC20 /* TinyAsyncRedux */; };
 		5ED8B9322ACD8FAC00BCFC20 /* rtpkcs11ecp in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B9312ACD8FAC00BCFC20 /* rtpkcs11ecp */; };
@@ -101,7 +102,6 @@
 		D4B130DA2B0E51FE00AD390F /* PcscHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */; };
 		D4C38F3A2B84CADE00BA50EC /* HeaderTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C38F392B84CADE00BA50EC /* HeaderTitleView.swift */; };
 		D4D46A0F2B3038F60005981A /* Atomic+propertywrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */; };
-		D4D9C9DA2B2306F900DA702C /* RtPcscWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = D4D9C9D92B2306F900DA702C /* RtPcscWrapper */; };
 		D4DC1FCF2B61669800D53AE6 /* String+createPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC1FCE2B61669800D53AE6 /* String+createPointer.swift */; };
 		D4F27DD32B6A5752003D8AE6 /* Bundle+readInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F27DD22B6A5752003D8AE6 /* Bundle+readInfo.swift */; };
 		D4F4FDEC2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F4FDEB2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift */; };
@@ -238,9 +238,9 @@
 				5ED8B9352ACD8FD100BCFC20 /* rtengine in Frameworks */,
 				5ED8B92C2ACD8EA100BCFC20 /* TinyAsyncRedux in Frameworks */,
 				5ED8B9322ACD8FAC00BCFC20 /* rtpkcs11ecp in Frameworks */,
+				5E1F3AA22BA34617008158EF /* RtPcscWrapper in Frameworks */,
 				5ED8B9382ACD996100BCFC20 /* openssl in Frameworks */,
 				D453F5FA2B8F2760008DD9E1 /* RutokenKeychainManager in Frameworks */,
-				D4D9C9DA2B2306F900DA702C /* RtPcscWrapper in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -641,9 +641,9 @@
 				5ED8B9312ACD8FAC00BCFC20 /* rtpkcs11ecp */,
 				5ED8B9342ACD8FD100BCFC20 /* rtengine */,
 				5ED8B9372ACD996100BCFC20 /* openssl */,
-				D4D9C9D92B2306F900DA702C /* RtPcscWrapper */,
 				D453F5F92B8F2760008DD9E1 /* RutokenKeychainManager */,
 				444D9F5E2B8E087E00C1EB0B /* RtUiComponents */,
+				5E1F3AA12BA34617008158EF /* RtPcscWrapper */,
 			);
 			productName = "Rutoken Tech";
 			productReference = 5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */;
@@ -700,9 +700,9 @@
 				5ED8B9302ACD8FAC00BCFC20 /* XCRemoteSwiftPackageReference "rt-pkcs11ecp" */,
 				5ED8B9332ACD8FD100BCFC20 /* XCRemoteSwiftPackageReference "rt-engine" */,
 				5ED8B9362ACD996100BCFC20 /* XCRemoteSwiftPackageReference "openssl-xcframework" */,
-				D4D9C9D82B2306F900DA702C /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */,
 				D453F5F82B8F2760008DD9E1 /* XCRemoteSwiftPackageReference "keychainmanager" */,
 				444D9F5D2B8E087E00C1EB0B /* XCRemoteSwiftPackageReference "swift-ui-components" */,
+				5E1F3AA02BA34617008158EF /* XCRemoteSwiftPackageReference "swift-rtpcsc-wrapper" */,
 			);
 			productRefGroup = 5EF75DDC2AC707BD001834BE /* Products */;
 			projectDirPath = "";
@@ -1183,6 +1183,14 @@
 				revision = d0a39effaf867c4ae4519727621e869e945ac403;
 			};
 		};
+		5E1F3AA02BA34617008158EF /* XCRemoteSwiftPackageReference "swift-rtpcsc-wrapper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AktivCo/swift-rtpcsc-wrapper.git";
+			requirement = {
+				kind = revision;
+				revision = 012ddc937ba1bbc9561b0a53cd8b5459dc48d8a7;
+			};
+		};
 		5ED8B92A2ACD8EA100BCFC20 /* XCRemoteSwiftPackageReference "tiny-redux" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/tiny-redux.git";
@@ -1223,14 +1231,6 @@
 				revision = 99454f840d016cc386add7cf4f8ff5cec07f440b;
 			};
 		};
-		D4D9C9D82B2306F900DA702C /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-pcsc-wrapper.git";
-			requirement = {
-				kind = revision;
-				revision = 2ba56df82033b4f737da9873d45fff58b9e89527;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1238,6 +1238,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 444D9F5D2B8E087E00C1EB0B /* XCRemoteSwiftPackageReference "swift-ui-components" */;
 			productName = RtUiComponents;
+		};
+		5E1F3AA12BA34617008158EF /* RtPcscWrapper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5E1F3AA02BA34617008158EF /* XCRemoteSwiftPackageReference "swift-rtpcsc-wrapper" */;
+			productName = RtPcscWrapper;
 		};
 		5ED8B92B2ACD8EA100BCFC20 /* TinyAsyncRedux */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1263,11 +1268,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D453F5F82B8F2760008DD9E1 /* XCRemoteSwiftPackageReference "keychainmanager" */;
 			productName = RutokenKeychainManager;
-		};
-		D4D9C9D92B2306F900DA702C /* RtPcscWrapper */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D4D9C9D82B2306F900DA702C /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */;
-			productName = RtPcscWrapper;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
