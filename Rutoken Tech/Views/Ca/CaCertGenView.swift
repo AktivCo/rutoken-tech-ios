@@ -187,8 +187,8 @@ struct CaCertGenView: View {
                     .frame(height: 50)
                     .frame(maxWidth: UIDevice.isPhone ? .infinity : 350)
             }
-            .disabled(nameInput.isEmpty || inProgress)
-            .background(nameInput.isEmpty
+            .disabled(nameInput.isEmpty || inProgress || store.state.nfcState.isLocked)
+            .background(nameInput.isEmpty || store.state.nfcState.isLocked
                         ? Color.RtColors.rtOtherDisabled
                         : Color.RtColors.rtColorsPrimary100
             )

@@ -87,8 +87,11 @@ struct CaGenerateKeyPairView: View {
                     .frame(height: 50)
                     .frame(maxWidth: UIDevice.isPhone ? .infinity : 350)
             }
-            .disabled(inProgress)
-            .background { Color.RtColors.rtColorsPrimary100 }
+            .disabled(inProgress || store.state.nfcState.isLocked)
+            .background { store.state.nfcState.isLocked
+                ? Color.RtColors.rtOtherDisabled
+                : Color.RtColors.rtColorsPrimary100
+            }
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.horizontal, 20)
             .padding(.bottom, UIDevice.isPhone ? 34 : 24)

@@ -110,7 +110,7 @@ struct CaEntryView: View {
                     RtAuthView(defaultPinGetter: { "12345678" },
                                onSubmit: { tokenType, pin in store.send(.selectToken(tokenType, pin)) },
                                onCancel: { store.send(.hideSheet) })
-                    .environmentObject(store.state.routingState.pinInputError)
+                    .environmentObject(store.state.routingState.pinInputModel)
                 }()))
             } label: {
                 Text("Подключить")

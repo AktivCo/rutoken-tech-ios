@@ -32,7 +32,8 @@ struct RutokenTechApp: App {
             OnPerformTokenConnection(cryptoManager: cryptoManager),
             OnPerformGenKeyPair(cryptoManager: cryptoManager),
             OnPerformGenCert(cryptoManager: cryptoManager),
-            OnHandleOpenLink()
+            OnHandleOpenLink(),
+            OnInitCooldownNfc()
         ]
 
         store = Store(initialState: AppState(),

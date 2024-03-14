@@ -19,7 +19,6 @@
 		44416B2F2B555F4500EC5F66 /* CertRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44416B2E2B555F4500EC5F66 /* CertRequest.swift */; };
 		4443EA0B2B96F5160003436D /* KeyAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4443EA0A2B96F5160003436D /* KeyAlgorithm.swift */; };
 		4443EA0D2B96F59A0003436D /* KeyAlgorithm+description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4443EA0C2B96F59A0003436D /* KeyAlgorithm+description.swift */; };
-		444D9F5F2B8E087E00C1EB0B /* RtUiComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 444D9F5E2B8E087E00C1EB0B /* RtUiComponents */; };
 		4464FAA82B359ED5005F732F /* Pkcs11Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464FAA72B359ED5005F732F /* Pkcs11Object.swift */; };
 		44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */; };
 		4469F7882B34512E000DCF8B /* AttributeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4469F7872B34512E000DCF8B /* AttributeType.swift */; };
@@ -32,8 +31,11 @@
 		44A415272B6106AD00D78653 /* bank.pem in Resources */ = {isa = PBXBuildFile; fileRef = 44A415232B6106AD00D78653 /* bank.pem */; };
 		44A415282B6106AD00D78653 /* ca.pem in Resources */ = {isa = PBXBuildFile; fileRef = 44A415242B6106AD00D78653 /* ca.pem */; };
 		44B4A81C2B6CD15D00E59F63 /* AboutAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B4A81B2B6CD15D00E59F63 /* AboutAppView.swift */; };
+		44C2F4DC2BA3394500B006FC /* RtUiComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 44C2F4DB2BA3394500B006FC /* RtUiComponents */; };
 		44EED1B62B1F115B0036F8DA /* TokenMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EED1B52B1F115B0036F8DA /* TokenMock.swift */; };
 		44F0323A2B5125BC00466080 /* Pkcs11ObjectMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F032392B5125BC00466080 /* Pkcs11ObjectMock.swift */; };
+		44F68AB32BA1E284003061B8 /* OnInitCooldownNfc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F68AB22BA1E284003061B8 /* OnInitCooldownNfc.swift */; };
+		44F68AB52BA1E7E2003061B8 /* NfcState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F68AB42BA1E7E2003061B8 /* NfcState.swift */; };
 		5E7331A72B6D71D400E96C06 /* Pkcs11Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E7331A62B6D71D400E96C06 /* Pkcs11Session.swift */; };
 		5ED8B92C2ACD8EA100BCFC20 /* TinyAsyncRedux in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B92B2ACD8EA100BCFC20 /* TinyAsyncRedux */; };
 		5ED8B9322ACD8FAC00BCFC20 /* rtpkcs11ecp in Frameworks */ = {isa = PBXBuildFile; productRef = 5ED8B9312ACD8FAC00BCFC20 /* rtpkcs11ecp */; };
@@ -130,6 +132,8 @@
 		44B4A81B2B6CD15D00E59F63 /* AboutAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutAppView.swift; sourceTree = "<group>"; };
 		44EED1B52B1F115B0036F8DA /* TokenMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMock.swift; sourceTree = "<group>"; };
 		44F032392B5125BC00466080 /* Pkcs11ObjectMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11ObjectMock.swift; sourceTree = "<group>"; };
+		44F68AB22BA1E284003061B8 /* OnInitCooldownNfc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnInitCooldownNfc.swift; sourceTree = "<group>"; };
+		44F68AB42BA1E7E2003061B8 /* NfcState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NfcState.swift; sourceTree = "<group>"; };
 		5E7331A62B6D71D400E96C06 /* Pkcs11Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Session.swift; sourceTree = "<group>"; };
 		5EF30EDD2B1A823700E48627 /* OnPerformTokenConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnPerformTokenConnection.swift; sourceTree = "<group>"; };
 		5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rutoken Tech.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -190,7 +194,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				444D9F5F2B8E087E00C1EB0B /* RtUiComponents in Frameworks */,
+				44C2F4DC2BA3394500B006FC /* RtUiComponents in Frameworks */,
 				5ED8B9352ACD8FD100BCFC20 /* rtengine in Frameworks */,
 				5ED8B92C2ACD8EA100BCFC20 /* TinyAsyncRedux in Frameworks */,
 				5ED8B9322ACD8FAC00BCFC20 /* rtpkcs11ecp in Frameworks */,
@@ -292,6 +296,7 @@
 				7D9D3C142B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift */,
 				446F71052B6271C400684E0D /* OnPerformGenCert.swift */,
 				D43314492B767E2600442809 /* OnHandleOpenLink.swift */,
+				44F68AB22BA1E284003061B8 /* OnInitCooldownNfc.swift */,
 			);
 			path = Middlewares;
 			sourceTree = "<group>";
@@ -388,11 +393,12 @@
 		7D9E5A5E2B0BA51600E2EAB7 /* States */ = {
 			isa = PBXGroup;
 			children = (
-				D42178022B1F0EAF00D08948 /* RoutingState.swift */,
 				7D38D6D92B0E2C190045FBAD /* AppState.swift */,
+				D42178022B1F0EAF00D08948 /* RoutingState.swift */,
 				7D9E5A5F2B0BA55E00E2EAB7 /* ConnectedTokenState.swift */,
 				7D28BD812B3082990079AE1C /* CaGenerateKeyPairState.swift */,
 				D49953C42B58343200E62B5B /* CaGenerateCertState.swift */,
+				44F68AB42BA1E7E2003061B8 /* NfcState.swift */,
 			);
 			path = States;
 			sourceTree = "<group>";
@@ -553,7 +559,7 @@
 				5ED8B9372ACD996100BCFC20 /* openssl */,
 				5ED8B93A2ACDA1C300BCFC20 /* RtPcsc */,
 				D4D9C9D92B2306F900DA702C /* RtPcscWrapper */,
-				444D9F5E2B8E087E00C1EB0B /* RtUiComponents */,
+				44C2F4DB2BA3394500B006FC /* RtUiComponents */,
 			);
 			productName = "Rutoken Tech";
 			productReference = 5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */;
@@ -612,7 +618,7 @@
 				5ED8B9362ACD996100BCFC20 /* XCRemoteSwiftPackageReference "openssl-xcframework" */,
 				5ED8B9392ACDA1C300BCFC20 /* XCRemoteSwiftPackageReference "rt-pcsc" */,
 				D4D9C9D82B2306F900DA702C /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */,
-				444D9F5D2B8E087E00C1EB0B /* XCRemoteSwiftPackageReference "swift-ui-components" */,
+				44C2F4D92BA338DD00B006FC /* XCRemoteSwiftPackageReference "swift-ui-components" */,
 			);
 			productRefGroup = 5EF75DDC2AC707BD001834BE /* Products */;
 			projectDirPath = "";
@@ -721,10 +727,12 @@
 				4416A2772B70F9A500645800 /* View+InfoListStyle.swift in Sources */,
 				4413CFAF2B590379000987A8 /* Rutoken_Tech-Bridging-Header.m in Sources */,
 				7D4335892B5567A700A0336A /* String+generateID.swift in Sources */,
+				44F68AB52BA1E7E2003061B8 /* NfcState.swift in Sources */,
 				4413CFB42B592F13000987A8 /* String+isNumber.swift in Sources */,
 				447AFBAA2B205A7000A53B0C /* ConnectionType.swift in Sources */,
 				44416B2C2B552CCE00EC5F66 /* OpenSslHelper.swift in Sources */,
 				443076EF2B1F2D5E0073B406 /* String+getFrom.swift in Sources */,
+				44F68AB32BA1E284003061B8 /* OnInitCooldownNfc.swift in Sources */,
 				D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */,
 				4443EA0B2B96F5160003436D /* KeyAlgorithm.swift in Sources */,
 				7D38D6DC2B0E2D3F0045FBAD /* AppAction.swift in Sources */,
@@ -1061,12 +1069,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		444D9F5D2B8E087E00C1EB0B /* XCRemoteSwiftPackageReference "swift-ui-components" */ = {
+		44C2F4D92BA338DD00B006FC /* XCRemoteSwiftPackageReference "swift-ui-components" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AktivCo/swift-ui-components";
 			requirement = {
 				kind = revision;
-				revision = d0a39effaf867c4ae4519727621e869e945ac403;
+				revision = 7d4877e7b676178cd5bc782fa54b35de8ff83e37;
 			};
 		};
 		5ED8B92A2ACD8EA100BCFC20 /* XCRemoteSwiftPackageReference "tiny-redux" */ = {
@@ -1120,9 +1128,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		444D9F5E2B8E087E00C1EB0B /* RtUiComponents */ = {
+		44C2F4DB2BA3394500B006FC /* RtUiComponents */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 444D9F5D2B8E087E00C1EB0B /* XCRemoteSwiftPackageReference "swift-ui-components" */;
+			package = 44C2F4D92BA338DD00B006FC /* XCRemoteSwiftPackageReference "swift-ui-components" */;
 			productName = RtUiComponents;
 		};
 		5ED8B92B2ACD8EA100BCFC20 /* TinyAsyncRedux */ = {
