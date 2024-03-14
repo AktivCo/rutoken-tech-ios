@@ -12,7 +12,7 @@ import TinyAsyncRedux
 
 class OnInitCooldownNfc: Middleware {
     func handle(action: AppAction) -> AsyncStream<AppAction>? {
-        guard case .lockNfc = action else {
+        guard case .willUnlockNfc = action else {
             return nil
         }
 

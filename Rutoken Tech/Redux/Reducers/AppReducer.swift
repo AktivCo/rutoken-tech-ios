@@ -65,6 +65,8 @@ struct AppReducer: Reducer {
         case .unlockNfc:
             newState.nfcState.isLocked = false
             newState.routingState.pinInputModel.isContinueButtonDisabled = false
+        case .willUnlockNfc:
+            break
         }
         return newState
     }

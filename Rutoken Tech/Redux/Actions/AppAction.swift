@@ -36,6 +36,9 @@ enum AppAction {
 
     // MARK: Other
     case openLink(LinkType)
+
+    // MARK: NFC interactions
     case lockNfc
+    case willUnlockNfc
     case unlockNfc
 }
