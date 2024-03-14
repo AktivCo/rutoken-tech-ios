@@ -19,39 +19,90 @@ class DocumentManagerTests: XCTestCase {
         continueAfterFailure = false
 
         helper = FileHelperMock()
+
+        // This is neccessary to DocumentManager init
+        helper.readFileCallback = { _ in "[]".data(using: .utf8)! }
         manager = DocumentManager(helper: helper)
     }
 
     func testResetTempDirectorySuccess() throws {
+        let name = "Платежное \"поручение\" №121"
+        let action = BankDocument.ActionType.verify
+        let amount: Int = 35600
+        let company = "ОАО \"Нефтегаз\""
+        let paymentDay = Date()
+
+        let doc = BankDocument(name: name,
+                               action: action,
+                               amount: amount,
+                               companyName: company,
+                               paymentDay: paymentDay)
+
         let exp1 = XCTestExpectation(description: "Clear temp directory")
         let exp2 = XCTestExpectation(description: "Copy files to temp directory")
         helper.clearTempDirCallback = { exp1.fulfill() }
         helper.copyFilesToTempDirCallback = { _ in exp2.fulfill() }
+        helper.readFileCallback = { url in
+            XCTAssertEqual(createBundleUrl(for: self.helper.documentListFileName, in: .bankDocuments), url)
+            return try BankDocument.jsonEncoder.encode([doc])
+        }
 
         let docs = try awaitPublisherUnwrapped(manager.documents.dropFirst()) {
             XCTAssertNoThrow(try manager.resetTempDirectory())
         }
 
         wait(for: [exp1, exp2], timeout: 0.3)
-        XCTAssertEqual(docs, [])
+        XCTAssertEqual(docs, [doc])
     }
 
     func testResetTempDirectoryClearTempDirError() throws {
-        helper.clearTempDirCallback = { throw FileHelperMockError.general }
+        let error = FileHelperMockError.general
+        helper.clearTempDirCallback = { throw error }
 
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
-            XCTAssertThrowsError(try manager.resetTempDirectory()) { error in
-                XCTAssertEqual(error as? FileHelperMockError, .general)
+            XCTAssertThrowsError(try manager.resetTempDirectory()) {
+                XCTAssertEqual($0 as? FileHelperMockError, error)
             }
         }
     }
 
-    func testResetTempDirectoryCopyFilesError() throws {
-        helper.copyFilesToTempDirCallback = { _ in throw FileHelperMockError.general }
+    func testResetTempDirectoryEmptyList() throws {
+        helper.readFileCallback = { _ in "[]".data(using: .utf8)! }
+
+        let docs = try awaitPublisherUnwrapped(manager.documents.dropFirst()) {
+            XCTAssertNoThrow(try manager.resetTempDirectory())
+        }
+
+        XCTAssertTrue(docs.isEmpty)
+    }
+
+    func testResetTempDirectoryReadFileError() throws {
+        let error = FileHelperMockError.general
+        helper.readFileCallback = { _ in throw error }
 
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
-            XCTAssertThrowsError(try manager.resetTempDirectory()) { error in
-                XCTAssertEqual(error as? FileHelperMockError, .general)
+            XCTAssertThrowsError(try manager.resetTempDirectory()) {
+                XCTAssertEqual($0 as? FileHelperMockError, error)
+            }
+        }
+    }
+
+    func testResetTmpDirectoryBadJson() throws {
+        helper.readFileCallback = { _ in "{}".data(using: .utf8)! }
+
+        try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
+            XCTAssertThrowsError(try manager.resetTempDirectory())
+        }
+    }
+
+    func testResetTempDirectoryCopyFilesError() throws {
+        let error = FileHelperMockError.general
+        helper.copyFilesToTempDirCallback = { _ in throw error }
+        helper.readFileCallback = { _ in "[]".data(using: .utf8)! }
+
+        try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
+            XCTAssertThrowsError(try manager.resetTempDirectory()) {
+                XCTAssertEqual($0 as? FileHelperMockError, .general)
             }
         }
     }

@@ -15,8 +15,9 @@ protocol DocumentManagerProtocol {
 }
 
 enum DocumentManagerError: Error {
-    case filesNotFound
+    case general
 }
+
 
 class DocumentManager: DocumentManagerProtocol {
     public var documents: AnyPublisher<[BankDocument], Never> {
@@ -27,14 +28,25 @@ class DocumentManager: DocumentManagerProtocol {
 
     private var documentsPublisher = CurrentValueSubject<[BankDocument], Never>([])
 
-    init(helper: FileHelperProtocol) {
+    init?(helper: FileHelperProtocol) {
         self.fileHelper = helper
+
+        do { try resetTempDirectory() } catch { return nil }
     }
 
     func resetTempDirectory() throws {
         try fileHelper.clearTempDir()
 
-        try fileHelper.copyFilesToTempDir(from: [])
-        documentsPublisher.send([])
+        guard let jsonUrl = createBundleUrl(for: fileHelper.documentListFileName,
+                                            in: .bankDocuments) else {
+            throw DocumentManagerError.general
+        }
+
+        let json = try fileHelper.readFile(from: jsonUrl)
+        let documents = try BankDocument.jsonDecoder.decode([BankDocument].self, from: json)
+
+        let urls = documents.compactMap { createBundleUrl(for: $0.name, in: .bankDocuments) }
+        try fileHelper.copyFilesToTempDir(from: urls)
+        documentsPublisher.send(documents)
     }
 }

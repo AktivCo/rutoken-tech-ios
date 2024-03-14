@@ -1,0 +1,14 @@
+[{
+    "name": "Инкассовое поручение №121.pdf",
+    "action": "encrypt",
+    "amount": 14500,
+    "companyName": "ОАО \"Нефтегаз\"",
+    "paymentDay": "25.11.2023"
+},
+{
+    "name": "Платежное поручение №121.pdf",
+    "action": "verify",
+    "amount": 356000,
+    "companyName": "ОАО \"Нефтегаз\"",
+    "paymentDay": "01.01.2007"
+}]

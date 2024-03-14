@@ -41,23 +41,18 @@ class FileHelper: FileHelperProtocol {
             return nil
         }
         tempDir = documentsUrl.appendingPathComponent(dirName)
-        do {
-            try clearTempDir()
-        } catch {
-            fatalError("Failed to initialize FileHelper with error: \(error.localizedDescription)")
-        }
     }
 
     // MARK: - Public API
-    func readFile(from url: URL) throws -> Data {
-        try Data(contentsOf: url)
-    }
-
     func clearTempDir() throws {
         if FileManager.default.fileExists(atPath: tempDir.path()) {
             try FileManager.default.removeItem(at: tempDir)
         }
         try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: false)
+    }
+
+    func readFile(from url: URL) throws -> Data {
+        return try Data(contentsOf: url)
     }
 
     func copyFilesToTempDir(from source: [URL]) throws {
@@ -68,5 +63,11 @@ class FileHelper: FileHelperProtocol {
 
     func saveFileToTempDir(with name: String, content: Data) throws {
         try content.write(to: tempDir.appendingPathComponent(name))
+    }
+}
+
+extension FileHelperProtocol {
+    var documentListFileName: String {
+        "documents.json"
     }
 }
