@@ -19,7 +19,9 @@ struct RutokenTechApp: App {
 
     init() {
         let userManager = UserManager()
-        let fileHelper = FileHelper()
+        guard let fileHelper = FileHelper(dirName: "BankTempDir") else {
+            fatalError("Failed to initialize FileHelper")
+        }
         let engineWrapper = RtEngineWrapper()
         let openSslHelper = OpenSslHelper(engine: engineWrapper)
 

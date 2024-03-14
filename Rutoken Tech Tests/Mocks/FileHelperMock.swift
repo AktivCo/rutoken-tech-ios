@@ -14,4 +14,10 @@ class FileHelperMock: FileHelperProtocol {
     }
 
     var getContentResult: String?
+
+    func resetTempDir() throws {
+        try resetTempDirCallback()
+    }
+
+    var resetTempDirCallback: () throws -> Void = {}
 }
