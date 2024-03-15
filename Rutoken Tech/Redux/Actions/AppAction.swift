@@ -49,8 +49,15 @@ enum AppAction {
 
     // MARK: Other
     case openLink(LinkType)
+
+    // MARK: PIN operations
     case savePin(String, String, Bool)
     case getPin(String)
     case updatePin(String?)
     case deletePin(String)
+
+    // MARK: NFC interactions
+    case lockNfc
+    case willUnlockNfc
+    case unlockNfc
 }

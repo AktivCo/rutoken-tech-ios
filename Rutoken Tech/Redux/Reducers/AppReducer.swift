@@ -34,16 +34,18 @@ struct AppReducer: Reducer {
             newState.connectedTokenState.connectedToken = info
             newState.connectedTokenState.pin = pin
         case let .showPinInputError(errorText):
-            newState.routingState.pinInputError.errorDescription = errorText
+            newState.routingState.pinInputModel.errorDescription = errorText
         case .hidePinInputError:
-            newState.routingState.pinInputError.errorDescription = ""
+            newState.routingState.pinInputModel.errorDescription = ""
         case .generateKeyId:
             newState.caGenerateKeyPairState.key = KeyModel(ckaId: String.generateID(),
                                                            type: .gostR3410_2012_256)
         case .generateKeyPair:
             newState.caGenerateKeyPairState.inProgress = true
+            newState.routingState.pinInputModel.inProgress = true
         case .finishGenerateKeyPair:
             newState.caGenerateKeyPairState.inProgress = false
+            newState.routingState.pinInputModel.inProgress = false
         case .updateKeys(let keys):
             newState.caGenerateCertState.keys = keys
         case .generateCert:
@@ -79,6 +81,14 @@ struct AppReducer: Reducer {
             break
         case .deletePin:
             newState.bankSelectUserState.pin = nil
+        case .lockNfc:
+            newState.nfcState.isLocked = true
+            newState.routingState.pinInputModel.isContinueButtonDisabled = true
+        case .unlockNfc:
+            newState.nfcState.isLocked = false
+            newState.routingState.pinInputModel.isContinueButtonDisabled = false
+        case .willUnlockNfc:
+            break
         }
         return newState
     }

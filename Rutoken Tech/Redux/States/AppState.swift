@@ -16,4 +16,6 @@ struct AppState {
     // MARK: Bank
     var bankSelectUserState = BankSelectUsersState()
     var bankCertListState = BankCertListState()
+    // MARK: NFC
+    var nfcState = NfcState()
 }

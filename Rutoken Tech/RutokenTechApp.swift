@@ -44,7 +44,8 @@ struct RutokenTechApp: App {
             OnSelectCert(userManager: userManager),
             OnDeletePin(pinCodeManager: pinCodeManager),
             // About
-            OnHandleOpenLink()
+            OnHandleOpenLink(),
+            OnInitCooldownNfc()
         ]
 
         store = Store(initialState: AppState(),

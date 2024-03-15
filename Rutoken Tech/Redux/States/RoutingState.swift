@@ -13,5 +13,5 @@ import RtUiComponents
 struct RoutingState {
     var alert: RtAlertModel?
     var sheet: RtSheetModel = RtSheetModel(size: .largePhone, isDraggable: false)
-    let pinInputError = RtPinInputError()
+    let pinInputModel = RtPinInputModel()
 }

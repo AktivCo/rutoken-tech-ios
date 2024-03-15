@@ -22,7 +22,13 @@ class OnPerformGenCert: Middleware {
 
         return AsyncStream<AppAction> { continuation in
             Task {
+                if connectionType == .nfc {
+                    continuation.yield(.lockNfc)
+                }
                 defer {
+                    if connectionType == .nfc {
+                        continuation.yield(.willUnlockNfc)
+                    }
                     continuation.yield(.finishGenerateCert)
                     continuation.finish()
                 }

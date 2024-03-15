@@ -20,11 +20,20 @@ class OnPerformTokenConnection: Middleware {
             return nil
         }
 
-        let tokenInterface: ConnectionType = tokenType == .nfc ? .nfc : .usb
+        let connectionType: ConnectionType = tokenType == .nfc ? .nfc : .usb
         return AsyncStream<AppAction> { continuation in
             Task {
+                if connectionType == .nfc {
+                    continuation.yield(.lockNfc)
+                }
+                defer {
+                    if connectionType == .nfc {
+                        continuation.yield(.willUnlockNfc)
+                    }
+                    continuation.finish()
+                }
                 do {
-                    try await self.cryptoManager.withToken(connectionType: tokenInterface,
+                    try await self.cryptoManager.withToken(connectionType: connectionType,
                                                            serial: nil, pin: pin) {
                         let info = try await self.cryptoManager.getTokenInfo()
                         continuation.yield(.tokenSelected(info, pin))
@@ -38,8 +47,6 @@ class OnPerformTokenConnection: Middleware {
                 } catch let error as CryptoManagerError {
                     continuation.yield(.showAlert(AppAlert(from: error)))
                 }
-
-                continuation.finish()
             }
         }
     }
