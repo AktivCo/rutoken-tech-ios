@@ -7,6 +7,7 @@ archive:
     entrypoint: ["/bin/bash"]
   stage: archive
   tags: [local]
+  resource_group: aktiv-builds-${CI_COMMIT_SHA}
   rules:
     - if: $SKIP_BUILD == "false"
     - when: never
