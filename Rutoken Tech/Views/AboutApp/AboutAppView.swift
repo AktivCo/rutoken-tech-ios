@@ -43,13 +43,11 @@ struct AboutAppView: View {
 
     var logoView: some View {
         VStack(spacing: 0) {
-            if let image = UIImage(named: "AppIcon") {
-                Image(uiImage: image)
-                    .resizable()
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                    .frame(width: 96, height: 96)
-                    .padding(.vertical, 12)
-            }
+            Image("AppLogo")
+                .resizable()
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .frame(width: 96, height: 96)
+                .padding(.vertical, 12)
             Text("Рутокен Технологии")
                 .font(.title2)
                 .fontWeight(.bold)
