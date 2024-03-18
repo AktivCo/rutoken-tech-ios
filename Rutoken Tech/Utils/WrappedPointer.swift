@@ -7,14 +7,14 @@
 
 class WrappedPointer<T> {
     let pointer: T
-    private let destructor: (T) -> Void
+    private let destructor: (T) -> Any
 
-    init(ptr: T, _ destructor: @escaping (T) -> Void) {
+    init(ptr: T, _ destructor: @escaping (T) -> Any) {
         self.pointer = ptr
         self.destructor = destructor
     }
 
     deinit {
-        destructor(pointer)
+        _ = destructor(pointer)
     }
 }

@@ -172,7 +172,11 @@ class OpenSslHelper: OpenSslHelperProtocol {
         guard PEM_write_bio_X509_REQ(bio, csr) == 1 else {
             throw OpenSslError.generalError(#line, getLastError())
         }
-        return bioToString(bio: bio)
+
+        guard let csr = bioToString(bio) else {
+            throw OpenSslError.generalError(#line, getLastError())
+        }
+        return csr
     }
 
     func createCert(for csr: String, with caKeyStr: String, and caCertStr: String) throws -> Data {
@@ -336,21 +340,12 @@ class OpenSslHelper: OpenSslHelperProtocol {
         defer {
             BIO_free(bio)
         }
-        guard i2d_X509_bio(bio, generatedCert) > 0 else {
+        guard i2d_X509_bio(bio, generatedCert) > 0,
+              let generatedCertData = bioToData(bio) else {
             throw OpenSslError.generalError(#line, getLastError())
         }
-        guard let generatedCertData = bioToData(bio) else {
-            throw OpenSslError.generalError(#line, "Something went wrong during converting BIO to Data")
-        }
-        return generatedCertData
-    }
 
-    func bioToData(_ bio: OpaquePointer) -> Data? {
-        let len = BIO_ctrl(bio, BIO_CTRL_PENDING, 0, nil)
-        var buffer = [UInt8](repeating: 0, count: len + 1)
-        let bytesRead = BIO_read(bio, &buffer, Int32(buffer.count))
-        guard bytesRead > 0 else { return nil }
-        return Data(bytes: buffer, count: Int(bytesRead))
+        return generatedCertData
     }
 
     func parseCert(_ cert: Data) throws -> CertModel {
@@ -381,17 +376,6 @@ class OpenSslHelper: OpenSslHelperProtocol {
                      keyAlgo: algorithm,
                      expiryDate: notAfter.getString(with: "dd.MM.YYYY"),
                      causeOfInvalid: reason)
-    }
-
-    private func bioToString(bio: OpaquePointer) -> String {
-        let len = BIO_ctrl(bio, BIO_CTRL_PENDING, 0, nil)
-        var buffer = [CChar](repeating: 0, count: len + 1)
-        BIO_read(bio, &buffer, Int32(len))
-
-        // Ensure last value is 0 (null terminated) otherwise we get buffer overflow!
-        buffer[len] = 0
-        let ret = String(cString: buffer)
-        return ret
     }
 
     private func getLastError() -> String? {

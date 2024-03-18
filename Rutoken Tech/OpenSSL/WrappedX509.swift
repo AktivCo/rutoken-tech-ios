@@ -23,59 +23,28 @@ class WrappedX509 {
         }
     }
 
-    private let x509: OpaquePointer
+    private let x509: WrappedPointer<OpaquePointer>
 
     init?(from cert: Data) {
-        var x509: OpaquePointer? = cert.withUnsafeBytes {
-            guard let bytes = $0.baseAddress?.assumingMemoryBound(to: UInt8.self),
-                  let bio = BIO_new(BIO_s_mem()) else {
-                return nil
-            }
-            defer {
-                BIO_free(bio)
-            }
-
-            var accumulated: Int32 = 0
-            var bytesReaded: Int32 = 0
-            repeat {
-                bytesReaded = BIO_write(bio, bytes.advanced(by: Int(bytesReaded)), Int32($0.count) - accumulated)
-                accumulated += bytesReaded
-
-                guard bytesReaded >= 0 else {
-                    return nil
-                }
-            } while bytesReaded > 0
-
-            return d2i_X509_bio(bio, nil)
+        guard let wrappedBio = dataToBio(cert) else {
+            return nil
         }
 
-        guard let x509 else { return nil }
-        self.x509 = x509
+        guard let ptr = d2i_X509_bio(wrappedBio.pointer, nil) else { return nil }
+        self.x509 = WrappedPointer(ptr: ptr, X509_free)
     }
 
     init?(from cert: String) {
-        guard let certPtr = cert.cString(using: .utf8),
-              let certBio = BIO_new(BIO_s_mem()) else {
-            return nil
-        }
-        defer {
-            BIO_free(certBio)
-        }
-
-        guard BIO_puts(certBio, certPtr) > 0,
-              let x509 = PEM_read_bio_X509(certBio, nil, nil, nil) else {
+        guard let wrappedBio = stringToBio(cert) else {
             return nil
         }
 
-        self.x509 = x509
-    }
-
-    deinit {
-        X509_free(x509)
+        guard let ptr = PEM_read_bio_X509(wrappedBio.pointer, nil, nil, nil) else { return nil }
+        self.x509 = WrappedPointer(ptr: ptr, X509_free)
     }
 
     public var publicKeyAlgorithm: KeyAlgorithm? {
-        guard let publicKey = X509_get_pubkey(x509) else {
+        guard let publicKey = X509_get_pubkey(x509.pointer) else {
             return nil
         }
         defer {
@@ -102,7 +71,7 @@ class WrappedX509 {
     }
 
     public var notBefore: Date? {
-        guard let notBefore = X509_get0_notBefore(x509) else {
+        guard let notBefore = X509_get0_notBefore(x509.pointer) else {
             return nil
         }
 
@@ -110,7 +79,7 @@ class WrappedX509 {
     }
 
     public var notAfter: Date? {
-        guard let notAfter = X509_get0_notAfter(x509) else {
+        guard let notAfter = X509_get0_notAfter(x509.pointer) else {
             return nil
         }
 
@@ -118,7 +87,7 @@ class WrappedX509 {
     }
 
     private func getValue(for field: CertField) -> String? {
-        guard let subjectName = X509_get_subject_name(x509) else {
+        guard let subjectName = X509_get_subject_name(x509.pointer) else {
             return nil
         }
 
@@ -145,7 +114,9 @@ class WrappedX509 {
 
 private extension UnsafePointer where Pointee == ASN1_TIME {
     func asDate() -> Date? {
-        let bio = BIO_new(BIO_s_mem())
+        guard let bio = BIO_new(BIO_s_mem()) else {
+            return nil
+        }
         defer {
             BIO_free(bio)
         }
@@ -154,19 +125,7 @@ private extension UnsafePointer where Pointee == ASN1_TIME {
             return nil
         }
 
-        let bufferSize: CInt = 128
-        var buffer = [UInt8](repeating: 0x0, count: Int(bufferSize))
-        var data = Data()
-        var readBytes: CInt = 0
-
-        repeat {
-            readBytes = BIO_read(bio, &buffer, bufferSize)
-            if readBytes > 0 {
-                data.append(contentsOf: buffer[0..<Int(readBytes)])
-            }
-        } while readBytes > 0
-
-        guard let string = String(data: data, encoding: .utf8) else {
+        guard let str = bioToString(bio) else {
             return nil
         }
 
@@ -174,7 +133,7 @@ private extension UnsafePointer where Pointee == ASN1_TIME {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd HH:mm:ss yyyy ZZZ"
         dateFormatter.locale = Locale(identifier: "en_US")
-        guard let date = dateFormatter.date(from: string) else {
+        guard let date = dateFormatter.date(from: str) else {
             return nil
         }
 

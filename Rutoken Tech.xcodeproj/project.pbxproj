@@ -35,6 +35,7 @@
 		44A415042B60F67600D78653 /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A415032B60F67600D78653 /* FileHelper.swift */; };
 		44B4A81C2B6CD15D00E59F63 /* AboutAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B4A81B2B6CD15D00E59F63 /* AboutAppView.swift */; };
 		44CB44542BA18BB30056583E /* OnGetTokenPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CB44532BA18BB30056583E /* OnGetTokenPin.swift */; };
+		44E6FCA32BA97AB1001D35A5 /* OpenSslUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E6FCA22BA97AB1001D35A5 /* OpenSslUtils.swift */; };
 		44E7F8322BA4760600786A42 /* OnDeletePin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E7F8312BA4760600786A42 /* OnDeletePin.swift */; };
 		44BB8F792B9F0DB400BF7438 /* BankDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BB8F782B9F0DB400BF7438 /* BankDocument.swift */; };
 		44BB8F942B9F339000BF7438 /* BankDocuments in Resources */ = {isa = PBXBuildFile; fileRef = 44BB8F932B9F339000BF7438 /* BankDocuments */; };
@@ -162,6 +163,7 @@
 		44A415032B60F67600D78653 /* FileHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
 		44B4A81B2B6CD15D00E59F63 /* AboutAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutAppView.swift; sourceTree = "<group>"; };
 		44CB44532BA18BB30056583E /* OnGetTokenPin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnGetTokenPin.swift; sourceTree = "<group>"; };
+		44E6FCA22BA97AB1001D35A5 /* OpenSslUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSslUtils.swift; sourceTree = "<group>"; };
 		44E7F8312BA4760600786A42 /* OnDeletePin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnDeletePin.swift; sourceTree = "<group>"; };
 		44BB8F782B9F0DB400BF7438 /* BankDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankDocument.swift; sourceTree = "<group>"; };
 		44BB8F932B9F339000BF7438 /* BankDocuments */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BankDocuments; sourceTree = "<group>"; };
@@ -297,6 +299,7 @@
 			children = (
 				44416B2B2B552CCE00EC5F66 /* OpenSslHelper.swift */,
 				44251E6D2B8CD52400ADAA0D /* WrappedX509.swift */,
+				44E6FCA22BA97AB1001D35A5 /* OpenSslUtils.swift */,
 			);
 			path = OpenSSL;
 			sourceTree = "<group>";
@@ -859,6 +862,7 @@
 				D42178192B205FD700D08948 /* AppAlert.swift in Sources */,
 				5EF75DE12AC707BD001834BE /* RootView.swift in Sources */,
 				4416A27A2B70F9F600645800 /* View+createLabel.swift in Sources */,
+				44E6FCA32BA97AB1001D35A5 /* OpenSslUtils.swift in Sources */,
 				D433144C2B76848900442809 /* LinkType.swift in Sources */,
 				D4B130A82B0CFD2F00AD390F /* CryptoManager.swift in Sources */,
 				446F71062B6271C400684E0D /* OnPerformGenCert.swift in Sources */,
