@@ -8,8 +8,18 @@
 import Foundation
 
 
-struct BankDocument: Codable {
+struct BankDocument: Codable, Identifiable {
+    enum ActionType: String, Codable {
+        case encrypt
+        case decrypt
+        case sign
+        case verify
+        case none
+    }
+
+    let id = UUID()
     let name: String
+    var action: ActionType = .none
     let amount: Int
     let companyName: String
     let paymentDay: Date
@@ -39,6 +49,15 @@ struct BankDocument: Codable {
         case companyName
         case paymentDay
     }
+
+    var direction: DocType {
+        switch self.action {
+        case .decrypt, .verify, .none:
+            return .income
+        case .sign, .encrypt:
+            return .outcome
+        }
+    }
 }
 
 extension BankDocument: Equatable {
@@ -48,5 +67,25 @@ extension BankDocument: Equatable {
         lhs.companyName == rhs.companyName &&
         lhs.inArchive == rhs.inArchive &&
         lhs.paymentDay.getString(with: dateFormatter.dateFormat) == rhs.paymentDay.getString(with: dateFormatter.dateFormat)
+    }
+}
+
+enum DocType: String, RawRepresentable, CaseIterable {
+    case income = "Входящие"
+    case outcome = "Исходящие"
+}
+
+extension BankDocument.ActionType {
+    var getImageName: String {
+        switch self {
+        case .verify, .none:
+            return "doc.text.fill"
+        case .encrypt:
+            return "lock.fill"
+        case .sign:
+            return "pencil"
+        case .decrypt:
+            return "doc.plaintext.fill"
+        }
     }
 }

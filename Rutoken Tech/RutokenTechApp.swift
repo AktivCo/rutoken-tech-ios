@@ -18,41 +18,46 @@ struct RutokenTechApp: App {
     let store: Store<AppState, AppAction>
 
     init() {
-        let userManager = UserManager()
-        guard let fileHelper = FileHelper(dirName: "BankTempDir"),
-              let documentManager = DocumentManager(helper: fileHelper) else {
-            fatalError("Failed to initialize FileHelper")
+        var middlewares: [any Middleware<AppAction>] = []
+
+        if !ProcessInfo.isPreview {
+            let userManager = UserManager()
+            guard let fileHelper = FileHelper(dirName: "BankTempDir"),
+                  let documentManager = DocumentManager(helper: fileHelper) else {
+                fatalError("Failed to initialize FileHelper")
+            }
+            let engineWrapper = RtEngineWrapper()
+            let openSslHelper = OpenSslHelper(engine: engineWrapper)
+
+            let pkcsHelper = Pkcs11Helper(with: engineWrapper)
+            let pcscHelper = PcscHelper(pcscWrapper: RtPcscWrapper())
+            let pinCodeManager = PinCodeManager(keychainManager: RutokenKeychainManager())
+
+            let cryptoManager = CryptoManager(pkcs11Helper: pkcsHelper,
+                                              pcscHelper: pcscHelper,
+                                              openSslHelper: openSslHelper,
+                                              fileHelper: fileHelper)
+
+            middlewares = [
+                OnStartMonitoring(cryptoManager: cryptoManager, userManager: userManager, documentManager: documentManager),
+                // CA
+                OnPerformTokenConnection(cryptoManager: cryptoManager),
+                OnPerformGenKeyPair(cryptoManager: cryptoManager),
+                OnPerformGenCert(cryptoManager: cryptoManager),
+                // Bank
+                OnPerformReadCerts(cryptoManager: cryptoManager),
+                OnSelectCert(userManager: userManager),
+                OnSavePin(pinCodeManager: pinCodeManager),
+                OnGetPin(pinCodeManager: pinCodeManager),
+                OnDeletePin(pinCodeManager: pinCodeManager),
+                OnDeleteUser(userManager: userManager),
+                OnAuthUser(cryptoManager: cryptoManager),
+                OnResetDocuments(manager: documentManager),
+                // About
+                OnHandleOpenLink(),
+                OnInitCooldownNfc()
+            ]
         }
-        let engineWrapper = RtEngineWrapper()
-        let openSslHelper = OpenSslHelper(engine: engineWrapper)
-
-        let pkcsHelper = Pkcs11Helper(with: engineWrapper)
-        let pcscHelper = PcscHelper(pcscWrapper: RtPcscWrapper())
-        let pinCodeManager = PinCodeManager(keychainManager: RutokenKeychainManager())
-
-        let cryptoManager = CryptoManager(pkcs11Helper: pkcsHelper,
-                                          pcscHelper: pcscHelper,
-                                          openSslHelper: openSslHelper,
-                                          fileHelper: fileHelper)
-
-        let middlewares: [any Middleware<AppAction>] = [
-            OnStartMonitoring(cryptoManager: cryptoManager, userManager: userManager, documentManager: documentManager),
-            // CA
-            OnPerformTokenConnection(cryptoManager: cryptoManager),
-            OnPerformGenKeyPair(cryptoManager: cryptoManager),
-            OnPerformGenCert(cryptoManager: cryptoManager),
-            // Bank
-            OnPerformReadCerts(cryptoManager: cryptoManager),
-            OnSelectCert(userManager: userManager),
-            OnAuthUser(cryptoManager: cryptoManager),
-            OnSavePin(pinCodeManager: pinCodeManager),
-            OnGetPin(pinCodeManager: pinCodeManager),
-            OnDeletePin(pinCodeManager: pinCodeManager),
-            OnDeleteUser(userManager: userManager),
-            // About
-            OnHandleOpenLink(),
-            OnInitCooldownNfc()
-        ]
 
         store = Store(initialState: AppState(),
                       reducer: AppReducer(),

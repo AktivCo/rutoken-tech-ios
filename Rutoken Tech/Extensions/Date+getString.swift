@@ -14,4 +14,11 @@ extension Date {
         dateFormatter.dateFormat = format
         return dateFormatter.string(from: self)
     }
+
+    var getRussianString: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        dateFormatter.dateFormat = "dd MMMM yyyy"
+        return dateFormatter.string(from: self)
+    }
 }

@@ -67,7 +67,8 @@ struct BankUserListView: View {
                 .navigationDestination(isPresented: Binding(
                     get: { store.state.bankSelectUserState.selectedUser != nil },
                     set: { _ in store.send(.selectUser(nil)) })) {
-                        EmptyView()
+                        PaymentListView()
+                            .navigationBarBackButtonHidden(true)
                     }
             }
         }

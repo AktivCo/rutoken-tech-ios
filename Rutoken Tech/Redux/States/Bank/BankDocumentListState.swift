@@ -7,4 +7,5 @@
 
 struct BankDocumentListState {
     var documents: [BankDocument] = []
+    var isLoading = false
 }

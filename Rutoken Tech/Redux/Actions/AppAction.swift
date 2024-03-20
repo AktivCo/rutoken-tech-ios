@@ -50,7 +50,6 @@ enum AppAction {
 
     // MARK: Other
     case openLink(LinkType)
-    case updateDocs([BankDocument])
 
     // MARK: PIN operations
     case savePin(String, String, Bool)
@@ -62,4 +61,8 @@ enum AppAction {
     case lockNfc
     case willUnlockNfc
     case unlockNfc
+
+    // MARK: Bank Documents
+    case resetDocuments
+    case updateDocuments([BankDocument])
 }

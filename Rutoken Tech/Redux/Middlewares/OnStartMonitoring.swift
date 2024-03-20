@@ -39,7 +39,7 @@ class OnStartMonitoring: Middleware {
             }
             .store(in: &cancellable)
             documentManager.documents.sink {
-                continuation.yield(.updateDocs($0))
+                continuation.yield(.updateDocuments($0))
             }
             .store(in: &cancellable)
         }

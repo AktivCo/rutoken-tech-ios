@@ -25,6 +25,7 @@
 		4464FAA82B359ED5005F732F /* Pkcs11Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464FAA72B359ED5005F732F /* Pkcs11Object.swift */; };
 		44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */; };
 		4469F7882B34512E000DCF8B /* AttributeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4469F7872B34512E000DCF8B /* AttributeType.swift */; };
+		446BB6362BB402C70062EA45 /* View+CustomNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446BB6352BB402C70062EA45 /* View+CustomNavBar.swift */; };
 		446E136C2B85D3AC0060ECEE /* OnPerformReadCerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446E136B2B85D3AC0060ECEE /* OnPerformReadCerts.swift */; };
 		446F71042B62511F00684E0D /* FileHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446F71032B62511F00684E0D /* FileHelperMock.swift */; };
 		446F71062B6271C400684E0D /* OnPerformGenCert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446F71052B6271C400684E0D /* OnPerformGenCert.swift */; };
@@ -36,6 +37,8 @@
 		44A1369E2B962184004E07E8 /* DocumentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A1369D2B962184004E07E8 /* DocumentManager.swift */; };
 		44A415042B60F67600D78653 /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A415032B60F67600D78653 /* FileHelper.swift */; };
 		44A502C42BB18CD6006236E7 /* Bundle+getUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A502C32BB18CD6006236E7 /* Bundle+getUrl.swift */; };
+		44A502C62BB1AC1F006236E7 /* OnResetDocuments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A502C52BB1AC1F006236E7 /* OnResetDocuments.swift */; };
+		44A502CA2BB1B8BA006236E7 /* String+withoutPathExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A502C92BB1B8BA006236E7 /* String+withoutPathExtension.swift */; };
 		44B4A81C2B6CD15D00E59F63 /* AboutAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B4A81B2B6CD15D00E59F63 /* AboutAppView.swift */; };
 		44BB8F792B9F0DB400BF7438 /* BankDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BB8F782B9F0DB400BF7438 /* BankDocument.swift */; };
 		44BB8F942B9F339000BF7438 /* BankDocuments in Resources */ = {isa = PBXBuildFile; fileRef = 44BB8F932B9F339000BF7438 /* BankDocuments */; };
@@ -98,6 +101,7 @@
 		D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F52AEA796E00B0AB64 /* RtAppTab.swift */; };
 		D453F5F52B8CD8F1008DD9E1 /* OnSavePin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D453F5F42B8CD8F1008DD9E1 /* OnSavePin.swift */; };
 		D453F5F72B8CD94D008DD9E1 /* PinCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D453F5F62B8CD94D008DD9E1 /* PinCodeManager.swift */; };
+		D453F5FE2B90845A008DD9E1 /* PaymentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D453F5FD2B90845A008DD9E1 /* PaymentListView.swift */; };
 		D455FCAE2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D455FCAD2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift */; };
 		D47302C32B91E07F0049E8F8 /* PinCodeManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47302C22B91E07F0049E8F8 /* PinCodeManagerTests.swift */; };
 		D47302C52B91E2000049E8F8 /* KeychainManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47302C42B91E2000049E8F8 /* KeychainManagerMock.swift */; };
@@ -114,6 +118,9 @@
 		D4B130DA2B0E51FE00AD390F /* PcscHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */; };
 		D4C38F3A2B84CADE00BA50EC /* HeaderTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C38F392B84CADE00BA50EC /* HeaderTitleView.swift */; };
 		D4D22A302BAC7E3000B93DA9 /* OnDeleteUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D22A2F2BAC7E3000B93DA9 /* OnDeleteUser.swift */; };
+		D4C582342BAC216B001604B4 /* ProcessInfo+isPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C582332BAC216B001604B4 /* ProcessInfo+isPreview.swift */; };
+		D4D22A322BAD7FF000B93DA9 /* DocumentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D22A312BAD7FF000B93DA9 /* DocumentListView.swift */; };
+		D4D22A342BAD804200B93DA9 /* DocumentListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D22A332BAD804200B93DA9 /* DocumentListItem.swift */; };
 		D4D46A0F2B3038F60005981A /* Atomic+propertywrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */; };
 		D4DC1FCF2B61669800D53AE6 /* String+createPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC1FCE2B61669800D53AE6 /* String+createPointer.swift */; };
 		D4F27DD32B6A5752003D8AE6 /* Bundle+readInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F27DD22B6A5752003D8AE6 /* Bundle+readInfo.swift */; };
@@ -157,6 +164,7 @@
 		4464FAA72B359ED5005F732F /* Pkcs11Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Object.swift; sourceTree = "<group>"; };
 		44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtEngineWrapper.swift; sourceTree = "<group>"; };
 		4469F7872B34512E000DCF8B /* AttributeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeType.swift; sourceTree = "<group>"; };
+		446BB6352BB402C70062EA45 /* View+CustomNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+CustomNavBar.swift"; sourceTree = "<group>"; };
 		446E136B2B85D3AC0060ECEE /* OnPerformReadCerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnPerformReadCerts.swift; sourceTree = "<group>"; };
 		446F71032B62511F00684E0D /* FileHelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHelperMock.swift; sourceTree = "<group>"; };
 		446F71052B6271C400684E0D /* OnPerformGenCert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnPerformGenCert.swift; sourceTree = "<group>"; };
@@ -168,6 +176,8 @@
 		44A1369D2B962184004E07E8 /* DocumentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentManager.swift; sourceTree = "<group>"; };
 		44A415032B60F67600D78653 /* FileHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
 		44A502C32BB18CD6006236E7 /* Bundle+getUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+getUrl.swift"; sourceTree = "<group>"; };
+		44A502C52BB1AC1F006236E7 /* OnResetDocuments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnResetDocuments.swift; sourceTree = "<group>"; };
+		44A502C92BB1B8BA006236E7 /* String+withoutPathExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+withoutPathExtension.swift"; sourceTree = "<group>"; };
 		44B4A81B2B6CD15D00E59F63 /* AboutAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutAppView.swift; sourceTree = "<group>"; };
 		44BB8F782B9F0DB400BF7438 /* BankDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankDocument.swift; sourceTree = "<group>"; };
 		44BB8F932B9F339000BF7438 /* BankDocuments */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BankDocuments; sourceTree = "<group>"; };
@@ -223,6 +233,7 @@
 		D44997F52AEA796E00B0AB64 /* RtAppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtAppTab.swift; sourceTree = "<group>"; };
 		D453F5F42B8CD8F1008DD9E1 /* OnSavePin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSavePin.swift; sourceTree = "<group>"; };
 		D453F5F62B8CD94D008DD9E1 /* PinCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCodeManager.swift; sourceTree = "<group>"; };
+		D453F5FD2B90845A008DD9E1 /* PaymentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentListView.swift; sourceTree = "<group>"; };
 		D455FCAD2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaEmptyKeysCertView.swift; sourceTree = "<group>"; };
 		D47302C22B91E07F0049E8F8 /* PinCodeManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCodeManagerTests.swift; sourceTree = "<group>"; };
 		D47302C42B91E2000049E8F8 /* KeychainManagerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManagerMock.swift; sourceTree = "<group>"; };
@@ -241,6 +252,9 @@
 		D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcscHelperMock.swift; sourceTree = "<group>"; };
 		D4C38F392B84CADE00BA50EC /* HeaderTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderTitleView.swift; sourceTree = "<group>"; };
 		D4D22A2F2BAC7E3000B93DA9 /* OnDeleteUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDeleteUser.swift; sourceTree = "<group>"; };
+		D4C582332BAC216B001604B4 /* ProcessInfo+isPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProcessInfo+isPreview.swift"; sourceTree = "<group>"; };
+		D4D22A312BAD7FF000B93DA9 /* DocumentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentListView.swift; sourceTree = "<group>"; };
+		D4D22A332BAD804200B93DA9 /* DocumentListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentListItem.swift; sourceTree = "<group>"; };
 		D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Atomic+propertywrapper.swift"; sourceTree = "<group>"; };
 		D4D9C9E62B2328B600DA702C /* Rutoken Tech.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Rutoken Tech.entitlements"; sourceTree = "<group>"; };
 		D4DC1FCE2B61669800D53AE6 /* String+createPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+createPointer.swift"; sourceTree = "<group>"; };
@@ -289,6 +303,7 @@
 				4413CFB32B592F13000987A8 /* String+isNumber.swift */,
 				D4DC1FCE2B61669800D53AE6 /* String+createPointer.swift */,
 				D43250352BA1BAA800493ACE /* String+getDate.swift */,
+				44A502C92BB1B8BA006236E7 /* String+withoutPathExtension.swift */,
 			);
 			path = String;
 			sourceTree = "<group>";
@@ -298,6 +313,7 @@
 			children = (
 				4416A2762B70F9A500645800 /* View+InfoListStyle.swift */,
 				4416A2792B70F9F600645800 /* View+createLabel.swift */,
+				446BB6352BB402C70062EA45 /* View+CustomNavBar.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -354,6 +370,7 @@
 				44E8C2E82B91FDD9008A77AE /* OnSelectCert.swift */,
 				D4D22A2F2BAC7E3000B93DA9 /* OnDeleteUser.swift */,
 				448E744E2BB42F7100585658 /* OnAuthUser.swift */,
+				44A502C52BB1AC1F006236E7 /* OnResetDocuments.swift */,
 			);
 			path = Bank;
 			sourceTree = "<group>";
@@ -533,6 +550,7 @@
 				444D9F5B2B8DECC600C1EB0B /* Date+getString.swift */,
 				4443EA0C2B96F59A0003436D /* KeyAlgorithm+description.swift */,
 				44A502C32BB18CD6006236E7 /* Bundle+getUrl.swift */,
+				D4C582332BAC216B001604B4 /* ProcessInfo+isPreview.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -701,6 +719,9 @@
 				D4FAF1742B8338E50024EFDA /* UserListItem.swift */,
 				44E9C03F2B837F250001E63F /* CertView.swift */,
 				44E9C0432B83866A0001E63F /* CertListView.swift */,
+				D453F5FD2B90845A008DD9E1 /* PaymentListView.swift */,
+				D4D22A312BAD7FF000B93DA9 /* DocumentListView.swift */,
+				D4D22A332BAD804200B93DA9 /* DocumentListItem.swift */,
 			);
 			path = Bank;
 			sourceTree = "<group>";
@@ -897,6 +918,7 @@
 				7DCC9AF12B3B2C9A002788B5 /* KeyModel.swift in Sources */,
 				5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */,
 				4469F7882B34512E000DCF8B /* AttributeType.swift in Sources */,
+				44A502CA2BB1B8BA006236E7 /* String+withoutPathExtension.swift in Sources */,
 				44A415042B60F67600D78653 /* FileHelper.swift in Sources */,
 				D4FC26C92B270C580029060D /* NfcMessages.swift in Sources */,
 				D437117D2B67A70A00441FBC /* SizeReaderViewModifier.swift in Sources */,
@@ -939,11 +961,15 @@
 				D4FAF1772B8347530024EFDA /* BankSelectUserState.swift in Sources */,
 				4422B8222BB1540700A4EDB4 /* BankDocumentListState.swift in Sources */,
 				7D9E5A602B0BA55E00E2EAB7 /* ConnectedTokenState.swift in Sources */,
+				D453F5FE2B90845A008DD9E1 /* PaymentListView.swift in Sources */,
 				441658472B5988F000225948 /* WrappedPointer.swift in Sources */,
 				4483F18C2B7A29420039EF3F /* OnStartMonitoring.swift in Sources */,
+				446BB6362BB402C70062EA45 /* View+CustomNavBar.swift in Sources */,
+				D4D22A322BAD7FF000B93DA9 /* DocumentListView.swift in Sources */,
 				5EF30EDE2B1A823700E48627 /* OnPerformTokenConnection.swift in Sources */,
 				D4B130B32B0DD52A00AD390F /* Token.swift in Sources */,
 				446E136C2B85D3AC0060ECEE /* OnPerformReadCerts.swift in Sources */,
+				44A502C62BB1AC1F006236E7 /* OnResetDocuments.swift in Sources */,
 				7D9D3C152B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift in Sources */,
 				44E9C0462B8387A20001E63F /* BankCertListState.swift in Sources */,
 				5EF30EE02B1A840800E48627 /* TokenInterface.swift in Sources */,
@@ -953,8 +979,10 @@
 				7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */,
 				44E7F8322BA4760600786A42 /* OnDeletePin.swift in Sources */,
 				4413CFB22B592EDE000987A8 /* String+hasCyrillic.swift in Sources */,
+				D4D22A342BAD804200B93DA9 /* DocumentListItem.swift in Sources */,
 				D4B130AB2B0CFD7300AD390F /* TokenInfo.swift in Sources */,
 				444D9F5C2B8DECC600C1EB0B /* Date+getString.swift in Sources */,
+				D4C582342BAC216B001604B4 /* ProcessInfo+isPreview.swift in Sources */,
 				44E9C0402B837F250001E63F /* CertView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

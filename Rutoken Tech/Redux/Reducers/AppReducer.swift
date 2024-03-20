@@ -61,8 +61,6 @@ struct AppReducer: Reducer {
             newState.caGenerateCertState.keys = []
         case .openLink:
             break
-        case let .updateDocs(docs):
-            newState.bankDocumentListState.documents = docs
         case .readCerts:
             break
         case let .updateCerts(certs):
@@ -93,6 +91,11 @@ struct AppReducer: Reducer {
             newState.routingState.pinInputModel.isContinueButtonDisabled = false
         case .willUnlockNfc:
             break
+        case .resetDocuments:
+            newState.bankDocumentListState.isLoading = true
+        case .updateDocuments(let docs):
+            newState.bankDocumentListState.isLoading = false
+            newState.bankDocumentListState.documents = docs
         }
         return newState
     }
