@@ -9,15 +9,7 @@ import Foundation
 
 
 struct BankDocument: Codable {
-    enum ActionType: String, Codable {
-        case encrypt
-        case decrypt
-        case sign
-        case verify
-    }
-
     let name: String
-    let action: ActionType
     let amount: Int
     let companyName: String
     let paymentDay: Date
@@ -43,7 +35,6 @@ struct BankDocument: Codable {
 
     enum CodingKeys: CodingKey {
         case name
-        case action
         case amount
         case companyName
         case paymentDay
@@ -53,7 +44,6 @@ struct BankDocument: Codable {
 extension BankDocument: Equatable {
     static func == (lhs: BankDocument, rhs: BankDocument) -> Bool {
         lhs.name == rhs.name &&
-        lhs.action == rhs.action &&
         lhs.amount == rhs.amount &&
         lhs.companyName == rhs.companyName &&
         lhs.inArchive == rhs.inArchive &&

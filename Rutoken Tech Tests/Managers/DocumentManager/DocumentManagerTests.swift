@@ -27,13 +27,11 @@ class DocumentManagerTests: XCTestCase {
 
     func testResetTempDirectorySuccess() throws {
         let name = "Платежное \"поручение\" №121"
-        let action = BankDocument.ActionType.verify
         let amount: Int = 35600
         let company = "ОАО \"Нефтегаз\""
         let paymentDay = Date()
 
         let doc = BankDocument(name: name,
-                               action: action,
                                amount: amount,
                                companyName: company,
                                paymentDay: paymentDay)
