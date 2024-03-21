@@ -11,23 +11,27 @@ import SwiftUI
 struct UserListItem: View {
     @State private var offset = 0.0
     private let maxTranslation = -80.0
-    let user: BankUser
-    let onRemoveUser: (() -> Void)
+
+    let name: String
+    let title: String
+    let expiryDate: Date
+
+    let onDeleteUser: (() -> Void)
     let onSelectUser: (() -> Void)
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 12) {
-                Text(user.fullname)
+                Text(name)
                     .foregroundStyle(Color.RtColors.rtLabelPrimary)
                 VStack(alignment: .leading, spacing: 8) {
-                    infoField(for: "Должность", with: user.title)
-                    infoField(for: "Сертификат истекает", with: user.expiryDate.getString(with: "dd.MM.yyyy"))
+                    infoField(for: "Должность", with: title)
+                    infoField(for: "Сертификат истекает", with: expiryDate.getString(with: "dd.MM.yyyy"))
                 }
             }
             Spacer()
         }
         .padding(.all, 12)
-        .frame(width: .infinity, height: 152)
+        .frame(height: 152)
         .background(Color("surfacePrimary"))
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .onTapGesture {
@@ -81,7 +85,7 @@ struct UserListItem: View {
         HStack {
             Spacer()
             Button {
-                onRemoveUser()
+                onDeleteUser()
             } label: {
                 Image(systemName: "trash.fill")
                     .foregroundStyle(Color.RtColors.rtColorsOnPrimary)

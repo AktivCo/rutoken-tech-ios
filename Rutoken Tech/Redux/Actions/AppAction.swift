@@ -43,7 +43,7 @@ enum AppAction {
     case selectCert(CertModel)
 
     // MARK: User handling
-    case removeUser(BankUser)
+    case deleteUser(BankUser)
     case selectUser(BankUser?)
     case updateUsers([BankUser])
 

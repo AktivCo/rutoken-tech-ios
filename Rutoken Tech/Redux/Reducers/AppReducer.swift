@@ -71,7 +71,7 @@ struct AppReducer: Reducer {
             break
         case .updateUsers(let users):
             newState.bankSelectUserState.users = users
-        case .removeUser:
+        case .deleteUser:
             break
         case .selectUser(let user):
             newState.bankSelectUserState.selectedUser = user

@@ -46,6 +46,7 @@ struct RutokenTechApp: App {
             OnSaveTokenPin(pinCodeManager: pinCodeManager),
             OnSelectCert(userManager: userManager),
             OnDeletePin(pinCodeManager: pinCodeManager),
+            OnDeleteUser(userManager: userManager),
             // About
             OnHandleOpenLink(),
             OnInitCooldownNfc()

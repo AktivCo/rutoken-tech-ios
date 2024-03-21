@@ -112,6 +112,7 @@
 		D4B130D62B0E4F2400AD390F /* PcscHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D52B0E4F2400AD390F /* PcscHelper.swift */; };
 		D4B130DA2B0E51FE00AD390F /* PcscHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */; };
 		D4C38F3A2B84CADE00BA50EC /* HeaderTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C38F392B84CADE00BA50EC /* HeaderTitleView.swift */; };
+		D4D22A302BAC7E3000B93DA9 /* OnDeleteUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D22A2F2BAC7E3000B93DA9 /* OnDeleteUser.swift */; };
 		D4D46A0F2B3038F60005981A /* Atomic+propertywrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */; };
 		D4DC1FCF2B61669800D53AE6 /* String+createPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC1FCE2B61669800D53AE6 /* String+createPointer.swift */; };
 		D4F27DD32B6A5752003D8AE6 /* Bundle+readInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F27DD22B6A5752003D8AE6 /* Bundle+readInfo.swift */; };
@@ -237,6 +238,7 @@
 		D4B130D72B0E4F8200AD390F /* TokenInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenInterface.swift; sourceTree = "<group>"; };
 		D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcscHelperMock.swift; sourceTree = "<group>"; };
 		D4C38F392B84CADE00BA50EC /* HeaderTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderTitleView.swift; sourceTree = "<group>"; };
+		D4D22A2F2BAC7E3000B93DA9 /* OnDeleteUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDeleteUser.swift; sourceTree = "<group>"; };
 		D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Atomic+propertywrapper.swift"; sourceTree = "<group>"; };
 		D4D9C9E62B2328B600DA702C /* Rutoken Tech.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Rutoken Tech.entitlements"; sourceTree = "<group>"; };
 		D4DC1FCE2B61669800D53AE6 /* String+createPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+createPointer.swift"; sourceTree = "<group>"; };
@@ -348,6 +350,7 @@
 				D453F5F42B8CD8F1008DD9E1 /* OnSaveTokenPin.swift */,
 				446E136B2B85D3AC0060ECEE /* OnPerformReadCerts.swift */,
 				44E8C2E82B91FDD9008A77AE /* OnSelectCert.swift */,
+				D4D22A2F2BAC7E3000B93DA9 /* OnDeleteUser.swift */,
 			);
 			path = Bank;
 			sourceTree = "<group>";
@@ -896,6 +899,7 @@
 				44416B2F2B555F4500EC5F66 /* CertRequest.swift in Sources */,
 				D4D46A0F2B3038F60005981A /* Atomic+propertywrapper.swift in Sources */,
 				4464FAA82B359ED5005F732F /* Pkcs11Object.swift in Sources */,
+				D4D22A302BAC7E3000B93DA9 /* OnDeleteUser.swift in Sources */,
 				D49953BE2B55209E00E62B5B /* CaCertGenView.swift in Sources */,
 				D4B130B52B0DDB2200AD390F /* Pkcs11Helper.swift in Sources */,
 				D4C38F3A2B84CADE00BA50EC /* HeaderTitleView.swift in Sources */,

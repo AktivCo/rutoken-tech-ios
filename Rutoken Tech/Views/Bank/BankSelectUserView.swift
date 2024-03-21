@@ -49,8 +49,8 @@ struct BankSelectUserView: View {
     private var usersListView: some View {
         VStack(spacing: 12) {
             ForEach(store.state.bankSelectUserState.users.prefix(maxUserCount), id: \.id) { user in
-                UserListItem(user: user,
-                             onRemoveUser: { store.send(.removeUser(user)) },
+                UserListItem(name: user.fullname, title: user.title, expiryDate: user.expiryDate,
+                             onDeleteUser: { store.send(.deleteUser(user)) },
                              onSelectUser: { store.send(.selectUser(user)) })
                 .navigationDestination(isPresented: Binding(
                     get: { store.state.bankSelectUserState.selectedUser != nil },
