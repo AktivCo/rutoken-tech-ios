@@ -1307,8 +1307,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AktivCo/swift-ui-components.git";
 			requirement = {
-				kind = exactVersion;
-				version = 1.0.0;
+				kind = revision;
+				revision = 4e90ed7cf5f3d0a2c30b3fc90852c5a71c1dadcf;
 			};
 		};
 		5E1F3AB62BA4B302008158EF /* XCRemoteSwiftPackageReference "keychainmanager" */ = {
