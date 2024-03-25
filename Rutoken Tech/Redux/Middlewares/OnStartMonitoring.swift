@@ -13,12 +13,14 @@ import TinyAsyncRedux
 class OnStartMonitoring: Middleware {
     private let cryptoManager: CryptoManagerProtocol
     private let userManager: UserManagerProtocol
+    private let documentManager: DocumentManagerProtocol
 
     private var cancellable = Set<AnyCancellable>()
 
-    init(cryptoManager: CryptoManagerProtocol, userManager: UserManagerProtocol) {
+    init(cryptoManager: CryptoManagerProtocol, userManager: UserManagerProtocol, documentManager: DocumentManagerProtocol) {
         self.cryptoManager = cryptoManager
         self.userManager = userManager
+        self.documentManager = documentManager
     }
 
     func handle(action: AppAction) -> AsyncStream<AppAction>? {
@@ -34,6 +36,10 @@ class OnStartMonitoring: Middleware {
             }
             userManager.users.sink { users in
                 continuation.yield(.updateUsers(users))
+            }
+            .store(in: &cancellable)
+            documentManager.documents.sink {
+                continuation.yield(.updateDocs($0))
             }
             .store(in: &cancellable)
         }

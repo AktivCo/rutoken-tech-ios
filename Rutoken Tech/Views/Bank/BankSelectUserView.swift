@@ -16,6 +16,8 @@ import TinyAsyncRedux
 struct BankSelectUserView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
 
+    let maxUserCount = 3
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -46,7 +48,7 @@ struct BankSelectUserView: View {
 
     private var usersListView: some View {
         VStack(spacing: 12) {
-            ForEach(store.state.bankSelectUserState.users, id: \.id) { user in
+            ForEach(store.state.bankSelectUserState.users.prefix(maxUserCount), id: \.id) { user in
                 UserListItem(user: user,
                              onRemoveUser: { store.send(.removeUser(user)) },
                              onSelectUser: { store.send(.selectUser(user)) })
@@ -62,7 +64,7 @@ struct BankSelectUserView: View {
 
     private var bottomView: some View {
         VStack {
-            if store.state.bankSelectUserState.users.count < 3 {
+            if store.state.bankSelectUserState.users.count < maxUserCount {
                 Spacer()
                 Button {
                     store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {

@@ -20,7 +20,7 @@ struct RutokenTechApp: App {
     init() {
         let userManager = UserManager()
         guard let fileHelper = FileHelper(dirName: "BankTempDir"),
-              let manager = DocumentManager(helper: fileHelper) else {
+              let documentManager = DocumentManager(helper: fileHelper) else {
             fatalError("Failed to initialize FileHelper")
         }
         let engineWrapper = RtEngineWrapper()
@@ -36,7 +36,7 @@ struct RutokenTechApp: App {
                                           fileHelper: fileHelper)
 
         let middlewares: [any Middleware<AppAction>] = [
-            OnStartMonitoring(cryptoManager: cryptoManager, userManager: userManager),
+            OnStartMonitoring(cryptoManager: cryptoManager, userManager: userManager, documentManager: documentManager),
             // CA
             OnPerformTokenConnection(cryptoManager: cryptoManager),
             OnPerformGenKeyPair(cryptoManager: cryptoManager),

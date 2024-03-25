@@ -49,6 +49,7 @@ enum AppAction {
 
     // MARK: Other
     case openLink(LinkType)
+    case updateDocs([BankDocument])
 
     // MARK: PIN operations
     case savePin(String, String, Bool)

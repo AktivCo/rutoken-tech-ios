@@ -14,6 +14,7 @@
 		441658472B5988F000225948 /* WrappedPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 441658462B5988F000225948 /* WrappedPointer.swift */; };
 		4416A2772B70F9A500645800 /* View+InfoListStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416A2762B70F9A500645800 /* View+InfoListStyle.swift */; };
 		4416A27A2B70F9F600645800 /* View+createLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416A2792B70F9F600645800 /* View+createLabel.swift */; };
+		4422B8222BB1540700A4EDB4 /* BankDocumentListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4422B8212BB1540700A4EDB4 /* BankDocumentListState.swift */; };
 		44251E6E2B8CD52400ADAA0D /* WrappedX509.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44251E6D2B8CD52400ADAA0D /* WrappedX509.swift */; };
 		443076EF2B1F2D5E0073B406 /* String+getFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443076EE2B1F2D5E0073B406 /* String+getFrom.swift */; };
 		44416B2C2B552CCE00EC5F66 /* OpenSslHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44416B2B2B552CCE00EC5F66 /* OpenSslHelper.swift */; };
@@ -142,6 +143,7 @@
 		441658462B5988F000225948 /* WrappedPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedPointer.swift; sourceTree = "<group>"; };
 		4416A2762B70F9A500645800 /* View+InfoListStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+InfoListStyle.swift"; sourceTree = "<group>"; };
 		4416A2792B70F9F600645800 /* View+createLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+createLabel.swift"; sourceTree = "<group>"; };
+		4422B8212BB1540700A4EDB4 /* BankDocumentListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankDocumentListState.swift; sourceTree = "<group>"; };
 		44251E6D2B8CD52400ADAA0D /* WrappedX509.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedX509.swift; sourceTree = "<group>"; };
 		443076EE2B1F2D5E0073B406 /* String+getFrom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+getFrom.swift"; sourceTree = "<group>"; };
 		443AF4DD2B10B40500D34150 /* Rutoken_Tech-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Rutoken_Tech-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -383,6 +385,7 @@
 			children = (
 				D4FAF1762B8347530024EFDA /* BankSelectUserState.swift */,
 				44E9C0452B8387A20001E63F /* BankCertListState.swift */,
+				4422B8212BB1540700A4EDB4 /* BankDocumentListState.swift */,
 			);
 			path = Bank;
 			sourceTree = "<group>";
@@ -926,6 +929,7 @@
 				44B4A81C2B6CD15D00E59F63 /* AboutAppView.swift in Sources */,
 				D4246A942B876CD500B5F737 /* AppStorage.xcdatamodeld in Sources */,
 				D4FAF1772B8347530024EFDA /* BankSelectUserState.swift in Sources */,
+				4422B8222BB1540700A4EDB4 /* BankDocumentListState.swift in Sources */,
 				7D9E5A602B0BA55E00E2EAB7 /* ConnectedTokenState.swift in Sources */,
 				441658472B5988F000225948 /* WrappedPointer.swift in Sources */,
 				4483F18C2B7A29420039EF3F /* OnStartMonitoring.swift in Sources */,
