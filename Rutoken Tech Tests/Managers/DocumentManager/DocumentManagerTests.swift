@@ -43,7 +43,7 @@ class DocumentManagerTests: XCTestCase {
         helper.clearTempDirCallback = { exp1.fulfill() }
         helper.copyFilesToTempDirCallback = { _ in exp2.fulfill() }
         helper.readFileCallback = { url in
-            XCTAssertEqual(createBundleUrl(for: self.helper.documentListFileName, in: .bankDocuments), url)
+            XCTAssertEqual(Bundle.getUrl(for: "documents.json", in: "BankDocuments"), url)
             return try BankDocument.jsonEncoder.encode([doc])
         }
 

@@ -33,15 +33,16 @@
 		44868B092B87306D00EA274D /* EnumerateCertsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44868B082B87306D00EA274D /* EnumerateCertsTests.swift */; };
 		44A1369E2B962184004E07E8 /* DocumentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A1369D2B962184004E07E8 /* DocumentManager.swift */; };
 		44A415042B60F67600D78653 /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A415032B60F67600D78653 /* FileHelper.swift */; };
+		44A502C42BB18CD6006236E7 /* Bundle+getUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A502C32BB18CD6006236E7 /* Bundle+getUrl.swift */; };
 		44B4A81C2B6CD15D00E59F63 /* AboutAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B4A81B2B6CD15D00E59F63 /* AboutAppView.swift */; };
-		44CB44542BA18BB30056583E /* OnGetTokenPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CB44532BA18BB30056583E /* OnGetTokenPin.swift */; };
-		44E6FCA32BA97AB1001D35A5 /* OpenSslUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E6FCA22BA97AB1001D35A5 /* OpenSslUtils.swift */; };
-		44E7F8322BA4760600786A42 /* OnDeletePin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E7F8312BA4760600786A42 /* OnDeletePin.swift */; };
 		44BB8F792B9F0DB400BF7438 /* BankDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BB8F782B9F0DB400BF7438 /* BankDocument.swift */; };
 		44BB8F942B9F339000BF7438 /* BankDocuments in Resources */ = {isa = PBXBuildFile; fileRef = 44BB8F932B9F339000BF7438 /* BankDocuments */; };
 		44BB8F962B9F339700BF7438 /* Credentials in Resources */ = {isa = PBXBuildFile; fileRef = 44BB8F952B9F339700BF7438 /* Credentials */; };
 		44BB8F9B2B9F563A00BF7438 /* DocumentManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BB8F9A2B9F563A00BF7438 /* DocumentManagerTests.swift */; };
 		44BB8F9D2B9F571400BF7438 /* XCTestCase+ExpectationWaiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BB8F9C2B9F571400BF7438 /* XCTestCase+ExpectationWaiter.swift */; };
+		44CB44542BA18BB30056583E /* OnGetTokenPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CB44532BA18BB30056583E /* OnGetTokenPin.swift */; };
+		44E6FCA32BA97AB1001D35A5 /* OpenSslUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E6FCA22BA97AB1001D35A5 /* OpenSslUtils.swift */; };
+		44E7F8322BA4760600786A42 /* OnDeletePin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E7F8312BA4760600786A42 /* OnDeletePin.swift */; };
 		44E8C2E92B91FDD9008A77AE /* OnSelectCert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E8C2E82B91FDD9008A77AE /* OnSelectCert.swift */; };
 		44E9C0402B837F250001E63F /* CertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E9C03F2B837F250001E63F /* CertView.swift */; };
 		44E9C0422B837FA90001E63F /* CertModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E9C0412B837FA90001E63F /* CertModel.swift */; };
@@ -161,15 +162,16 @@
 		44868B082B87306D00EA274D /* EnumerateCertsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumerateCertsTests.swift; sourceTree = "<group>"; };
 		44A1369D2B962184004E07E8 /* DocumentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentManager.swift; sourceTree = "<group>"; };
 		44A415032B60F67600D78653 /* FileHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
+		44A502C32BB18CD6006236E7 /* Bundle+getUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+getUrl.swift"; sourceTree = "<group>"; };
 		44B4A81B2B6CD15D00E59F63 /* AboutAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutAppView.swift; sourceTree = "<group>"; };
-		44CB44532BA18BB30056583E /* OnGetTokenPin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnGetTokenPin.swift; sourceTree = "<group>"; };
-		44E6FCA22BA97AB1001D35A5 /* OpenSslUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSslUtils.swift; sourceTree = "<group>"; };
-		44E7F8312BA4760600786A42 /* OnDeletePin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnDeletePin.swift; sourceTree = "<group>"; };
 		44BB8F782B9F0DB400BF7438 /* BankDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankDocument.swift; sourceTree = "<group>"; };
 		44BB8F932B9F339000BF7438 /* BankDocuments */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BankDocuments; sourceTree = "<group>"; };
 		44BB8F952B9F339700BF7438 /* Credentials */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Credentials; sourceTree = "<group>"; };
 		44BB8F9A2B9F563A00BF7438 /* DocumentManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentManagerTests.swift; sourceTree = "<group>"; };
 		44BB8F9C2B9F571400BF7438 /* XCTestCase+ExpectationWaiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+ExpectationWaiter.swift"; sourceTree = "<group>"; };
+		44CB44532BA18BB30056583E /* OnGetTokenPin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnGetTokenPin.swift; sourceTree = "<group>"; };
+		44E6FCA22BA97AB1001D35A5 /* OpenSslUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSslUtils.swift; sourceTree = "<group>"; };
+		44E7F8312BA4760600786A42 /* OnDeletePin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnDeletePin.swift; sourceTree = "<group>"; };
 		44E8C2E82B91FDD9008A77AE /* OnSelectCert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSelectCert.swift; sourceTree = "<group>"; };
 		44E9C03F2B837F250001E63F /* CertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertView.swift; sourceTree = "<group>"; };
 		44E9C0412B837FA90001E63F /* CertModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertModel.swift; sourceTree = "<group>"; };
@@ -328,6 +330,14 @@
 			path = AboutApp;
 			sourceTree = "<group>";
 		};
+		44BB8F992B9F562800BF7438 /* DocumentManager */ = {
+			isa = PBXGroup;
+			children = (
+				44BB8F9A2B9F563A00BF7438 /* DocumentManagerTests.swift */,
+			);
+			path = DocumentManager;
+			sourceTree = "<group>";
+		};
 		44E8C2E12B91EDCD008A77AE /* Bank */ = {
 			isa = PBXGroup;
 			children = (
@@ -375,14 +385,6 @@
 				44E9C0452B8387A20001E63F /* BankCertListState.swift */,
 			);
 			path = Bank;
-			sourceTree = "<group>";
-		};
-		44BB8F992B9F562800BF7438 /* DocumentManager */ = {
-			isa = PBXGroup;
-			children = (
-				44BB8F9A2B9F563A00BF7438 /* DocumentManagerTests.swift */,
-			);
-			path = DocumentManager;
 			sourceTree = "<group>";
 		};
 		5EF30ED92B1A790E00E48627 /* Root */ = {
@@ -521,6 +523,7 @@
 				D4F27DD22B6A5752003D8AE6 /* Bundle+readInfo.swift */,
 				444D9F5B2B8DECC600C1EB0B /* Date+getString.swift */,
 				4443EA0C2B96F59A0003436D /* KeyAlgorithm+description.swift */,
+				44A502C32BB18CD6006236E7 /* Bundle+getUrl.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -859,6 +862,7 @@
 			files = (
 				5E1F3AC22BA4BA2E008158EF /* RoutingState.swift in Sources */,
 				D4B130D62B0E4F2400AD390F /* PcscHelper.swift in Sources */,
+				44A502C42BB18CD6006236E7 /* Bundle+getUrl.swift in Sources */,
 				D42178192B205FD700D08948 /* AppAlert.swift in Sources */,
 				5EF75DE12AC707BD001834BE /* RootView.swift in Sources */,
 				4416A27A2B70F9F600645800 /* View+createLabel.swift in Sources */,

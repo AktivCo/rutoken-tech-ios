@@ -8,29 +8,11 @@
 import Foundation
 
 
-enum RtFile: String {
-    case caKey = "ca.key"
-    case caCert = "ca.pem"
-    case bankKey = "bank.key"
-    case bankCert = "bank.pem"
-}
-
-enum BundleSubdir: String {
-    case credentials = "Credentials"
-    case bankDocuments = "BankDocuments"
-}
-
 protocol FileHelperProtocol {
     func clearTempDir() throws
     func readFile(from url: URL) throws -> Data
     func saveFileToTempDir(with name: String, content: Data) throws
     func copyFilesToTempDir(from source: [URL]) throws
-}
-
-func createBundleUrl(for file: String, in subdir: BundleSubdir) -> URL? {
-    Bundle.main.url(forResource: file,
-                    withExtension: nil,
-                    subdirectory: subdir.rawValue)
 }
 
 class FileHelper: FileHelperProtocol {
@@ -63,11 +45,5 @@ class FileHelper: FileHelperProtocol {
 
     func saveFileToTempDir(with name: String, content: Data) throws {
         try content.write(to: tempDir.appendingPathComponent(name))
-    }
-}
-
-extension FileHelperProtocol {
-    var documentListFileName: String {
-        "documents.json"
     }
 }

@@ -32,6 +32,17 @@ enum CryptoManagerError: Error, Equatable {
     case wrongToken
 }
 
+enum RtFile: String {
+    case caKey = "ca.key"
+    case caCert = "ca.pem"
+    case bankKey = "bank.key"
+    case bankCert = "bank.pem"
+
+    static var subdir: String {
+        "Credentials"
+    }
+}
+
 class CryptoManager: CryptoManagerProtocol {
     private let pkcs11Helper: Pkcs11HelperProtocol
     private let pcscHelper: PcscHelperProtocol
@@ -138,8 +149,8 @@ class CryptoManager: CryptoManagerProtocol {
         let wrappedPrivateKey = try token.getWrappedKey(with: id)
         let csr = try openSslHelper.createCsr(with: wrappedPrivateKey, for: info)
 
-        guard let caKeyUrl = createBundleUrl(for: RtFile.caKey.rawValue, in: .credentials),
-              let caCertUrl = createBundleUrl(for: RtFile.caCert.rawValue, in: .credentials),
+        guard let caKeyUrl = Bundle.getUrl(for: RtFile.caKey.rawValue, in: RtFile.subdir),
+              let caCertUrl = Bundle.getUrl(for: RtFile.caCert.rawValue, in: RtFile.subdir),
               let caKeyData = try? fileHelper.readFile(from: caKeyUrl),
               let caCertData = try? fileHelper.readFile(from: caCertUrl),
               let caKey = String(data: caKeyData, encoding: .utf8),
