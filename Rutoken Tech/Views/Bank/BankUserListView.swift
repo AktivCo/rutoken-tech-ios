@@ -54,7 +54,7 @@ struct BankUserListView: View {
                              onSelectUser: {
                     store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
                         RtAuthView(defaultPinGetter: {
-                            store.send(.getPin(user.tokenSerial))
+                            store.send(.updatePin("12345678"))
                         }, onSubmit: { tokenType, pin in
                             store.send(.authUser(tokenType, pin, user))
                         }, onCancel: {
@@ -62,7 +62,8 @@ struct BankUserListView: View {
                             store.send(.updatePin(""))
                         })
                         .environmentObject(store.state.routingState.pinInputModel)
-                    }()))})
+                    }()))
+                })
                 .navigationDestination(isPresented: Binding(
                     get: { store.state.bankSelectUserState.selectedUser != nil },
                     set: { _ in store.send(.selectUser(nil)) })) {
@@ -79,7 +80,7 @@ struct BankUserListView: View {
                 Spacer()
                 Button {
                     store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
-                        RtAuthView(defaultPinGetter: { "12345678" },
+                        RtAuthView(defaultPinGetter: { store.send(.updatePin("12345678")) },
                                    onSubmit: { tokenType, pin in store.send(.readCerts(tokenType, pin)) },
                                    onCancel: { store.send(.hideSheet) })
                         .environmentObject(store.state.routingState.pinInputModel)

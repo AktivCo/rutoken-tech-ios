@@ -40,6 +40,8 @@ class OnPerformReadCerts: Middleware {
                             return
                         }
                         continuation.yield(.updateCerts(certs))
+                        let info = try await cryptoManager.getTokenInfo()
+                        continuation.yield(.savePin(pin, info.serial, true))
                         await continuation.yield(.showSheet(false,
                                                             UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640),
                                                             CertListView()))

@@ -46,7 +46,7 @@ struct AppReducer: Reducer {
         case .finishGenerateKeyPair:
             newState.caGenerateKeyPairState.inProgress = false
             newState.routingState.pinInputModel.inProgress = false
-        case .updateKeys(let keys):
+        case let .updateKeys(keys):
             newState.caGenerateCertState.keys = keys
         case .generateCert:
             newState.caGenerateCertState.inProgress = true
@@ -61,21 +61,21 @@ struct AppReducer: Reducer {
             newState.caGenerateCertState.keys = []
         case .openLink:
             break
-        case .updateDocs(let docs):
+        case let .updateDocs(docs):
             newState.bankDocumentListState.documents = docs
         case .readCerts:
             break
-        case .updateCerts(let certs):
+        case let .updateCerts(certs):
             newState.bankCertListState.certs = certs
         case .selectCert:
             break
-        case .updateUsers(let users):
+        case let .updateUsers(users):
             newState.bankSelectUserState.users = users
         case .deleteUser:
             break
         case .authUser:
             break
-        case .selectUser(let user):
+        case let .selectUser(user):
             newState.bankSelectUserState.selectedUser = user
         case .savePin:
             break
