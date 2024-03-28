@@ -1,5 +1,5 @@
 //
-//  OnSaveTokenPin.swift
+//  OnSave  Pin.swift
 //  Rutoken Tech
 //
 //  Created by Никита Девятых on 26.02.2024.
@@ -8,7 +8,7 @@
 import TinyAsyncRedux
 
 
-class OnSaveTokenPin: Middleware {
+class OnSavePin: Middleware {
     private let pinCodeManager: PinCodeManagerProtocol
 
     init(pinCodeManager: PinCodeManagerProtocol) {

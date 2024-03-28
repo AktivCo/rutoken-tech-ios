@@ -1,5 +1,5 @@
 //
-//  BankSelectUserView.swift
+//  BankUserListView.swift
 //  Rutoken Tech
 //
 //  Created by Никита Девятых on 14.02.2024.
@@ -13,7 +13,7 @@ import RtUiComponents
 import TinyAsyncRedux
 
 
-struct BankSelectUserView: View {
+struct BankUserListView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
 
     let maxUserCount = 3
@@ -51,7 +51,18 @@ struct BankSelectUserView: View {
             ForEach(store.state.bankSelectUserState.users.prefix(maxUserCount), id: \.id) { user in
                 UserListItem(name: user.fullname, title: user.title, expiryDate: user.expiryDate,
                              onDeleteUser: { store.send(.deleteUser(user)) },
-                             onSelectUser: { store.send(.selectUser(user)) })
+                             onSelectUser: {
+                    store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
+                        RtAuthView(defaultPinGetter: {
+                            store.send(.getPin(user.tokenSerial))
+                        }, onSubmit: { tokenType, pin in
+                            store.send(.authUser(tokenType, pin, user))
+                        }, onCancel: {
+                            store.send(.hideSheet)
+                            store.send(.updatePin(""))
+                        })
+                        .environmentObject(store.state.routingState.pinInputModel)
+                    }()))})
                 .navigationDestination(isPresented: Binding(
                     get: { store.state.bankSelectUserState.selectedUser != nil },
                     set: { _ in store.send(.selectUser(nil)) })) {
@@ -116,7 +127,7 @@ struct UserSelectView_Previews: PreviewProvider {
         ZStack {
             Color.RtColors.rtSurfaceSecondary
                 .ignoresSafeArea()
-            BankSelectUserView()
+            BankUserListView()
                 .environmentObject(store)
                 .environment(\.managedObjectContext, userManager.context)
         }

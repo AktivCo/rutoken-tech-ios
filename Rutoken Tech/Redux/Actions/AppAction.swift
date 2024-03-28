@@ -43,8 +43,9 @@ enum AppAction {
     case selectCert(CertModel)
 
     // MARK: User handling
-    case deleteUser(BankUser)
     case selectUser(BankUser?)
+    case deleteUser(BankUser)
+    case authUser(RtTokenType, String, BankUser)
     case updateUsers([BankUser])
 
     // MARK: Other
@@ -54,7 +55,7 @@ enum AppAction {
     // MARK: PIN operations
     case savePin(String, String, Bool)
     case getPin(String)
-    case updatePin(String?)
+    case updatePin(String)
     case deletePin(String)
 
     // MARK: NFC interactions

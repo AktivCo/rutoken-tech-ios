@@ -16,6 +16,7 @@ enum AppAlert {
     case wrongToken
     case tokenNotFound
     case noCerts
+    case noSuitCert
     case unknownError
 
     var alertModel: RtAlertModel {
@@ -44,6 +45,9 @@ enum AppAlert {
                          buttons: [.init(.regular("ОК"))])
         case .noCerts:
             return .init(title: .titleOnly("На Рутокене нет сертификатов"),
+                         buttons: [.init(.regular("ОК"))])
+        case .noSuitCert:
+            return .init(title: .titleOnly("На Рутокене нет подходящего сертификата"),
                          buttons: [.init(.regular("ОК"))])
         case .unknownError:
             return .init(title: .titleOnly("Неизвестная ошибка"),

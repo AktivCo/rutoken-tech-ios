@@ -1,5 +1,5 @@
 //
-//  OnGetTokenPin.swift
+//  OnGetPin.swift
 //  Rutoken Tech
 //
 //  Created by Никита Девятых on 29.02.2024.
@@ -8,7 +8,7 @@
 import TinyAsyncRedux
 
 
-class OnGetTokenPin: Middleware {
+class OnGetPin: Middleware {
     private let pinCodeManager: PinCodeManagerProtocol
 
     init(pinCodeManager: PinCodeManagerProtocol) {
@@ -24,8 +24,9 @@ class OnGetTokenPin: Middleware {
             defer {
                 continuation.finish()
             }
-            let pin = pinCodeManager.getPin(for: serial)
-            continuation.yield(.updatePin(pin))
+            if let pin = pinCodeManager.getPin(for: serial) {
+                continuation.yield(.updatePin(pin))
+            }
         }
     }
 }

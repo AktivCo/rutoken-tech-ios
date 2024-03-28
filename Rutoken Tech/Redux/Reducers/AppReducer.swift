@@ -73,16 +73,18 @@ struct AppReducer: Reducer {
             newState.bankSelectUserState.users = users
         case .deleteUser:
             break
+        case .authUser:
+            break
         case .selectUser(let user):
             newState.bankSelectUserState.selectedUser = user
         case .savePin:
             break
         case let .updatePin(pin):
-            newState.bankSelectUserState.pin = pin
+            newState.routingState.pinInputModel.pin = pin
         case .getPin:
             break
         case .deletePin:
-            newState.bankSelectUserState.pin = nil
+            newState.routingState.pinInputModel.pin = ""
         case .lockNfc:
             newState.nfcState.isLocked = true
             newState.routingState.pinInputModel.isContinueButtonDisabled = true

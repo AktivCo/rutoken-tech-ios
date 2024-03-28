@@ -43,8 +43,10 @@ struct RutokenTechApp: App {
             OnPerformGenCert(cryptoManager: cryptoManager),
             // Bank
             OnPerformReadCerts(cryptoManager: cryptoManager),
-            OnSaveTokenPin(pinCodeManager: pinCodeManager),
             OnSelectCert(userManager: userManager),
+            OnAuthUser(cryptoManager: cryptoManager),
+            OnSavePin(pinCodeManager: pinCodeManager),
+            OnGetPin(pinCodeManager: pinCodeManager),
             OnDeletePin(pinCodeManager: pinCodeManager),
             OnDeleteUser(userManager: userManager),
             // About

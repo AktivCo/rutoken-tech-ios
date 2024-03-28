@@ -51,7 +51,7 @@ struct IpadRootView: View {
                         case .about:
                             AboutAppView()
                         case .bank:
-                            BankSelectUserView()
+                            BankUserListView()
                         }
                     }
                 }

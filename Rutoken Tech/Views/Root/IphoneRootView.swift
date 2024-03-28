@@ -30,7 +30,7 @@ struct IphoneRootView: View {
                             .tabItem { Label(tab.rawValue, systemImage: tab.imageName) }
                             .tag(tab)
                     case .bank:
-                        BankSelectUserView()
+                        BankUserListView()
                             .tabItem { Label(tab.rawValue, systemImage: tab.imageName) }
                             .tag(tab)
                             .ignoresSafeArea(.keyboard)
