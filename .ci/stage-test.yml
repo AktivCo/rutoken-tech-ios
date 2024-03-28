@@ -3,7 +3,8 @@ include: .ci/vault.yml
 
 test:
   stage: test
-  tags: [vagrant-darwin]
+  tags: [tart-darwin]
+  image: $TART_IMAGE
   rules:
     - if: $SKIP_BUILD == "false"
     - when: never

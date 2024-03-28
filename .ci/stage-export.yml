@@ -3,7 +3,8 @@ include: .ci/vault.yml
 
 export:
   stage: export
-  tags: [vagrant-darwin]
+  tags: [tart-darwin]
+  image: $TART_IMAGE
   rules:
     - if: $PUBLISH_TO != "none"
     - when: never
