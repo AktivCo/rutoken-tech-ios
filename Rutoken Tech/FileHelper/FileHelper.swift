@@ -13,6 +13,11 @@ protocol FileHelperProtocol {
     func readFile(from url: URL) throws -> Data
     func saveFileToTempDir(with name: String, content: Data) throws
     func copyFilesToTempDir(from source: [URL]) throws
+    func readDataFromTempDir(filename: String) throws -> Data
+}
+
+enum FileHelperError: Error {
+    case generalError(UInt32, String?)
 }
 
 class FileHelper: FileHelperProtocol {
@@ -28,22 +33,46 @@ class FileHelper: FileHelperProtocol {
     // MARK: - Public API
     func clearTempDir() throws {
         if FileManager.default.fileExists(atPath: tempDir.path()) {
-            try FileManager.default.removeItem(at: tempDir)
+            do {
+                try FileManager.default.removeItem(at: tempDir)
+            } catch {
+                throw FileHelperError.generalError(#line, error.localizedDescription)
+            }
         }
-        try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: false)
+        do {
+            try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: false)
+        } catch {
+            throw FileHelperError.generalError(#line, error.localizedDescription)
+        }
     }
 
     func readFile(from url: URL) throws -> Data {
-        return try Data(contentsOf: url)
+        do {
+            return try Data(contentsOf: url)
+        } catch {
+            throw FileHelperError.generalError(#line, error.localizedDescription)
+        }
     }
 
     func copyFilesToTempDir(from source: [URL]) throws {
         for url in source {
-            try FileManager.default.copyItem(at: url, to: tempDir.appendingPathComponent(url.lastPathComponent))
+            do {
+                try FileManager.default.copyItem(at: url, to: tempDir.appendingPathComponent(url.lastPathComponent))
+            } catch {
+                throw FileHelperError.generalError(#line, error.localizedDescription)
+            }
         }
     }
 
     func saveFileToTempDir(with name: String, content: Data) throws {
-        try content.write(to: tempDir.appendingPathComponent(name))
+        do {
+            try content.write(to: tempDir.appendingPathComponent(name))
+        } catch {
+            throw FileHelperError.generalError(#line, error.localizedDescription)
+        }
+    }
+
+    func readDataFromTempDir(filename: String) throws -> Data {
+        try readFile(from: tempDir.appendingPathComponent(filename))
     }
 }

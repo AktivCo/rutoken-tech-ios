@@ -8,6 +8,11 @@
 import Foundation
 
 
+enum FileType {
+    case plain
+    case encrypted
+}
+
 struct BankDocument: Codable, Identifiable {
     enum ActionType: String, Codable {
         case encrypt
@@ -24,6 +29,7 @@ struct BankDocument: Codable, Identifiable {
     let companyName: String
     let paymentDay: Date
     var inArchive: Bool = false
+    var type: FileType = .plain
 
     static var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
@@ -66,7 +72,8 @@ extension BankDocument: Equatable {
         lhs.amount == rhs.amount &&
         lhs.companyName == rhs.companyName &&
         lhs.inArchive == rhs.inArchive &&
-        lhs.paymentDay.getString(with: dateFormatter.dateFormat) == rhs.paymentDay.getString(with: dateFormatter.dateFormat)
+        lhs.paymentDay.getString(with: dateFormatter.dateFormat) == rhs.paymentDay.getString(with: dateFormatter.dateFormat) &&
+        lhs.type == rhs.type
     }
 }
 

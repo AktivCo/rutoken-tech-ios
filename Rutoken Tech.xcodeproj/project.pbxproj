@@ -80,6 +80,7 @@
 		7D38D6E02B0E33780045FBAD /* AppReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D38D6DF2B0E33780045FBAD /* AppReducer.swift */; };
 		7D4335892B5567A700A0336A /* String+generateID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4335882B5567A700A0336A /* String+generateID.swift */; };
 		7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5145402AFBD1DB004B6947 /* CaEntryView.swift */; };
+		7D7D51832BB59DC200428107 /* BankFileContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7D51822BB59DC200428107 /* BankFileContent.swift */; };
 		7D9D3C152B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9D3C142B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift */; };
 		7D9D3C1B2B3C76F000BF2EE1 /* EnumerateKeysTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9D3C1A2B3C76F000BF2EE1 /* EnumerateKeysTests.swift */; };
 		7D9E5A602B0BA55E00E2EAB7 /* ConnectedTokenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E5A5F2B0BA55E00E2EAB7 /* ConnectedTokenState.swift */; };
@@ -212,6 +213,7 @@
 		7D38D6DF2B0E33780045FBAD /* AppReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReducer.swift; sourceTree = "<group>"; };
 		7D4335882B5567A700A0336A /* String+generateID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+generateID.swift"; sourceTree = "<group>"; };
 		7D5145402AFBD1DB004B6947 /* CaEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaEntryView.swift; sourceTree = "<group>"; };
+		7D7D51822BB59DC200428107 /* BankFileContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankFileContent.swift; sourceTree = "<group>"; };
 		7D9D3C142B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnPerformGenKeyPair.swift; sourceTree = "<group>"; };
 		7D9D3C1A2B3C76F000BF2EE1 /* EnumerateKeysTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumerateKeysTests.swift; sourceTree = "<group>"; };
 		7D9E5A5F2B0BA55E00E2EAB7 /* ConnectedTokenState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedTokenState.swift; sourceTree = "<group>"; };
@@ -621,6 +623,7 @@
 				D4FAF1782B8347960024EFDA /* BankUser.swift */,
 				44E9C0412B837FA90001E63F /* CertModel.swift */,
 				44BB8F782B9F0DB400BF7438 /* BankDocument.swift */,
+				7D7D51822BB59DC200428107 /* BankFileContent.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -916,6 +919,7 @@
 				44251E6E2B8CD52400ADAA0D /* WrappedX509.swift in Sources */,
 				D433144A2B767E2700442809 /* OnHandleOpenLink.swift in Sources */,
 				7DCC9AF12B3B2C9A002788B5 /* KeyModel.swift in Sources */,
+				7D7D51832BB59DC200428107 /* BankFileContent.swift in Sources */,
 				5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */,
 				4469F7882B34512E000DCF8B /* AttributeType.swift in Sources */,
 				44A502CA2BB1B8BA006236E7 /* String+withoutPathExtension.swift in Sources */,

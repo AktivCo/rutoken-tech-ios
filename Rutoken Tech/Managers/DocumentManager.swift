@@ -11,11 +11,12 @@ import Foundation
 
 protocol DocumentManagerProtocol {
     var documents: AnyPublisher<[BankDocument], Never> { get }
-    func resetTempDirectory() throws
+    func resetDirectory() throws
+    func readFile(with name: String) throws -> BankFileContent
 }
 
-enum DocumentManagerError: Error {
-    case general
+enum DocumentManagerError: Error, Equatable {
+    case general(String?)
 }
 
 class DocumentManager: DocumentManagerProtocol {
@@ -31,21 +32,41 @@ class DocumentManager: DocumentManagerProtocol {
     init?(helper: FileHelperProtocol) {
         self.fileHelper = helper
 
-        do { try resetTempDirectory() } catch { return nil }
+        do { try resetDirectory() } catch { return nil }
     }
 
-    func resetTempDirectory() throws {
+    func resetDirectory() throws {
         try fileHelper.clearTempDir()
 
         guard let jsonUrl = Bundle.getUrl(for: documentListFileName, in: documentsBundleSubdir) else {
-            throw DocumentManagerError.general
+            throw DocumentManagerError.general("Something went wrong during reset directory.")
         }
 
         let json = try fileHelper.readFile(from: jsonUrl)
         let documents = try BankDocument.jsonDecoder.decode([BankDocument].self, from: json)
 
         let urls = documents.compactMap { Bundle.getUrl(for: $0.name, in: documentsBundleSubdir) }
-        try fileHelper.copyFilesToTempDir(from: urls)
+        do {
+            try fileHelper.copyFilesToTempDir(from: urls)
+        } catch FileHelperError.generalError(let line, let str) {
+            throw DocumentManagerError.general("\(line): \(String(describing: str))")
+        }
         documentsPublisher.send(documents)
+    }
+
+    func readFile(with name: String) throws -> BankFileContent {
+        do {
+            let content = try fileHelper.readDataFromTempDir(filename: name)
+
+            guard let metaDataFile = documentsPublisher.value.first(where: { $0.name == name }) else {
+                throw DocumentManagerError.general("Something went wrong during read file.")
+            }
+            guard let result = BankFileContent(type: metaDataFile.type, content: content) else {
+                throw DocumentManagerError.general("Something went wrong during read file.")
+            }
+            return result
+        } catch FileHelperError.generalError(let line, let str) {
+            throw DocumentManagerError.general("\(line): \(String(describing: str))")
+        }
     }
 }

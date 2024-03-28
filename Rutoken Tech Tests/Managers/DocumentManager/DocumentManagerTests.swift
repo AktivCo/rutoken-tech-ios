@@ -46,7 +46,7 @@ class DocumentManagerTests: XCTestCase {
         }
 
         let docs = try awaitPublisherUnwrapped(manager.documents.dropFirst()) {
-            XCTAssertNoThrow(try manager.resetTempDirectory())
+            XCTAssertNoThrow(try manager.resetDirectory())
         }
 
         wait(for: [exp1, exp2], timeout: 0.3)
@@ -54,12 +54,12 @@ class DocumentManagerTests: XCTestCase {
     }
 
     func testResetTempDirectoryClearTempDirError() throws {
-        let error = FileHelperMockError.general
+        let error = DocumentManagerError.general("")
         helper.clearTempDirCallback = { throw error }
 
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
-            XCTAssertThrowsError(try manager.resetTempDirectory()) {
-                XCTAssertEqual($0 as? FileHelperMockError, error)
+            XCTAssertThrowsError(try manager.resetDirectory()) {
+                XCTAssertEqual($0 as? DocumentManagerError, error)
             }
         }
     }
@@ -68,19 +68,19 @@ class DocumentManagerTests: XCTestCase {
         helper.readFileCallback = { _ in "[]".data(using: .utf8)! }
 
         let docs = try awaitPublisherUnwrapped(manager.documents.dropFirst()) {
-            XCTAssertNoThrow(try manager.resetTempDirectory())
+            XCTAssertNoThrow(try manager.resetDirectory())
         }
 
         XCTAssertTrue(docs.isEmpty)
     }
 
     func testResetTempDirectoryReadFileError() throws {
-        let error = FileHelperMockError.general
+        let error = DocumentManagerError.general("")
         helper.readFileCallback = { _ in throw error }
 
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
-            XCTAssertThrowsError(try manager.resetTempDirectory()) {
-                XCTAssertEqual($0 as? FileHelperMockError, error)
+            XCTAssertThrowsError(try manager.resetDirectory()) {
+                XCTAssertEqual($0 as? DocumentManagerError, error)
             }
         }
     }
@@ -89,18 +89,18 @@ class DocumentManagerTests: XCTestCase {
         helper.readFileCallback = { _ in "{}".data(using: .utf8)! }
 
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
-            XCTAssertThrowsError(try manager.resetTempDirectory())
+            XCTAssertThrowsError(try manager.resetDirectory())
         }
     }
 
     func testResetTempDirectoryCopyFilesError() throws {
-        let error = FileHelperMockError.general
+        let error = DocumentManagerError.general("")
         helper.copyFilesToTempDirCallback = { _ in throw error }
         helper.readFileCallback = { _ in "[]".data(using: .utf8)! }
 
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
-            XCTAssertThrowsError(try manager.resetTempDirectory()) {
-                XCTAssertEqual($0 as? FileHelperMockError, .general)
+            XCTAssertThrowsError(try manager.resetDirectory()) {
+                XCTAssertEqual($0 as? DocumentManagerError, error)
             }
         }
     }

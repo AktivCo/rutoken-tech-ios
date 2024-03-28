@@ -10,10 +10,6 @@
 import Foundation
 
 
-enum FileHelperMockError: Error {
-    case general
-}
-
 class FileHelperMock: FileHelperProtocol {
     func clearTempDir() throws { try clearTempDirCallback() }
     var clearTempDirCallback: () throws -> Void = {}
@@ -26,4 +22,9 @@ class FileHelperMock: FileHelperProtocol {
 
     func copyFilesToTempDir(from source: [URL]) throws { try copyFilesToTempDirCallback(source) }
     var copyFilesToTempDirCallback: ([URL]) throws -> Void = { _ in }
+
+    func readDataFromTempDir(filename: String) throws -> Data {
+        try readDataFromTempDirCallback(filename)
+    }
+    var readDataFromTempDirCallback: (String) throws -> Data = { _ in Data() }
 }

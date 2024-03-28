@@ -86,7 +86,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     }
 
     func testCreateCertReadFileFromBundleError() async throws {
-        fileHelper.readFileCallback = { _ in throw FileHelperMockError.general }
+        fileHelper.readFileCallback = { _ in throw DocumentManagerError.general("") }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
