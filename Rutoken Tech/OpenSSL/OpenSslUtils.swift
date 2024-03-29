@@ -11,8 +11,10 @@ import Foundation
 func bioToData(_ bio: OpaquePointer) -> Data? {
     let len = BIO_ctrl(bio, BIO_CTRL_PENDING, 0, nil)
 
-    let wrappedPointer = WrappedPointer(ptr: UnsafeMutableRawBufferPointer.allocate(byteCount: Int(len), alignment: 1)) { $0.deallocate() }
-    guard let bytes = wrappedPointer.pointer.baseAddress?.assumingMemoryBound(to: UInt8.self) else {
+    guard let wrappedPointer = WrappedPointer({
+        UnsafeMutableRawBufferPointer.allocate(byteCount: Int(len), alignment: 1)
+    }, { $0.deallocate() }),
+        let bytes = wrappedPointer.pointer.baseAddress?.assumingMemoryBound(to: UInt8.self) else {
         return nil
     }
 
@@ -40,23 +42,25 @@ func bioToString(_ bio: OpaquePointer) -> String? {
 
 func dataToBio(_ data: Data) -> WrappedPointer<OpaquePointer>? {
     data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> WrappedPointer<OpaquePointer>? in
-        guard let bytes = ptr.baseAddress?.assumingMemoryBound(to: UInt8.self),
-              let bio = BIO_new(BIO_s_mem()) else {
-            return nil
-        }
-
-        var accumulated: Int32 = 0
-        var bytesWritten: Int32 = 0
-        repeat {
-            bytesWritten = BIO_write(bio, bytes.advanced(by: Int(bytesWritten)), Int32(ptr.count) - accumulated)
-            accumulated += bytesWritten
-
-            guard bytesWritten >= 0 else {
+        WrappedPointer({
+            guard let bytes = ptr.baseAddress?.assumingMemoryBound(to: UInt8.self),
+                  let bio = BIO_new(BIO_s_mem()) else {
                 return nil
             }
-        } while bytesWritten > 0
 
-        return WrappedPointer(ptr: bio, BIO_free)
+            var accumulated: Int32 = 0
+            var bytesWritten: Int32 = 0
+            repeat {
+                bytesWritten = BIO_write(bio, bytes.advanced(by: Int(bytesWritten)), Int32(ptr.count) - accumulated)
+                accumulated += bytesWritten
+
+                guard bytesWritten >= 0 else {
+                    return nil
+                }
+            } while bytesWritten > 0
+
+            return bio
+        }, BIO_free)
     }
 }
 

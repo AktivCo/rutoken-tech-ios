@@ -17,7 +17,7 @@ class OpenSslHelperMock: OpenSslHelperProtocol {
 
     var createCsrCallback: (WrappedPointer<OpaquePointer>, CsrModel) throws -> String = { _, _ in "" }
 
-    func createCert(for csr: String, with caKeyStr: String, and caCertStr: String) throws -> Data {
+    func createCert(for csr: String, with caKey: Data, cert caCert: Data) throws -> Data {
         try createCertCallback()
     }
 

@@ -124,7 +124,10 @@ class Token: TokenProtocol, Identifiable {
 
         var idPointer: WrappedPointer<UnsafeMutablePointer<UInt8>>
         if let id {
-            idPointer = id.createPointer()
+            guard let ptr = id.createPointer() else {
+                throw TokenError.generalError
+            }
+            idPointer = ptr
             certTemplate.append(AttributeType.id(idPointer.pointer, UInt(id.count)).attr)
         }
 
@@ -166,7 +169,10 @@ class Token: TokenProtocol, Identifiable {
 
         var idPointer: WrappedPointer<UnsafeMutablePointer<UInt8>>
         if let id {
-            idPointer = id.createPointer()
+            guard let ptr = id.createPointer() else {
+                throw TokenError.generalError
+            }
+            idPointer = ptr
             pubKeyTemplate.append(AttributeType.id(idPointer.pointer, UInt(id.count)).attr)
             privateKeyTemplate.append(AttributeType.id(idPointer.pointer, UInt(id.count)).attr)
         }
@@ -197,19 +203,23 @@ class Token: TokenProtocol, Identifiable {
             throw TokenError.keyNotFound
         }
 
-        guard let evpPKey = try? engine.wrapKeys(with: session.handle,
-                                                 privateKeyHandle: keyPair.privateKey.handle,
-                                                 pubKeyHandle: keyPair.pubKey.handle) else {
+        guard let wrappedKey = WrappedPointer<OpaquePointer>({
+            try? engine.wrapKeys(with: session.handle,
+                                 privateKeyHandle: keyPair.privateKey.handle,
+                                 pubKeyHandle: keyPair.pubKey.handle)
+        }, EVP_PKEY_free) else {
             throw TokenError.generalError
         }
-        return WrappedPointer(ptr: evpPKey, EVP_PKEY_free)
+        return wrappedKey
     }
 
     func generateKeyPair(with id: String) throws {
         var publicKey = CK_OBJECT_HANDLE()
         var privateKey = CK_OBJECT_HANDLE()
 
-        let idPointer = id.createPointer()
+        guard let idPointer = id.createPointer() else {
+            throw TokenError.generalError
+        }
         var publicKeyTemplate = [
             AttributeType.objectClass(.publicKey),
             .id(idPointer.pointer, UInt(id.count)),
@@ -238,7 +248,9 @@ class Token: TokenProtocol, Identifiable {
     }
 
     func deleteKeyPair(with id: String) throws {
-        let idPointer = id.createPointer()
+        guard let idPointer = id.createPointer() else {
+            throw TokenError.generalError
+        }
         let template = [
             AttributeType.id(idPointer.pointer, UInt(id.count)),
             .keyType(&keyTypeGostR3410_2012_256, UInt(MemoryLayout.size(ofValue: keyTypeGostR3410_2012_256)))
@@ -259,11 +271,11 @@ class Token: TokenProtocol, Identifiable {
     }
 
     func importCert(_ cert: Data, for id: String) throws {
-        guard (try enumerateKeys(by: id, with: .gostR3410_2012_256).first) != nil else {
+        guard (try enumerateKeys(by: id, with: .gostR3410_2012_256).first) != nil,
+              let idPointer = id.createPointer() else {
             throw TokenError.generalError
         }
         try cert.withUnsafeBytes { ptr in
-            let idPointer = id.createPointer()
             // MARK: Prepare cert template
             var certTemplate = [
                 AttributeType.value(UnsafeMutableRawPointer(mutating: ptr.baseAddress), UInt(cert.count)),

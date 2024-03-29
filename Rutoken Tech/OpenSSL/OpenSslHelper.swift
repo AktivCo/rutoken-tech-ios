@@ -15,7 +15,7 @@ enum OpenSslError: Error, Equatable {
 protocol OpenSslHelperProtocol {
     func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String
     func parseCert(_ cert: Data) throws -> CertModel
-    func createCert(for csr: String, with caKeyStr: String, and caCertStr: String) throws -> Data
+    func createCert(for csr: String, with caKey: Data, cert caCert: Data) throws -> Data
 }
 
 class OpenSslHelper: OpenSslHelperProtocol {
@@ -33,11 +33,6 @@ class OpenSslHelper: OpenSslHelperProtocol {
     }
 
     func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String {
-        guard let bio = BIO_new(BIO_s_mem()) else { throw OpenSslError.generalError(#line, getLastError()) }
-        defer {
-            BIO_free(bio)
-        }
-
         guard let csr = X509_REQ_new() else { throw OpenSslError.generalError(#line, getLastError()) }
         defer {
             X509_REQ_free(csr)
@@ -163,35 +158,21 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         // MARK: Read created request
-        guard let bio = BIO_new(BIO_s_mem()) else {
-            throw OpenSslError.generalError(#line, getLastError())
-        }
-        defer {
-            BIO_free(bio)
-        }
-        guard PEM_write_bio_X509_REQ(bio, csr) == 1 else {
+        guard let wrappedBio = WrappedPointer({ BIO_new(BIO_s_mem()) }, BIO_free),
+              PEM_write_bio_X509_REQ(wrappedBio.pointer, csr) == 1,
+              let csr = bioToString(wrappedBio.pointer) else {
             throw OpenSslError.generalError(#line, getLastError())
         }
 
-        guard let csr = bioToString(bio) else {
-            throw OpenSslError.generalError(#line, getLastError())
-        }
         return csr
     }
 
-    func createCert(for csr: String, with caKeyStr: String, and caCertStr: String) throws -> Data {
+    func createCert(for csr: String, with caKey: Data, cert caCert: Data) throws -> Data {
         // MARK: Load the CSR
-        let csrPointer = csr.cString(using: .utf8)
-        guard let csrBio = BIO_new(BIO_s_mem()) else {
+        guard let csrBio = stringToBio(csr) else {
             throw OpenSslError.generalError(#line, getLastError())
         }
-        defer {
-            BIO_free(csrBio)
-        }
-        guard BIO_puts(csrBio, csrPointer) > 0 else {
-            throw OpenSslError.generalError(#line, getLastError())
-        }
-        guard let csr = PEM_read_bio_X509_REQ(csrBio, nil, nil, nil) else {
+        guard let csr = PEM_read_bio_X509_REQ(csrBio.pointer, nil, nil, nil) else {
             throw OpenSslError.generalError(#line, getLastError())
         }
         defer {
@@ -199,19 +180,8 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         // MARK: Load a certificate of the CA
-        guard let caCertPointer = caCertStr.cString(using: .utf8) else {
-            throw OpenSslError.generalError(#line, getLastError())
-        }
-        guard let caCertBio = BIO_new(BIO_s_mem()) else {
-            throw OpenSslError.generalError(#line, getLastError())
-        }
-        defer {
-            BIO_free(caCertBio)
-        }
-        guard BIO_puts(caCertBio, caCertPointer) > 0 else {
-            throw OpenSslError.generalError(#line, getLastError())
-        }
-        guard let caCert = PEM_read_bio_X509(caCertBio, nil, nil, nil) else {
+        guard let caCertBio = dataToBio(caCert),
+              let caCert = PEM_read_bio_X509(caCertBio.pointer, nil, nil, nil) else {
             throw OpenSslError.generalError(#line, getLastError())
         }
         defer {
@@ -219,19 +189,8 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         // MARK: Load a private key of the CA
-        guard let caKeyPointer = caKeyStr.cString(using: .utf8) else {
-            throw OpenSslError.generalError(#line, getLastError())
-        }
-        guard let caKeyBio = BIO_new(BIO_s_mem()) else {
-            throw OpenSslError.generalError(#line, getLastError())
-        }
-        defer {
-            BIO_free(caKeyBio)
-        }
-        guard BIO_puts(caKeyBio, caKeyPointer) > 0 else {
-            throw OpenSslError.generalError(#line, getLastError())
-        }
-        guard let privateKeyCa = PEM_read_bio_PrivateKey(caKeyBio, nil, nil, nil) else {
+        guard let caKeyBio = dataToBio(caKey),
+              let privateKeyCa = PEM_read_bio_PrivateKey(caKeyBio.pointer, nil, nil, nil) else {
             throw OpenSslError.generalError(#line, getLastError())
         }
         defer {
@@ -334,14 +293,9 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         // MARK: Read created certificate
-        guard let bio = BIO_new(BIO_s_mem()) else {
-            throw OpenSslError.generalError(#line, getLastError())
-        }
-        defer {
-            BIO_free(bio)
-        }
-        guard i2d_X509_bio(bio, generatedCert) > 0,
-              let generatedCertData = bioToData(bio) else {
+        guard let wrappedBio = WrappedPointer({ BIO_new(BIO_s_mem()) }, BIO_free),
+              i2d_X509_bio(wrappedBio.pointer, generatedCert) > 0,
+              let generatedCertData = bioToData(wrappedBio.pointer) else {
             throw OpenSslError.generalError(#line, getLastError())
         }
 

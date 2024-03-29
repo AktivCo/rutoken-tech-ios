@@ -25,33 +25,64 @@ class WrappedX509 {
 
     private let x509: WrappedPointer<OpaquePointer>
 
-    init?(from cert: Data) {
-        guard let wrappedBio = dataToBio(cert) else {
+    init?() {
+        guard let x509 = WrappedPointer(X509_new, X509_free) else {
             return nil
         }
+        self.x509 = x509
+    }
 
-        guard let ptr = d2i_X509_bio(wrappedBio.pointer, nil) else { return nil }
-        self.x509 = WrappedPointer(ptr: ptr, X509_free)
+    init?(from bio: WrappedPointer<OpaquePointer>) {
+        guard let x509 = WrappedPointer({
+            PEM_read_bio_X509(bio.pointer, nil, nil, nil)
+        }, X509_free) else {
+            return nil
+        }
+        self.x509 = x509
+    }
+
+    convenience init?(from cert: Data) {
+        if let pemString = String(data: cert, encoding: .utf8) {
+            self.init(from: pemString)
+        } else {
+            self.init(with: cert)
+        }
+    }
+
+    private init?(with data: Data) {
+        guard let x509 = WrappedPointer<OpaquePointer>({
+            guard let wrappedBio = dataToBio(data),
+                  let ptr = d2i_X509_bio(wrappedBio.pointer, nil) else {
+                return nil
+            }
+            return ptr
+        }, X509_free) else {
+            return nil
+        }
+        self.x509 = x509
     }
 
     init?(from cert: String) {
-        guard let wrappedBio = stringToBio(cert) else {
+        guard let x509 = WrappedPointer<OpaquePointer>({
+            guard let wrappedBio = stringToBio(cert),
+                  let ptr = PEM_read_bio_X509(wrappedBio.pointer, nil, nil, nil) else {
+                return nil
+            }
+            return ptr
+        }, X509_free) else {
             return nil
         }
-
-        guard let ptr = PEM_read_bio_X509(wrappedBio.pointer, nil, nil, nil) else { return nil }
-        self.x509 = WrappedPointer(ptr: ptr, X509_free)
+        self.x509 = x509
     }
 
     public var publicKeyAlgorithm: KeyAlgorithm? {
-        guard let publicKey = X509_get_pubkey(x509.pointer) else {
+        guard let publicKey = WrappedPointer({
+            X509_get_pubkey(x509.pointer)
+        }, EVP_PKEY_free) else {
             return nil
         }
-        defer {
-            EVP_PKEY_free(publicKey)
-        }
 
-        guard EVP_PKEY_get_id(publicKey) == NID_id_GostR3410_2012_256 else {
+        guard EVP_PKEY_get_id(publicKey.pointer) == NID_id_GostR3410_2012_256 else {
             return nil
         }
 
@@ -114,18 +145,15 @@ class WrappedX509 {
 
 private extension UnsafePointer where Pointee == ASN1_TIME {
     func asDate() -> Date? {
-        guard let bio = BIO_new(BIO_s_mem()) else {
-            return nil
-        }
-        defer {
-            BIO_free(bio)
-        }
-
-        guard ASN1_TIME_print(bio, self) == 1 else {
+        guard let wrappedBio = WrappedPointer({ BIO_new(BIO_s_mem()) }, BIO_free) else {
             return nil
         }
 
-        guard let str = bioToString(bio) else {
+        guard ASN1_TIME_print(wrappedBio.pointer, self) == 1 else {
+            return nil
+        }
+
+        guard let str = bioToString(wrappedBio.pointer) else {
             return nil
         }
 

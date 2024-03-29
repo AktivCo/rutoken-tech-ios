@@ -6,13 +6,13 @@
 //
 
 extension String {
-    func createPointer() -> WrappedPointer<UnsafeMutablePointer<UInt8>> {
-        self.withCString(encodedAs: UTF8.self) {
-            let ptr = UnsafeMutablePointer<UInt8>.allocate(capacity: self.count)
-            ptr.initialize(from: $0, count: self.count)
-            return WrappedPointer(ptr: ptr) { ptr in
-                ptr.deallocate()
-            }
+    func createPointer() -> WrappedPointer<UnsafeMutablePointer<UInt8>>? {
+        self.withCString(encodedAs: UTF8.self) { stringPtr in
+            WrappedPointer({
+                let ptr = UnsafeMutablePointer<UInt8>.allocate(capacity: self.count)
+                ptr.initialize(from: stringPtr, count: self.count)
+                return ptr
+            }, { $0.deallocate() })
         }
     }
 }

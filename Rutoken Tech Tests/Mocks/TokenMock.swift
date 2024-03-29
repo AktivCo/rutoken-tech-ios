@@ -59,7 +59,11 @@ class TokenMock: TokenProtocol {
         try getWrappedKeyCallback(id)
     }
 
-    var getWrappedKeyCallback: (String) throws -> WrappedPointer = { _ in WrappedPointer(ptr: OpaquePointer.init(bitPattern: 1)!, {_ in})}
+    var getWrappedKeyCallback: (String) throws -> WrappedPointer = { _ in
+        WrappedPointer({
+            OpaquePointer.init(bitPattern: 1)!
+        }, {_ in})!
+    }
 
     func importCert(_ cert: Data, for id: String) throws {
         try importCertCallback(cert, id)

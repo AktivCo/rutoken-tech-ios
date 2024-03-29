@@ -9,7 +9,8 @@ class WrappedPointer<T> {
     let pointer: T
     private let destructor: (T) -> Any
 
-    init(ptr: T, _ destructor: @escaping (T) -> Any) {
+    init?(_ constructor: () -> T?, _ destructor: @escaping (T) -> Any) {
+        guard let ptr = constructor() else { return nil }
         self.pointer = ptr
         self.destructor = destructor
     }

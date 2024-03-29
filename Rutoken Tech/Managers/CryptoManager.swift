@@ -152,13 +152,11 @@ class CryptoManager: CryptoManagerProtocol {
         guard let caKeyUrl = Bundle.getUrl(for: RtFile.caKey.rawValue, in: RtFile.subdir),
               let caCertUrl = Bundle.getUrl(for: RtFile.caCert.rawValue, in: RtFile.subdir),
               let caKeyData = try? fileHelper.readFile(from: caKeyUrl),
-              let caCertData = try? fileHelper.readFile(from: caCertUrl),
-              let caKey = String(data: caKeyData, encoding: .utf8),
-              let caCert = String(data: caCertData, encoding: .utf8) else {
+              let caCertData = try? fileHelper.readFile(from: caCertUrl) else {
             throw CryptoManagerError.unknown
         }
 
-        let cert = try openSslHelper.createCert(for: csr, with: caKey, and: caCert)
+        let cert = try openSslHelper.createCert(for: csr, with: caKeyData, cert: caCertData)
         try token.importCert(cert, for: id)
     }
 
