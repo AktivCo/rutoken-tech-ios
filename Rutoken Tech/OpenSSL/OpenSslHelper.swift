@@ -16,6 +16,7 @@ protocol OpenSslHelperProtocol {
     func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String
     func parseCert(_ cert: Data) throws -> CertModel
     func createCert(for csr: String, with caKey: Data, cert caCert: Data) throws -> Data
+    func signCms(for content: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String
 }
 
 class OpenSslHelper: OpenSslHelperProtocol {
@@ -30,6 +31,38 @@ class OpenSslHelper: OpenSslHelperProtocol {
 
     deinit {
         OPENSSL_cleanup()
+    }
+
+    func signCms(for content: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String {
+        guard let contentBio = dataToBio(content),
+              let x509 = WrappedX509(from: cert)
+        else {
+            throw OpenSslError.generalError(#line, getLastError())
+        }
+
+        guard let cms = WrappedPointer({
+            CMS_sign(x509.wrappedPointer.pointer, wrappedKey.pointer, nil,
+                     contentBio.pointer, UInt32(CMS_BINARY | CMS_NOSMIMECAP | CMS_DETACHED))
+        }, CMS_ContentInfo_free) else {
+            throw OpenSslError.generalError(#line, getLastError())
+        }
+
+        let cmsLength = i2d_CMS_ContentInfo(cms.pointer, nil)
+        var cmsData = Data(repeating: 0x00, count: Int(cmsLength))
+        try cmsData.withUnsafeMutableBytes {
+            var pointer = $0.baseAddress?.assumingMemoryBound(to: UInt8.self)
+            guard i2d_CMS_ContentInfo(cms.pointer, &pointer) >= 0 else {
+                throw OpenSslError.generalError(#line, getLastError())
+            }
+        }
+
+        // Add EOL after every 64th symbol to improve readability
+        // 64 is chosen by sense of beauty
+        let rawSignature = cmsData.base64EncodedString().enumerated().map { (idx, el) in
+            idx > 0 && idx % 64 == 0 ? ["\n", el] : [el]
+        }.joined()
+
+        return "-----BEGIN CMS-----\n" + rawSignature + "\n-----END CMS-----"
     }
 
     func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String {

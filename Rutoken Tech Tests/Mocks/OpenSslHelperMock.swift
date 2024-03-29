@@ -14,19 +14,16 @@ class OpenSslHelperMock: OpenSslHelperProtocol {
     func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String {
         try createCsrCallback(wrappedKey, request)
     }
-
     var createCsrCallback: (WrappedPointer<OpaquePointer>, CsrModel) throws -> String = { _, _ in "" }
 
     func createCert(for csr: String, with caKey: Data, cert caCert: Data) throws -> Data {
         try createCertCallback()
     }
-
     var createCertCallback: () throws -> Data = { return Data() }
 
     func parseCert(_ cert: Data) throws -> CertModel {
         try parseCertCallback(cert)
     }
-
     var parseCertCallback: (Data) throws -> CertModel = { _ in
             .init(hash: "hash",
                   name: "Иванов Михаил Романович",
@@ -36,4 +33,9 @@ class OpenSslHelperMock: OpenSslHelperProtocol {
                   expiryDate: "07.03.2024",
                   causeOfInvalid: nil)
     }
+
+    func signCms(for content: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String {
+        try signCmsCallback()
+    }
+    var signCmsCallback: () throws -> String = { "" }
 }

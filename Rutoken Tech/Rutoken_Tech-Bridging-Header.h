@@ -16,6 +16,7 @@
 #define OPENSSL_SUPPRESS_DEPRECATED
 
 #include <openssl/x509v3.h>
+#include <openssl/cms.h>
 #include <openssl/evp.h>
 
 #include <rtengine/engine.h>
