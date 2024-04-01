@@ -23,13 +23,13 @@ class WrappedX509 {
         }
     }
 
-    private let x509: WrappedPointer<OpaquePointer>
+    let wrappedPointer: WrappedPointer<OpaquePointer>
 
     init?() {
         guard let x509 = WrappedPointer(X509_new, X509_free) else {
             return nil
         }
-        self.x509 = x509
+        self.wrappedPointer = x509
     }
 
     init?(from bio: WrappedPointer<OpaquePointer>) {
@@ -38,7 +38,7 @@ class WrappedX509 {
         }, X509_free) else {
             return nil
         }
-        self.x509 = x509
+        self.wrappedPointer = x509
     }
 
     convenience init?(from cert: Data) {
@@ -59,7 +59,7 @@ class WrappedX509 {
         }, X509_free) else {
             return nil
         }
-        self.x509 = x509
+        self.wrappedPointer = x509
     }
 
     init?(from cert: String) {
@@ -72,11 +72,11 @@ class WrappedX509 {
         }, X509_free) else {
             return nil
         }
-        self.x509 = x509
+        self.wrappedPointer = x509
     }
 
     public var subjectNameHash: String? {
-        let hash = X509_subject_name_hash(x509.pointer)
+        let hash = X509_subject_name_hash(wrappedPointer.pointer)
         guard hash != 0 else {
             return nil
         }
@@ -86,7 +86,7 @@ class WrappedX509 {
 
     public var publicKeyAlgorithm: KeyAlgorithm? {
         guard let publicKey = WrappedPointer({
-            X509_get_pubkey(x509.pointer)
+            X509_get_pubkey(wrappedPointer.pointer)
         }, EVP_PKEY_free) else {
             return nil
         }
@@ -111,7 +111,7 @@ class WrappedX509 {
     }
 
     public var notBefore: Date? {
-        guard let notBefore = X509_get0_notBefore(x509.pointer) else {
+        guard let notBefore = X509_get0_notBefore(wrappedPointer.pointer) else {
             return nil
         }
 
@@ -119,7 +119,7 @@ class WrappedX509 {
     }
 
     public var notAfter: Date? {
-        guard let notAfter = X509_get0_notAfter(x509.pointer) else {
+        guard let notAfter = X509_get0_notAfter(wrappedPointer.pointer) else {
             return nil
         }
 
@@ -127,7 +127,7 @@ class WrappedX509 {
     }
 
     private func getValue(for field: CertField) -> String? {
-        guard let subjectName = X509_get_subject_name(x509.pointer) else {
+        guard let subjectName = X509_get_subject_name(wrappedPointer.pointer) else {
             return nil
         }
 
