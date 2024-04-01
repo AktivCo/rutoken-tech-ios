@@ -17,6 +17,7 @@ protocol OpenSslHelperProtocol {
     func parseCert(_ cert: Data) throws -> CertModel
     func createCert(for csr: String, with caKey: Data, cert caCert: Data) throws -> Data
     func signCms(for content: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String
+    func verifyCms(signedCms: String, for content: Data, with cert: Data) throws -> Bool
 }
 
 class OpenSslHelper: OpenSslHelperProtocol {
@@ -63,6 +64,37 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }.joined()
 
         return "-----BEGIN CMS-----\n" + rawSignature + "\n-----END CMS-----"
+    }
+
+    func verifyCms(signedCms: String, for content: Data, with cert: Data) throws -> Bool {
+        var rawBase64Cms = signedCms
+            .replacingOccurrences(of: "-----BEGIN CMS-----", with: "")
+            .replacingOccurrences(of: "-----END CMS-----", with: "")
+
+        rawBase64Cms.removeAll { $0 == "\n" }
+
+        guard let data = rawBase64Cms.data(using: .utf8),
+              let cmsData = Data(base64Encoded: data),
+              let contentBio = dataToBio(content),
+              let certsStack = createX509Stack(with: [cert]),
+              let cms = WrappedPointer({
+                  cmsData.withUnsafeBytes {
+                      var pointer: UnsafePointer<UInt8>? = $0.baseAddress?.assumingMemoryBound(to: UInt8.self)
+                      guard let pointer = d2i_CMS_ContentInfo(nil, &pointer, data.count) else {
+                          return nil
+                      }
+                      return pointer
+                  }
+              }, CMS_ContentInfo_free) else {
+            throw OpenSslError.generalError(#line, getLastError())
+        }
+
+        return CMS_verify(cms.pointer,
+                          certsStack.pointer,
+                          nil,
+                          contentBio.pointer,
+                          nil,
+                          UInt32(CMS_BINARY | CMS_NO_SIGNER_CERT_VERIFY)) == 1
     }
 
     func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String {
@@ -365,6 +397,26 @@ class OpenSslHelper: OpenSslHelperProtocol {
                      keyAlgo: algorithm,
                      expiryDate: notAfter.getString(with: "dd.MM.YYYY"),
                      causeOfInvalid: reason)
+    }
+
+    private func createX509Stack(with certs: [Data]) -> WrappedPointer<OpaquePointer>? {
+        guard let wrappedStack = WrappedPointer(exposed_sk_X509_new_null, exposed_sk_X509_pop_free) else {
+            return nil
+        }
+
+        for cert in certs {
+            guard let x509 = WrappedX509(from: cert) else {
+                return nil
+            }
+            guard 0 < exposed_sk_X509_push(wrappedStack.pointer, x509.wrappedPointer.pointer) else {
+                return nil
+            }
+
+            // After x509 was added to stack we need to increment its reference counter to avoid unexpected resource free
+            X509_up_ref(x509.wrappedPointer.pointer)
+        }
+
+        return wrappedStack
     }
 
     private func getLastError() -> String? {
