@@ -174,7 +174,7 @@ struct CaCertGenView: View {
             Divider()
                 .overlay(Color("IOSElementsTitleBarSeparator"))
                 .opacity(isBottomViewShown ? 1 : 0)
-            Button {
+            RtLoadingButton(action: {
                 if let token = store.state.connectedTokenState.connectedToken,
                    let pin = store.state.connectedTokenState.pin {
                     let id = store.state.caGenerateCertState.keys[selectedKey].ckaId
@@ -182,42 +182,13 @@ struct CaCertGenView: View {
                 } else {
                     store.send(.showAlert(.unknownError))
                 }
-            } label: {
-                buttonLabel
-                    .frame(height: 50)
-                    .frame(maxWidth: UIDevice.isPhone ? .infinity : 350)
-            }
-            .disabled(nameInput.isEmpty || inProgress || store.state.nfcState.isLocked)
-            .background(nameInput.isEmpty || store.state.nfcState.isLocked
-                        ? Color.RtColors.rtOtherDisabled
-                        : Color.RtColors.rtColorsPrimary100
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            }, title: "Сгенерировать",
+                     inProgress: $inProgress)
+            .disabled(nameInput.isEmpty || store.state.nfcState.isLocked)
+            .frame(maxWidth: UIDevice.isPhone ? .infinity : 350)
             .padding(.horizontal, 20)
             .padding(.top, 12)
             .padding(.bottom, bottomPadding)
-            .frame(maxWidth: .infinity)
-            .background {
-                Color("IOSElementsTitleBarSurface")
-                    .background(.ultraThinMaterial)
-                    .opacity(isBottomViewShown ? 1 : 0)
-            }
-        }
-    }
-
-    @ViewBuilder
-    private var buttonLabel: some View {
-        if inProgress {
-            RtLoadingIndicator(.small)
-                .padding(.vertical, 13)
-        } else {
-            Text("Сгенерировать")
-                .font(.headline)
-                .foregroundStyle(nameInput.isEmpty
-                                 ? Color.RtColors.rtLabelTertiary
-                                 : Color.RtColors.rtColorsOnPrimary
-                )
-                .padding(.vertical, 15)
         }
     }
 }

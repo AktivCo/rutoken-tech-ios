@@ -74,7 +74,7 @@ struct CaGenerateKeyPairView: View {
             .frame(maxWidth: .infinity, alignment: .topLeading)
 
             Spacer()
-            Button {
+            RtLoadingButton(action: {
                 if let connectedToken = store.state.connectedTokenState.connectedToken,
                    let pin = store.state.connectedTokenState.pin,
                    let id = store.state.caGenerateKeyPairState.key?.ckaId {
@@ -82,35 +82,15 @@ struct CaGenerateKeyPairView: View {
                 } else {
                     store.send(.showAlert(.unknownError))
                 }
-            } label: {
-                buttonLabel
-                    .frame(height: 50)
-                    .frame(maxWidth: UIDevice.isPhone ? .infinity : 350)
-            }
-            .disabled(inProgress || store.state.nfcState.isLocked)
-            .background { store.state.nfcState.isLocked
-                ? Color.RtColors.rtOtherDisabled
-                : Color.RtColors.rtColorsPrimary100
-            }
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            }, title: "Сгенерировать",
+                     inProgress: $inProgress)
+            .disabled(store.state.nfcState.isLocked)
+            .frame(maxWidth: UIDevice.isPhone ? .infinity : 350)
             .padding(.horizontal, 20)
             .padding(.bottom, UIDevice.isPhone ? 34 : 24)
         }
         .onChange(of: store.state.caGenerateKeyPairState.inProgress) { newValue in
             inProgress = newValue
-        }
-    }
-
-    @ViewBuilder
-    private var buttonLabel: some View {
-        if inProgress {
-            RtLoadingIndicator(.small)
-                .padding(.vertical, 13)
-        } else {
-            Text("Сгенерировать")
-                .font(.headline)
-                .foregroundStyle(Color.RtColors.rtColorsOnPrimary)
-                .padding(.vertical, 15)
         }
     }
 }

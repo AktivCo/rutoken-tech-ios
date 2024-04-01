@@ -60,7 +60,6 @@
 		5E1F3AAB2BA36474008158EF /* rtpkcs11ecp in Frameworks */ = {isa = PBXBuildFile; productRef = 5E1F3AAA2BA36474008158EF /* rtpkcs11ecp */; };
 		5E1F3AAE2BA364D5008158EF /* openssl in Frameworks */ = {isa = PBXBuildFile; productRef = 5E1F3AAD2BA364D5008158EF /* openssl */; };
 		5E1F3AB12BA36505008158EF /* RtPcscWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 5E1F3AB02BA36505008158EF /* RtPcscWrapper */; };
-		5E1F3AB42BA36569008158EF /* RtUiComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 5E1F3AB32BA36569008158EF /* RtUiComponents */; };
 		5E1F3AB82BA4B302008158EF /* RutokenKeychainManager in Frameworks */ = {isa = PBXBuildFile; productRef = 5E1F3AB72BA4B302008158EF /* RutokenKeychainManager */; };
 		5E1F3AC12BA4BA2E008158EF /* NfcState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1F3ABF2BA4BA2E008158EF /* NfcState.swift */; };
 		5E1F3AC22BA4BA2E008158EF /* RoutingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1F3AC02BA4BA2E008158EF /* RoutingState.swift */; };
@@ -87,6 +86,7 @@
 		7DACCE262B569CCF00FB3F2C /* CreateCertTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DACCE252B569CCF00FB3F2C /* CreateCertTests.swift */; };
 		7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */; };
 		7DCC9AF12B3B2C9A002788B5 /* KeyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCC9AF02B3B2C9A002788B5 /* KeyModel.swift */; };
+		7DD49F702BC447FF000DE0FF /* RtUiComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 7DD49F6F2BC447FF000DE0FF /* RtUiComponents */; };
 		7DEBBDD62B3B1FCE00C35BA5 /* WithTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DEBBDD52B3B1FCE00C35BA5 /* WithTokenTests.swift */; };
 		D42178192B205FD700D08948 /* AppAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42178182B205FD700D08948 /* AppAlert.swift */; };
 		D423F8BF2B3574BB0058ECDE /* GetTokenInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D423F8BE2B3574BB0058ECDE /* GetTokenInfoTests.swift */; };
@@ -118,8 +118,8 @@
 		D4B130D62B0E4F2400AD390F /* PcscHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D52B0E4F2400AD390F /* PcscHelper.swift */; };
 		D4B130DA2B0E51FE00AD390F /* PcscHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */; };
 		D4C38F3A2B84CADE00BA50EC /* HeaderTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C38F392B84CADE00BA50EC /* HeaderTitleView.swift */; };
-		D4D22A302BAC7E3000B93DA9 /* OnDeleteUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D22A2F2BAC7E3000B93DA9 /* OnDeleteUser.swift */; };
 		D4C582342BAC216B001604B4 /* ProcessInfo+isPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C582332BAC216B001604B4 /* ProcessInfo+isPreview.swift */; };
+		D4D22A302BAC7E3000B93DA9 /* OnDeleteUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D22A2F2BAC7E3000B93DA9 /* OnDeleteUser.swift */; };
 		D4D22A322BAD7FF000B93DA9 /* DocumentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D22A312BAD7FF000B93DA9 /* DocumentListView.swift */; };
 		D4D22A342BAD804200B93DA9 /* DocumentListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D22A332BAD804200B93DA9 /* DocumentListItem.swift */; };
 		D4D46A0F2B3038F60005981A /* Atomic+propertywrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */; };
@@ -253,8 +253,8 @@
 		D4B130D72B0E4F8200AD390F /* TokenInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenInterface.swift; sourceTree = "<group>"; };
 		D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcscHelperMock.swift; sourceTree = "<group>"; };
 		D4C38F392B84CADE00BA50EC /* HeaderTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderTitleView.swift; sourceTree = "<group>"; };
-		D4D22A2F2BAC7E3000B93DA9 /* OnDeleteUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDeleteUser.swift; sourceTree = "<group>"; };
 		D4C582332BAC216B001604B4 /* ProcessInfo+isPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProcessInfo+isPreview.swift"; sourceTree = "<group>"; };
+		D4D22A2F2BAC7E3000B93DA9 /* OnDeleteUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDeleteUser.swift; sourceTree = "<group>"; };
 		D4D22A312BAD7FF000B93DA9 /* DocumentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentListView.swift; sourceTree = "<group>"; };
 		D4D22A332BAD804200B93DA9 /* DocumentListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentListItem.swift; sourceTree = "<group>"; };
 		D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Atomic+propertywrapper.swift"; sourceTree = "<group>"; };
@@ -276,12 +276,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7DD49F702BC447FF000DE0FF /* RtUiComponents in Frameworks */,
 				5E1F3AA82BA3636C008158EF /* rtengine in Frameworks */,
 				5E1F3AAE2BA364D5008158EF /* openssl in Frameworks */,
 				5E1F3AB12BA36505008158EF /* RtPcscWrapper in Frameworks */,
 				5E1F3AAB2BA36474008158EF /* rtpkcs11ecp in Frameworks */,
 				5E1F3AB82BA4B302008158EF /* RutokenKeychainManager in Frameworks */,
-				5E1F3AB42BA36569008158EF /* RtUiComponents in Frameworks */,
 				5E1F3AA52BA362C5008158EF /* TinyAsyncRedux in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -753,8 +753,8 @@
 				5E1F3AAA2BA36474008158EF /* rtpkcs11ecp */,
 				5E1F3AAD2BA364D5008158EF /* openssl */,
 				5E1F3AB02BA36505008158EF /* RtPcscWrapper */,
-				5E1F3AB32BA36569008158EF /* RtUiComponents */,
 				5E1F3AB72BA4B302008158EF /* RutokenKeychainManager */,
+				7DD49F6F2BC447FF000DE0FF /* RtUiComponents */,
 			);
 			productName = "Rutoken Tech";
 			productReference = 5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */;
@@ -812,8 +812,8 @@
 				5E1F3AA92BA36474008158EF /* XCRemoteSwiftPackageReference "swift-rtpkcs11ecp-binary" */,
 				5E1F3AAC2BA364D5008158EF /* XCRemoteSwiftPackageReference "swift-rtopenssl-binary" */,
 				5E1F3AAF2BA36505008158EF /* XCRemoteSwiftPackageReference "swift-rtpcsc-wrapper" */,
-				5E1F3AB22BA36569008158EF /* XCRemoteSwiftPackageReference "swift-ui-components" */,
 				5E1F3AB62BA4B302008158EF /* XCRemoteSwiftPackageReference "keychainmanager" */,
+				7DD49F6E2BC447FF000DE0FF /* XCRemoteSwiftPackageReference "swift-ui-components" */,
 			);
 			productRefGroup = 5EF75DDC2AC707BD001834BE /* Products */;
 			projectDirPath = "";
@@ -1347,20 +1347,20 @@
 				version = 1.0.0;
 			};
 		};
-		5E1F3AB22BA36569008158EF /* XCRemoteSwiftPackageReference "swift-ui-components" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/AktivCo/swift-ui-components.git";
-			requirement = {
-				kind = revision;
-				revision = 4e90ed7cf5f3d0a2c30b3fc90852c5a71c1dadcf;
-			};
-		};
 		5E1F3AB62BA4B302008158EF /* XCRemoteSwiftPackageReference "keychainmanager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/keychainmanager.git";
 			requirement = {
 				kind = revision;
 				revision = 99454f840d016cc386add7cf4f8ff5cec07f440b;
+			};
+		};
+		7DD49F6E2BC447FF000DE0FF /* XCRemoteSwiftPackageReference "swift-ui-components" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AktivCo/swift-ui-components.git";
+			requirement = {
+				kind = revision;
+				revision = 1b3671a206f98e18fa9f5c80014a8bc9bb232b5e;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1391,15 +1391,15 @@
 			package = 5E1F3AAF2BA36505008158EF /* XCRemoteSwiftPackageReference "swift-rtpcsc-wrapper" */;
 			productName = RtPcscWrapper;
 		};
-		5E1F3AB32BA36569008158EF /* RtUiComponents */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5E1F3AB22BA36569008158EF /* XCRemoteSwiftPackageReference "swift-ui-components" */;
-			productName = RtUiComponents;
-		};
 		5E1F3AB72BA4B302008158EF /* RutokenKeychainManager */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 5E1F3AB62BA4B302008158EF /* XCRemoteSwiftPackageReference "keychainmanager" */;
 			productName = RutokenKeychainManager;
+		};
+		7DD49F6F2BC447FF000DE0FF /* RtUiComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7DD49F6E2BC447FF000DE0FF /* XCRemoteSwiftPackageReference "swift-ui-components" */;
+			productName = RtUiComponents;
 		};
 /* End XCSwiftPackageProductDependency section */
 
