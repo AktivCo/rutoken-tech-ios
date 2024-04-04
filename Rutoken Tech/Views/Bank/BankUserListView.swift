@@ -110,17 +110,17 @@ struct UserSelectView_Previews: PreviewProvider {
         let user1 = try? userManager.createUser(
             fullname: "Иванов Михаил Романович",
             title: "Дизайнер",
-            expiryDate: Date(), certId: "", tokenSerial: "")
+            expiryDate: Date(), keyId: "", certHash: "", tokenSerial: "")
 
         let user2 = try? userManager.createUser(
             fullname: "Иванов Михаил Романович",
             title: "Дизайнер",
-            expiryDate: Date(), certId: "", tokenSerial: "")
+            expiryDate: Date(), keyId: "", certHash: "", tokenSerial: "")
 
         let user3 = try? userManager.createUser(
             fullname: "Иванов Михаил Романович",
             title: "Дизайнер",
-            expiryDate: Date(), certId: "", tokenSerial: "")
+            expiryDate: Date(), keyId: "", certHash: "", tokenSerial: "")
 
         let state = AppState(bankSelectUserState: BankSelectUsersState(users: [user1!, user2!, user3!]))
         let store = Store(initialState: state,

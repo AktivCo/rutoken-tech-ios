@@ -54,7 +54,7 @@ struct CertView: View {
 
 struct CertView_Previews: PreviewProvider {
     static var previews: some View {
-        let cert = CertModel(id: UUID().uuidString,
+        let cert = CertModel(hash: UUID().uuidString,
                              name: "Иванов Михаил Романович",
                              jobTitle: "Дизайнер",
                              companyName: "Рутокен",
@@ -62,7 +62,7 @@ struct CertView_Previews: PreviewProvider {
                              expiryDate: "07.03.2024",
                              causeOfInvalid: nil)
 
-        let invalidCert = CertModel(id: UUID().uuidString,
+        let invalidCert = CertModel(hash: UUID().uuidString,
                                     name: "Иванов Михаил Романович",
                                     jobTitle: "Дизайнер",
                                     companyName: "Рутокен",

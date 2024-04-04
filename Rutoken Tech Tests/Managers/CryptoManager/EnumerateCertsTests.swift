@@ -34,7 +34,8 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
         token = TokenMock(serial: "87654321", currentInterface: .usb, supportedInterfaces: [.usb])
         pkcs11Helper.tokenPublisher.send([token])
 
-        certModel = CertModel(id: "some id",
+        certModel = CertModel(keyId: "123",
+                              hash: "hash",
                               tokenSerial: token.serial,
                               name: "Иванов Михаил Романович",
                               jobTitle: "Дизайнер",
@@ -48,7 +49,7 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
         let certData = Data(repeating: 0x07, count: 10)
         token.enumerateCertsCallback = {
             XCTAssertNil($0)
-            return [Pkcs11ObjectMock(id: self.certModel.id, body: certData)]
+            return [Pkcs11ObjectMock(id: self.certModel.keyId, body: certData)]
         }
         openSslHelper.parseCertCallback = { cert in
             XCTAssertEqual(cert, certData)

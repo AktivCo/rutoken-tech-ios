@@ -28,11 +28,11 @@ class UserManagerMock: UserManagerProtocol {
 
     var deleteUserCallback: (BankUser) throws -> Void = { _ in  }
 
-    func createUser(fullname: String, title: String, expiryDate: Date, certId: String, tokenSerial: String) throws -> BankUser? {
-        try createUserCallback(fullname, title, expiryDate, certId, tokenSerial)
+    func createUser(fullname: String, title: String, expiryDate: Date, keyId: String, certHash: String, tokenSerial: String) throws -> BankUser? {
+        try createUserCallback(fullname, title, expiryDate, keyId, certHash, tokenSerial)
     }
 
-    var createUserCallback: (String, String, Date, String, String) throws -> BankUser? = { _, _, _, _, _ in return nil }
+    var createUserCallback: (String, String, Date, String, String, String) throws -> BankUser? = { _, _, _, _, _, _  in return nil }
 
     func createUser(from cert: CertModel) throws -> BankUser? {
         try createUserFromCertCallback(cert)

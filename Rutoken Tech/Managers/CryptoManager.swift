@@ -120,16 +120,16 @@ class CryptoManager: CryptoManagerProtocol {
 
         return try token.enumerateCerts(by: nil).compactMap {
             guard let certData = $0.body,
-                  let id = $0.id else {
+                  let keyId = $0.id else {
                 return nil
             }
 
             var model = try openSslHelper.parseCert(certData)
-            model.id = id
+            model.keyId = keyId
             model.tokenSerial = token.serial
 
             if model.causeOfInvalid == nil,
-               try token.enumerateKeys(by: id, with: nil).isEmpty {
+               try token.enumerateKeys(by: keyId, with: nil).isEmpty {
                 model.causeOfInvalid = .noKeyPair
             }
             return model

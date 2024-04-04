@@ -25,7 +25,12 @@ enum CertInvalidReason {
 }
 
 struct CertModel: Identifiable, Equatable {
-    var id: String?
+    var id: String {
+        return hash
+    }
+
+    var keyId: String?
+    var hash: String
     var tokenSerial: String?
 
     let name: String
@@ -37,7 +42,8 @@ struct CertModel: Identifiable, Equatable {
     var causeOfInvalid: CertInvalidReason?
 
     static func == (lhs: CertModel, rhs: CertModel) -> Bool {
-        return lhs.id == rhs.id &&
+        return lhs.keyId == rhs.keyId &&
+        lhs.hash == rhs.hash &&
         lhs.tokenSerial == rhs.tokenSerial &&
         lhs.name == rhs.name &&
         lhs.jobTitle == rhs.jobTitle &&

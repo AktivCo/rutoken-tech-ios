@@ -75,6 +75,15 @@ class WrappedX509 {
         self.x509 = x509
     }
 
+    public var subjectNameHash: String? {
+        let hash = X509_subject_name_hash(x509.pointer)
+        guard hash != 0 else {
+            return nil
+        }
+
+        return String(hash)
+    }
+
     public var publicKeyAlgorithm: KeyAlgorithm? {
         guard let publicKey = WrappedPointer({
             X509_get_pubkey(x509.pointer)

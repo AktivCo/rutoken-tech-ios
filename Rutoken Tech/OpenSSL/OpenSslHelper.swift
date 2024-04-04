@@ -312,7 +312,8 @@ class OpenSslHelper: OpenSslHelperProtocol {
               let organizationName = wrappedX509.organizationName,
               let notBefore = wrappedX509.notBefore,
               let notAfter = wrappedX509.notAfter,
-              let algorithm = wrappedX509.publicKeyAlgorithm
+              let algorithm = wrappedX509.publicKeyAlgorithm,
+              let subjectNameHash = wrappedX509.subjectNameHash
         else {
             throw OpenSslError.generalError(#line, getLastError())
         }
@@ -324,7 +325,8 @@ class OpenSslHelper: OpenSslHelperProtocol {
             reason = .notStartedBefore(notBefore)
         }
 
-        return .init(name: commonName,
+        return .init(hash: subjectNameHash,
+                     name: commonName,
                      jobTitle: title,
                      companyName: organizationName,
                      keyAlgo: algorithm,

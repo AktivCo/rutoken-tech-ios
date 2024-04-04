@@ -36,7 +36,8 @@ class OnAuthUser: Middleware {
                     try await self.cryptoManager.withToken(connectionType: connectionType,
                                                            serial: user.tokenSerial, pin: pin) {
                         let certs = try await cryptoManager.enumerateCerts()
-                        guard certs.contains(where: {$0.id == user.certId}) else {
+
+                        guard certs.contains(where: {$0.hash == user.certHash}) else {
                             throw CryptoManagerError.noSuitCert
                         }
                     }

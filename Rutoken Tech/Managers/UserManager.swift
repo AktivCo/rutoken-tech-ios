@@ -14,7 +14,7 @@ protocol UserManagerProtocol {
     var users: AnyPublisher<[BankUser], Never> { get }
     func listUsers() -> [BankUser]
     func deleteUser(user: BankUser) throws
-    func createUser(fullname: String, title: String, expiryDate: Date, certId: String, tokenSerial: String) throws -> BankUser?
+    func createUser(fullname: String, title: String, expiryDate: Date, keyId: String, certHash: String, tokenSerial: String) throws -> BankUser?
     func createUser(from cert: CertModel) throws -> BankUser?
 }
 
@@ -54,7 +54,7 @@ class UserManager: UserManagerProtocol {
         updateUsers()
     }
 
-    func createUser(fullname: String, title: String, expiryDate: Date, certId: String, tokenSerial: String) throws -> BankUser? {
+    func createUser(fullname: String, title: String, expiryDate: Date, keyId: String, certHash: String, tokenSerial: String) throws -> BankUser? {
         guard let entity = NSEntityDescription.entity(forEntityName: "BankUser", in: context) else {
             return nil
         }
@@ -62,7 +62,8 @@ class UserManager: UserManagerProtocol {
         newUser.expiryDate = expiryDate
         newUser.fullname = fullname
         newUser.title = title
-        newUser.certId = certId
+        newUser.keyId = keyId
+        newUser.certHash = certHash
         newUser.tokenSerial = tokenSerial
         try context.save()
         updateUsers()
@@ -74,7 +75,7 @@ class UserManager: UserManagerProtocol {
             return nil
         }
         guard let date = cert.expiryDate.getDate(with: "dd.MM.yyyy"),
-              let certId = cert.id,
+              let keyId = cert.keyId,
               let tokenSerial = cert.tokenSerial else {
             return nil
         }
@@ -82,7 +83,8 @@ class UserManager: UserManagerProtocol {
         newUser.expiryDate = date
         newUser.fullname = cert.name
         newUser.title = cert.jobTitle
-        newUser.certId = certId
+        newUser.keyId = keyId
+        newUser.certHash = cert.hash
         newUser.tokenSerial = tokenSerial
         try context.save()
         updateUsers()

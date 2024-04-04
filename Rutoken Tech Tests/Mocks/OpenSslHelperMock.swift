@@ -28,7 +28,8 @@ class OpenSslHelperMock: OpenSslHelperProtocol {
     }
 
     var parseCertCallback: (Data) throws -> CertModel = { _ in
-            .init(name: "Иванов Михаил Романович",
+            .init(hash: "hash",
+                  name: "Иванов Михаил Романович",
                   jobTitle: "Дизайнер",
                   companyName: "Рутокен",
                   keyAlgo: .gostR3410_2012_256,

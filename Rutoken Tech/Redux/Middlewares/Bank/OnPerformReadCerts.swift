@@ -36,6 +36,7 @@ class OnPerformReadCerts: Middleware {
                 do {
                     try await self.cryptoManager.withToken(connectionType: tokenInterface,
                                                            serial: nil, pin: pin) {
+
                         let certs = try await self.cryptoManager.enumerateCerts()
                         guard !certs.isEmpty else {
                             continuation.yield(.showAlert(.noCerts))
@@ -44,7 +45,7 @@ class OnPerformReadCerts: Middleware {
 
                         let users = self.userManager.listUsers()
                         let checkedCerts: [CertModel] = certs.map { cert in
-                            if users.contains(where: { $0.certId == cert.id }) {
+                            if users.contains(where: { $0.certHash == cert.hash }) {
                                 var newCert = cert
                                 newCert.causeOfInvalid = .alreadyExist
                                 return newCert
