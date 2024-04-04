@@ -18,6 +18,10 @@ class UserManagerMock: UserManagerProtocol {
 
     var usersPublisher = CurrentValueSubject<[BankUser], Never>([])
 
+    func listUsers() -> [BankUser] {
+        usersPublisher.value
+    }
+
     func deleteUser(user: BankUser) throws {
         try deleteUserCallback(user)
     }

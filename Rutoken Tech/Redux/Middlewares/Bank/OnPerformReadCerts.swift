@@ -13,9 +13,11 @@ import TinyAsyncRedux
 
 class OnPerformReadCerts: Middleware {
     private let cryptoManager: CryptoManagerProtocol
+    private let userManager: UserManagerProtocol
 
-    init(cryptoManager: CryptoManagerProtocol) {
+    init(cryptoManager: CryptoManagerProtocol, userManager: UserManagerProtocol) {
         self.cryptoManager = cryptoManager
+        self.userManager = userManager
     }
 
     func handle(action: AppAction) -> AsyncStream<AppAction>? {
@@ -39,7 +41,19 @@ class OnPerformReadCerts: Middleware {
                             continuation.yield(.showAlert(.noCerts))
                             return
                         }
-                        continuation.yield(.updateCerts(certs))
+
+                        let users = self.userManager.listUsers()
+                        let checkedCerts: [CertModel] = certs.map { cert in
+                            if users.contains(where: { $0.certId == cert.id }) {
+                                var newCert = cert
+                                newCert.causeOfInvalid = .alreadyExist
+                                return newCert
+                            } else {
+                                return cert
+                            }
+                        }
+
+                        continuation.yield(.updateCerts(checkedCerts))
                         let info = try await cryptoManager.getTokenInfo()
                         continuation.yield(.savePin(pin, info.serial, true))
                         await continuation.yield(.showSheet(false,

@@ -12,6 +12,7 @@ import Foundation
 
 protocol UserManagerProtocol {
     var users: AnyPublisher<[BankUser], Never> { get }
+    func listUsers() -> [BankUser]
     func deleteUser(user: BankUser) throws
     func createUser(fullname: String, title: String, expiryDate: Date, certId: String, tokenSerial: String) throws -> BankUser?
     func createUser(from cert: CertModel) throws -> BankUser?
@@ -41,6 +42,10 @@ class UserManager: UserManagerProtocol {
 
     private func updateUsers() {
         usersPublisher.send((try? context.fetch(BankUser.fetchRequest())) ?? [])
+    }
+
+    func listUsers() -> [BankUser] {
+        return usersPublisher.value
     }
 
     func deleteUser(user: BankUser) throws {

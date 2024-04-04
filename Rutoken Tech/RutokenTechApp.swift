@@ -45,7 +45,7 @@ struct RutokenTechApp: App {
                 OnPerformGenKeyPair(cryptoManager: cryptoManager),
                 OnPerformGenCert(cryptoManager: cryptoManager),
                 // Bank
-                OnPerformReadCerts(cryptoManager: cryptoManager),
+                OnPerformReadCerts(cryptoManager: cryptoManager, userManager: userManager),
                 OnSelectCert(userManager: userManager),
                 OnSavePin(pinCodeManager: pinCodeManager),
                 OnGetPin(pinCodeManager: pinCodeManager),
