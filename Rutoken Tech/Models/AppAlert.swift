@@ -66,6 +66,8 @@ enum AppAlert {
             self = .tokenNotFound
         case .wrongToken:
             self = .wrongToken
+        case .noSuitCert:
+            self = .noSuitCert
         }
     }
 }

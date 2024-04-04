@@ -30,6 +30,7 @@ enum CryptoManagerError: Error, Equatable {
     case nfcStopped
     case incorrectPin(UInt)
     case wrongToken
+    case noSuitCert
 }
 
 enum RtFile: String {
