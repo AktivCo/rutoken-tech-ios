@@ -39,8 +39,8 @@ class OpenSslHelperMock: OpenSslHelperProtocol {
     }
     var signCmsCallback: () throws -> String = { "" }
 
-    func verifyCms(signedCms: String, for content: Data, with cert: Data) throws -> Bool {
+    func verifyCms(signedCms: String, for content: Data, with cert: Data, certChain: [Data]) throws -> VerifyCmsResult {
         try verifyCmsCallback()
     }
-    var verifyCmsCallback: () throws -> Bool  = { true }
+    var verifyCmsCallback: () throws -> VerifyCmsResult  = { .success }
 }

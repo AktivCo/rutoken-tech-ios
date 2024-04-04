@@ -71,3 +71,10 @@ func stringToBio(_ str: String) -> WrappedPointer<OpaquePointer>? {
 
     return dataToBio(data)
 }
+
+func wrapKey(_ data: Data) -> WrappedPointer<OpaquePointer>? {
+    return WrappedPointer<OpaquePointer>({
+        guard let bio = dataToBio(data) else { return nil }
+        return PEM_read_bio_PrivateKey(bio.pointer, nil, nil, nil)
+    }, EVP_PKEY_free)
+}

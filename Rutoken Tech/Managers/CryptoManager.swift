@@ -37,6 +37,8 @@ enum CryptoManagerError: Error, Equatable {
 enum RtFile: String {
     case caKey = "ca.key"
     case caCert = "ca.pem"
+    case rootCaKey = "rootCa.key"
+    case rootCaCert = "rootCa.pem"
     case bankKey = "bank.key"
     case bankCert = "bank.pem"
 

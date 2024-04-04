@@ -17,7 +17,13 @@ protocol OpenSslHelperProtocol {
     func parseCert(_ cert: Data) throws -> CertModel
     func createCert(for csr: String, with caKey: Data, cert caCert: Data) throws -> Data
     func signCms(for content: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String
-    func verifyCms(signedCms: String, for content: Data, with cert: Data) throws -> Bool
+    func verifyCms(signedCms: String, for content: Data, with cert: Data, certChain: [Data]) throws -> VerifyCmsResult
+}
+
+enum VerifyCmsResult {
+    case success
+    case failedChain
+    case failure(OpenSslError)
 }
 
 class OpenSslHelper: OpenSslHelperProtocol {
@@ -66,19 +72,23 @@ class OpenSslHelper: OpenSslHelperProtocol {
         return "-----BEGIN CMS-----\n" + rawSignature + "\n-----END CMS-----"
     }
 
-    func verifyCms(signedCms: String, for content: Data, with cert: Data) throws -> Bool {
+    func verifyCms(signedCms: String, for content: Data, with cert: Data, certChain: [Data]) throws -> VerifyCmsResult {
         var rawBase64Cms = signedCms
             .replacingOccurrences(of: "-----BEGIN CMS-----", with: "")
             .replacingOccurrences(of: "-----END CMS-----", with: "")
 
         rawBase64Cms.removeAll { $0 == "\n" }
 
-        guard let data = rawBase64Cms.data(using: .utf8),
-              let cmsData = Data(base64Encoded: data),
-              let contentBio = dataToBio(content),
+        guard let contentBio = dataToBio(content),
               let certsStack = createX509Stack(with: [cert]),
+              let certStore = WrappedPointer(X509_STORE_new, X509_STORE_free),
               let cms = WrappedPointer({
-                  cmsData.withUnsafeBytes {
+                  guard let data = rawBase64Cms.data(using: .utf8),
+                        let cmsData = Data(base64Encoded: data) else {
+                      return nil
+                  }
+
+                  return cmsData.withUnsafeBytes {
                       var pointer: UnsafePointer<UInt8>? = $0.baseAddress?.assumingMemoryBound(to: UInt8.self)
                       guard let pointer = d2i_CMS_ContentInfo(nil, &pointer, data.count) else {
                           return nil
@@ -89,12 +99,32 @@ class OpenSslHelper: OpenSslHelperProtocol {
             throw OpenSslError.generalError(#line, getLastError())
         }
 
-        return CMS_verify(cms.pointer,
-                          certsStack.pointer,
-                          nil,
-                          contentBio.pointer,
-                          nil,
-                          UInt32(CMS_BINARY | CMS_NO_SIGNER_CERT_VERIFY)) == 1
+        for cert in certChain {
+            guard let caCert = WrappedX509(from: cert),
+                  X509_STORE_add_cert(certStore.pointer, caCert.wrappedPointer.pointer) == 1 else {
+                throw OpenSslError.generalError(#line, getLastError())
+            }
+        }
+
+        guard CMS_verify(cms.pointer,
+                         certsStack.pointer,
+                         certStore.pointer,
+                         contentBio.pointer,
+                         nil,
+                         UInt32(CMS_BINARY)) == 1 else {
+            // If we receive an error on CMS verify we try to verify without chain cheking
+            // and send appropriate error
+            guard CMS_verify(cms.pointer,
+                             certsStack.pointer,
+                             certStore.pointer,
+                             contentBio.pointer,
+                             nil,
+                             UInt32(CMS_BINARY | CMS_NO_SIGNER_CERT_VERIFY)) == 1 else {
+                return .failure(OpenSslError.generalError(#line, getLastError()))
+            }
+            return .failedChain
+        }
+        return .success
     }
 
     func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String {
