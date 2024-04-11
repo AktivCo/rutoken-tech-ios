@@ -19,12 +19,11 @@ struct BankDocument: Codable, Identifiable {
         case decrypt
         case sign
         case verify
-        case none
     }
 
     let id = UUID()
     let name: String
-    var action: ActionType = .none
+    let action: ActionType
     let amount: Int
     let companyName: String
     let paymentDay: Date
@@ -54,11 +53,12 @@ struct BankDocument: Codable, Identifiable {
         case amount
         case companyName
         case paymentDay
+        case action
     }
 
     var direction: DocType {
         switch self.action {
-        case .decrypt, .verify, .none:
+        case .decrypt, .verify:
             return .income
         case .sign, .encrypt:
             return .outcome
@@ -85,7 +85,7 @@ enum DocType: String, RawRepresentable, CaseIterable {
 extension BankDocument.ActionType {
     var getImageName: String {
         switch self {
-        case .verify, .none:
+        case .verify:
             return "doc.text.fill"
         case .encrypt:
             return "lock.fill"

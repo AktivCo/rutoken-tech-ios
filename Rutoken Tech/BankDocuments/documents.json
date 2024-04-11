@@ -1,95 +1,114 @@
 [{
   "name": "Инкассовое поручение №00981.pdf",
+  "action": "encrypt",
   "amount": 45000,
   "companyName": "ООО «Тренд Хоум»",
   "paymentDay": "18.02.2023"
 },{
   "name": "Инкассовое поручение №15.pdf",
+  "action": "encrypt",
   "amount": 700350,
   "companyName": "АО «Тандер Боут»",
   "paymentDay": "30.08.2023"
 },{
   "name": "Инкассовое поручение №333.pdf",
+  "action": "encrypt",
   "amount": 487000,
   "companyName": "АО «Шаоми»",
   "paymentDay": "26.10.2023"
 },{
   "name": "Инкассовое поручение №345.pdf",
+  "action": "encrypt",
   "amount": 45000,
   "companyName": "ООО «Тренд Хоум»",
   "paymentDay": "28.08.2023"
 },{
   "name": "Инкассовое поручение №35.pdf",
+  "action": "encrypt",
   "amount": 200500,
   "companyName": "ПАО «Бета»",
   "paymentDay": "13.07.2023"
 },{
   "name": "Инкассовое поручение №567.pdf",
+  "action": "decrypt",
   "amount": 560000,
   "companyName": "ПАО «Квартирный вопрос»",
   "paymentDay": "26.10.2023"
 },{
   "name": "Инкассовое поручение №76.pdf",
+  "action": "decrypt",
   "amount": 2000000,
   "companyName": "ООО «Лотос Экспорт»",
   "paymentDay": "27.04.2023"
 },{
   "name": "Инкассовое поручение №789.pdf",
+  "action": "decrypt",
   "amount": 40000,
   "companyName": "ООО «Крипто-Экс»",
   "paymentDay": "15.08.2023"
 },{
   "name": "Инкассовое поручение №98.pdf",
+  "action": "decrypt",
   "amount": 301000,
   "companyName": "ПАО «ФростТех»",
   "paymentDay": "30.06.2023"
 },{
   "name": "Платежное поручение №00121.pdf",
+  "action": "sign",
   "amount": 100000,
   "companyName": "ООО «Крипто-Экс»",
   "paymentDay": "15.08.2023"
 },{
   "name": "Платежное поручение №010.pdf",
+  "action": "sign",
   "amount": 80800,
   "companyName": "АО «Марлен»",
   "paymentDay": "08.08.2023"
 },{
   "name": "Платежное поручение №00122.pdf",
+  "action": "sign",
   "amount": 60000,
   "companyName": "ПАО «Бета»",
   "paymentDay": "13.07.2023"
 },{
   "name": "Платежное поручение №00123.pdf",
+  "action": "sign",
   "amount": 200500,
   "companyName": "ООО «Техно-веб»",
   "paymentDay": "18.05.2023"
 },{
   "name": "Платежное поручение №00124.pdf",
+  "action": "sign",
   "amount": 200500,
   "companyName": "АО «Агролайн»",
   "paymentDay": "23.01.2023"
 },{
   "name": "Платежное поручение №00981.pdf",
+  "action": "verify",
   "amount": 45000,
   "companyName": "ООО «Тренд Хоум»",
   "paymentDay": "18.02.2023"
 },{
   "name": "Платежное поручение №673.pdf",
+  "action": "verify",
   "amount": 3000,
   "companyName": "ООО «Фрешлайтс»",
   "paymentDay": "01.01.2023"
 },{
   "name": "Платежное поручение №654.pdf",
+  "action": "verify",
   "amount": 300000,
   "companyName": "ООО «Мобайл»",
   "paymentDay": "24.07.2022"
 },{
   "name": "Платежное поручение №04134.pdf",
+  "action": "verify",
   "amount": 3000,
   "companyName": "ПАО «Инвест Банк»",
   "paymentDay": "01.01.2023"
 },{
   "name": "Платежное поручение №0543.pdf",
+  "action": "verify",
   "amount": 800300,
   "companyName": "ООО «КО-НЕО»",
   "paymentDay": "27.02.2023"

@@ -32,6 +32,7 @@ class DocumentManagerTests: XCTestCase {
         let paymentDay = Date()
 
         let doc = BankDocument(name: name,
+                               action: .encrypt,
                                amount: amount,
                                companyName: company,
                                paymentDay: paymentDay)
