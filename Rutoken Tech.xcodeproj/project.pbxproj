@@ -71,6 +71,7 @@
 		5EF75DE12AC707BD001834BE /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF75DE02AC707BD001834BE /* RootView.swift */; };
 		5EF75DE32AC707BD001834BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EF75DE22AC707BD001834BE /* Assets.xcassets */; };
 		5EF75DE62AC707BD001834BE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EF75DE52AC707BD001834BE /* Preview Assets.xcassets */; };
+		7D1051BE2BC8028800AA8F43 /* RutokenTechApp+defaultPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1051BD2BC8028800AA8F43 /* RutokenTechApp+defaultPin.swift */; };
 		7D2021472AEC16E8003E2B73 /* IpadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2021462AEC16E8003E2B73 /* IpadRootView.swift */; };
 		7D28BD822B3082990079AE1C /* CaGenerateKeyPairState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D28BD812B3082990079AE1C /* CaGenerateKeyPairState.swift */; };
 		7D28BD842B3083460079AE1C /* CaGenerateKeyPairView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D28BD832B3083460079AE1C /* CaGenerateKeyPairView.swift */; };
@@ -206,6 +207,7 @@
 		5EF75DE02AC707BD001834BE /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		5EF75DE22AC707BD001834BE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5EF75DE52AC707BD001834BE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		7D1051BD2BC8028800AA8F43 /* RutokenTechApp+defaultPin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RutokenTechApp+defaultPin.swift"; sourceTree = "<group>"; };
 		7D2021462AEC16E8003E2B73 /* IpadRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IpadRootView.swift; sourceTree = "<group>"; };
 		7D28BD812B3082990079AE1C /* CaGenerateKeyPairState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaGenerateKeyPairState.swift; sourceTree = "<group>"; };
 		7D28BD832B3083460079AE1C /* CaGenerateKeyPairView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaGenerateKeyPairView.swift; sourceTree = "<group>"; };
@@ -555,6 +557,7 @@
 				4443EA0C2B96F59A0003436D /* KeyAlgorithm+description.swift */,
 				44A502C32BB18CD6006236E7 /* Bundle+getUrl.swift */,
 				D4C582332BAC216B001604B4 /* ProcessInfo+isPreview.swift */,
+				7D1051BD2BC8028800AA8F43 /* RutokenTechApp+defaultPin.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -943,6 +946,7 @@
 				447AFBAA2B205A7000A53B0C /* ConnectionType.swift in Sources */,
 				44CB44542BA18BB30056583E /* OnGetPin.swift in Sources */,
 				44416B2C2B552CCE00EC5F66 /* OpenSslHelper.swift in Sources */,
+				7D1051BE2BC8028800AA8F43 /* RutokenTechApp+defaultPin.swift in Sources */,
 				443076EF2B1F2D5E0073B406 /* String+getFrom.swift in Sources */,
 				44E9C0422B837FA90001E63F /* CertModel.swift in Sources */,
 				D453F5F72B8CD94D008DD9E1 /* PinCodeManager.swift in Sources */,
