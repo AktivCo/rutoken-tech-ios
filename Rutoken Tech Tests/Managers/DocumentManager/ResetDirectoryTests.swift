@@ -1,5 +1,5 @@
 //
-//  DocumentManager.swift
+//  ResetDirectoryTests.swift
 //  Rutoken Tech Tests
 //
 //  Created by Vova Badyaev on 11.03.2024.
@@ -10,7 +10,7 @@ import XCTest
 @testable import Rutoken_Tech
 
 
-class DocumentManagerTests: XCTestCase {
+class DocumentManagerResetDirectoryTests: XCTestCase {
     var manager: DocumentManager!
     var helper: FileHelperMock!
 

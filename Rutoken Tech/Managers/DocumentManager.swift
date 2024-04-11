@@ -13,7 +13,7 @@ protocol DocumentManagerProtocol {
     var documents: AnyPublisher<[BankDocument], Never> { get }
     func resetDirectory() throws
     func readFile(with name: String) throws -> BankFileContent
-    func saveToFile(with name: String, data: Data) throws
+    func saveToFile(documentName: String, fileName: String, data: Data) throws
 }
 
 enum DocumentManagerError: Error, Equatable {
@@ -71,6 +71,21 @@ class DocumentManager: DocumentManagerProtocol {
         }
     }
 
-    func saveToFile(with name: String, data: Data) throws {
+    func saveToFile(documentName: String, fileName: String, data: Data) throws {
+        do {
+            try fileHelper.saveFileToTempDir(with: fileName, content: data)
+            markAsArchived(documentName: documentName)
+        } catch FileHelperError.generalError(let line, let str) {
+            throw DocumentManagerError.general("\(line): \(String(describing: str))")
+        }
+    }
+
+    private func markAsArchived(documentName: String) {
+        var documents = documentsPublisher.value
+        guard let index = documents.firstIndex(where: { $0.name == documentName }) else {
+            return
+        }
+        documents[index].inArchive = true
+        documentsPublisher.send(documents)
     }
 }

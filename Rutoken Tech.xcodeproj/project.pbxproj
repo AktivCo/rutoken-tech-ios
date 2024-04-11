@@ -43,7 +43,7 @@
 		44BB8F792B9F0DB400BF7438 /* BankDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BB8F782B9F0DB400BF7438 /* BankDocument.swift */; };
 		44BB8F942B9F339000BF7438 /* BankDocuments in Resources */ = {isa = PBXBuildFile; fileRef = 44BB8F932B9F339000BF7438 /* BankDocuments */; };
 		44BB8F962B9F339700BF7438 /* Credentials in Resources */ = {isa = PBXBuildFile; fileRef = 44BB8F952B9F339700BF7438 /* Credentials */; };
-		44BB8F9B2B9F563A00BF7438 /* DocumentManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BB8F9A2B9F563A00BF7438 /* DocumentManagerTests.swift */; };
+		44BB8F9B2B9F563A00BF7438 /* ResetDirectoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BB8F9A2B9F563A00BF7438 /* ResetDirectoryTests.swift */; };
 		44BB8F9D2B9F571400BF7438 /* XCTestCase+ExpectationWaiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BB8F9C2B9F571400BF7438 /* XCTestCase+ExpectationWaiter.swift */; };
 		44CB44542BA18BB30056583E /* OnGetPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CB44532BA18BB30056583E /* OnGetPin.swift */; };
 		44E6FCA32BA97AB1001D35A5 /* OpenSslUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E6FCA22BA97AB1001D35A5 /* OpenSslUtils.swift */; };
@@ -127,6 +127,7 @@
 		D4D22A342BAD804200B93DA9 /* DocumentListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D22A332BAD804200B93DA9 /* DocumentListItem.swift */; };
 		D4D46A0F2B3038F60005981A /* Atomic+propertywrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */; };
 		D4DC1FCF2B61669800D53AE6 /* String+createPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC1FCE2B61669800D53AE6 /* String+createPointer.swift */; };
+		D4E92ED22BCECE4D009240F9 /* SaveToFileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E92ED12BCECE4D009240F9 /* SaveToFileTests.swift */; };
 		D4F27DD32B6A5752003D8AE6 /* Bundle+readInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F27DD22B6A5752003D8AE6 /* Bundle+readInfo.swift */; };
 		D4F4FDEC2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F4FDEB2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift */; };
 		D4F7CD772B32D1DA00764787 /* AnyCancellable+store.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F7CD762B32D1DA00764787 /* AnyCancellable+store.swift */; };
@@ -186,7 +187,7 @@
 		44BB8F782B9F0DB400BF7438 /* BankDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankDocument.swift; sourceTree = "<group>"; };
 		44BB8F932B9F339000BF7438 /* BankDocuments */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BankDocuments; sourceTree = "<group>"; };
 		44BB8F952B9F339700BF7438 /* Credentials */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Credentials; sourceTree = "<group>"; };
-		44BB8F9A2B9F563A00BF7438 /* DocumentManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentManagerTests.swift; sourceTree = "<group>"; };
+		44BB8F9A2B9F563A00BF7438 /* ResetDirectoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetDirectoryTests.swift; sourceTree = "<group>"; };
 		44BB8F9C2B9F571400BF7438 /* XCTestCase+ExpectationWaiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+ExpectationWaiter.swift"; sourceTree = "<group>"; };
 		44CB44532BA18BB30056583E /* OnGetPin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnGetPin.swift; sourceTree = "<group>"; };
 		44E6FCA22BA97AB1001D35A5 /* OpenSslUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSslUtils.swift; sourceTree = "<group>"; };
@@ -266,6 +267,7 @@
 		D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Atomic+propertywrapper.swift"; sourceTree = "<group>"; };
 		D4D9C9E62B2328B600DA702C /* Rutoken Tech.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Rutoken Tech.entitlements"; sourceTree = "<group>"; };
 		D4DC1FCE2B61669800D53AE6 /* String+createPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+createPointer.swift"; sourceTree = "<group>"; };
+		D4E92ED12BCECE4D009240F9 /* SaveToFileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveToFileTests.swift; sourceTree = "<group>"; };
 		D4F27DD22B6A5752003D8AE6 /* Bundle+readInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+readInfo.swift"; sourceTree = "<group>"; };
 		D4F4FDEB2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+LinuxFulfillment.swift"; sourceTree = "<group>"; };
 		D4F7CD762B32D1DA00764787 /* AnyCancellable+store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnyCancellable+store.swift"; sourceTree = "<group>"; };
@@ -363,7 +365,8 @@
 		44BB8F992B9F562800BF7438 /* DocumentManager */ = {
 			isa = PBXGroup;
 			children = (
-				44BB8F9A2B9F563A00BF7438 /* DocumentManagerTests.swift */,
+				44BB8F9A2B9F563A00BF7438 /* ResetDirectoryTests.swift */,
+				D4E92ED12BCECE4D009240F9 /* SaveToFileTests.swift */,
 			);
 			path = DocumentManager;
 			sourceTree = "<group>";
@@ -1018,7 +1021,8 @@
 				44EED1B62B1F115B0036F8DA /* TokenMock.swift in Sources */,
 				D4F4FDEC2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift in Sources */,
 				D44833A42B8C7B8B00A9B7A2 /* UserManagerMock.swift in Sources */,
-				44BB8F9B2B9F563A00BF7438 /* DocumentManagerTests.swift in Sources */,
+				44BB8F9B2B9F563A00BF7438 /* ResetDirectoryTests.swift in Sources */,
+				D4E92ED22BCECE4D009240F9 /* SaveToFileTests.swift in Sources */,
 				D423F8BF2B3574BB0058ECDE /* GetTokenInfoTests.swift in Sources */,
 				D47302C52B91E2000049E8F8 /* KeychainManagerMock.swift in Sources */,
 				D4B130D32B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift in Sources */,
