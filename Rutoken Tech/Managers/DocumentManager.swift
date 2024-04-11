@@ -13,6 +13,7 @@ protocol DocumentManagerProtocol {
     var documents: AnyPublisher<[BankDocument], Never> { get }
     func resetDirectory() throws
     func readFile(with name: String) throws -> BankFileContent
+    func saveToFile(with name: String, data: Data) throws
 }
 
 enum DocumentManagerError: Error, Equatable {
@@ -68,5 +69,8 @@ class DocumentManager: DocumentManagerProtocol {
         } catch FileHelperError.generalError(let line, let str) {
             throw DocumentManagerError.general("\(line): \(String(describing: str))")
         }
+    }
+
+    func saveToFile(with name: String, data: Data) throws {
     }
 }

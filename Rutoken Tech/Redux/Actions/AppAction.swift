@@ -65,4 +65,5 @@ enum AppAction {
     // MARK: Bank Documents
     case resetDocuments
     case updateDocuments([BankDocument])
+    case signDocument(tokenType: RtTokenType, serial: String, pin: String, documentName: String, certId: String)
 }

@@ -96,6 +96,8 @@ struct AppReducer: Reducer {
         case .updateDocuments(let docs):
             newState.bankDocumentListState.isLoading = false
             newState.bankDocumentListState.documents = docs
+        case .signDocument:
+            break
         }
         return newState
     }

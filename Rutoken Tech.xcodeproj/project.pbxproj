@@ -108,6 +108,7 @@
 		D47302C32B91E07F0049E8F8 /* PinCodeManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47302C22B91E07F0049E8F8 /* PinCodeManagerTests.swift */; };
 		D47302C52B91E2000049E8F8 /* KeychainManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47302C42B91E2000049E8F8 /* KeychainManagerMock.swift */; };
 		D4871D6B2BC693A2008B027C /* SignDocumentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4871D6A2BC693A2008B027C /* SignDocumentTests.swift */; };
+		D4871D6D2BC81036008B027C /* OnSignDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4871D6C2BC81036008B027C /* OnSignDocument.swift */; };
 		D49953BE2B55209E00E62B5B /* CaCertGenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49953BD2B55209E00E62B5B /* CaCertGenView.swift */; };
 		D49953C52B58343200E62B5B /* CaGenerateCertState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49953C42B58343200E62B5B /* CaGenerateCertState.swift */; };
 		D4B130A82B0CFD2F00AD390F /* CryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */; };
@@ -243,6 +244,7 @@
 		D47302C22B91E07F0049E8F8 /* PinCodeManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCodeManagerTests.swift; sourceTree = "<group>"; };
 		D47302C42B91E2000049E8F8 /* KeychainManagerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManagerMock.swift; sourceTree = "<group>"; };
 		D4871D6A2BC693A2008B027C /* SignDocumentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignDocumentTests.swift; sourceTree = "<group>"; };
+		D4871D6C2BC81036008B027C /* OnSignDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSignDocument.swift; sourceTree = "<group>"; };
 		D49953BD2B55209E00E62B5B /* CaCertGenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaCertGenView.swift; sourceTree = "<group>"; };
 		D49953C42B58343200E62B5B /* CaGenerateCertState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaGenerateCertState.swift; sourceTree = "<group>"; };
 		D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoManager.swift; sourceTree = "<group>"; };
@@ -377,6 +379,7 @@
 				D4D22A2F2BAC7E3000B93DA9 /* OnDeleteUser.swift */,
 				448E744E2BB42F7100585658 /* OnAuthUser.swift */,
 				44A502C52BB1AC1F006236E7 /* OnResetDocuments.swift */,
+				D4871D6C2BC81036008B027C /* OnSignDocument.swift */,
 			);
 			path = Bank;
 			sourceTree = "<group>";
@@ -992,6 +995,7 @@
 				4413CFB22B592EDE000987A8 /* String+hasCyrillic.swift in Sources */,
 				D4D22A342BAD804200B93DA9 /* DocumentListItem.swift in Sources */,
 				D4B130AB2B0CFD7300AD390F /* TokenInfo.swift in Sources */,
+				D4871D6D2BC81036008B027C /* OnSignDocument.swift in Sources */,
 				444D9F5C2B8DECC600C1EB0B /* Date+getString.swift in Sources */,
 				D4C582342BAC216B001604B4 /* ProcessInfo+isPreview.swift in Sources */,
 				44E9C0402B837F250001E63F /* CertView.swift in Sources */,

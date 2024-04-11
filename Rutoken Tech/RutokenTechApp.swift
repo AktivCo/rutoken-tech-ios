@@ -53,6 +53,7 @@ struct RutokenTechApp: App {
                 OnDeleteUser(userManager: userManager),
                 OnAuthUser(cryptoManager: cryptoManager),
                 OnResetDocuments(manager: documentManager),
+                OnSignDocumentMiddleware(cryptoManager: cryptoManager, documentManager: documentManager),
                 // About
                 OnHandleOpenLink(),
                 OnInitCooldownNfc()

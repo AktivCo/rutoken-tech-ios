@@ -9,8 +9,11 @@ import RtUiComponents
 
 
 enum AppAlert {
+    // MARK: Success
     case certGenerated
     case keyGenerated
+    case documentSigned
+    // MARK: Errors
     case unknownDevice
     case connectionLost
     case wrongToken
@@ -26,6 +29,9 @@ enum AppAlert {
                          buttons: [.init(.regular("ОК"))])
         case .keyGenerated:
             return .init(title: .titleOnly("Ключевая пара сгенерирована"),
+                         buttons: [.init(.regular("ОК"))])
+        case .documentSigned:
+            return .init(title: .titleOnly("Документ подписан"),
                          buttons: [.init(.regular("ОК"))])
         case .unknownDevice:
             return .init(title: .titleOnly("Устройство не распознано"),
