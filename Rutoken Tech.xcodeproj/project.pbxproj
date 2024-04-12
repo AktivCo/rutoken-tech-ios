@@ -89,9 +89,12 @@
 		7D9D3C1B2B3C76F000BF2EE1 /* EnumerateKeysTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9D3C1A2B3C76F000BF2EE1 /* EnumerateKeysTests.swift */; };
 		7D9E5A602B0BA55E00E2EAB7 /* ConnectedTokenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E5A5F2B0BA55E00E2EAB7 /* ConnectedTokenState.swift */; };
 		7DACCE262B569CCF00FB3F2C /* CreateCertTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DACCE252B569CCF00FB3F2C /* CreateCertTests.swift */; };
+		7DAEA2A92BCD6D4F00A906B2 /* BankSelectedDocumentState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAEA2A82BCD6D4F00A906B2 /* BankSelectedDocumentState.swift */; };
+		7DAEA2AB2BCD856D00A906B2 /* RtPDFView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAEA2AA2BCD856D00A906B2 /* RtPDFView.swift */; };
 		7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */; };
 		7DCC9AF12B3B2C9A002788B5 /* KeyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCC9AF02B3B2C9A002788B5 /* KeyModel.swift */; };
 		7DD49F702BC447FF000DE0FF /* RtUiComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 7DD49F6F2BC447FF000DE0FF /* RtUiComponents */; };
+		7DDBF5E62BC847B700B3AF30 /* DocumentProcessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBF5E52BC847B700B3AF30 /* DocumentProcessView.swift */; };
 		7DEBBDD62B3B1FCE00C35BA5 /* WithTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DEBBDD52B3B1FCE00C35BA5 /* WithTokenTests.swift */; };
 		D42178192B205FD700D08948 /* AppAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42178182B205FD700D08948 /* AppAlert.swift */; };
 		D423F8BF2B3574BB0058ECDE /* GetTokenInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D423F8BE2B3574BB0058ECDE /* GetTokenInfoTests.swift */; };
@@ -232,8 +235,11 @@
 		7D9D3C1A2B3C76F000BF2EE1 /* EnumerateKeysTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumerateKeysTests.swift; sourceTree = "<group>"; };
 		7D9E5A5F2B0BA55E00E2EAB7 /* ConnectedTokenState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedTokenState.swift; sourceTree = "<group>"; };
 		7DACCE252B569CCF00FB3F2C /* CreateCertTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCertTests.swift; sourceTree = "<group>"; };
+		7DAEA2A82BCD6D4F00A906B2 /* BankSelectedDocumentState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankSelectedDocumentState.swift; sourceTree = "<group>"; };
+		7DAEA2AA2BCD856D00A906B2 /* RtPDFView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtPDFView.swift; sourceTree = "<group>"; };
 		7DAF6E752AFA362A003A57D1 /* UIDevice+isPhone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+isPhone.swift"; sourceTree = "<group>"; };
 		7DCC9AF02B3B2C9A002788B5 /* KeyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyModel.swift; sourceTree = "<group>"; };
+		7DDBF5E52BC847B700B3AF30 /* DocumentProcessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentProcessView.swift; sourceTree = "<group>"; };
 		7DEBBDD52B3B1FCE00C35BA5 /* WithTokenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithTokenTests.swift; sourceTree = "<group>"; };
 		D42178182B205FD700D08948 /* AppAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlert.swift; sourceTree = "<group>"; };
 		D423F8BE2B3574BB0058ECDE /* GetTokenInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTokenInfoTests.swift; sourceTree = "<group>"; };
@@ -441,6 +447,7 @@
 				D4FAF1762B8347530024EFDA /* BankSelectUserState.swift */,
 				44E9C0452B8387A20001E63F /* BankCertListState.swift */,
 				4422B8212BB1540700A4EDB4 /* BankDocumentListState.swift */,
+				7DAEA2A82BCD6D4F00A906B2 /* BankSelectedDocumentState.swift */,
 			);
 			path = Bank;
 			sourceTree = "<group>";
@@ -768,6 +775,8 @@
 				D453F5FD2B90845A008DD9E1 /* PaymentListView.swift */,
 				D4D22A312BAD7FF000B93DA9 /* DocumentListView.swift */,
 				D4D22A332BAD804200B93DA9 /* DocumentListItem.swift */,
+				7DDBF5E52BC847B700B3AF30 /* DocumentProcessView.swift */,
+				7DAEA2AA2BCD856D00A906B2 /* RtPDFView.swift */,
 			);
 			path = Bank;
 			sourceTree = "<group>";
@@ -1007,6 +1016,7 @@
 				7D28BD842B3083460079AE1C /* CaGenerateKeyPairView.swift in Sources */,
 				7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */,
 				44B4A81C2B6CD15D00E59F63 /* AboutAppView.swift in Sources */,
+				7DAEA2AB2BCD856D00A906B2 /* RtPDFView.swift in Sources */,
 				D4246A942B876CD500B5F737 /* AppStorage.xcdatamodeld in Sources */,
 				5EC532012BD0189200AD5854 /* BankUserInfo.swift in Sources */,
 				D4FAF1772B8347530024EFDA /* BankSelectUserState.swift in Sources */,
@@ -1017,6 +1027,7 @@
 				4483F18C2B7A29420039EF3F /* OnStartMonitoring.swift in Sources */,
 				446BB6362BB402C70062EA45 /* View+CustomNavBar.swift in Sources */,
 				D4D22A322BAD7FF000B93DA9 /* DocumentListView.swift in Sources */,
+				7DDBF5E62BC847B700B3AF30 /* DocumentProcessView.swift in Sources */,
 				5EF30EDE2B1A823700E48627 /* OnPerformTokenConnection.swift in Sources */,
 				D4B130B32B0DD52A00AD390F /* Token.swift in Sources */,
 				446E136C2B85D3AC0060ECEE /* OnPerformReadCerts.swift in Sources */,
@@ -1026,6 +1037,7 @@
 				5EF30EE02B1A840800E48627 /* TokenInterface.swift in Sources */,
 				D4F7D8182B7CBC300055A3FD /* BankUserListView.swift in Sources */,
 				D453F5F52B8CD8F1008DD9E1 /* OnSavePin.swift in Sources */,
+				7DAEA2A92BCD6D4F00A906B2 /* BankSelectedDocumentState.swift in Sources */,
 				D455FCAE2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift in Sources */,
 				7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */,
 				44E7F8322BA4760600786A42 /* OnDeletePin.swift in Sources */,
