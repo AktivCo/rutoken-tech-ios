@@ -9,7 +9,7 @@ import SwiftUI
 
 
 struct CertView: View {
-    let cert: CertModel
+    let cert: CertViewData
 
     func infoField(for title: String, with value: String) -> some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -52,23 +52,11 @@ struct CertView: View {
     }
 }
 
+#if DEBUG
 struct CertView_Previews: PreviewProvider {
     static var previews: some View {
-        let cert = CertModel(hash: UUID().uuidString,
-                             name: "Иванов Михаил Романович",
-                             jobTitle: "Дизайнер",
-                             companyName: "Рутокен",
-                             keyAlgo: .gostR3410_2012_256,
-                             expiryDate: "07.03.2024",
-                             causeOfInvalid: nil)
-
-        let invalidCert = CertModel(hash: UUID().uuidString,
-                                    name: "Иванов Михаил Романович",
-                                    jobTitle: "Дизайнер",
-                                    companyName: "Рутокен",
-                                    keyAlgo: .gostR3410_2012_256,
-                                    expiryDate: "07.03.2024",
-                                    causeOfInvalid: .alreadyExist)
+        let cert = CertViewData()
+        let invalidCert = CertViewData(reason: .alreadyExist)
 
         ZStack {
             Color.RtColors.rtSurfaceSecondary
@@ -81,3 +69,4 @@ struct CertView_Previews: PreviewProvider {
         }
     }
 }
+#endif

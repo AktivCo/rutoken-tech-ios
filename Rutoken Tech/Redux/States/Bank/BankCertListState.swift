@@ -6,5 +6,5 @@
 //
 
 struct BankCertListState {
-    var certs: [CertModel] = []
+    var certs: [CertViewData] = []
 }

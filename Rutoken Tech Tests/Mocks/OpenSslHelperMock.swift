@@ -21,19 +21,6 @@ class OpenSslHelperMock: OpenSslHelperProtocol {
     }
     var createCertCallback: () throws -> Data = { return Data() }
 
-    func parseCert(_ cert: Data) throws -> CertModel {
-        try parseCertCallback(cert)
-    }
-    var parseCertCallback: (Data) throws -> CertModel = { _ in
-            .init(hash: "hash",
-                  name: "Иванов Михаил Романович",
-                  jobTitle: "Дизайнер",
-                  companyName: "Рутокен",
-                  keyAlgo: .gostR3410_2012_256,
-                  expiryDate: "07.03.2024",
-                  causeOfInvalid: nil)
-    }
-
     func signCms(for content: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String {
         try signCmsCallback()
     }

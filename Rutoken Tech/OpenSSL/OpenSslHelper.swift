@@ -14,7 +14,6 @@ enum OpenSslError: Error, Equatable {
 
 protocol OpenSslHelperProtocol {
     func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String
-    func parseCert(_ cert: Data) throws -> CertModel
     func createCert(for csr: String, with caKey: Data, cert caCert: Data) throws -> Data
     func signCms(for content: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String
     func verifyCms(signedCms: String, for content: Data, with cert: Data, certChain: [Data]) throws -> VerifyCmsResult
@@ -395,38 +394,6 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         return generatedCertData
-    }
-
-    func parseCert(_ cert: Data) throws -> CertModel {
-        guard let wrappedX509 = WrappedX509(from: cert) else {
-            throw OpenSslError.generalError(#line, getLastError())
-        }
-
-        guard let commonName = wrappedX509.commonName,
-              let title = wrappedX509.title,
-              let organizationName = wrappedX509.organizationName,
-              let notBefore = wrappedX509.notBefore,
-              let notAfter = wrappedX509.notAfter,
-              let algorithm = wrappedX509.publicKeyAlgorithm,
-              let subjectNameHash = wrappedX509.subjectNameHash
-        else {
-            throw OpenSslError.generalError(#line, getLastError())
-        }
-
-        var reason: CertInvalidReason?
-        if Date() > notAfter {
-            reason = .expired
-        } else if notBefore > Date() {
-            reason = .notStartedBefore(notBefore)
-        }
-
-        return .init(hash: subjectNameHash,
-                     name: commonName,
-                     jobTitle: title,
-                     companyName: organizationName,
-                     keyAlgo: algorithm,
-                     expiryDate: notAfter.getString(with: "dd.MM.YYYY"),
-                     causeOfInvalid: reason)
     }
 
     private func createX509Stack(with certs: [Data]) -> WrappedPointer<OpaquePointer>? {

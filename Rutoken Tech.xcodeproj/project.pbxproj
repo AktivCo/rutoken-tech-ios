@@ -22,6 +22,7 @@
 		4443EA0B2B96F5160003436D /* KeyAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4443EA0A2B96F5160003436D /* KeyAlgorithm.swift */; };
 		4443EA0D2B96F59A0003436D /* KeyAlgorithm+description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4443EA0C2B96F59A0003436D /* KeyAlgorithm+description.swift */; };
 		444D9F5C2B8DECC600C1EB0B /* Date+getString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444D9F5B2B8DECC600C1EB0B /* Date+getString.swift */; };
+		4453EFF32BC9172C00F2CD07 /* CertViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4453EFF22BC9172C00F2CD07 /* CertViewData.swift */; };
 		4464FAA82B359ED5005F732F /* Pkcs11Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464FAA72B359ED5005F732F /* Pkcs11Object.swift */; };
 		44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */; };
 		4469F7882B34512E000DCF8B /* AttributeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4469F7872B34512E000DCF8B /* AttributeType.swift */; };
@@ -50,7 +51,7 @@
 		44E7F8322BA4760600786A42 /* OnDeletePin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E7F8312BA4760600786A42 /* OnDeletePin.swift */; };
 		44E8C2E92B91FDD9008A77AE /* OnSelectCert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E8C2E82B91FDD9008A77AE /* OnSelectCert.swift */; };
 		44E9C0402B837F250001E63F /* CertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E9C03F2B837F250001E63F /* CertView.swift */; };
-		44E9C0422B837FA90001E63F /* CertModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E9C0412B837FA90001E63F /* CertModel.swift */; };
+		44E9C0422B837FA90001E63F /* CertMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E9C0412B837FA90001E63F /* CertMetaData.swift */; };
 		44E9C0442B83866A0001E63F /* CertListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E9C0432B83866A0001E63F /* CertListView.swift */; };
 		44E9C0462B8387A20001E63F /* BankCertListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E9C0452B8387A20001E63F /* BankCertListState.swift */; };
 		44EED1B62B1F115B0036F8DA /* TokenMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EED1B52B1F115B0036F8DA /* TokenMock.swift */; };
@@ -166,6 +167,7 @@
 		4443EA0A2B96F5160003436D /* KeyAlgorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyAlgorithm.swift; sourceTree = "<group>"; };
 		4443EA0C2B96F59A0003436D /* KeyAlgorithm+description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyAlgorithm+description.swift"; sourceTree = "<group>"; };
 		444D9F5B2B8DECC600C1EB0B /* Date+getString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+getString.swift"; sourceTree = "<group>"; };
+		4453EFF22BC9172C00F2CD07 /* CertViewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertViewData.swift; sourceTree = "<group>"; };
 		4464FAA72B359ED5005F732F /* Pkcs11Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Object.swift; sourceTree = "<group>"; };
 		44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtEngineWrapper.swift; sourceTree = "<group>"; };
 		4469F7872B34512E000DCF8B /* AttributeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeType.swift; sourceTree = "<group>"; };
@@ -194,7 +196,7 @@
 		44E7F8312BA4760600786A42 /* OnDeletePin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnDeletePin.swift; sourceTree = "<group>"; };
 		44E8C2E82B91FDD9008A77AE /* OnSelectCert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSelectCert.swift; sourceTree = "<group>"; };
 		44E9C03F2B837F250001E63F /* CertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertView.swift; sourceTree = "<group>"; };
-		44E9C0412B837FA90001E63F /* CertModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertModel.swift; sourceTree = "<group>"; };
+		44E9C0412B837FA90001E63F /* CertMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertMetaData.swift; sourceTree = "<group>"; };
 		44E9C0432B83866A0001E63F /* CertListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertListView.swift; sourceTree = "<group>"; };
 		44E9C0452B8387A20001E63F /* BankCertListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankCertListState.swift; sourceTree = "<group>"; };
 		44EED1B52B1F115B0036F8DA /* TokenMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMock.swift; sourceTree = "<group>"; };
@@ -326,6 +328,15 @@
 				446BB6352BB402C70062EA45 /* View+CustomNavBar.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		44311EFB2BCE5B8A00D16B0C /* CryptoManager */ = {
+			isa = PBXGroup;
+			children = (
+				44E9C0412B837FA90001E63F /* CertMetaData.swift */,
+				D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */,
+			);
+			path = CryptoManager;
 			sourceTree = "<group>";
 		};
 		44416B2D2B552CFC00EC5F66 /* OpenSSL */ = {
@@ -614,7 +625,7 @@
 		D4B130A62B0CFD1B00AD390F /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */,
+				44311EFB2BCE5B8A00D16B0C /* CryptoManager */,
 				D453F5F62B8CD94D008DD9E1 /* PinCodeManager.swift */,
 				D44833A12B8C78A800A9B7A2 /* UserManager.swift */,
 				44A1369D2B962184004E07E8 /* DocumentManager.swift */,
@@ -633,9 +644,9 @@
 				44416B2E2B555F4500EC5F66 /* CertRequest.swift */,
 				D433144B2B76848900442809 /* LinkType.swift */,
 				D4FAF1782B8347960024EFDA /* BankUser.swift */,
-				44E9C0412B837FA90001E63F /* CertModel.swift */,
 				44BB8F782B9F0DB400BF7438 /* BankDocument.swift */,
 				7D7D51822BB59DC200428107 /* BankFileContent.swift */,
+				4453EFF22BC9172C00F2CD07 /* CertViewData.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -945,6 +956,7 @@
 				D49953BE2B55209E00E62B5B /* CaCertGenView.swift in Sources */,
 				D4B130B52B0DDB2200AD390F /* Pkcs11Helper.swift in Sources */,
 				D4C38F3A2B84CADE00BA50EC /* HeaderTitleView.swift in Sources */,
+				4453EFF32BC9172C00F2CD07 /* CertViewData.swift in Sources */,
 				4416A2772B70F9A500645800 /* View+InfoListStyle.swift in Sources */,
 				4413CFAF2B590379000987A8 /* Rutoken_Tech-Bridging-Header.m in Sources */,
 				7D4335892B5567A700A0336A /* String+generateID.swift in Sources */,
@@ -954,7 +966,7 @@
 				44416B2C2B552CCE00EC5F66 /* OpenSslHelper.swift in Sources */,
 				7D1051BE2BC8028800AA8F43 /* RutokenTechApp+defaultPin.swift in Sources */,
 				443076EF2B1F2D5E0073B406 /* String+getFrom.swift in Sources */,
-				44E9C0422B837FA90001E63F /* CertModel.swift in Sources */,
+				44E9C0422B837FA90001E63F /* CertMetaData.swift in Sources */,
 				D453F5F72B8CD94D008DD9E1 /* PinCodeManager.swift in Sources */,
 				D43250362BA1BAA800493ACE /* String+getDate.swift in Sources */,
 				D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */,

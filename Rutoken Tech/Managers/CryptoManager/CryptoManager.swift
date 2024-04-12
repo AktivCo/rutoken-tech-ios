@@ -17,7 +17,7 @@ protocol CryptoManagerProtocol {
 
     func getTokenInfo() async throws -> TokenInfo
     func enumerateKeys() async throws -> [KeyModel]
-    func enumerateCerts() async throws -> [CertModel]
+    func enumerateCerts() async throws -> [CertMetaData]
     func generateKeyPair(with id: String) async throws
     func createCert(for id: String, with info: CsrModel) async throws
     func signDocument(document: Data, with id: String) throws -> String
@@ -116,26 +116,18 @@ class CryptoManager: CryptoManagerProtocol {
         }
     }
 
-    func enumerateCerts() async throws -> [CertModel] {
+    func enumerateCerts() async throws -> [CertMetaData] {
         guard let token = connectedToken else {
             throw CryptoManagerError.tokenNotFound
         }
 
-        return try token.enumerateCerts(by: nil).compactMap {
-            guard let certData = $0.body,
-                  let keyId = $0.id else {
+        return try token.enumerateCerts(by: nil).compactMap { (cert: Pkcs11ObjectProtocol) -> CertMetaData? in
+            guard let certData = cert.body,
+                  let keyId = cert.id else {
                 return nil
             }
 
-            var model = try openSslHelper.parseCert(certData)
-            model.keyId = keyId
-            model.tokenSerial = token.serial
-
-            if model.causeOfInvalid == nil,
-               try token.enumerateKeys(by: keyId, with: nil).isEmpty {
-                model.causeOfInvalid = .noKeyPair
-            }
-            return model
+            return CertMetaData(keyId: keyId, tokenSerial: token.serial, from: certData)
         }
     }
 

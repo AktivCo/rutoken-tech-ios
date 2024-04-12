@@ -34,9 +34,9 @@ class UserManagerMock: UserManagerProtocol {
 
     var createUserCallback: (String, String, Date, String, String, String) throws -> BankUser? = { _, _, _, _, _, _  in return nil }
 
-    func createUser(from cert: CertModel) throws -> BankUser? {
+    func createUser(from cert: CertViewData) throws -> BankUser? {
         try createUserFromCertCallback(cert)
     }
 
-    var createUserFromCertCallback: (CertModel) throws -> BankUser? = { _ in return nil }
+    var createUserFromCertCallback: (CertViewData) throws -> BankUser? = { _ in return nil }
 }

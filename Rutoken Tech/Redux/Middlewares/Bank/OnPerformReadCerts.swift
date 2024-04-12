@@ -19,6 +19,17 @@ class OnPerformReadCerts: Middleware {
         self.userManager = userManager
     }
 
+    func getReason(for cert: CertMetaData) async throws -> CertInvalidReason? {
+        let users = userManager.listUsers()
+        let keys = try await cryptoManager.enumerateKeys()
+
+        if Date() > cert.expiryDate { return .expired } else
+        if users.contains(where: { $0.certHash == cert.hash }) { return .alreadyExist } else
+        if cert.startDate > Date() { return .notStartedBefore(cert.startDate)} else
+        if !keys.contains(where: { $0.ckaId == cert.keyId }) { return .noKeyPair }
+        return nil
+    }
+
     func handle(action: AppAction) -> AsyncStream<AppAction>? {
         guard case let .readCerts(connectionType, pin) = action else {
             return nil
@@ -42,18 +53,12 @@ class OnPerformReadCerts: Middleware {
                             return
                         }
 
-                        let users = self.userManager.listUsers()
-                        let checkedCerts: [CertModel] = certs.map { cert in
-                            if users.contains(where: { $0.certHash == cert.hash }) {
-                                var newCert = cert
-                                newCert.causeOfInvalid = .alreadyExist
-                                return newCert
-                            } else {
-                                return cert
-                            }
+                        var certModels: [CertViewData] = []
+                        for cert in certs {
+                            certModels.append(CertViewData(from: cert, reason: try await getReason(for: cert)))
                         }
 
-                        continuation.yield(.updateCerts(checkedCerts))
+                        continuation.yield(.updateCerts(certModels))
                         let info = try await cryptoManager.getTokenInfo()
                         continuation.yield(.savePin(pin, info.serial, true))
                         await continuation.yield(.showSheet(false,

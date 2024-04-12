@@ -10,6 +10,41 @@ import XCTest
 @testable import Rutoken_Tech
 
 
+let unitTestCert = """
+-----BEGIN CERTIFICATE-----
+MIIFcjCCBR2gAwIBAgIJAPS1KxQfsVEKMAwGCCqFAwcBAQMCBQAwgeIxGDAWBgNV
+BAMMD1J1dG9rZW4gVGVjaCBDQTEhMB8GCSqGSIb3DQEJARYScnV0b2tlbkBydXRv
+a2VuLnJ1MSMwIQYDVQQKDBrQkNCeICLQkNC60YLQuNCyINCh0L7RhNGCIjELMAkG
+A1UEBhMCUlUxGTAXBgNVBAgMENCzLiDQnNC+0YHQutCy0LAxFTATBgNVBAcMDNCc
+0L7RgdC60LLQsDE/MD0GA1UECQw20KjQsNGA0LjQutC+0L/QvtC00YjQuNC/0L3Q
+uNC60L7QstGB0LrQsNGPINGD0LssINC0LiA1MB4XDTI0MDQxNTA5MjE0N1oXDTI1
+MDQxNTA5MjE0N1owggGEMSswKQYJKoZIhvcNAQkBFhxpdmFub3ZhX2VrYXRlcmlu
+YUBydXRva2VuLnJ1MRgwFgYIKoUDA4EDAQESCjc3MjkzNjEwMzAxGTAXBgNVBAcM
+ENCzLiDQnNC+0YHQutCy0LAxCzAJBgNVBAYTAlJVMRcwFQYDVQQDDA5Vbml0IHRl
+c3QgY2VydDEYMBYGBSqFA2QBEg0xMDM3NzAwMDk0NTQxMRswGQYDVQQLDBLQkNC9
+0LDQu9C40YLQuNC60LAxFTATBgNVBAgMDNCc0L7RgdC60LLQsDEuMCwGA1UEDAwl
+0KDRg9C60L7QstC+0LTQuNGC0LXQu9GMINC+0YLQtNC10LvQsDEWMBQGBSqFA2QD
+EgsxMjM0NTY3ODkwMDEjMCEGA1UECgwa0JDQniAi0JDQutGC0LjQsiDQodC+0YTR
+giIxPzA9BgNVBAkMNtCo0LDRgNC40LrQvtC/0L7QtNGI0LjQv9C90LjQutC+0LLR
+gdC60LDRjyDRg9C7LCDQtC4gMTBmMB8GCCqFAwcBAQEBMBMGByqFAwICIwIGCCqF
+AwcBAQICA0MABECM0JFIANCsaf29X1Op54bbn50fH6OrHNXiRdJiJr1OeUYHaQOl
+IhgninlLiNSURktKs60lKocoIsFl0IW7wyQ8o4ICBjCCAgIwZwYFKoUDZG8EXgxc
+0KHRgNC10LTRgdGC0LLQviDRjdC70LXQutGC0YDQvtC90L3QvtC5INC/0L7QtNC/
+0LjRgdC4OiDQodCa0JfQmCAi0KDRg9GC0L7QutC10L0g0K3QptCfIDMuMCIwCwYD
+VR0PBAQDAgTwMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDAMBgUqhQNk
+cgQDAgEAMBYGA1UdIAEB/wQMMAowCAYGKoUDZHEBMB0GA1UdDgQWBBTTgKbmPV80
+rJE2UVjtEIWeicRU/TCCASQGA1UdIwSCARswggEXgBQfg+dirupA1bYJTzfeyHKD
+82LUZaGB6KSB5TCB4jEYMBYGA1UEAwwPUnV0b2tlbiBUZWNoIENBMSEwHwYJKoZI
+hvcNAQkBFhJydXRva2VuQHJ1dG9rZW4ucnUxIzAhBgNVBAoMGtCQ0J4gItCQ0LrR
+gtC40LIg0KHQvtGE0YIiMQswCQYDVQQGEwJSVTEZMBcGA1UECAwQ0LMuINCc0L7R
+gdC60LLQsDEVMBMGA1UEBwwM0JzQvtGB0LrQstCwMT8wPQYDVQQJDDbQqNCw0YDQ
+uNC60L7Qv9C+0LTRiNC40L/QvdC40LrQvtCy0YHQutCw0Y8g0YPQuywg0LQuIDWC
+FAI8x5mIdgpYFkKs8OG3cS4khY9pMAwGCCqFAwcBAQMCBQADQQA85TWXxQ2i+USp
+2uWDReSNB34EaDTjkr8GqCS1SE1gITAhkA+6zKOwIitRzTd9CcEdx6yZted672gG
+S4UdEY8f
+-----END CERTIFICATE-----
+"""
+
 class CryptoManagerEnumerateCertsTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: Pkcs11HelperMock!
@@ -18,7 +53,7 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
     var fileHelper: FileHelperMock!
 
     var token: TokenMock!
-    var certModel: CertModel!
+    var keyId: String!
 
     override func setUp() {
         super.setUp()
@@ -34,30 +69,17 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
         token = TokenMock(serial: "87654321", currentInterface: .usb, supportedInterfaces: [.usb])
         pkcs11Helper.tokenPublisher.send([token])
 
-        certModel = CertModel(keyId: "123",
-                              hash: "hash",
-                              tokenSerial: token.serial,
-                              name: "Иванов Михаил Романович",
-                              jobTitle: "Дизайнер",
-                              companyName: "Рутокен",
-                              keyAlgo: .gostR3410_2012_256,
-                              expiryDate: "07.03.2024",
-                              causeOfInvalid: nil)
+        keyId = "123"
     }
 
     func testEnumerateCertsSuccess() async throws {
-        let certData = Data(repeating: 0x07, count: 10)
         token.enumerateCertsCallback = {
             XCTAssertNil($0)
-            return [Pkcs11ObjectMock(id: self.certModel.keyId, body: certData)]
-        }
-        openSslHelper.parseCertCallback = { cert in
-            XCTAssertEqual(cert, certData)
-            return self.certModel
+            return [Pkcs11ObjectMock(id: self.keyId, body: unitTestCert.data(using: .utf8))]
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
             let result = try await manager.enumerateCerts()
-            XCTAssertEqual([certModel], result)
+            XCTAssertEqual(result, [.init(keyId: keyId, tokenSerial: token.serial, from: unitTestCert.data(using: .utf8)!)!])
         }
     }
 
@@ -66,10 +88,22 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
                                throws: CryptoManagerError.tokenNotFound)
     }
 
+    func testEnumerateCertsNoData() async throws {
+        token.enumerateCertsCallback = {
+            XCTAssertNil($0)
+            return [Pkcs11ObjectMock(id: self.keyId, body: nil)]
+        }
+
+        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
+            let result = try await manager.enumerateCerts()
+            XCTAssertEqual([], result)
+        }
+    }
+
     func testEnumerateCertsBadData() async throws {
         token.enumerateCertsCallback = {
             XCTAssertNil($0)
-            return [Pkcs11ObjectMock(id: self.certModel.id, body: nil)]
+            return [Pkcs11ObjectMock(id: self.keyId, body: Data(repeating: 0x01, count: 1))]
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
@@ -81,27 +115,12 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
     func testEnumerateCertsNoId() async throws {
         token.enumerateCertsCallback = {
             XCTAssertNil($0)
-            return [Pkcs11ObjectMock(id: nil, body: Data(repeating: 0x07, count: 10))]
+            return [Pkcs11ObjectMock(id: nil, body: unitTestCert.data(using: .utf8))]
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
             let result = try await manager.enumerateCerts()
             XCTAssertEqual([], result)
-        }
-    }
-
-    func testEnumerateCertsParsingError() async throws {
-        let error = OpenSslError.generalError(12, nil)
-
-        token.enumerateCertsCallback = {
-            XCTAssertNil($0)
-            return [Pkcs11ObjectMock(id: self.certModel.id, body: Data(repeating: 0x07, count: 10))]
-        }
-        openSslHelper.parseCertCallback = { _ in
-            throw error
-        }
-        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
-            await assertErrorAsync(try await manager.enumerateCerts(), throws: error)
         }
     }
 }
