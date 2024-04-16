@@ -20,6 +20,9 @@ enum AppAlert {
     case tokenNotFound
     case noCerts
     case noSuitCert
+    case verifySuccess
+    case failedChain
+    case invalidSignature
     case unknownError
 
     var alertModel: RtAlertModel {
@@ -55,6 +58,15 @@ enum AppAlert {
         case .noSuitCert:
             return .init(title: .titleOnly("На Рутокене нет подходящего сертификата"),
                          buttons: [.init(.regular("ОК"))])
+        case .verifySuccess:
+            return .init(title: .success("Подпись верна"),
+                         buttons: [.init(.regular("OK"))])
+        case .invalidSignature:
+            return .init(title: .failure("Подпись неверна"),
+                         buttons: [.init(.regular("OK"))])
+        case .failedChain:
+            return .init(title: .success("Подпись верна"), subTitle: "Но не удалось построить цепочку доверия для сертификата",
+                         buttons: [.init(.regular("OK"))])
         case .unknownError:
             return .init(title: .titleOnly("Неизвестная ошибка"),
                          subTitle: "Попробуйте еще раз или обратитесь в Техническую поддержку",
@@ -74,6 +86,10 @@ enum AppAlert {
             self = .wrongToken
         case .noSuitCert:
             self = .noSuitCert
+        case .failedChain:
+            self = .failedChain
+        case .invalidSignature:
+            self = .invalidSignature
         }
     }
 }

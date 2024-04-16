@@ -21,6 +21,7 @@ protocol CryptoManagerProtocol {
     func generateKeyPair(with id: String) async throws
     func createCert(for id: String, with info: CsrModel) async throws
     func signDocument(document: Data, with id: String) throws -> String
+    func verifyCms(signedCms: Data, document: Data) async throws
     func startMonitoring() throws
 }
 
@@ -32,6 +33,8 @@ enum CryptoManagerError: Error, Equatable {
     case incorrectPin(UInt)
     case wrongToken
     case noSuitCert
+    case failedChain
+    case invalidSignature
 }
 
 enum RtFile: String {
@@ -165,6 +168,32 @@ class CryptoManager: CryptoManagerProtocol {
             throw CryptoManagerError.noSuitCert
         }
         return try openSslHelper.signCms(for: document, wrappedKey: key, cert: certData)
+    }
+
+    func verifyCms(signedCms: Data, document: Data) async throws {
+        guard let cms = String(data: signedCms, encoding: .utf8),
+              let bankCertUrl = Bundle.getUrl(for: RtFile.bankCert.rawValue, in: RtFile.subdir),
+              let rootCaCertUrl = Bundle.getUrl(for: RtFile.rootCaCert.rawValue, in: RtFile.subdir) else {
+            throw CryptoManagerError.unknown
+        }
+
+        do {
+            let bankCertData = try fileHelper.readFile(from: bankCertUrl)
+            let rootCaCertData = try fileHelper.readFile(from: rootCaCertUrl)
+
+            switch try openSslHelper.verifyCms(signedCms: cms, for: document, with: bankCertData, certChain: [rootCaCertData]) {
+            case .success:
+                return
+            case .failedChain:
+                throw CryptoManagerError.failedChain
+            case .invalidSignature:
+                throw CryptoManagerError.invalidSignature
+            }
+        } catch let error as CryptoManagerError {
+            throw error
+        } catch {
+            throw CryptoManagerError.unknown
+        }
     }
 
     func withToken(connectionType: ConnectionType,

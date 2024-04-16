@@ -22,7 +22,7 @@ protocol OpenSslHelperProtocol {
 enum VerifyCmsResult {
     case success
     case failedChain
-    case failure(OpenSslError)
+    case invalidSignature(OpenSslError)
 }
 
 class OpenSslHelper: OpenSslHelperProtocol {
@@ -119,7 +119,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
                              contentBio.pointer,
                              nil,
                              UInt32(CMS_BINARY | CMS_NO_SIGNER_CERT_VERIFY)) == 1 else {
-                return .failure(OpenSslError.generalError(#line, getLastError()))
+                return .invalidSignature(OpenSslError.generalError(#line, getLastError()))
             }
             return .failedChain
         }
