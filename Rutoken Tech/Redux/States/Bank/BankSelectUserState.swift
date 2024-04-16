@@ -7,6 +7,6 @@
 
 
 struct BankSelectUsersState {
-    var users: [BankUser] = []
-    var selectedUser: BankUser?
+    var users: [BankUserInfo] = []
+    var selectedUser: BankUserInfo?
 }

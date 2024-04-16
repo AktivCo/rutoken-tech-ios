@@ -30,7 +30,7 @@ class OnSelectCert: Middleware {
                 continuation.yield(.showAlert(.unknownError))
                 return
             }
-            continuation.yield(.selectUser(user))
+            continuation.yield(.selectUser(user.toBankUserInfo()))
             continuation.yield(.hideSheet)
         }
     }

@@ -104,25 +104,21 @@ struct BankUserListView: View {
     }
 }
 
-struct UserSelectView_Previews: PreviewProvider {
+ struct UserSelectView_Previews: PreviewProvider {
     static var previews: some View {
-        let userManager = UserManager(inMemory: true)
-        let user1 = try? userManager.createUser(
-            fullname: "Иванов Михаил Романович",
-            title: "Дизайнер",
-            expiryDate: Date(), keyId: "", certHash: "", tokenSerial: "")
+        let user1 = BankUserInfo(
+            expiryDate: Date(), fullname: "Иванов Михаил Романович",
+            title: "Дизайнер", keyId: "", certHash: "", tokenSerial: "")
 
-        let user2 = try? userManager.createUser(
-            fullname: "Иванов Михаил Романович",
-            title: "Дизайнер",
-            expiryDate: Date(), keyId: "", certHash: "", tokenSerial: "")
+        let user2 = BankUserInfo(
+            expiryDate: Date(), fullname: "Иванов Михаил Романович",
+            title: "Дизайнер", keyId: "", certHash: "", tokenSerial: "")
 
-        let user3 = try? userManager.createUser(
-            fullname: "Иванов Михаил Романович",
-            title: "Дизайнер",
-            expiryDate: Date(), keyId: "", certHash: "", tokenSerial: "")
+        let user3 = BankUserInfo(
+            expiryDate: Date(), fullname: "Иванов Михаил Романович",
+            title: "Дизайнер", keyId: "", certHash: "", tokenSerial: "")
 
-        let state = AppState(bankSelectUserState: BankSelectUsersState(users: [user1!, user2!, user3!]))
+        let state = AppState(bankSelectUserState: BankSelectUsersState(users: [user1, user2, user3]))
         let store = Store(initialState: state,
                           reducer: AppReducer(),
                           middlewares: [])
@@ -131,7 +127,6 @@ struct UserSelectView_Previews: PreviewProvider {
                 .ignoresSafeArea()
             BankUserListView()
                 .environmentObject(store)
-                .environment(\.managedObjectContext, userManager.context)
         }
     }
-}
+ }

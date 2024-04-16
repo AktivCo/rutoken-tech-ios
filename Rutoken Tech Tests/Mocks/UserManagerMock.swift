@@ -12,31 +12,38 @@ import Foundation
 
 
 class UserManagerMock: UserManagerProtocol {
-    var users: AnyPublisher<[Rutoken_Tech.BankUser], Never> {
+    var users: AnyPublisher<[Rutoken_Tech.BankUserInfo], Never> {
         usersPublisher.eraseToAnyPublisher()
     }
 
-    var usersPublisher = CurrentValueSubject<[BankUser], Never>([])
+    var usersPublisher = CurrentValueSubject<[BankUserInfo], Never>([])
 
-    func listUsers() -> [BankUser] {
+    func listUsers() -> [BankUserInfo] {
         usersPublisher.value
     }
 
-    func deleteUser(user: BankUser) throws {
+    func deleteUser(user: BankUserInfo) throws {
         try deleteUserCallback(user)
     }
 
-    var deleteUserCallback: (BankUser) throws -> Void = { _ in  }
+    var deleteUserCallback: (BankUserInfo) throws -> Void = { _ in  }
 
-    func createUser(fullname: String, title: String, expiryDate: Date, keyId: String, certHash: String, tokenSerial: String) throws -> BankUser? {
+    func createUser(fullname: String,
+                    title: String,
+                    expiryDate: Date,
+                    keyId: String,
+                    certHash: String,
+                    tokenSerial: String) throws -> ManagedBankUser {
         try createUserCallback(fullname, title, expiryDate, keyId, certHash, tokenSerial)
     }
 
-    var createUserCallback: (String, String, Date, String, String, String) throws -> BankUser? = { _, _, _, _, _, _  in return nil }
+    var createUserCallback: (String, String, Date, String, String, String) throws -> ManagedBankUser = { _, _, _, _, _, _  in
+        throw UserManagerError.general
+    }
 
-    func createUser(from cert: CertViewData) throws -> BankUser? {
+    func createUser(from cert: CertViewData) throws -> ManagedBankUser {
         try createUserFromCertCallback(cert)
     }
 
-    var createUserFromCertCallback: (CertViewData) throws -> BankUser? = { _ in return nil }
+    var createUserFromCertCallback: (CertViewData) throws -> ManagedBankUser = { _ in throw UserManagerError.general }
 }

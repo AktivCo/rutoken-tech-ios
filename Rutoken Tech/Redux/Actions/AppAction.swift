@@ -43,10 +43,10 @@ enum AppAction {
     case selectCert(CertViewData)
 
     // MARK: User handling
-    case selectUser(BankUser?)
-    case deleteUser(BankUser)
-    case authUser(RtTokenType, String, BankUser)
-    case updateUsers([BankUser])
+    case selectUser(BankUserInfo?)
+    case deleteUser(BankUserInfo)
+    case authUser(RtTokenType, String, BankUserInfo)
+    case updateUsers([BankUserInfo])
 
     // MARK: Other
     case openLink(LinkType)
