@@ -24,6 +24,9 @@ class OpenSslHelperMock: OpenSslHelperProtocol {
     func signCms(for content: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String {
         try signCmsCallback()
     }
+    func signCms(for content: Data, key: Data, cert: Data) throws -> String {
+        try signCmsCallback()
+    }
     var signCmsCallback: () throws -> String = { "" }
 
     func verifyCms(signedCms: String, for content: Data, with cert: Data, certChain: [Data]) throws -> VerifyCmsResult {

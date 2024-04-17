@@ -45,6 +45,7 @@ class OnAuthUser: Middleware {
                     continuation.yield(.savePin(pin, user.tokenSerial, true))
                     continuation.yield(.hideSheet)
                     continuation.yield(.updatePin(""))
+                    continuation.yield(.prepareDocuments)
                 } catch CryptoManagerError.incorrectPin(let attemptsLeft) {
                     continuation.yield(.showPinInputError("Неверный PIN-код. Осталось попыток: \(attemptsLeft)"))
                     continuation.yield(.deletePin(user.tokenSerial))

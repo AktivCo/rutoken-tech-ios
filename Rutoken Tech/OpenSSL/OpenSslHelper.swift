@@ -16,6 +16,7 @@ protocol OpenSslHelperProtocol {
     func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String
     func createCert(for csr: String, with caKey: Data, cert caCert: Data) throws -> Data
     func signCms(for content: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String
+    func signCms(for content: Data, key: Data, cert: Data) throws -> String
     func verifyCms(signedCms: String, for content: Data, with cert: Data, certChain: [Data]) throws -> VerifyCmsResult
 }
 
@@ -69,6 +70,13 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }.joined()
 
         return "-----BEGIN CMS-----\n" + rawSignature + "\n-----END CMS-----"
+    }
+
+    func signCms(for content: Data, key: Data, cert: Data) throws -> String {
+        guard let privateKey = wrapKey(key) else {
+            throw OpenSslError.generalError(#line, getLastError())
+        }
+        return try self.signCms(for: content, wrappedKey: privateKey, cert: cert)
     }
 
     func verifyCms(signedCms: String, for content: Data, with cert: Data, certChain: [Data]) throws -> VerifyCmsResult {
@@ -283,10 +291,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         // MARK: Load a private key of the CA
-        guard let caKeyBio = dataToBio(caKey),
-              let privateKeyCa = WrappedPointer({
-                  PEM_read_bio_PrivateKey(caKeyBio.pointer, nil, nil, nil)
-              }, EVP_PKEY_free) else {
+        guard let privateKeyCa = wrapKey(caKey) else {
             throw OpenSslError.generalError(#line, getLastError())
         }
 

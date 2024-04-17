@@ -8,7 +8,7 @@
 import TinyAsyncRedux
 
 
-class OnSignDocumentMiddleware: Middleware {
+class OnSignDocument: Middleware {
     private let cryptoManager: CryptoManagerProtocol
     private let documentManager: DocumentManagerProtocol
 

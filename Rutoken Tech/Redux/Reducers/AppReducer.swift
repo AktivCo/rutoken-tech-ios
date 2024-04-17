@@ -73,6 +73,8 @@ struct AppReducer: Reducer {
             break
         case .authUser:
             break
+        case .prepareDocuments:
+            break
         case let .selectUser(user):
             newState.bankSelectUserState.selectedUser = user
         case .savePin:

@@ -52,8 +52,9 @@ struct RutokenTechApp: App {
                 OnDeletePin(pinCodeManager: pinCodeManager),
                 OnDeleteUser(userManager: userManager),
                 OnAuthUser(cryptoManager: cryptoManager),
+                OnPrepareDocuments(documentsManager: documentManager, fileHelper: fileHelper, openSslHelper: openSslHelper),
                 OnResetDocuments(manager: documentManager),
-                OnSignDocumentMiddleware(cryptoManager: cryptoManager, documentManager: documentManager),
+                OnSignDocument(cryptoManager: cryptoManager, documentManager: documentManager),
                 // About
                 OnHandleOpenLink(),
                 OnInitCooldownNfc()

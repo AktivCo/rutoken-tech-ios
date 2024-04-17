@@ -46,6 +46,7 @@ enum AppAction {
     case selectUser(BankUserInfo?)
     case deleteUser(BankUserInfo)
     case authUser(RtTokenType, String, BankUserInfo)
+    case prepareDocuments
     case updateUsers([BankUserInfo])
 
     // MARK: Other
