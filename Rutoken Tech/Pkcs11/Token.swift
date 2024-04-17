@@ -217,14 +217,24 @@ class Token: TokenProtocol, Identifiable {
         var publicKey = CK_OBJECT_HANDLE()
         var privateKey = CK_OBJECT_HANDLE()
 
-        guard let idPointer = id.createPointer() else {
+        let currentDate = Date()
+
+
+        guard let idPointer = id.createPointer(),
+              var startDate = createDateObject(with: currentDate),
+              var endDate = createDateObject(with: currentDate.addingTimeInterval(3 * 365 * 24 * 60 * 60)),
+              let startDatePtr = withUnsafeMutableBytes(of: &startDate, { $0.baseAddress }),
+              let endDatePtr = withUnsafeMutableBytes(of: &endDate, { $0.baseAddress }) else {
             throw TokenError.generalError
         }
+
         var publicKeyTemplate = [
             AttributeType.objectClass(.publicKey),
             .id(idPointer.pointer, UInt(id.count)),
             .keyType(&keyTypeGostR3410_2012_256, UInt(MemoryLayout.size(ofValue: keyTypeGostR3410_2012_256))),
             .attrTrue(CKA_TOKEN), .attrFalse(CKA_PRIVATE),
+            .startDate(startDatePtr, UInt(MemoryLayout.size(ofValue: startDate))),
+            .endDate(endDatePtr, UInt(MemoryLayout.size(ofValue: endDate))),
             .gostR3410_2012_256_params, .gostR3411_2012_256_params
         ].map { $0.attr }
 
@@ -232,6 +242,8 @@ class Token: TokenProtocol, Identifiable {
             AttributeType.objectClass(.privateKey),
             .id(idPointer.pointer, UInt(id.count)),
             .keyType(&keyTypeGostR3410_2012_256, UInt(MemoryLayout.size(ofValue: keyTypeGostR3410_2012_256))),
+            .startDate(startDatePtr, UInt(MemoryLayout.size(ofValue: startDate))),
+            .endDate(endDatePtr, UInt(MemoryLayout.size(ofValue: endDate))),
             .attrTrue(CKA_TOKEN), .attrTrue(CKA_PRIVATE), .attrTrue(CKA_DERIVE),
             .gostR3410_2012_256_params, .gostR3411_2012_256_params
         ].map { $0.attr }

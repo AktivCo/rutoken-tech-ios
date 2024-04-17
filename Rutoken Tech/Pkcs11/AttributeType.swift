@@ -5,6 +5,8 @@
 //  Created by Vova Badyaev on 21.12.2023.
 //
 
+import Foundation
+
 
 private var certObject: CK_OBJECT_CLASS = CKO_CERTIFICATE
 private var publicKeyObject: CK_OBJECT_CLASS = CKO_PUBLIC_KEY
@@ -23,6 +25,19 @@ private var attributeFalse = CK_BBOOL(CK_FALSE)
 var parametersGostR3410_2012_256: [CK_BYTE] = [ 0x06, 0x07, 0x2a, 0x85, 0x03, 0x02, 0x02, 0x23, 0x02 ]
 var parametersGostR3411_2012_256: [CK_BYTE] = [ 0x06, 0x08, 0x2a, 0x85, 0x03, 0x07, 0x01, 0x01, 0x02, 0x02 ]
 
+func createDateObject(with date: Date = Date()) -> CK_DATE? {
+    var result = CK_DATE()
+
+    guard let day = date.getString(with: "dd").createPointer(),
+          let month = date.getString(with: "MM").createPointer(),
+          let year = date.getString(with: "YYYY").createPointer() else {
+        return nil
+    }
+    memcpy(&(result.day), day.pointer, 2)
+    memcpy(&(result.month), month.pointer, 2)
+    memcpy(&(result.year), year.pointer, 4)
+    return result
+}
 
 enum AttributeType {
     enum ObjectClass {
@@ -35,11 +50,13 @@ enum AttributeType {
     case objectClass(ObjectClass)
     case id(UnsafeMutableRawPointer?, UInt)
     case value(UnsafeMutableRawPointer?, UInt)
-    case keyType(UnsafeMutableRawPointer?, UInt)
-    case certX509(UnsafeMutableRawPointer?, UInt)
-    case certCategory(UnsafeMutableRawPointer?, UInt)
+    case keyType(UnsafeMutableRawPointer, UInt)
+    case certX509(UnsafeMutableRawPointer, UInt)
+    case certCategory(UnsafeMutableRawPointer, UInt)
     case attrTrue(UInt)
     case attrFalse(UInt)
+    case startDate(UnsafeMutableRawPointer, UInt)
+    case endDate(UnsafeMutableRawPointer, UInt)
     case gostR3410_2012_256_params
     case gostR3411_2012_256_params
     case hwFeatureType
@@ -93,6 +110,14 @@ enum AttributeType {
             return CK_ATTRIBUTE(type: type,
                                 pValue: &attributeFalse,
                                 ulValueLen: CK_ULONG(MemoryLayout.size(ofValue: attributeFalse)))
+        case .startDate(let pointer, let len):
+            return CK_ATTRIBUTE(type: CKA_START_DATE,
+                                pValue: pointer,
+                                ulValueLen: CK_ULONG(len))
+        case .endDate(let pointer, let len):
+            return CK_ATTRIBUTE(type: CKA_END_DATE,
+                                pValue: pointer,
+                                ulValueLen: CK_ULONG(len))
         case .gostR3410_2012_256_params:
             return parametersGostR3410_2012_256.withUnsafeMutableBufferPointer { buf in
                 return CK_ATTRIBUTE(type: CKA_GOSTR3410_PARAMS,
