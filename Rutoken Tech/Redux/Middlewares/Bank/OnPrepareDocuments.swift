@@ -47,11 +47,10 @@ class OnPrepareDocuments: Middleware {
                         }
                         do {
                             try documents.filter({ $0.action == .verify }).forEach {
-                                guard case let .pdfDoc(pdf) = try documentsManager.readFile(with: $0.name),
-                                      let pdfData = pdf.dataRepresentation() else {
-                                    throw CryptoManagerError.unknown
+                                guard case let .singleFile(content) = try documentsManager.readFile(with: $0.name) else {
+                                    return
                                 }
-                                let signature = try openSslHelper.signCms(for: pdfData, key: bankKey, cert: bankCert)
+                                let signature = try openSslHelper.signCms(for: content, key: bankKey, cert: bankCert)
                                 guard let signatureData = signature.data(using: .utf8) else {
                                     throw CryptoManagerError.unknown
                                 }

@@ -16,7 +16,7 @@ protocol FileHelperProtocol {
     func readDataFromTempDir(filename: String) throws -> Data
 }
 
-enum FileHelperError: Error {
+enum FileHelperError: Error, Equatable {
     case generalError(UInt32, String?)
 }
 

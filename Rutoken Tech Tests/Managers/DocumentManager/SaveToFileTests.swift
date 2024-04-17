@@ -39,7 +39,7 @@ class DocumentManagerSaveToFileTests: XCTestCase {
                                 paymentDay: paymentDay)
     }
 
-    func testSaveToFileTestSuccess() throws {
+    func testSaveToFileSuccess() throws {
         let doc2 = BankDocument(name: document.name + "2",
                                 action: .encrypt,
                                 amount: document.amount + 5000,
@@ -56,15 +56,9 @@ class DocumentManagerSaveToFileTests: XCTestCase {
         }
         manager = DocumentManager(helper: helper)
 
-        var docs = try awaitPublisherUnwrapped(manager.documents)
-        XCTAssertEqual(docs.count, 2)
-        XCTAssertEqual(docs.first?.inArchive, false)
-
-        docs = try awaitPublisherUnwrapped(manager.documents.dropFirst()) {
+        try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
             try manager.saveToFile(documentName: document.name, fileName: documentFileName, data: dataToSave!)
         }
-        XCTAssertEqual(docs.count, 2)
-        XCTAssertEqual(docs.first?.inArchive, true)
     }
 
     func testSaveToFileError() throws {

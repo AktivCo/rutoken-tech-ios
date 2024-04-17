@@ -178,7 +178,7 @@ struct CaCertGenView: View {
                 if let token = store.state.connectedTokenState.connectedToken,
                    let pin = store.state.connectedTokenState.pin {
                     let id = store.state.caGenerateCertState.keys[selectedKey].ckaId
-                    store.send(.generateCert(token.connectionType, token.serial, pin, id, nameInput))
+                    store.send(.generateCert(token.connectionType, serial: token.serial, pin: pin, id: id, commonName: nameInput))
                 } else {
                     store.send(.showAlert(.unknownError))
                 }

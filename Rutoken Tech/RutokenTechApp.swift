@@ -55,6 +55,7 @@ struct RutokenTechApp: App {
                 OnPrepareDocuments(documentsManager: documentManager, fileHelper: fileHelper, openSslHelper: openSslHelper),
                 OnResetDocuments(manager: documentManager),
                 OnSignDocument(cryptoManager: cryptoManager, documentManager: documentManager),
+                OnCmsVerify(cryptoManager: cryptoManager, documentManager: documentManager),
                 // About
                 OnHandleOpenLink(),
                 OnInitCooldownNfc()

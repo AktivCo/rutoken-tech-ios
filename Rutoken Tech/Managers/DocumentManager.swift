@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import PDFKit
 
 
 protocol DocumentManagerProtocol {
@@ -14,6 +15,7 @@ protocol DocumentManagerProtocol {
     func resetDirectory() throws
     func readFile(with name: String) throws -> BankFileContent
     func saveToFile(documentName: String, fileName: String, data: Data) throws
+    func markAsArchived(documentName: String) throws
 }
 
 enum DocumentManagerError: Error, Equatable {
@@ -40,7 +42,7 @@ class DocumentManager: DocumentManagerProtocol {
         try fileHelper.clearTempDir()
 
         guard let jsonUrl = Bundle.getUrl(for: documentListFileName, in: documentsBundleSubdir) else {
-            throw DocumentManagerError.general("Something went wrong during reset directory.")
+            throw DocumentManagerError.general("Something went wrong during reset directory")
         }
 
         let json = try fileHelper.readFile(from: jsonUrl)
@@ -57,15 +59,20 @@ class DocumentManager: DocumentManagerProtocol {
 
     func readFile(with name: String) throws -> BankFileContent {
         do {
+            guard let documentModel = documentsPublisher.value.first(where: { $0.name == name }) else {
+                throw DocumentManagerError.general("Something went wrong during reading the file")
+            }
             let content = try fileHelper.readDataFromTempDir(filename: name)
 
-            guard let metaDataFile = documentsPublisher.value.first(where: { $0.name == name }) else {
-                throw DocumentManagerError.general("Something went wrong during read file.")
+            switch documentModel.action {
+            case .encrypt, .sign, .decrypt:
+                return .singleFile(content)
+            case .verify:
+                if let signedCms = try? fileHelper.readDataFromTempDir(filename: name + ".sig") {
+                    return .fileWithDetachedCMS(file: content, cms: signedCms)
+                }
+                return .singleFile(content)
             }
-            guard let result = BankFileContent(type: metaDataFile.type, content: content) else {
-                throw DocumentManagerError.general("Something went wrong during read file.")
-            }
-            return result
         } catch FileHelperError.generalError(let line, let str) {
             throw DocumentManagerError.general("\(line): \(String(describing: str))")
         }
@@ -74,16 +81,15 @@ class DocumentManager: DocumentManagerProtocol {
     func saveToFile(documentName: String, fileName: String, data: Data) throws {
         do {
             try fileHelper.saveFileToTempDir(with: fileName, content: data)
-            markAsArchived(documentName: documentName)
         } catch FileHelperError.generalError(let line, let str) {
             throw DocumentManagerError.general("\(line): \(String(describing: str))")
         }
     }
 
-    private func markAsArchived(documentName: String) {
+    func markAsArchived(documentName: String) throws {
         var documents = documentsPublisher.value
         guard let index = documents.firstIndex(where: { $0.name == documentName }) else {
-            return
+            throw DocumentManagerError.general("Something went wrong during reading the file")
         }
         documents[index].inArchive = true
         documentsPublisher.send(documents)

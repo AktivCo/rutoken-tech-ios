@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4407C1D82BD68E5E00DBA7D3 /* ReadFileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4407C1D72BD68E5E00DBA7D3 /* ReadFileTests.swift */; };
+		4407C1DA2BD68E6F00DBA7D3 /* MarkAsArchivedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4407C1D92BD68E6F00DBA7D3 /* MarkAsArchivedTests.swift */; };
 		4413CFAF2B590379000987A8 /* Rutoken_Tech-Bridging-Header.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413CFAE2B590379000987A8 /* Rutoken_Tech-Bridging-Header.m */; };
 		4413CFB22B592EDE000987A8 /* String+hasCyrillic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4413CFB12B592EDE000987A8 /* String+hasCyrillic.swift */; };
 		4413CFB42B592F13000987A8 /* String+isNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4413CFB32B592F13000987A8 /* String+isNumber.swift */; };
@@ -48,6 +50,7 @@
 		44BB8F9B2B9F563A00BF7438 /* ResetDirectoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BB8F9A2B9F563A00BF7438 /* ResetDirectoryTests.swift */; };
 		44BB8F9D2B9F571400BF7438 /* XCTestCase+ExpectationWaiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BB8F9C2B9F571400BF7438 /* XCTestCase+ExpectationWaiter.swift */; };
 		44CB44542BA18BB30056583E /* OnGetPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CB44532BA18BB30056583E /* OnGetPin.swift */; };
+		44CBDBE82BCD777E00F28E61 /* OnCmsVerify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CBDBE72BCD777E00F28E61 /* OnCmsVerify.swift */; };
 		44DC46CA2BCEC1FC003E88E6 /* String+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44DC46C92BCEC1FC003E88E6 /* String+Error.swift */; };
 		44E6FCA32BA97AB1001D35A5 /* OpenSslUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E6FCA22BA97AB1001D35A5 /* OpenSslUtils.swift */; };
 		44E7F8322BA4760600786A42 /* OnDeletePin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E7F8312BA4760600786A42 /* OnDeletePin.swift */; };
@@ -160,6 +163,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4407C1D72BD68E5E00DBA7D3 /* ReadFileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadFileTests.swift; sourceTree = "<group>"; };
+		4407C1D92BD68E6F00DBA7D3 /* MarkAsArchivedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkAsArchivedTests.swift; sourceTree = "<group>"; };
 		4413CFAE2B590379000987A8 /* Rutoken_Tech-Bridging-Header.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Rutoken_Tech-Bridging-Header.m"; sourceTree = "<group>"; };
 		4413CFB12B592EDE000987A8 /* String+hasCyrillic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+hasCyrillic.swift"; sourceTree = "<group>"; };
 		4413CFB32B592F13000987A8 /* String+isNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+isNumber.swift"; sourceTree = "<group>"; };
@@ -202,6 +207,7 @@
 		44BB8F9A2B9F563A00BF7438 /* ResetDirectoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetDirectoryTests.swift; sourceTree = "<group>"; };
 		44BB8F9C2B9F571400BF7438 /* XCTestCase+ExpectationWaiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+ExpectationWaiter.swift"; sourceTree = "<group>"; };
 		44CB44532BA18BB30056583E /* OnGetPin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnGetPin.swift; sourceTree = "<group>"; };
+		44CBDBE72BCD777E00F28E61 /* OnCmsVerify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnCmsVerify.swift; sourceTree = "<group>"; };
 		44DC46C92BCEC1FC003E88E6 /* String+Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Error.swift"; sourceTree = "<group>"; };
 		44E6FCA22BA97AB1001D35A5 /* OpenSslUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSslUtils.swift; sourceTree = "<group>"; };
 		44E7F8312BA4760600786A42 /* OnDeletePin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnDeletePin.swift; sourceTree = "<group>"; };
@@ -397,6 +403,8 @@
 				44BB8F9A2B9F563A00BF7438 /* ResetDirectoryTests.swift */,
 				D4E92ED12BCECE4D009240F9 /* SaveToFileTests.swift */,
 				44F61BE82BD7940E00770C75 /* Init.swift */,
+				4407C1D72BD68E5E00DBA7D3 /* ReadFileTests.swift */,
+				4407C1D92BD68E6F00DBA7D3 /* MarkAsArchivedTests.swift */,
 			);
 			path = DocumentManager;
 			sourceTree = "<group>";
@@ -412,8 +420,9 @@
 				D4D22A2F2BAC7E3000B93DA9 /* OnDeleteUser.swift */,
 				448E744E2BB42F7100585658 /* OnAuthUser.swift */,
 				44A502C52BB1AC1F006236E7 /* OnResetDocuments.swift */,
-				D4871D6C2BC81036008B027C /* OnSignDocument.swift */,
 				D499FDBC2BD294160053FB28 /* OnPrepareDocuments.swift */,
+				D4871D6C2BC81036008B027C /* OnSignDocument.swift */,
+				44CBDBE72BCD777E00F28E61 /* OnCmsVerify.swift */,
 			);
 			path = Bank;
 			sourceTree = "<group>";
@@ -1020,6 +1029,7 @@
 				D44833A22B8C78A800A9B7A2 /* UserManager.swift in Sources */,
 				D4FEB5C72B62675400D3BAD2 /* ScrollViewOffset.swift in Sources */,
 				D49953C52B58343200E62B5B /* CaGenerateCertState.swift in Sources */,
+				44CBDBE82BCD777E00F28E61 /* OnCmsVerify.swift in Sources */,
 				7D28BD842B3083460079AE1C /* CaGenerateKeyPairView.swift in Sources */,
 				7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */,
 				44B4A81C2B6CD15D00E59F63 /* AboutAppView.swift in Sources */,
@@ -1078,11 +1088,13 @@
 				D4E92ED22BCECE4D009240F9 /* SaveToFileTests.swift in Sources */,
 				D423F8BF2B3574BB0058ECDE /* GetTokenInfoTests.swift in Sources */,
 				44311EFD2BCE9B7500D16B0C /* VerifyCmsTests.swift in Sources */,
+				4407C1DA2BD68E6F00DBA7D3 /* MarkAsArchivedTests.swift in Sources */,
 				D47302C52B91E2000049E8F8 /* KeychainManagerMock.swift in Sources */,
 				D4B130D32B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift in Sources */,
 				4413CFB82B597206000987A8 /* OpenSslHelperMock.swift in Sources */,
 				7DEBBDD62B3B1FCE00C35BA5 /* WithTokenTests.swift in Sources */,
 				44DC46CA2BCEC1FC003E88E6 /* String+Error.swift in Sources */,
+				4407C1D82BD68E5E00DBA7D3 /* ReadFileTests.swift in Sources */,
 				7D9D3C1B2B3C76F000BF2EE1 /* EnumerateKeysTests.swift in Sources */,
 				D4871D6B2BC693A2008B027C /* SignDocumentTests.swift in Sources */,
 				44F61BE92BD7940E00770C75 /* Init.swift in Sources */,

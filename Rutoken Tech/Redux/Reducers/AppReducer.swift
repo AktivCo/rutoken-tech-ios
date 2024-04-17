@@ -100,6 +100,8 @@ struct AppReducer: Reducer {
             newState.bankDocumentListState.documents = docs
         case .signDocument:
             break
+        case .cmsVerify:
+            break
         }
         return newState
     }

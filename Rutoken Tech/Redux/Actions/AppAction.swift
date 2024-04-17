@@ -28,12 +28,12 @@ enum AppAction {
     case logoutCa
 
     // MARK: Cert generation
-    case generateCert(ConnectionType, String, String, String, String)
+    case generateCert(ConnectionType, serial: String, pin: String, id: String, commonName: String)
     case finishGenerateCert
 
     // MARK: Key Pair generation
     case generateKeyId
-    case generateKeyPair(ConnectionType, String, String, String)
+    case generateKeyPair(ConnectionType, serial: String, pin: String, id: String)
     case finishGenerateKeyPair
     case updateKeys([KeyModel])
 
@@ -66,5 +66,8 @@ enum AppAction {
     // MARK: Bank Documents
     case resetDocuments
     case updateDocuments([BankDocument])
+
+    // MARK: Bank crypto operations
     case signDocument(tokenType: RtTokenType, serial: String, pin: String, documentName: String, certId: String)
+    case cmsVerify(fileName: String)
 }

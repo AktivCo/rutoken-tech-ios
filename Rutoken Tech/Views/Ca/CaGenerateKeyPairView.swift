@@ -78,7 +78,7 @@ struct CaGenerateKeyPairView: View {
                 if let connectedToken = store.state.connectedTokenState.connectedToken,
                    let pin = store.state.connectedTokenState.pin,
                    let id = store.state.caGenerateKeyPairState.key?.ckaId {
-                    store.send(.generateKeyPair(connectedToken.connectionType, connectedToken.serial, pin, id))
+                    store.send(.generateKeyPair(connectedToken.connectionType, serial: connectedToken.serial, pin: pin, id: id))
                 } else {
                     store.send(.showAlert(.unknownError))
                 }
