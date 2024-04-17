@@ -26,7 +26,7 @@
 		4453EFF32BC9172C00F2CD07 /* CertViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4453EFF22BC9172C00F2CD07 /* CertViewData.swift */; };
 		4464FAA82B359ED5005F732F /* Pkcs11Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464FAA72B359ED5005F732F /* Pkcs11Object.swift */; };
 		44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */; };
-		4469F7882B34512E000DCF8B /* AttributeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4469F7872B34512E000DCF8B /* AttributeType.swift */; };
+		4469F7882B34512E000DCF8B /* PkcsAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4469F7872B34512E000DCF8B /* PkcsAttribute.swift */; };
 		446BB6362BB402C70062EA45 /* View+CustomNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446BB6352BB402C70062EA45 /* View+CustomNavBar.swift */; };
 		446E136C2B85D3AC0060ECEE /* OnPerformReadCerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446E136B2B85D3AC0060ECEE /* OnPerformReadCerts.swift */; };
 		446F71042B62511F00684E0D /* FileHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446F71032B62511F00684E0D /* FileHelperMock.swift */; };
@@ -174,7 +174,7 @@
 		4453EFF22BC9172C00F2CD07 /* CertViewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertViewData.swift; sourceTree = "<group>"; };
 		4464FAA72B359ED5005F732F /* Pkcs11Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Object.swift; sourceTree = "<group>"; };
 		44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtEngineWrapper.swift; sourceTree = "<group>"; };
-		4469F7872B34512E000DCF8B /* AttributeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeType.swift; sourceTree = "<group>"; };
+		4469F7872B34512E000DCF8B /* PkcsAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PkcsAttribute.swift; sourceTree = "<group>"; };
 		446BB6352BB402C70062EA45 /* View+CustomNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+CustomNavBar.swift"; sourceTree = "<group>"; };
 		446E136B2B85D3AC0060ECEE /* OnPerformReadCerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnPerformReadCerts.swift; sourceTree = "<group>"; };
 		446F71032B62511F00684E0D /* FileHelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHelperMock.swift; sourceTree = "<group>"; };
@@ -674,7 +674,7 @@
 				D4B130B22B0DD52A00AD390F /* Token.swift */,
 				D4B130AF2B0CFFCD00AD390F /* TokenModel.swift */,
 				D4B130D72B0E4F8200AD390F /* TokenInterface.swift */,
-				4469F7872B34512E000DCF8B /* AttributeType.swift */,
+				4469F7872B34512E000DCF8B /* PkcsAttribute.swift */,
 				4464FAA72B359ED5005F732F /* Pkcs11Object.swift */,
 				5E7331A62B6D71D400E96C06 /* Pkcs11Session.swift */,
 				4443EA0A2B96F5160003436D /* KeyAlgorithm.swift */,
@@ -961,7 +961,7 @@
 				7DCC9AF12B3B2C9A002788B5 /* KeyModel.swift in Sources */,
 				7D7D51832BB59DC200428107 /* BankFileContent.swift in Sources */,
 				5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */,
-				4469F7882B34512E000DCF8B /* AttributeType.swift in Sources */,
+				4469F7882B34512E000DCF8B /* PkcsAttribute.swift in Sources */,
 				44A502CA2BB1B8BA006236E7 /* String+withoutPathExtension.swift in Sources */,
 				44A415042B60F67600D78653 /* FileHelper.swift in Sources */,
 				D4FC26C92B270C580029060D /* NfcMessages.swift in Sources */,

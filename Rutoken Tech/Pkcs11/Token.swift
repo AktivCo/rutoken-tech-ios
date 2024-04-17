@@ -116,22 +116,17 @@ class Token: TokenProtocol, Identifiable {
 
     func enumerateCerts(by id: String?) throws -> [Pkcs11ObjectProtocol] {
         var certs: [Pkcs11Object] = []
-        var certTemplate = [
-            AttributeType.objectClass(.cert),
-            .attrTrue(CKA_TOKEN),
-            .certX509(&certTypeX509, UInt(MemoryLayout.size(ofValue: certTypeX509)))
-        ].map { $0.attr }
+        var certTemplate: [PkcsAttribute] = [
+            ULongAttribute(type: .classObject, value: CKO_CERTIFICATE),
+            BoolAttribute(type: .token, value: true),
+            ULongAttribute(type: .certType, value: CKC_X_509)
+        ]
 
-        var idPointer: WrappedPointer<UnsafeMutablePointer<UInt8>>
         if let id {
-            guard let ptr = id.createPointer() else {
-                throw TokenError.generalError
-            }
-            idPointer = ptr
-            certTemplate.append(AttributeType.id(idPointer.pointer, UInt(id.count)).attr)
+            certTemplate.append(BufferAttribute(type: .id, value: Array(id.utf8)))
         }
 
-        let certObjects = try Token.findObjects(certTemplate, in: session.handle)
+        let certObjects = try Token.findObjects(certTemplate.map { $0.attribute }, in: session.handle)
 
         for obj in certObjects {
             certs.append(Pkcs11Object(with: obj, session))
@@ -143,42 +138,31 @@ class Token: TokenProtocol, Identifiable {
         var keyPairs: [Pkcs11KeyPair] = []
 
         // MARK: Prepare key templates
-        var pubKeyTemplate = [
-            AttributeType.objectClass(.publicKey),
-            .attrTrue(CKA_TOKEN),
-            .attrFalse(CKA_PRIVATE)
-        ].map { $0.attr }
-        var privateKeyTemplate = [
-            AttributeType.objectClass(.privateKey),
-            .attrTrue(CKA_TOKEN),
-            .attrTrue(CKA_PRIVATE)
-        ].map { $0.attr }
+        var pubKeyTemplate: [PkcsAttribute] = [
+            ULongAttribute(type: .classObject, value: CKO_PUBLIC_KEY),
+            BoolAttribute(type: .token, value: true),
+            BoolAttribute(type: .privateness, value: false)
+        ]
+        var privateKeyTemplate: [PkcsAttribute] = [
+            ULongAttribute(type: .classObject, value: CKO_PRIVATE_KEY),
+            BoolAttribute(type: .token, value: true),
+            BoolAttribute(type: .privateness, value: true)
+        ]
 
         switch type {
         case .gostR3410_2012_256:
-            pubKeyTemplate.append(
-                AttributeType.keyType(&keyTypeGostR3410_2012_256,
-                                      UInt(MemoryLayout.size(ofValue: keyTypeGostR3410_2012_256))).attr
-            )
-            privateKeyTemplate.append(
-                AttributeType.keyType(&keyTypeGostR3410_2012_256,
-                                      UInt(MemoryLayout.size(ofValue: keyTypeGostR3410_2012_256))).attr
-            )
+            pubKeyTemplate.append(ULongAttribute(type: .keyType, value: CKK_GOSTR3410))
+            privateKeyTemplate.append(ULongAttribute(type: .keyType, value: CKK_GOSTR3410))
         case .none: break
         }
 
-        var idPointer: WrappedPointer<UnsafeMutablePointer<UInt8>>
         if let id {
-            guard let ptr = id.createPointer() else {
-                throw TokenError.generalError
-            }
-            idPointer = ptr
-            pubKeyTemplate.append(AttributeType.id(idPointer.pointer, UInt(id.count)).attr)
-            privateKeyTemplate.append(AttributeType.id(idPointer.pointer, UInt(id.count)).attr)
+            pubKeyTemplate.append(BufferAttribute(type: .id, value: Array(id.utf8)))
+            privateKeyTemplate.append(BufferAttribute(type: .id, value: Array(id.utf8)))
         }
 
         // MARK: Find public keys
-        let pubKeyObjects = try Token.findObjects(pubKeyTemplate, in: session.handle)
+        let pubKeyObjects = try Token.findObjects(pubKeyTemplate.map { $0.attribute }, in: session.handle)
 
         var publicKeys: [Pkcs11Object] = []
         for obj in pubKeyObjects {
@@ -186,7 +170,7 @@ class Token: TokenProtocol, Identifiable {
         }
 
         // MARK: Find private keys
-        let privateKeyObjects = try Token.findObjects(privateKeyTemplate, in: session.handle)
+        let privateKeyObjects = try Token.findObjects(privateKeyTemplate.map { $0.attribute }, in: session.handle)
 
         for obj in privateKeyObjects {
             let privateKey = Pkcs11Object(with: obj, session)
@@ -219,34 +203,32 @@ class Token: TokenProtocol, Identifiable {
 
         let currentDate = Date()
 
+        let publicKeyAttributes: [PkcsAttribute] = [
+            ULongAttribute(type: .classObject, value: CKO_PUBLIC_KEY),
+            BufferAttribute(type: .id, value: Array(id.utf8)),
+            ULongAttribute(type: .keyType, value: CKK_GOSTR3410),
+            BoolAttribute(type: .token, value: true),
+            BoolAttribute(type: .privateness, value: false),
+            ObjectAttribute(type: .startDate(currentDate)),
+            ObjectAttribute(type: .endDate(currentDate.addingTimeInterval(3 * 365 * 24 * 60 * 60))),
+            BufferAttribute(type: .gostR3410Params, value: PkcsConstants.parametersGostR3410_2012_256),
+            BufferAttribute(type: .gostR3411Params, value: PkcsConstants.parametersGostR3411_2012_256)
+        ]
 
-        guard let idPointer = id.createPointer(),
-              var startDate = createDateObject(with: currentDate),
-              var endDate = createDateObject(with: currentDate.addingTimeInterval(3 * 365 * 24 * 60 * 60)),
-              let startDatePtr = withUnsafeMutableBytes(of: &startDate, { $0.baseAddress }),
-              let endDatePtr = withUnsafeMutableBytes(of: &endDate, { $0.baseAddress }) else {
-            throw TokenError.generalError
-        }
-
-        var publicKeyTemplate = [
-            AttributeType.objectClass(.publicKey),
-            .id(idPointer.pointer, UInt(id.count)),
-            .keyType(&keyTypeGostR3410_2012_256, UInt(MemoryLayout.size(ofValue: keyTypeGostR3410_2012_256))),
-            .attrTrue(CKA_TOKEN), .attrFalse(CKA_PRIVATE),
-            .startDate(startDatePtr, UInt(MemoryLayout.size(ofValue: startDate))),
-            .endDate(endDatePtr, UInt(MemoryLayout.size(ofValue: endDate))),
-            .gostR3410_2012_256_params, .gostR3411_2012_256_params
-        ].map { $0.attr }
-
-        var privateKeyTemplate = [
-            AttributeType.objectClass(.privateKey),
-            .id(idPointer.pointer, UInt(id.count)),
-            .keyType(&keyTypeGostR3410_2012_256, UInt(MemoryLayout.size(ofValue: keyTypeGostR3410_2012_256))),
-            .startDate(startDatePtr, UInt(MemoryLayout.size(ofValue: startDate))),
-            .endDate(endDatePtr, UInt(MemoryLayout.size(ofValue: endDate))),
-            .attrTrue(CKA_TOKEN), .attrTrue(CKA_PRIVATE), .attrTrue(CKA_DERIVE),
-            .gostR3410_2012_256_params, .gostR3411_2012_256_params
-        ].map { $0.attr }
+        let privateKeyAttributes: [PkcsAttribute] = [
+            ULongAttribute(type: .classObject, value: CKO_PRIVATE_KEY),
+            BufferAttribute(type: .id, value: Array(id.utf8)),
+            ULongAttribute(type: .keyType, value: CKK_GOSTR3410),
+            BoolAttribute(type: .token, value: true),
+            BoolAttribute(type: .privateness, value: true),
+            BoolAttribute(type: .derive, value: true),
+            ObjectAttribute(type: .startDate(currentDate)),
+            ObjectAttribute(type: .endDate(currentDate.addingTimeInterval(3 * 365 * 24 * 60 * 60))),
+            BufferAttribute(type: .gostR3410Params, value: PkcsConstants.parametersGostR3410_2012_256),
+            BufferAttribute(type: .gostR3411Params, value: PkcsConstants.parametersGostR3411_2012_256)
+        ]
+        var publicKeyTemplate = publicKeyAttributes.map { $0.attribute }
+        var privateKeyTemplate = privateKeyAttributes.map { $0.attribute }
 
         var gostR3410_2012_256KeyPairGenMech: CK_MECHANISM = CK_MECHANISM(mechanism: CKM_GOSTR3410_KEY_PAIR_GEN, pParameter: nil, ulParameterLen: 0)
 
@@ -259,16 +241,12 @@ class Token: TokenProtocol, Identifiable {
         }
     }
 
-    func deleteKeyPair(with id: String) throws {
-        guard let idPointer = id.createPointer() else {
-            throw TokenError.generalError
-        }
-        let template = [
-            AttributeType.id(idPointer.pointer, UInt(id.count)),
-            .keyType(&keyTypeGostR3410_2012_256, UInt(MemoryLayout.size(ofValue: keyTypeGostR3410_2012_256)))
-        ].map { $0.attr }
+    func deleteObjects(with id: String) throws {
+        let template: [PkcsAttribute] = [
+            BufferAttribute(type: .id, value: Array(id.utf8))
+        ]
 
-        let objects = try Token.findObjects(template, in: session.handle)
+        let objects = try Token.findObjects(template.map { $0.attribute }, in: session.handle)
 
         guard !objects.isEmpty else {
             throw TokenError.generalError
@@ -283,27 +261,24 @@ class Token: TokenProtocol, Identifiable {
     }
 
     func importCert(_ cert: Data, for id: String) throws {
-        guard (try enumerateKeys(by: id, with: .gostR3410_2012_256).first) != nil,
-              let idPointer = id.createPointer() else {
+        guard (try enumerateKeys(by: id, with: .gostR3410_2012_256).first) != nil else {
             throw TokenError.generalError
         }
-        try cert.withUnsafeBytes { ptr in
-            // MARK: Prepare cert template
-            var certTemplate = [
-                AttributeType.value(UnsafeMutableRawPointer(mutating: ptr.baseAddress), UInt(cert.count)),
-                .objectClass(.cert),
-                .id(idPointer.pointer, UInt(id.count)),
-                .attrTrue(CKA_TOKEN),
-                .attrFalse(CKA_PRIVATE),
-                .certX509(&certTypeX509, UInt(MemoryLayout.size(ofValue: certTypeX509))),
-                .certCategory(&certCategoryUser, UInt(MemoryLayout.size(ofValue: certCategoryUser)))
-            ].map { $0.attr }
+        let certAttributes: [PkcsAttribute] = [
+            BufferAttribute(type: .value, value: [UInt8](cert)),
+            ULongAttribute(type: .classObject, value: CKO_CERTIFICATE),
+            BufferAttribute(type: .id, value: Array(id.utf8)),
+            BoolAttribute(type: .token, value: true),
+            BoolAttribute(type: .privateness, value: false),
+            ULongAttribute(type: .certType, value: CKC_X_509),
+            ULongAttribute(type: .certCategory, value: PkcsConstants.CK_CERTIFICATE_CATEGORY_TOKEN_USER)
+        ]
+        var certTemplate = certAttributes.map { $0.attribute }
 
-            var certHandle = CK_OBJECT_HANDLE()
-            let rv = C_CreateObject(session.handle, &certTemplate, CK_ULONG(certTemplate.count), &certHandle)
-            guard rv == CKR_OK else {
-                throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
-            }
+        var certHandle = CK_OBJECT_HANDLE()
+        let rv = C_CreateObject(session.handle, &certTemplate, CK_ULONG(certTemplate.count), &certHandle)
+        guard rv == CKR_OK else {
+            throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
         }
     }
 
@@ -323,21 +298,20 @@ class Token: TokenProtocol, Identifiable {
     }
 
     class private func getTokenInterfaces(session: CK_SESSION_HANDLE) -> (CK_ULONG, CK_ULONG)? {
-        let objectTemplate = [AttributeType.objectClass(.hwFeature), AttributeType.hwFeatureType].map { $0.attr }
+        let objectAttributes = [
+            ULongAttribute(type: .classObject, value: CKO_HW_FEATURE),
+            ULongAttribute(type: .hwFeatureType, value: CKH_VENDOR_TOKEN_INFO)
+        ]
 
-        guard let handle = try? Token.findObjects(objectTemplate, in: session).first else {
+        guard let handle = try? Token.findObjects(objectAttributes.map { $0.attribute }, in: session).first else {
             return nil
         }
 
-        let valueSize: CK_ULONG = 0
-        let currentInterfaceAttr = CK_ATTRIBUTE(type: CK_ATTRIBUTE_TYPE(CKA_VENDOR_CURRENT_TOKEN_INTERFACE),
-                                                pValue: nil,
-                                                ulValueLen: valueSize)
-        let supportedInterfaceAttr = CK_ATTRIBUTE(type: CK_ATTRIBUTE_TYPE(CKA_VENDOR_SUPPORTED_TOKEN_INTERFACE),
-                                                  pValue: nil,
-                                                  ulValueLen: valueSize)
-
-        var template = [currentInterfaceAttr, supportedInterfaceAttr]
+        let attributes = [
+            BufferAttribute(type: .vendorCurrentInterface),
+            BufferAttribute(type: .vendorSupportedInterface)
+        ]
+        var template = attributes.map { $0.attribute }
         var rv = C_GetAttributeValue(session, handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             return nil

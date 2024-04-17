@@ -14,7 +14,6 @@ protocol Pkcs11ObjectProtocol {
     var handle: CK_OBJECT_HANDLE { get }
 }
 
-
 class Pkcs11Object: Pkcs11ObjectProtocol {
     private(set) var handle: CK_OBJECT_HANDLE
     private weak var session: Pkcs11Session?
@@ -25,25 +24,25 @@ class Pkcs11Object: Pkcs11ObjectProtocol {
     }
 
     lazy var id: String? = {
-        guard let dataId = try? getValue(for: AttributeType.id(nil, 0), with: handle, with: session) else {
+        guard let dataId = try? getValue(for: BufferAttribute(type: .id), with: handle, with: session) else {
             return nil
         }
         return String(decoding: dataId, as: UTF8.self)
     }()
 
     lazy var body: Data? = {
-        guard let value = try? getValue(for: AttributeType.value(nil, 0), with: handle, with: session) else {
+        guard let value = try? getValue(for: BufferAttribute(type: .value), with: handle, with: session) else {
             return nil
         }
         return value
     }()
 
-    private func getValue(for attr: AttributeType, with handle: CK_OBJECT_HANDLE, with session: Pkcs11Session?) throws -> Data {
+    private func getValue(for attr: BufferAttribute, with handle: CK_OBJECT_HANDLE, with session: Pkcs11Session?) throws -> Data {
         guard let session else {
             throw TokenError.generalError
         }
 
-        var template = [attr].map { $0.attr }
+        var template = [attr.attribute]
         var rv = C_GetAttributeValue(session.handle, handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             throw TokenError.generalError
