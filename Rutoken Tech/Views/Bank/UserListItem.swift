@@ -22,6 +22,7 @@ struct UserListItem: View {
         HStack {
             VStack(alignment: .leading, spacing: 12) {
                 Text(name)
+                    .font(.headline)
                     .foregroundStyle(Color.RtColors.rtLabelPrimary)
                 VStack(alignment: .leading, spacing: 8) {
                     infoField(for: "Должность", with: title)
@@ -31,7 +32,6 @@ struct UserListItem: View {
             Spacer()
         }
         .padding(.all, 12)
-        .frame(height: 152)
         .background(Color("surfacePrimary"))
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .onTapGesture {
@@ -87,14 +87,29 @@ struct UserListItem: View {
             Button {
                 onDeleteUser()
             } label: {
-                Image(systemName: "trash.fill")
-                    .foregroundStyle(Color.RtColors.rtColorsOnPrimary)
-                    .frame(width: 72, height: 150)
-                    .background(Color.red)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                VStack {
+                    Spacer()
+                    Image(systemName: "trash.fill")
+                        .foregroundStyle(Color.RtColors.rtColorsOnPrimary)
+                        .frame(width: 72)
+                    Spacer()
+                }
+                .background(Color.RtColors.rtColorsSystemRed)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
             }
-            .padding(.trailing, 1)
+            .padding([.trailing, .vertical], 1)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+
+struct UserListItem_Previews: PreviewProvider {
+    static var previews: some View {
+        let user = BankUserInfo(expiryDate: Date(), fullname: "Иванов Михаил Романович",
+                                title: "Дизайнер", keyId: "", certHash: "", tokenSerial: "")
+        UserListItem(name: user.fullname, title: user.title, expiryDate: user.expiryDate,
+                     onDeleteUser: {}, onSelectUser: {})
+        .padding(15)
+        .background(Color.RtColors.rtSurfaceSecondary)
     }
 }
