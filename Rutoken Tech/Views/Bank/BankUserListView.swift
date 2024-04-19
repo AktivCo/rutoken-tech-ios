@@ -69,6 +69,7 @@ struct BankUserListView: View {
                     set: { _ in store.send(.selectUser(nil)) })) {
                         PaymentListView()
                             .navigationBarBackButtonHidden(true)
+                            .ignoresSafeArea(.container, edges: [.top])
                     }
             }
         }

@@ -16,6 +16,8 @@ struct PaymentListView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
     @State private var docsType: DocType = .income
     @State private var isArchivedDocsShown = true
+    @State private var isTopViewShown = false
+    @State private var topSafeAreaHeight: CGFloat = 0
 
     var body: some View {
         VStack(spacing: 0) {
@@ -46,12 +48,24 @@ struct PaymentListView: View {
                 .disabled(store.state.bankDocumentListState.isLoading)
             })
             .frame(height: 44)
+            .padding(.top, topSafeAreaHeight)
+            .background {
+                Color("IOSElementsTitleBarSurface")
+                    .background(.ultraThinMaterial)
+                    .opacity(isTopViewShown ? 1 : 0)
+            }
+            Divider()
+                .overlay(Color("IOSElementsTitleBarSeparator"))
+                .opacity(isTopViewShown ? 1 : 0)
             mainView
                 .frame(maxWidth: 642)
                 .padding(.horizontal, 20)
             Spacer()
         }
         .background(Color.RtColors.rtSurfaceSecondary)
+        .onAppear {
+            topSafeAreaHeight = getSafeAreaInsets()?.top ?? 0
+        }
     }
 
     private var backButton: some View {
@@ -81,16 +95,28 @@ struct PaymentListView: View {
             $0.direction == docsType && $0.inArchive
         })
         return VStack(alignment: .leading, spacing: 0) {
-            HeaderTitleView(title: "Платежи")
             if store.state.bankDocumentListState.isLoading {
+                HeaderTitleView(title: "Платежи")
                 documentsLoadingView
             } else {
-                ScrollView(showsIndicators: false) {
-                    DocumentListView(documents: notArchived)
-                    if !archived.isEmpty {
-                        archiveDocumentListView(archived)
+                ScrollViewOffset {
+                    VStack(spacing: 0) {
+                        HeaderTitleView(title: "Платежи")
+                        DocumentListView(documents: notArchived)
+                        if !archived.isEmpty {
+                            archiveDocumentListView(archived)
+                        }
+                    }
+                } onOffsetChanged: { offset in
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        if offset < -20 {
+                            isTopViewShown = true
+                        } else {
+                            isTopViewShown = false
+                        }
                     }
                 }
+
             }
         }
     }
@@ -167,9 +193,11 @@ struct PaymentListView_Previews: PreviewProvider {
         let store = Store(initialState: AppState(bankDocumentListState: docListState), reducer: AppReducer(), middlewares: [])
         PaymentListView()
             .environmentObject(store)
+            .ignoresSafeArea(.all, edges: .top)
 
         let state = AppState(bankDocumentListState: BankDocumentListState(isLoading: true))
         PaymentListView()
             .environmentObject(Store(initialState: state, reducer: AppReducer(), middlewares: []))
+            .ignoresSafeArea(.all, edges: .top)
     }
 }
