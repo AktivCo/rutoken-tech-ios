@@ -91,6 +91,7 @@
 		7D9D3C152B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9D3C142B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift */; };
 		7D9D3C1B2B3C76F000BF2EE1 /* EnumerateKeysTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9D3C1A2B3C76F000BF2EE1 /* EnumerateKeysTests.swift */; };
 		7D9E5A602B0BA55E00E2EAB7 /* CaConnectedTokenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9E5A5F2B0BA55E00E2EAB7 /* CaConnectedTokenState.swift */; };
+		7DA3751B2BD16AC600087DC8 /* OnSelectDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA3751A2BD16AC600087DC8 /* OnSelectDocument.swift */; };
 		7DACCE262B569CCF00FB3F2C /* CreateCertTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DACCE252B569CCF00FB3F2C /* CreateCertTests.swift */; };
 		7DAEA2A92BCD6D4F00A906B2 /* BankSelectedDocumentState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAEA2A82BCD6D4F00A906B2 /* BankSelectedDocumentState.swift */; };
 		7DAEA2AB2BCD856D00A906B2 /* RtPDFView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAEA2AA2BCD856D00A906B2 /* RtPDFView.swift */; };
@@ -241,6 +242,7 @@
 		7D9D3C142B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnPerformGenKeyPair.swift; sourceTree = "<group>"; };
 		7D9D3C1A2B3C76F000BF2EE1 /* EnumerateKeysTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumerateKeysTests.swift; sourceTree = "<group>"; };
 		7D9E5A5F2B0BA55E00E2EAB7 /* CaConnectedTokenState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaConnectedTokenState.swift; sourceTree = "<group>"; };
+		7DA3751A2BD16AC600087DC8 /* OnSelectDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSelectDocument.swift; sourceTree = "<group>"; };
 		7DACCE252B569CCF00FB3F2C /* CreateCertTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCertTests.swift; sourceTree = "<group>"; };
 		7DAEA2A82BCD6D4F00A906B2 /* BankSelectedDocumentState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankSelectedDocumentState.swift; sourceTree = "<group>"; };
 		7DAEA2AA2BCD856D00A906B2 /* RtPDFView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtPDFView.swift; sourceTree = "<group>"; };
@@ -420,6 +422,7 @@
 				D499FDBC2BD294160053FB28 /* OnPrepareDocuments.swift */,
 				D4871D6C2BC81036008B027C /* OnSignDocument.swift */,
 				44CBDBE72BCD777E00F28E61 /* OnCmsVerify.swift */,
+				7DA3751A2BD16AC600087DC8 /* OnSelectDocument.swift */,
 			);
 			path = Bank;
 			sourceTree = "<group>";
@@ -958,6 +961,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5E1F3AC22BA4BA2E008158EF /* RoutingState.swift in Sources */,
+				7DA3751B2BD16AC600087DC8 /* OnSelectDocument.swift in Sources */,
 				D4B130D62B0E4F2400AD390F /* PcscHelper.swift in Sources */,
 				44A502C42BB18CD6006236E7 /* Bundle+getUrl.swift in Sources */,
 				D42178192B205FD700D08948 /* AppAlert.swift in Sources */,

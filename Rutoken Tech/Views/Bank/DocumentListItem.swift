@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-import RtUiComponents
 import TinyAsyncRedux
 
 
@@ -17,20 +16,7 @@ struct DocumentListItem: View {
 
     var body: some View {
         Button {
-            guard document.inArchive == false,
-                  let tokenSerial = store.state.bankSelectUserState.selectedUser?.tokenSerial,
-                  let certId = store.state.bankSelectUserState.selectedUser?.keyId else {
-                return
-            }
-            store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
-                RtAuthView(defaultPinGetter: { store.send(.getPin(tokenSerial)) },
-                           onSubmit: { tokenType, pin in
-                    store.send(.signDocument(tokenType: tokenType, serial: tokenSerial, pin: pin,
-                                             documentName: document.name, certId: certId))
-                },
-                           onCancel: { store.send(.hideSheet) })
-                .environmentObject(store.state.routingState.pinInputModel)
-            }()))
+            store.send(.selectDocument(document))
         } label: {
             HStack(alignment: .top, spacing: 12) {
                 Image(systemName: document.action.getImageName)

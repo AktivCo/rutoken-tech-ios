@@ -12,8 +12,8 @@ import TinyAsyncRedux
 
 
 struct PaymentListView: View {
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @EnvironmentObject private var store: Store<AppState, AppAction>
+    @Environment(\.dismiss) private var dismiss
     @State private var docsType: DocType = .income
     @State private var isArchivedDocsShown = true
     @State private var isTopViewShown = false
@@ -23,7 +23,7 @@ struct PaymentListView: View {
         VStack(spacing: 0) {
             CustomNavBar(left: {
                 Button {
-                    presentationMode.wrappedValue.dismiss()
+                    dismiss()
                 } label: {
                     backButton
                         .padding(.leading, 11)
@@ -66,6 +66,13 @@ struct PaymentListView: View {
         .onAppear {
             topSafeAreaHeight = getSafeAreaInsets()?.top ?? 0
         }
+        .navigationDestination(isPresented: Binding(
+            get: { store.state.bankSelectedDocumentState.docContent != nil },
+            set: { ok in if !ok { store.send(.updateCurrentDoc(nil, nil))} })) {
+                DocumentProcessView()
+                    .navigationBarBackButtonHidden(true)
+                    .toolbar(.hidden, for: .tabBar)
+            }
     }
 
     private var backButton: some View {

@@ -110,6 +110,11 @@ struct AppReducer: Reducer {
             break
         case .cmsVerify:
             break
+        case .selectDocument:
+            break
+        case let .updateCurrentDoc(metadata, content):
+            newState.bankSelectedDocumentState.metadata = metadata
+            newState.bankSelectedDocumentState.docContent = content
         }
         return newState
     }

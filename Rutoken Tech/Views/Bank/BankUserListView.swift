@@ -64,14 +64,14 @@ struct BankUserListView: View {
                         .environmentObject(store.state.routingState.pinInputModel)
                     }()))
                 })
-                .navigationDestination(isPresented: Binding(
-                    get: { store.state.bankSelectUserState.selectedUser != nil },
-                    set: { _ in store.send(.selectUser(nil)) })) {
-                        PaymentListView()
-                            .navigationBarBackButtonHidden(true)
-                            .ignoresSafeArea(.container, edges: [.top])
-                    }
             }
+            .navigationDestination(isPresented: Binding(
+                get: { store.state.bankSelectUserState.selectedUser != nil },
+                set: { ok in if !ok { store.send(.selectUser(nil)) } })) {
+                    PaymentListView()
+                        .navigationBarBackButtonHidden(true)
+                        .ignoresSafeArea(.container, edges: [.top])
+                }
         }
         .padding(.top, 12)
     }

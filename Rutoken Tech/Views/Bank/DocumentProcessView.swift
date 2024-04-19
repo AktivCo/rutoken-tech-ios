@@ -8,11 +8,13 @@
 import PDFKit
 import SwiftUI
 
+import RtUiComponents
 import TinyAsyncRedux
 
 
 struct DocumentProcessView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
+    @Environment(\.dismiss) private var dismiss
 
     private var backButtonLabel: some View {
         Image(systemName: "chevron.backward")
@@ -47,6 +49,7 @@ struct DocumentProcessView: View {
     private func navBar(title: String, date: String) -> some View {
         CustomNavBar {
             Button {
+                dismiss()
             } label: {
                 backButtonLabel
                     .padding(.leading, 13)
@@ -86,7 +89,22 @@ struct DocumentProcessView: View {
                 switch document.action {
                 case .decrypt: return
                 case .encrypt: return
-                case .sign: return
+                case .sign:
+                    guard store.state.bankSelectedDocumentState.metadata?.inArchive == false,
+                          let tokenSerial = store.state.bankSelectUserState.selectedUser?.tokenSerial,
+                          let certId = store.state.bankSelectUserState.selectedUser?.keyId else {
+                        return
+                    }
+                    store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
+                        RtAuthView(defaultPinGetter: { store.send(.getPin(tokenSerial)) },
+                                   onSubmit: { tokenType, pin in
+                            store.send(.signDocument(tokenType: tokenType, serial: tokenSerial, pin: pin,
+                                                     documentName: store.state.bankSelectedDocumentState.metadata?.name ?? "",
+                                                     certId: certId))
+                        },
+                                   onCancel: { store.send(.hideSheet) })
+                        .environmentObject(store.state.routingState.pinInputModel)
+                    }()))
                 case .verify: store.send(.cmsVerify(fileName: document.name))
                 }
             } label: {
@@ -133,15 +151,16 @@ struct DocumentProcessView: View {
 
             bottomBar
         }
+        .ignoresSafeArea(.keyboard)
     }
 }
 
 struct DocumentProcessView_Previews: PreviewProvider {
     static var previews: some View {
-        let emptryState = AppState()
-        let emptryStore = Store(initialState: emptryState,
+        let emptyState = AppState()
+        let emptyStore = Store(initialState: emptyState,
                                 reducer: AppReducer(), middlewares: [])
-        DocumentProcessView().environmentObject(emptryStore)
+        DocumentProcessView().environmentObject(emptyStore)
 
         let metadata = BankDocument(
             name: "Платежное поручение №00121", action: .encrypt, amount: 14500,
