@@ -50,7 +50,7 @@ class CryptoManagerSignDocumentTests: XCTestCase {
         }
         token.getWrappedKeyCallback = {
             XCTAssertEqual($0, self.keyId)
-            return WrappedPointer({
+            return WrappedPointer<OpaquePointer>({
                 OpaquePointer.init(bitPattern: 1)!
             }, {_ in})!
         }
@@ -86,7 +86,7 @@ class CryptoManagerSignDocumentTests: XCTestCase {
         }
         token.getWrappedKeyCallback = {
             XCTAssertEqual($0, self.keyId)
-            return WrappedPointer({
+            return WrappedPointer<OpaquePointer>({
                 OpaquePointer.init(bitPattern: 1)!
             }, {_ in})!
         }

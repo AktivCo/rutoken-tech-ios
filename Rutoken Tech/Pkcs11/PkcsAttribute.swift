@@ -48,12 +48,12 @@ class BoolAttribute: PkcsAttribute {
     }
 
     private let type: AttrType
-    private let wrappedPointer: WrappedPointer<UnsafeMutablePointer<CK_BBOOL>>?
+    private let wrappedPointer: WrappedPointer<UnsafeMutablePointer<CK_BBOOL>>
     private let size: Int
 
     init(type: AttrType, value: Bool) {
         self.type = type
-        self.wrappedPointer = WrappedPointer({
+        self.wrappedPointer = WrappedPointer<UnsafeMutablePointer<CK_BBOOL>>({
             let ptr = UnsafeMutablePointer<CK_BBOOL>.allocate(capacity: 1)
             var temp = value ? CK_BBOOL(CK_TRUE) : CK_BBOOL(CK_FALSE)
             ptr.initialize(from: &temp, count: 1)
@@ -64,7 +64,7 @@ class BoolAttribute: PkcsAttribute {
 
     var attribute: CK_ATTRIBUTE {
         CK_ATTRIBUTE(type: self.type.rawValue,
-                     pValue: wrappedPointer?.pointer,
+                     pValue: wrappedPointer.pointer,
                      ulValueLen: CK_ULONG(size))
     }
 }
@@ -89,12 +89,12 @@ class ULongAttribute: PkcsAttribute {
     }
 
     private let type: AttrType
-    private let wrappedPointer: WrappedPointer<UnsafeMutablePointer<CK_ULONG>>?
+    private let wrappedPointer: WrappedPointer<UnsafeMutablePointer<CK_ULONG>>
     private let size: Int
 
     init(type: AttrType, value: CK_ULONG) {
         self.type = type
-        wrappedPointer = WrappedPointer({
+        wrappedPointer = WrappedPointer<UnsafeMutablePointer<CK_ULONG>>({
             var temp = value
             let ptr = UnsafeMutablePointer<CK_ULONG>.allocate(capacity: MemoryLayout.size(ofValue: value))
             ptr.initialize(from: &temp, count: MemoryLayout.size(ofValue: value))
@@ -105,7 +105,7 @@ class ULongAttribute: PkcsAttribute {
 
     var attribute: CK_ATTRIBUTE {
         CK_ATTRIBUTE(type: self.type.rawValue,
-                     pValue: wrappedPointer?.pointer,
+                     pValue: wrappedPointer.pointer,
                      ulValueLen: CK_ULONG(size))
     }
 }
@@ -132,12 +132,12 @@ class BufferAttribute: PkcsAttribute {
     }
 
     private let type: AttrType
-    private let wrappedPointer: WrappedPointer<UnsafeMutablePointer<UInt8>>?
+    private let wrappedPointer: WrappedPointer<UnsafeMutablePointer<UInt8>?>
     private let size: Int
 
     init(type: AttrType, value: [UInt8]? = nil) {
         self.type = type
-        wrappedPointer = WrappedPointer({
+        wrappedPointer = WrappedPointer<UnsafeMutablePointer<UInt8>?>({
             if let value {
                 var temp = value
                 let ptr = UnsafeMutablePointer<UInt8>.allocate(capacity: value.count)
@@ -145,13 +145,13 @@ class BufferAttribute: PkcsAttribute {
                 return ptr
             }
             return nil
-        }, { $0.deallocate() })
+        }, { $0?.deallocate() })
         self.size = value?.count ?? 0
     }
 
     var attribute: CK_ATTRIBUTE {
         CK_ATTRIBUTE(type: type.rawValue,
-                     pValue: wrappedPointer?.pointer,
+                     pValue: wrappedPointer.pointer,
                      ulValueLen: CK_ULONG(size))
     }
 }
@@ -191,7 +191,7 @@ class ObjectAttribute: PkcsAttribute {
                     return ptr
                 } else { return nil }
             }
-        }, { $0.deallocate })
+        }, { $0.deallocate() })
         self.size = type.length
     }
 

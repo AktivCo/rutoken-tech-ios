@@ -60,7 +60,7 @@ class TokenMock: TokenProtocol {
     }
 
     var getWrappedKeyCallback: (String) throws -> WrappedPointer = { _ in
-        WrappedPointer({
+        WrappedPointer<OpaquePointer>({
             OpaquePointer.init(bitPattern: 1)!
         }, {_ in})!
     }

@@ -47,7 +47,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
             throw OpenSslError.generalError(#line, getLastError())
         }
 
-        guard let cms = WrappedPointer({
+        guard let cms = WrappedPointer<OpaquePointer>({
             CMS_sign(x509.wrappedPointer.pointer, wrappedKey.pointer, nil,
                      contentBio.pointer, UInt32(CMS_BINARY | CMS_NOSMIMECAP | CMS_DETACHED))
         }, CMS_ContentInfo_free) else {
@@ -88,8 +88,8 @@ class OpenSslHelper: OpenSslHelperProtocol {
 
         guard let contentBio = dataToBio(content),
               let certsStack = createX509Stack(with: [cert]),
-              let certStore = WrappedPointer(X509_STORE_new, X509_STORE_free),
-              let cms = WrappedPointer({
+              let certStore = WrappedPointer<OpaquePointer>(X509_STORE_new, X509_STORE_free),
+              let cms = WrappedPointer<OpaquePointer>({
                   guard let data = rawBase64Cms.data(using: .utf8),
                         let cmsData = Data(base64Encoded: data) else {
                       return nil
@@ -135,7 +135,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
     }
 
     func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String {
-        guard let csr = WrappedPointer(X509_REQ_new, X509_REQ_free) else {
+        guard let csr = WrappedPointer<OpaquePointer>(X509_REQ_new, X509_REQ_free) else {
             throw OpenSslError.generalError(#line, getLastError())
         }
 
@@ -154,7 +154,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         // MARK: Create extension for 'Subject sign tool'
-        guard let subjectSignTool = WrappedPointer({
+        guard let subjectSignTool = WrappedPointer<OpaquePointer>({
             X509V3_EXT_nconf_nid(nil, nil, NID_subjectSignTool,
                                  "Средство электронной подписи: СКЗИ \"Рутокен ЭЦП 3.0\"")
         }, X509_EXTENSION_free) else {
@@ -162,7 +162,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         // MARK: Create extension for 'Key usage'
-        guard let keyUsageExt = WrappedPointer({
+        guard let keyUsageExt = WrappedPointer<OpaquePointer>({
             X509V3_EXT_nconf_nid(nil, nil, NID_key_usage,
                                  "digitalSignature,nonRepudiation,keyEncipherment,dataEncipherment")
 
@@ -171,20 +171,20 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         // MARK: Add ext key usage
-        guard let exExtKeyUsage = WrappedPointer({
+        guard let exExtKeyUsage = WrappedPointer<OpaquePointer>({
             X509V3_EXT_conf_nid(nil, nil, NID_ext_key_usage, "clientAuth,emailProtection")
         }, X509_EXTENSION_free) else {
             throw OpenSslError.generalError(#line, getLastError())
         }
 
         // MARK: Create extension for 'certificate policies'
-        guard let obj = WrappedPointer({
+        guard let obj = WrappedPointer<OpaquePointer>({
             OBJ_txt2obj("1.2.643.100.113.1", 0)
         }, ASN1_OBJECT_free) else {
             throw OpenSslError.generalError(#line, getLastError())
         }
 
-        guard let polInfo = WrappedPointer(POLICYINFO_new, POLICYINFO_free) else {
+        guard let polInfo = WrappedPointer<UnsafeMutablePointer<POLICYINFO>>(POLICYINFO_new, POLICYINFO_free) else {
             throw OpenSslError.generalError(#line, getLastError())
         }
         polInfo.pointer.pointee.policyid = obj.pointer
@@ -206,7 +206,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         // MARK: Add IdentificationKind (custom extension)
-        guard let oid = WrappedPointer({
+        guard let oid = WrappedPointer<OpaquePointer>({
             OBJ_txt2obj("1.2.643.100.114", 1)
         }, ASN1_OBJECT_free) else {
             throw OpenSslError.generalError(#line, getLastError())
@@ -215,7 +215,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
         // Set IdentificationKind as raw TLV, for possible values see:
         // https://datatracker.ietf.org/doc/html/rfc9215
         let valueData = Data([0x02, 0x01, 0x00])
-        guard let valueOctetString = WrappedPointer({
+        guard let valueOctetString = WrappedPointer<UnsafeMutablePointer<ASN1_OCTET_STRING>>({
             let newString = ASN1_OCTET_STRING_new()
             return valueData.withUnsafeBytes {
                 let pointerValueData = $0.baseAddress?.assumingMemoryBound(to: UInt8.self)
@@ -229,7 +229,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
             throw OpenSslError.generalError(#line, getLastError())
         }
 
-        guard let identificationKindByObj = WrappedPointer({
+        guard let identificationKindByObj = WrappedPointer<OpaquePointer>({
             X509_EXTENSION_create_by_OBJ(nil, oid.pointer, 0, valueOctetString.pointer)
         }, X509_EXTENSION_free) else {
             throw OpenSslError.generalError(#line, getLastError())
@@ -264,7 +264,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         // MARK: Read created request
-        guard let wrappedBio = WrappedPointer({ BIO_new(BIO_s_mem()) }, BIO_free),
+        guard let wrappedBio = WrappedPointer<OpaquePointer>({ BIO_new(BIO_s_mem()) }, { BIO_free($0) }),
               PEM_write_bio_X509_REQ(wrappedBio.pointer, csr.pointer) == 1,
               let csr = bioToString(wrappedBio.pointer) else {
             throw OpenSslError.generalError(#line, getLastError())
@@ -275,7 +275,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
 
     func createCert(for csr: String, with caKey: Data, cert caCert: Data) throws -> Data {
         // MARK: Load the CSR
-        guard let wrappedCsr = WrappedPointer({
+        guard let wrappedCsr = WrappedPointer<OpaquePointer>({
             guard let csrBio = stringToBio(csr),
                   let csr = PEM_read_bio_X509_REQ(csrBio.pointer, nil, nil, nil) else {
                 return nil
@@ -330,15 +330,15 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         // MARK: Set Date
-        guard let asn1Before = WrappedPointer({ X509_gmtime_adj(nil, 0) }, ASN1_STRING_free),
-              let asn1After = WrappedPointer({ X509_gmtime_adj(nil, 60*60*24*365) }, ASN1_STRING_free),
+        guard let asn1Before = WrappedPointer<UnsafeMutablePointer<ASN1_STRING>>({ X509_gmtime_adj(nil, 0) }, ASN1_STRING_free),
+              let asn1After = WrappedPointer<UnsafeMutablePointer<ASN1_STRING>>({ X509_gmtime_adj(nil, 60*60*24*365) }, ASN1_STRING_free),
               X509_set1_notBefore(generatedCert.wrappedPointer.pointer, asn1Before.pointer) != 0,
               X509_set1_notAfter(generatedCert.wrappedPointer.pointer, asn1After.pointer) != 0 else {
             throw OpenSslError.generalError(#line, getLastError())
         }
 
         // MARK: Extracts the public key and set to the new certificate
-        guard let publicKeyCsr = WrappedPointer({ X509_REQ_get_pubkey(wrappedCsr.pointer) }, EVP_PKEY_free) else {
+        guard let publicKeyCsr = WrappedPointer<OpaquePointer>({ X509_REQ_get_pubkey(wrappedCsr.pointer) }, EVP_PKEY_free) else {
             throw OpenSslError.generalError(#line, getLastError())
         }
         guard X509_set_pubkey(generatedCert.wrappedPointer.pointer, publicKeyCsr.pointer) != 0 else {
@@ -346,13 +346,13 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         // MARK: Copy parameters
-        guard let publicCaKey = WrappedPointer({ X509_get_pubkey(wrappedCaCert.wrappedPointer.pointer) }, EVP_PKEY_free),
+        guard let publicCaKey = WrappedPointer<OpaquePointer>({ X509_get_pubkey(wrappedCaCert.wrappedPointer.pointer) }, EVP_PKEY_free),
               EVP_PKEY_copy_parameters(publicCaKey.pointer, privateKeyCa.pointer) != 0 else {
             throw OpenSslError.generalError(#line, getLastError())
         }
 
         // MARK: Copy extensions
-        guard let extensionStack = WrappedPointer({
+        guard let extensionStack = WrappedPointer<OpaquePointer>({
             X509_REQ_get_extensions(wrappedCsr.pointer)
         }, {
             exposed_sk_X509_EXTENSION_pop_free($0, X509_EXTENSION_free)
@@ -370,7 +370,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
         var ctx = X509V3_CTX()
         X509V3_set_ctx(&ctx, wrappedCaCert.wrappedPointer.pointer, generatedCert.wrappedPointer.pointer, nil, nil, 0)
 
-        guard let exKey = WrappedPointer({
+        guard let exKey = WrappedPointer<OpaquePointer>({
             X509V3_EXT_conf_nid(nil, &ctx, NID_subject_key_identifier, "hash")
         }, X509_EXTENSION_free),
               X509_add_ext(generatedCert.wrappedPointer.pointer, exKey.pointer, -1) != 0 else {
@@ -378,7 +378,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         // MARK: Add authorityKeyIdentifier
-        guard let exAuthority = WrappedPointer({
+        guard let exAuthority = WrappedPointer<OpaquePointer>({
             X509V3_EXT_conf_nid(nil, &ctx, NID_authority_key_identifier, "keyid,issuer:always")
         }, X509_EXTENSION_free),
               X509_add_ext(generatedCert.wrappedPointer.pointer, exAuthority.pointer, -1) != 0 else {
@@ -392,7 +392,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         // MARK: Read created certificate
-        guard let wrappedBio = WrappedPointer({ BIO_new(BIO_s_mem()) }, BIO_free),
+        guard let wrappedBio = WrappedPointer<OpaquePointer>({ BIO_new(BIO_s_mem()) }, { BIO_free($0) }),
               i2d_X509_bio(wrappedBio.pointer, generatedCert.wrappedPointer.pointer) > 0,
               let generatedCertData = bioToData(wrappedBio.pointer) else {
             throw OpenSslError.generalError(#line, getLastError())
@@ -402,7 +402,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
     }
 
     private func createX509Stack(with certs: [Data]) -> WrappedPointer<OpaquePointer>? {
-        guard let wrappedStack = WrappedPointer(exposed_sk_X509_new_null, exposed_sk_X509_pop_free) else {
+        guard let wrappedStack = WrappedPointer<OpaquePointer>(exposed_sk_X509_new_null, exposed_sk_X509_pop_free) else {
             return nil
         }
 

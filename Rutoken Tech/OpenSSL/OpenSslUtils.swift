@@ -11,10 +11,11 @@ import Foundation
 func bioToData(_ bio: OpaquePointer) -> Data? {
     let len = BIO_ctrl(bio, BIO_CTRL_PENDING, 0, nil)
 
-    guard let wrappedPointer = WrappedPointer({
+    let wrappedPointer = WrappedPointer<UnsafeMutableRawBufferPointer>({
         UnsafeMutableRawBufferPointer.allocate(byteCount: Int(len), alignment: 1)
-    }, { $0.deallocate() }),
-        let bytes = wrappedPointer.pointer.baseAddress?.assumingMemoryBound(to: UInt8.self) else {
+    }, { $0.deallocate() })
+
+    guard let bytes = wrappedPointer.pointer.baseAddress?.assumingMemoryBound(to: UInt8.self) else {
         return nil
     }
 
@@ -42,7 +43,7 @@ func bioToString(_ bio: OpaquePointer) -> String? {
 
 func dataToBio(_ data: Data) -> WrappedPointer<OpaquePointer>? {
     data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> WrappedPointer<OpaquePointer>? in
-        WrappedPointer({
+        WrappedPointer<OpaquePointer>({
             guard let bytes = ptr.baseAddress?.assumingMemoryBound(to: UInt8.self),
                   let bio = BIO_new(BIO_s_mem()) else {
                 return nil
@@ -60,7 +61,7 @@ func dataToBio(_ data: Data) -> WrappedPointer<OpaquePointer>? {
             } while bytesWritten > 0
 
             return bio
-        }, BIO_free)
+        }, { BIO_free($0) })
     }
 }
 
@@ -80,7 +81,7 @@ func wrapKey(_ data: Data) -> WrappedPointer<OpaquePointer>? {
 }
 
 func x509DerToPem(_ bio: OpaquePointer) -> String? {
-    guard let wrappedBio = WrappedPointer({ BIO_new(BIO_s_mem()) }, BIO_free),
+    guard let wrappedBio = WrappedPointer<OpaquePointer>({ BIO_new(BIO_s_mem()) }, { BIO_free($0) }),
           PEM_write_bio_X509(wrappedBio.pointer, bio) == 1 else {
         return nil
     }

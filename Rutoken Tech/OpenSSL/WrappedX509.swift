@@ -26,14 +26,14 @@ class WrappedX509 {
     let wrappedPointer: WrappedPointer<OpaquePointer>
 
     init?() {
-        guard let x509 = WrappedPointer(X509_new, X509_free) else {
+        guard let x509 = WrappedPointer<OpaquePointer>(X509_new, X509_free) else {
             return nil
         }
         self.wrappedPointer = x509
     }
 
     init?(from bio: WrappedPointer<OpaquePointer>) {
-        guard let x509 = WrappedPointer({
+        guard let x509 = WrappedPointer<OpaquePointer>({
             PEM_read_bio_X509(bio.pointer, nil, nil, nil)
         }, X509_free) else {
             return nil
@@ -85,7 +85,7 @@ class WrappedX509 {
     }
 
     public var publicKeyAlgorithm: KeyAlgorithm? {
-        guard let publicKey = WrappedPointer({
+        guard let publicKey = WrappedPointer<OpaquePointer>({
             X509_get_pubkey(wrappedPointer.pointer)
         }, EVP_PKEY_free) else {
             return nil
@@ -154,7 +154,7 @@ class WrappedX509 {
 
 private extension UnsafePointer where Pointee == ASN1_TIME {
     func asDate() -> Date? {
-        guard let wrappedBio = WrappedPointer({ BIO_new(BIO_s_mem()) }, BIO_free) else {
+        guard let wrappedBio = WrappedPointer<OpaquePointer>({ BIO_new(BIO_s_mem()) }, { BIO_free($0) }) else {
             return nil
         }
 
