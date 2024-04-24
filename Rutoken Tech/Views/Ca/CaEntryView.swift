@@ -168,7 +168,7 @@ struct CaEntryView_Previews: PreviewProvider {
 
         let token = TokenInfo(label: "Ivan",
                               serial: "274-10-01",
-                              model: .rutoken3Nfc,
+                              model: .rutoken3Nfc_3100,
                               connectionType: .nfc,
                               type: .sc)
         let state = AppState(caConnectedTokenState: CaConnectedTokenState(connectedToken: token))

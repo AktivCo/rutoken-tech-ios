@@ -19,7 +19,7 @@ class TokenMock: TokenProtocol {
 
     init(label: String = "",
          serial: String = "",
-         model: TokenModel = .rutoken2,
+         model: TokenModel = .rutoken3Nfc_3100,
          currentInterface: TokenInterface = .nfc,
          supportedInterfaces: Set<TokenInterface> = [.nfc]) {
         self.label = label

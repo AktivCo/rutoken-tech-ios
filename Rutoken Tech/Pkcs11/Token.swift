@@ -96,11 +96,18 @@ class Token: TokenProtocol, Identifiable {
             return nil
         }
 
-        guard let model = TokenModel(tokenInfo.hardwareVersion, tokenInfo.firmwareVersion,
-                                     extendedTokenInfo.ulTokenClass, supportedInterfaces: supportedInterfaces) else {
-            return nil
+        if tokenInfo.firmwareVersion.major >= 32 {
+            guard let modelName = Token.getTokenVendorModel(session: session.handle) else {
+                return nil
+            }
+            self.model = .rutokenSelfIdentify(modelName)
+        } else {
+            guard let model = TokenModel(tokenInfo.hardwareVersion, tokenInfo.firmwareVersion,
+                                         extendedTokenInfo, supportedInterfaces: supportedInterfaces) else {
+                return nil
+            }
+            self.model = model
         }
-        self.model = model
     }
 
     // MARK: - Public API
@@ -302,15 +309,52 @@ class Token: TokenProtocol, Identifiable {
             ULongAttribute(type: .classObject, value: CKO_HW_FEATURE),
             ULongAttribute(type: .hwFeatureType, value: CKH_VENDOR_TOKEN_INFO)
         ]
-
-        guard let handle = try? Token.findObjects(objectAttributes.map { $0.attribute }, in: session).first else {
-            return nil
-        }
-
         let attributes = [
             BufferAttribute(type: .vendorCurrentInterface),
             BufferAttribute(type: .vendorSupportedInterface)
         ]
+
+        guard let template = readAttributes(objectAttributes: objectAttributes, attributes: attributes, in: session) else {
+            return nil
+        }
+        defer {
+            template.forEach {
+                $0.pValue.deallocate()
+            }
+        }
+        return (UnsafeRawBufferPointer(start: template[0].pValue.assumingMemoryBound(to: UInt8.self),
+                                       count: Int(template[0].ulValueLen)).load(as: CK_ULONG.self),
+                UnsafeRawBufferPointer(start: template[1].pValue.assumingMemoryBound(to: UInt8.self),
+                                       count: Int(template[1].ulValueLen)).load(as: CK_ULONG.self))
+    }
+
+    class private func getTokenVendorModel(session: CK_SESSION_HANDLE) -> String? {
+        let objectAttributes = [
+            ULongAttribute(type: .classObject, value: CKO_HW_FEATURE),
+            ULongAttribute(type: .hwFeatureType, value: CKH_VENDOR_TOKEN_INFO)
+        ]
+        let attribute = BufferAttribute(type: .vendorModelName)
+
+        guard let template = readAttributes(objectAttributes: objectAttributes, attributes: [attribute], in: session) else {
+            return nil
+        }
+        defer {
+            template.forEach {
+                $0.pValue.deallocate()
+            }
+        }
+        guard let stringPtr = UnsafeRawBufferPointer(start: template[0].pValue.assumingMemoryBound(to: UInt8.self),
+                                                     count: Int(template[0].ulValueLen)).assumingMemoryBound(to: CChar.self).baseAddress else {
+            return nil
+        }
+        return String(cString: stringPtr)
+    }
+
+    class private func readAttributes(objectAttributes: [PkcsAttribute],
+                                      attributes: [PkcsAttribute], in session: CK_SESSION_HANDLE) -> [CK_ATTRIBUTE]? {
+        guard let handle = try? Token.findObjects(objectAttributes.map { $0.attribute }, in: session).first else {
+            return nil
+        }
         var template = attributes.map { $0.attribute }
         var rv = C_GetAttributeValue(session, handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
@@ -320,21 +364,13 @@ class Token: TokenProtocol, Identifiable {
         for i in 0..<template.count {
             template[i].pValue = UnsafeMutableRawPointer.allocate(byteCount: Int(template[i].ulValueLen), alignment: 1)
         }
-        defer {
-            for i in 0..<template.count {
-                template[i].pValue.deallocate()
-            }
-        }
 
         rv = C_GetAttributeValue(session, handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             return nil
         }
 
-        return (UnsafeRawBufferPointer(start: template[0].pValue.assumingMemoryBound(to: UInt8.self),
-                                       count: Int(template[0].ulValueLen)).load(as: CK_ULONG.self),
-                UnsafeRawBufferPointer(start: template[1].pValue.assumingMemoryBound(to: UInt8.self),
-                                       count: Int(template[1].ulValueLen)).load(as: CK_ULONG.self))
+        return template
     }
 
     class private func findObjects(_ attributes: [CK_ATTRIBUTE], in session: CK_SESSION_HANDLE) throws -> [CK_OBJECT_HANDLE] {

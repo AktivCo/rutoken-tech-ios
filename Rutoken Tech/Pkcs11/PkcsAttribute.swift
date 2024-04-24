@@ -118,6 +118,7 @@ class BufferAttribute: PkcsAttribute {
         case gostR3411Params
         case vendorCurrentInterface
         case vendorSupportedInterface
+        case vendorModelName
 
         var rawValue: CK_ULONG {
             switch self {
@@ -127,6 +128,7 @@ class BufferAttribute: PkcsAttribute {
             case .gostR3411Params: return CKA_GOSTR3411_PARAMS
             case .vendorCurrentInterface: return CKA_VENDOR_CURRENT_TOKEN_INTERFACE
             case .vendorSupportedInterface: return CKA_VENDOR_SUPPORTED_TOKEN_INTERFACE
+            case .vendorModelName: return CKA_VENDOR_MODEL_NAME
             }
         }
     }
