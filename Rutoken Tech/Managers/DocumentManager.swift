@@ -32,10 +32,8 @@ class DocumentManager: DocumentManagerProtocol {
     private let documentListFileName = "documents.json"
     private let documentsBundleSubdir = "BankDocuments"
 
-    init?(helper: FileHelperProtocol) {
+    init(helper: FileHelperProtocol) {
         self.fileHelper = helper
-
-        do { try resetDirectory() } catch { return nil }
     }
 
     func resetDirectory() throws {

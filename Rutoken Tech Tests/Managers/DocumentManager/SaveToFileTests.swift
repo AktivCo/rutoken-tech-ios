@@ -21,9 +21,6 @@ class DocumentManagerSaveToFileTests: XCTestCase {
         continueAfterFailure = false
 
         helper = FileHelperMock()
-
-        // This is neccessary to DocumentManager init
-        helper.readFileCallback = { _ in "[]".data(using: .utf8)! }
         manager = DocumentManager(helper: helper)
 
         dataToSave = "Data to save".data(using: .utf8)
@@ -46,10 +43,6 @@ class DocumentManagerSaveToFileTests: XCTestCase {
                                 companyName: document.companyName,
                                 paymentDay: document.paymentDay)
 
-        helper.readFileCallback = { url in
-            XCTAssertEqual(Bundle.getUrl(for: "documents.json", in: "BankDocuments"), url)
-            return try BankDocument.jsonEncoder.encode([self.document, doc2])
-        }
         let documentFileName = document.name + ".sig"
         helper.saveFileToTempDirCallback = { fileName, _ in
             XCTAssertEqual(fileName, documentFileName)

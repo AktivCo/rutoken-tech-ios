@@ -10,7 +10,7 @@ struct AppState {
     // MARK: Common
     var routingState = RoutingState()
     // MARK: Ca
-    var connectedTokenState = ConnectedTokenState()
+    var caConnectedTokenState = CaConnectedTokenState()
     var caGenerateKeyPairState = CaGenerateKeyPairState()
     var caGenerateCertState = CaGenerateCertState()
     // MARK: Bank

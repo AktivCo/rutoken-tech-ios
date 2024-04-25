@@ -75,8 +75,8 @@ struct CaGenerateKeyPairView: View {
 
             Spacer()
             RtLoadingButton(action: {
-                if let connectedToken = store.state.connectedTokenState.connectedToken,
-                   let pin = store.state.connectedTokenState.pin,
+                if let connectedToken = store.state.caConnectedTokenState.connectedToken,
+                   let pin = store.state.caConnectedTokenState.pin,
                    let id = store.state.caGenerateKeyPairState.key?.ckaId {
                     store.send(.generateKeyPair(connectedToken.connectionType, serial: connectedToken.serial, pin: pin, id: id))
                 } else {

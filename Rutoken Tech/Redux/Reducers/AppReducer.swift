@@ -31,8 +31,8 @@ struct AppReducer: Reducer {
         case .selectToken:
             break
         case let .tokenSelected(info, pin):
-            newState.connectedTokenState.connectedToken = info
-            newState.connectedTokenState.pin = pin
+            newState.caConnectedTokenState.connectedToken = info
+            newState.caConnectedTokenState.pin = pin
         case let .showPinInputError(errorText):
             newState.routingState.pinInputModel.errorDescription = errorText
         case .hidePinInputError:
@@ -52,13 +52,21 @@ struct AppReducer: Reducer {
             newState.caGenerateCertState.inProgress = true
         case .finishGenerateCert:
             newState.caGenerateCertState.inProgress = false
-        case .logoutCa:
-            newState.connectedTokenState.connectedToken = nil
-            newState.connectedTokenState.pin = nil
+        case .logout:
+            // MARK: logout ca
+            newState.caConnectedTokenState.connectedToken = nil
+            newState.caConnectedTokenState.pin = nil
             newState.caGenerateKeyPairState.inProgress = false
             newState.caGenerateKeyPairState.key = nil
             newState.caGenerateCertState.inProgress = false
             newState.caGenerateCertState.keys = []
+
+            // MARK: logout bank
+            newState.bankDocumentListState.isLoading = false
+            newState.bankCertListState.certs = []
+            newState.bankSelectUserState.selectedUser = nil
+            newState.bankSelectedDocumentState.docContent = nil
+            newState.bankSelectedDocumentState.metadata = nil
         case .openLink:
             break
         case .readCerts:

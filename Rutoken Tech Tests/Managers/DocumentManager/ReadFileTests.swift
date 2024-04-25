@@ -20,7 +20,6 @@ class DocumentManagerReadFileTests: XCTestCase {
         continueAfterFailure = false
 
         helper = FileHelperMock()
-        helper.readFileCallback = { _ in "[]".data(using: .utf8)! }
         manager = DocumentManager(helper: helper)
     }
 
@@ -33,6 +32,7 @@ class DocumentManagerReadFileTests: XCTestCase {
         helper.readFileCallback = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
 
         manager = DocumentManager(helper: helper)
+        try manager.resetDirectory()
 
         let data = Data(repeating: 0x07, count: 777)
         helper.readDataFromTempDirCallback = { name in
@@ -59,6 +59,7 @@ class DocumentManagerReadFileTests: XCTestCase {
         helper.readFileCallback = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
 
         manager = DocumentManager(helper: helper)
+        try manager.resetDirectory()
 
         let data = Data(repeating: 0x07, count: 777)
         let cms = Data(repeating: 0x07, count: 77)
@@ -96,6 +97,7 @@ class DocumentManagerReadFileTests: XCTestCase {
         helper.readFileCallback = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
 
         manager = DocumentManager(helper: helper)
+        try manager.resetDirectory()
 
         let data = Data(repeating: 0x07, count: 777)
         helper.readDataFromTempDirCallback = { name in
@@ -124,6 +126,7 @@ class DocumentManagerReadFileTests: XCTestCase {
         helper.readFileCallback = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
 
         manager = DocumentManager(helper: helper)
+        try manager.resetDirectory()
 
         let data = Data(repeating: 0x07, count: 777)
         helper.readDataFromTempDirCallback = { _ in
@@ -147,6 +150,7 @@ class DocumentManagerReadFileTests: XCTestCase {
         helper.readFileCallback = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
 
         manager = DocumentManager(helper: helper)
+        try manager.resetDirectory()
 
         let encodedFile = "some text".data(using: .utf8)!.base64EncodedString().data(using: .utf8)!
         helper.readDataFromTempDirCallback = { _ in
@@ -162,6 +166,8 @@ class DocumentManagerReadFileTests: XCTestCase {
     }
 
     func testReadFileNoDocument() throws {
+        helper.readFileCallback = { _ in "[]".data(using: .utf8)! }
+        try manager.resetDirectory()
         XCTAssertThrowsError(try manager.readFile(with: "some name")) {
             XCTAssertEqual($0 as? DocumentManagerError, DocumentManagerError.general("Something went wrong during reading the file"))
         }
@@ -175,6 +181,7 @@ class DocumentManagerReadFileTests: XCTestCase {
                                 paymentDay: Date())
         helper.readFileCallback = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
         manager = DocumentManager(helper: helper)
+        try manager.resetDirectory()
 
         let error = FileHelperError.generalError(1, nil)
         helper.readDataFromTempDirCallback = { _ in

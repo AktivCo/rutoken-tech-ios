@@ -22,10 +22,10 @@ struct RutokenTechApp: App {
 
         if !ProcessInfo.isPreview {
             let userManager = UserManager()
-            guard let fileHelper = FileHelper(dirName: "BankTempDir"),
-                  let documentManager = DocumentManager(helper: fileHelper) else {
+            guard let fileHelper = FileHelper(dirName: "BankTempDir") else {
                 fatalError("Failed to initialize FileHelper")
             }
+            let documentManager = DocumentManager(helper: fileHelper)
             let engineWrapper = RtEngineWrapper()
             let openSslHelper = OpenSslHelper(engine: engineWrapper)
 

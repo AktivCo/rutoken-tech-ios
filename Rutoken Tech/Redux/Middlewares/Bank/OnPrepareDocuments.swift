@@ -31,6 +31,7 @@ class OnPrepareDocuments: Middleware {
 
         return AsyncStream<AppAction> { continuation in
             do {
+                try documentsManager.resetDirectory()
                 guard let bankKeyUrl = Bundle.getUrl(for: RtFile.rootCaKey.rawValue, in: RtFile.subdir),
                       let bankCertUrl = Bundle.getUrl(for: RtFile.rootCaCert.rawValue, in: RtFile.subdir) else {
                     throw CryptoManagerError.unknown

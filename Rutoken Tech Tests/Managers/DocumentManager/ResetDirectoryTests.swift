@@ -19,9 +19,6 @@ class DocumentManagerResetDirectoryTests: XCTestCase {
         continueAfterFailure = false
 
         helper = FileHelperMock()
-
-        // This is neccessary to DocumentManager init
-        helper.readFileCallback = { _ in "[]".data(using: .utf8)! }
         manager = DocumentManager(helper: helper)
     }
 
@@ -52,6 +49,34 @@ class DocumentManagerResetDirectoryTests: XCTestCase {
 
         wait(for: [exp1, exp2], timeout: 0.3)
         XCTAssertEqual(docs, [doc])
+    }
+
+    func testResetTempDirectorySeveralDocumentsSuccess() throws {
+        let document = BankDocument(name: "Платежное поручение №0543.pdf",
+                                action: .sign,
+                                amount: 35600,
+                                companyName: "ОАО \"Нефтегаз\"",
+                                paymentDay: Date())
+
+        let anotherDocument = BankDocument(name: "Платежное поручение №03423543.pdf",
+                                action: .verify,
+                                amount: 3561100,
+                                companyName: "ОАО \"Нефтегаз\"",
+                                paymentDay: Date())
+
+        helper.readFileCallback = { url in
+            XCTAssertEqual(Bundle.getUrl(for: "documents.json", in: "BankDocuments"), url)
+            return try BankDocument.jsonEncoder.encode([document, anotherDocument])
+        }
+        helper.copyFilesToTempDirCallback = { urls in
+            XCTAssertEqual(urls, [Bundle.getUrl(for: document.name, in: "BankDocuments")])
+        }
+        let manager = DocumentManager(helper: helper)
+        try manager.resetDirectory()
+        let documents = try awaitPublisherUnwrapped(manager.documents)
+        XCTAssertTrue(documents.contains(document))
+        XCTAssertTrue(documents.contains(anotherDocument))
+        XCTAssertEqual(documents.count, 2)
     }
 
     func testResetTempDirectoryClearTempDirError() throws {
