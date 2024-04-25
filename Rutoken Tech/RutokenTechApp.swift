@@ -58,6 +58,7 @@ struct RutokenTechApp: App {
                 OnCmsVerify(cryptoManager: cryptoManager, documentManager: documentManager),
                 OnEncryptDocument(cryptoManager: cryptoManager, documentManager: documentManager),
                 OnSelectDocument(documentManager: documentManager),
+                OnUpdateUrlsCurrentDoc(documentManager: documentManager),
                 // About
                 OnHandleOpenLink(),
                 OnInitCooldownNfc()

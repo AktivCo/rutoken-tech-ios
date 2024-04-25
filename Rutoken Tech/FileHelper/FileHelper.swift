@@ -14,6 +14,7 @@ protocol FileHelperProtocol {
     func saveFileToTempDir(with name: String, content: Data) throws
     func copyFilesToTempDir(from source: [URL]) throws
     func readDataFromTempDir(filename: String) throws -> Data
+    func getUrlFromTempDir(for documentName: String) -> URL?
 }
 
 enum FileHelperError: Error, Equatable {
@@ -27,7 +28,7 @@ class FileHelper: FileHelperProtocol {
         guard let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return nil
         }
-        tempDir = documentsUrl.appendingPathComponent(dirName)
+        tempDir = documentsUrl.appending(path: dirName)
     }
 
     // MARK: - Public API
@@ -57,7 +58,7 @@ class FileHelper: FileHelperProtocol {
     func copyFilesToTempDir(from source: [URL]) throws {
         for url in source {
             do {
-                try FileManager.default.copyItem(at: url, to: tempDir.appendingPathComponent(url.lastPathComponent))
+                try FileManager.default.copyItem(at: url, to: tempDir.appending(path: url.lastPathComponent))
             } catch {
                 throw FileHelperError.generalError(#line, error.localizedDescription)
             }
@@ -66,13 +67,18 @@ class FileHelper: FileHelperProtocol {
 
     func saveFileToTempDir(with name: String, content: Data) throws {
         do {
-            try content.write(to: tempDir.appendingPathComponent(name))
+            try content.write(to: tempDir.appending(path: name))
         } catch {
             throw FileHelperError.generalError(#line, error.localizedDescription)
         }
     }
 
     func readDataFromTempDir(filename: String) throws -> Data {
-        try readFile(from: tempDir.appendingPathComponent(filename))
+        try readFile(from: tempDir.appending(path: filename))
+    }
+
+    func getUrlFromTempDir(for documentName: String) -> URL? {
+        let url = tempDir.appending(path: documentName)
+        return FileManager.default.fileExists(atPath: url.path(percentEncoded: false)) ? url : nil
     }
 }

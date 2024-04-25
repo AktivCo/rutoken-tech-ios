@@ -73,4 +73,6 @@ enum AppAction {
     case encryptDocument(documentName: String)
     case selectDocument(BankDocument)
     case updateCurrentDoc(BankDocument?, BankFileContent?)
+    case updateUrlsForCurrentDoc(documentName: String, action: BankDocument.ActionType, inArchive: Bool)
+    case updateUrlsForShare([URL])
 }

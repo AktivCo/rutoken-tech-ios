@@ -36,6 +36,7 @@ class OnEncryptDocument: Middleware {
                     let encryptedData = try cryptoManager.encryptDocument(document: content, with: .file(.bankCert))
                     try documentManager.saveToFile(fileName: documentName + ".enc", data: encryptedData)
                     try documentManager.markAsArchived(documentName: documentName)
+                    continuation.yield(.updateUrlsForCurrentDoc(documentName: documentName, action: .encrypt, inArchive: true))
                     continuation.yield(.hideSheet)
                     continuation.yield(.showAlert(.documentEncrypted))
                 } catch let error as CryptoManagerError {

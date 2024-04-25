@@ -46,6 +46,13 @@ struct DocumentProcessView: View {
         }
     }
 
+    private func shareButton(urls: [URL]) -> some View {
+        ShareLink(items: urls) {
+            shareButtonLabel
+                .padding(.trailing, 19)
+        }
+    }
+
     private func navBar(title: String, date: String) -> some View {
         CustomNavBar {
             Button {
@@ -60,12 +67,7 @@ struct DocumentProcessView: View {
         } center: {
             mainTitle(title, date)
         } right: {
-            Button {
-            } label: {
-                shareButtonLabel
-                    .padding(.trailing, 19)
-            }
-            .frame(maxHeight: .infinity)
+            shareButton(urls: store.state.bankSelectedDocumentState.urlsForShare)
         }
         .frame(height: 44)
         .background(Color("IOSElementsTitleBarSurface"))
@@ -153,7 +155,9 @@ struct DocumentProcessView: View {
 
             switch store.state.bankSelectedDocumentState.docContent {
             case .singleFile(let content), .fileWithDetachedCMS(file: let content, cms: _):
-                if store.state.bankSelectedDocumentState.metadata?.action == .decrypt {
+                if store.state.bankSelectedDocumentState.metadata?.action == .decrypt ||
+                    (store.state.bankSelectedDocumentState.metadata?.action == .encrypt &&
+                     store.state.bankSelectedDocumentState.metadata?.inArchive == true) {
                     VStack {
                         Text(content.base64EncodedString())
                             .font(.caption)

@@ -67,6 +67,7 @@ struct AppReducer: Reducer {
             newState.bankSelectUserState.selectedUser = nil
             newState.bankSelectedDocumentState.docContent = nil
             newState.bankSelectedDocumentState.metadata = nil
+            newState.bankSelectedDocumentState.urlsForShare = []
         case .openLink:
             break
         case .readCerts:
@@ -121,6 +122,10 @@ struct AppReducer: Reducer {
         case let .updateCurrentDoc(metadata, content):
             newState.bankSelectedDocumentState.metadata = metadata
             newState.bankSelectedDocumentState.docContent = content
+        case .updateUrlsForCurrentDoc:
+            break
+        case let .updateUrlsForShare(urls):
+            newState.bankSelectedDocumentState.urlsForShare = urls
         }
         return newState
     }

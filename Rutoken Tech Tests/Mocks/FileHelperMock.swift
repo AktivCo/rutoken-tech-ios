@@ -27,4 +27,9 @@ class FileHelperMock: FileHelperProtocol {
         try readDataFromTempDirCallback(filename)
     }
     var readDataFromTempDirCallback: (String) throws -> Data = { _ in Data() }
+
+    func getUrlFromTempDir(for documentName: String) -> URL? {
+        getUrlFromTempDirCallback(documentName)
+    }
+    var getUrlFromTempDirCallback: (String) -> URL? = { _ in URL(string: "")}
 }

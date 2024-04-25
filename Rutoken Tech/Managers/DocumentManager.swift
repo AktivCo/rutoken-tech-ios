@@ -16,6 +16,7 @@ protocol DocumentManagerProtocol {
     func readFile(with name: String) throws -> BankFileContent
     func saveToFile(fileName: String, data: Data) throws
     func markAsArchived(documentName: String) throws
+    func getUrl(for documentName: String) -> URL?
 }
 
 enum DocumentManagerError: Error, Equatable {
@@ -92,5 +93,9 @@ class DocumentManager: DocumentManagerProtocol {
         documents[index].inArchive = true
         documents[index].dateOfChange = Date()
         documentsPublisher.send(documents)
+    }
+
+    func getUrl(for documentName: String) -> URL? {
+        fileHelper.getUrlFromTempDir(for: documentName)
     }
 }

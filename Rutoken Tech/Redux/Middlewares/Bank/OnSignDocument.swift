@@ -41,6 +41,9 @@ class OnSignDocument: Middleware {
                         }
                         try documentManager.saveToFile(fileName: documentName + ".sig", data: cmsData)
                         try documentManager.markAsArchived(documentName: documentName)
+
+                        continuation.yield(.updateUrlsForCurrentDoc(documentName: documentName, action: .sign, inArchive: true))
+
                         continuation.yield(.hideSheet)
                         continuation.yield(.showAlert(.documentSigned))
                     }

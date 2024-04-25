@@ -85,6 +85,7 @@
 		7D2021472AEC16E8003E2B73 /* IpadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2021462AEC16E8003E2B73 /* IpadRootView.swift */; };
 		7D28BD822B3082990079AE1C /* CaGenerateKeyPairState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D28BD812B3082990079AE1C /* CaGenerateKeyPairState.swift */; };
 		7D28BD842B3083460079AE1C /* CaGenerateKeyPairView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D28BD832B3083460079AE1C /* CaGenerateKeyPairView.swift */; };
+		7D34EF6C2BF655D7001CC87C /* OnUpdateUrlsCurrentDoc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D34EF6B2BF655D7001CC87C /* OnUpdateUrlsCurrentDoc.swift */; };
 		7D38D6DA2B0E2C190045FBAD /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D38D6D92B0E2C190045FBAD /* AppState.swift */; };
 		7D38D6DC2B0E2D3F0045FBAD /* AppAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D38D6DB2B0E2D3F0045FBAD /* AppAction.swift */; };
 		7D38D6E02B0E33780045FBAD /* AppReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D38D6DF2B0E33780045FBAD /* AppReducer.swift */; };
@@ -240,6 +241,7 @@
 		7D2021462AEC16E8003E2B73 /* IpadRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IpadRootView.swift; sourceTree = "<group>"; };
 		7D28BD812B3082990079AE1C /* CaGenerateKeyPairState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaGenerateKeyPairState.swift; sourceTree = "<group>"; };
 		7D28BD832B3083460079AE1C /* CaGenerateKeyPairView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaGenerateKeyPairView.swift; sourceTree = "<group>"; };
+		7D34EF6B2BF655D7001CC87C /* OnUpdateUrlsCurrentDoc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnUpdateUrlsCurrentDoc.swift; sourceTree = "<group>"; };
 		7D38D6D92B0E2C190045FBAD /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		7D38D6DB2B0E2D3F0045FBAD /* AppAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAction.swift; sourceTree = "<group>"; };
 		7D38D6DF2B0E33780045FBAD /* AppReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReducer.swift; sourceTree = "<group>"; };
@@ -433,6 +435,7 @@
 				D4871D6C2BC81036008B027C /* OnSignDocument.swift */,
 				44CBDBE72BCD777E00F28E61 /* OnCmsVerify.swift */,
 				44F55C942BF21B0D007F441C /* OnEncryptDocument.swift */,
+				7D34EF6B2BF655D7001CC87C /* OnUpdateUrlsCurrentDoc.swift */,
 			);
 			path = Bank;
 			sourceTree = "<group>";
@@ -1061,6 +1064,7 @@
 				D4D22A322BAD7FF000B93DA9 /* DocumentListView.swift in Sources */,
 				7DDBF5E62BC847B700B3AF30 /* DocumentProcessView.swift in Sources */,
 				5EF30EDE2B1A823700E48627 /* OnPerformTokenConnection.swift in Sources */,
+				7D34EF6C2BF655D7001CC87C /* OnUpdateUrlsCurrentDoc.swift in Sources */,
 				D4B130B32B0DD52A00AD390F /* Token.swift in Sources */,
 				446E136C2B85D3AC0060ECEE /* OnPerformReadCerts.swift in Sources */,
 				44A502C62BB1AC1F006236E7 /* OnResetDocuments.swift in Sources */,
