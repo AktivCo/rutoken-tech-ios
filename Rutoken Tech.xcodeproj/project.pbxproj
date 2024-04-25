@@ -124,6 +124,7 @@
 		D49953C52B58343200E62B5B /* CaGenerateCertState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49953C42B58343200E62B5B /* CaGenerateCertState.swift */; };
 		D499FDBB2BD27D7F0053FB28 /* View+getSaveAreaInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = D499FDBA2BD27D7F0053FB28 /* View+getSaveAreaInsets.swift */; };
 		D499FDBD2BD294160053FB28 /* OnPrepareDocuments.swift in Sources */ = {isa = PBXBuildFile; fileRef = D499FDBC2BD294160053FB28 /* OnPrepareDocuments.swift */; };
+		D499FDC12BDBA4D50053FB28 /* WrappedValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D499FDC02BDBA4D50053FB28 /* WrappedValue.swift */; };
 		D4B130A82B0CFD2F00AD390F /* CryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */; };
 		D4B130AB2B0CFD7300AD390F /* TokenInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130AA2B0CFD7300AD390F /* TokenInfo.swift */; };
 		D4B130B02B0CFFCD00AD390F /* TokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130AF2B0CFFCD00AD390F /* TokenModel.swift */; };
@@ -274,6 +275,7 @@
 		D49953C42B58343200E62B5B /* CaGenerateCertState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaGenerateCertState.swift; sourceTree = "<group>"; };
 		D499FDBA2BD27D7F0053FB28 /* View+getSaveAreaInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+getSaveAreaInsets.swift"; sourceTree = "<group>"; };
 		D499FDBC2BD294160053FB28 /* OnPrepareDocuments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnPrepareDocuments.swift; sourceTree = "<group>"; };
+		D499FDC02BDBA4D50053FB28 /* WrappedValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedValue.swift; sourceTree = "<group>"; };
 		D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoManager.swift; sourceTree = "<group>"; };
 		D4B130AA2B0CFD7300AD390F /* TokenInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenInfo.swift; sourceTree = "<group>"; };
 		D4B130AF2B0CFFCD00AD390F /* TokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenModel.swift; sourceTree = "<group>"; };
@@ -773,6 +775,7 @@
 			children = (
 				D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */,
 				441658462B5988F000225948 /* WrappedPointer.swift */,
+				D499FDC02BDBA4D50053FB28 /* WrappedValue.swift */,
 				D4FEB5C62B62675400D3BAD2 /* ScrollViewOffset.swift */,
 				D437117C2B67A70A00441FBC /* SizeReaderViewModifier.swift */,
 				D499FDBA2BD27D7F0053FB28 /* View+getSaveAreaInsets.swift */,
@@ -1040,6 +1043,7 @@
 				D4FAF1772B8347530024EFDA /* BankSelectUserState.swift in Sources */,
 				4422B8222BB1540700A4EDB4 /* BankDocumentListState.swift in Sources */,
 				7D9E5A602B0BA55E00E2EAB7 /* CaConnectedTokenState.swift in Sources */,
+				D499FDC12BDBA4D50053FB28 /* WrappedValue.swift in Sources */,
 				D453F5FE2B90845A008DD9E1 /* PaymentListView.swift in Sources */,
 				441658472B5988F000225948 /* WrappedPointer.swift in Sources */,
 				4483F18C2B7A29420039EF3F /* OnStartMonitoring.swift in Sources */,

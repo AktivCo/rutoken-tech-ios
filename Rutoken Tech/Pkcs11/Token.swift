@@ -41,72 +41,48 @@ class Token: TokenProtocol, Identifiable {
     private let slot: CK_SLOT_ID
     private let session: Pkcs11Session
     private let engine: RtEngineWrapperProtocol
+    private var tokenInfo: CK_TOKEN_INFO
+    private var extendedTokenInfo: CK_TOKEN_INFO_EXTENDED
 
-    let label: String
-    let serial: String
-    let model: TokenModel
-    let currentInterface: TokenInterface
-    let supportedInterfaces: Set<TokenInterface>
+    var label: String = ""
+    var serial: String = ""
+    var model: TokenModel = .rutoken2_2000
+    var currentInterface: TokenInterface = .usb
+    var supportedInterfaces: Set<TokenInterface> = .init()
 
     init?(with slot: CK_SLOT_ID, _ engine: RtEngineWrapperProtocol) {
         self.slot = slot
         self.engine = engine
 
+        // MARK: Get tokenInfo and tokenExtendedInfo
         var tokenInfo = CK_TOKEN_INFO()
         var rv = C_GetTokenInfo(slot, &tokenInfo)
         guard rv == CKR_OK else {
             return nil
         }
+        self.tokenInfo = tokenInfo
 
-        // MARK: Get serial number
-        guard let hexSerial = String.getFrom(tokenInfo.serialNumber),
-              let decimalSerial = Int(hexSerial.trimmingCharacters(in: .whitespacesAndNewlines), radix: 16) else {
-            return nil
-        }
-        self.serial = String(format: "%0.10d", decimalSerial)
-
-        // MARK: Get label
-        guard let label = String.getFrom(tokenInfo.label)?.trimmingCharacters(in: .whitespacesAndNewlines) else {
-            return nil
-        }
-        self.label = label
-
-        // MARK: Get supported interfaces
-        guard let session = Pkcs11Session(slot: self.slot) else {
-            return nil
-        }
-        self.session = session
-
-        guard let (currentInterfaceBits, supportedInterfacesBits) = Token.getTokenInterfaces(session: session.handle) else {
-            return nil
-        }
-
-        guard let currentInterface = TokenInterface(currentInterfaceBits) else {
-            return nil
-        }
-        self.currentInterface = currentInterface
-
-        self.supportedInterfaces = Set([TokenInterface](bits: supportedInterfacesBits))
-
-        // MARK: Get model
         var extendedTokenInfo = CK_TOKEN_INFO_EXTENDED()
         extendedTokenInfo.ulSizeofThisStructure = UInt(MemoryLayout.size(ofValue: extendedTokenInfo))
         rv = C_EX_GetTokenInfoExtended(slot, &extendedTokenInfo)
         guard rv == CKR_OK else {
             return nil
         }
+        self.extendedTokenInfo = extendedTokenInfo
 
-        if tokenInfo.firmwareVersion.major >= 32 {
-            guard let modelName = Token.getTokenVendorModel(session: session.handle) else {
-                return nil
-            }
-            self.model = .rutokenSelfIdentify(modelName)
-        } else {
-            guard let model = TokenModel(tokenInfo.hardwareVersion, tokenInfo.firmwareVersion,
-                                         extendedTokenInfo, supportedInterfaces: supportedInterfaces) else {
-                return nil
-            }
-            self.model = model
+        // MARK: Get PkcsSession
+        guard let session = Pkcs11Session(slot: self.slot) else {
+            return nil
+        }
+        self.session = session
+
+        do {
+            let (currentInterface, supportedInterfaces) = try getTokenInterfaces()
+            self.currentInterface = currentInterface
+            self.supportedInterfaces = supportedInterfaces
+            try initTokenInfo()
+        } catch {
+            return nil
         }
     }
 
@@ -133,7 +109,7 @@ class Token: TokenProtocol, Identifiable {
             certTemplate.append(BufferAttribute(type: .id, value: Array(id.utf8)))
         }
 
-        let certObjects = try Token.findObjects(certTemplate.map { $0.attribute }, in: session.handle)
+        let certObjects = try findObjects(certTemplate.map { $0.attribute })
 
         for obj in certObjects {
             certs.append(Pkcs11Object(with: obj, session))
@@ -169,7 +145,7 @@ class Token: TokenProtocol, Identifiable {
         }
 
         // MARK: Find public keys
-        let pubKeyObjects = try Token.findObjects(pubKeyTemplate.map { $0.attribute }, in: session.handle)
+        let pubKeyObjects = try findObjects(pubKeyTemplate.map { $0.attribute })
 
         var publicKeys: [Pkcs11Object] = []
         for obj in pubKeyObjects {
@@ -177,7 +153,7 @@ class Token: TokenProtocol, Identifiable {
         }
 
         // MARK: Find private keys
-        let privateKeyObjects = try Token.findObjects(privateKeyTemplate.map { $0.attribute }, in: session.handle)
+        let privateKeyObjects = try findObjects(privateKeyTemplate.map { $0.attribute })
 
         for obj in privateKeyObjects {
             let privateKey = Pkcs11Object(with: obj, session)
@@ -253,7 +229,7 @@ class Token: TokenProtocol, Identifiable {
             BufferAttribute(type: .id, value: Array(id.utf8))
         ]
 
-        let objects = try Token.findObjects(template.map { $0.attribute }, in: session.handle)
+        let objects = try findObjects(template.map { $0.attribute })
 
         guard !objects.isEmpty else {
             throw TokenError.generalError
@@ -304,7 +280,7 @@ class Token: TokenProtocol, Identifiable {
         }
     }
 
-    class private func getTokenInterfaces(session: CK_SESSION_HANDLE) -> (CK_ULONG, CK_ULONG)? {
+    private func getTokenInterfaces() throws -> (TokenInterface, Set<TokenInterface>) {
         let objectAttributes = [
             ULongAttribute(type: .classObject, value: CKO_HW_FEATURE),
             ULongAttribute(type: .hwFeatureType, value: CKH_VENDOR_TOKEN_INFO)
@@ -314,35 +290,125 @@ class Token: TokenProtocol, Identifiable {
             BufferAttribute(type: .vendorSupportedInterface)
         ]
 
-        guard let template = readAttributes(objectAttributes: objectAttributes, attributes: attributes, in: session) else {
-            return nil
+        guard let handle = try? findObjects(objectAttributes.map { $0.attribute }).first else {
+            throw TokenError.generalError
         }
-        defer {
-            template.forEach {
-                $0.pValue.deallocate()
-            }
+        guard let wrappedTemplate = readAttributes(handle: handle, attributes: attributes) else {
+            throw TokenError.generalError
         }
-        return (UnsafeRawBufferPointer(start: template[0].pValue.assumingMemoryBound(to: UInt8.self),
-                                       count: Int(template[0].ulValueLen)).load(as: CK_ULONG.self),
-                UnsafeRawBufferPointer(start: template[1].pValue.assumingMemoryBound(to: UInt8.self),
-                                       count: Int(template[1].ulValueLen)).load(as: CK_ULONG.self))
+        let template = wrappedTemplate.value
+
+        let currentInterfaceBits = UnsafeRawBufferPointer(start: template[0].pValue.assumingMemoryBound(to: UInt8.self),
+                                                          count: Int(template[0].ulValueLen)).load(as: CK_ULONG.self)
+        let supportedInterfacesBits = UnsafeRawBufferPointer(start: template[1].pValue.assumingMemoryBound(to: UInt8.self),
+                                                             count: Int(template[1].ulValueLen)).load(as: CK_ULONG.self)
+
+        guard let currentInterface = TokenInterface(currentInterfaceBits) else {
+            throw TokenError.generalError
+        }
+        return (currentInterface, Set([TokenInterface](bits: supportedInterfacesBits)))
     }
 
-    class private func getTokenVendorModel(session: CK_SESSION_HANDLE) -> String? {
+    private func initTokenInfo() throws {
+        // MARK: Get serial number
+        guard let hexSerial = String.getFrom(tokenInfo.serialNumber),
+              let decimalSerial = Int(hexSerial.trimmingCharacters(in: .whitespacesAndNewlines), radix: 16) else {
+            throw TokenError.generalError
+        }
+        serial = String(format: "%0.10d", decimalSerial)
+
+        // MARK: Get label
+        guard let label = String.getFrom(tokenInfo.label)?.trimmingCharacters(in: .whitespacesAndNewlines) else {
+            throw TokenError.generalError
+        }
+        self.label = label
+
+        // MARK: Get token model
+        if tokenInfo.firmwareVersion.major >= 32 {
+            guard let modelName = getTokenModelFromToken() else {
+                throw TokenError.generalError
+            }
+            model = .rutokenSelfIdentify(modelName)
+        } else {
+            guard let model = computeTokenModel() else {
+                throw TokenError.generalError
+            }
+            self.model = model
+        }
+    }
+
+    private func computeTokenModel() -> TokenModel? {
+        let AA = tokenInfo.hardwareVersion.major
+        let BB = tokenInfo.hardwareVersion.minor
+        let CC = tokenInfo.firmwareVersion.major
+        let DD = tokenInfo.firmwareVersion.minor
+        let containsFlashDrive = extendedTokenInfo.flags & TOKEN_FLAGS_HAS_FLASH_DRIVE == 0 ? false : true
+        let containsTouchButton = extendedTokenInfo.flags & TOKEN_FLAGS_HAS_BUTTON == 0 ? false : true
+
+        switch (AA, BB, CC, DD, containsFlashDrive, containsTouchButton) {
+        case (20, _, 23, _, false, false),
+            (59, _, 26, _, false, false):
+            return .rutoken2_2000
+        case (54, _, 23, 2, false, false):
+            return .rutoken2_2100
+        case (20, _, 24, _, false, false):
+            return .rutoken2_2200
+        case (20, _, 26, _, false, false),
+            (59, _, 27, _, false, false):
+            return .rutoken2_3000
+        case (55, _, 24, _, false, false):
+            return .rutoken2_4000
+        case (55, _, 24, _, false, true):
+            return .rutoken2_4400
+        case (55, _, 24, _, true, false),
+            (59, _, 26, _, true, false),
+            (55, _, 27, _, true, false),
+            (58...59, _, 27, _, true, false):
+            return .rutoken2_4500
+        case (55, _, 24, _, true, true),
+            (55, _, 27, _, true, true),
+            (59, _, 27, _, true, true):
+            return .rutoken2_4900
+        case (_, _, 21, _, false, false),
+            (_, _, 25, _, false, false):
+            return .rutoken2_8003
+        case (59, _, 30, _, false, false):
+            return .rutoken3_3200
+        case (65, _, 30, _, false, false):
+            return  .rutoken3_3220
+        case (60, _, 30, _, false, false),
+            (60, _, 28, _, false, false):
+            if supportedInterfaces.contains(.nfc) {
+                return .rutoken3Nfc_3100
+            } else {
+                return  .rutoken3_3100
+            }
+        case (60, _, 31, _, false, false):
+            return  .rutoken3NfcMf_3110
+        case (_, _, 30, _, false, false):
+            return .rutoken3Ble_8100
+        case (_, _, 24, _, false, false):
+            return .rutoken2_2010
+        default:
+            return nil
+        }
+    }
+
+    private func getTokenModelFromToken() -> String? {
         let objectAttributes = [
             ULongAttribute(type: .classObject, value: CKO_HW_FEATURE),
             ULongAttribute(type: .hwFeatureType, value: CKH_VENDOR_TOKEN_INFO)
         ]
         let attribute = BufferAttribute(type: .vendorModelName)
 
-        guard let template = readAttributes(objectAttributes: objectAttributes, attributes: [attribute], in: session) else {
+        guard let handle = try? findObjects(objectAttributes.map { $0.attribute }).first else {
             return nil
         }
-        defer {
-            template.forEach {
-                $0.pValue.deallocate()
-            }
+        guard let wrappedTemplate = readAttributes(handle: handle, attributes: [attribute]) else {
+            return nil
         }
+        let template = wrappedTemplate.value
+
         guard let stringPtr = UnsafeRawBufferPointer(start: template[0].pValue.assumingMemoryBound(to: UInt8.self),
                                                      count: Int(template[0].ulValueLen)).assumingMemoryBound(to: CChar.self).baseAddress else {
             return nil
@@ -350,13 +416,10 @@ class Token: TokenProtocol, Identifiable {
         return String(cString: stringPtr)
     }
 
-    class private func readAttributes(objectAttributes: [PkcsAttribute],
-                                      attributes: [PkcsAttribute], in session: CK_SESSION_HANDLE) -> [CK_ATTRIBUTE]? {
-        guard let handle = try? Token.findObjects(objectAttributes.map { $0.attribute }, in: session).first else {
-            return nil
-        }
+    private func readAttributes(handle: CK_OBJECT_HANDLE,
+                                attributes: [PkcsAttribute]) -> WrappedValue<[CK_ATTRIBUTE]>? {
         var template = attributes.map { $0.attribute }
-        var rv = C_GetAttributeValue(session, handle, &template, CK_ULONG(template.count))
+        var rv = C_GetAttributeValue(session.handle, handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             return nil
         }
@@ -365,22 +428,25 @@ class Token: TokenProtocol, Identifiable {
             template[i].pValue = UnsafeMutableRawPointer.allocate(byteCount: Int(template[i].ulValueLen), alignment: 1)
         }
 
-        rv = C_GetAttributeValue(session, handle, &template, CK_ULONG(template.count))
+        rv = C_GetAttributeValue(session.handle, handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             return nil
         }
 
-        return template
+        let result = WrappedValue(template, { $0.forEach { attrib in
+            attrib.pValue.deallocate()
+        }})
+        return result
     }
 
-    class private func findObjects(_ attributes: [CK_ATTRIBUTE], in session: CK_SESSION_HANDLE) throws -> [CK_OBJECT_HANDLE] {
+    private func findObjects(_ attributes: [CK_ATTRIBUTE]) throws -> [CK_OBJECT_HANDLE] {
         var template = attributes
-        var rv = C_FindObjectsInit(session, &template, CK_ULONG(template.count))
+        var rv = C_FindObjectsInit(session.handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
         }
         defer {
-            C_FindObjectsFinal(session)
+            C_FindObjectsFinal(session.handle)
         }
 
         var count: CK_ULONG = 0
@@ -390,7 +456,7 @@ class Token: TokenProtocol, Identifiable {
         repeat {
             var handles: [CK_OBJECT_HANDLE] = Array(repeating: 0x00, count: Int(maxCount))
 
-            rv = C_FindObjects(session, &handles, maxCount, &count)
+            rv = C_FindObjects(session.handle, &handles, maxCount, &count)
             guard rv == CKR_OK else {
                 throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
             }
