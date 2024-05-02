@@ -21,12 +21,12 @@ struct BankDocument: Codable, Identifiable {
     let action: ActionType
     let amount: Int
     let companyName: String
-    let paymentDay: Date
+    let paymentTime: Date
     var inArchive: Bool = false
 
     static var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.yyyy"
+        dateFormatter.dateFormat = "dd.MM.yyyy H:mm"
         return dateFormatter
     }
 
@@ -46,7 +46,7 @@ struct BankDocument: Codable, Identifiable {
         case name
         case amount
         case companyName
-        case paymentDay
+        case paymentTime
         case action
     }
 
@@ -66,7 +66,7 @@ extension BankDocument: Equatable {
         lhs.amount == rhs.amount &&
         lhs.companyName == rhs.companyName &&
         lhs.inArchive == rhs.inArchive &&
-        lhs.paymentDay.getString(with: dateFormatter.dateFormat) == rhs.paymentDay.getString(with: dateFormatter.dateFormat)
+        lhs.paymentTime.getString(with: dateFormatter.dateFormat) == rhs.paymentTime.getString(with: dateFormatter.dateFormat)
     }
 }
 

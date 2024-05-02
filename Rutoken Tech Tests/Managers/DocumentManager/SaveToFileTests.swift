@@ -33,7 +33,7 @@ class DocumentManagerSaveToFileTests: XCTestCase {
                                 action: .sign,
                                 amount: amount,
                                 companyName: company,
-                                paymentDay: paymentDay)
+                                paymentTime: paymentDay)
     }
 
     func testSaveToFileSuccess() throws {

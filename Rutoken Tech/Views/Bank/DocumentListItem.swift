@@ -59,11 +59,11 @@ struct DocumentListItem_Previews: PreviewProvider {
         Group {
             DocumentListItem(document: BankDocument(
                 name: "Платежное поручение №121", action: .verify, amount: 14500,
-                companyName: "ОАО “Нефтегаз”", paymentDay: date))
+                companyName: "ОАО “Нефтегаз”", paymentTime: date))
 
             DocumentListItem(document: BankDocument(
                 name: "Платежное поручение №121", action: .sign, amount: 14500,
-                companyName: "ОАО “Нефтегаз”", paymentDay: date))
+                companyName: "ОАО “Нефтегаз”", paymentTime: date))
         }
         .padding(15)
         .background(Color.RtColors.rtSurfaceSecondary)

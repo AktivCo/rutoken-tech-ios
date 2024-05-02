@@ -121,7 +121,7 @@ struct DocumentProcessView: View {
     var body: some View {
         VStack(spacing: 0) {
             navBar(title: store.state.bankSelectedDocumentState.metadata?.name ?? "",
-                   date: store.state.bankSelectedDocumentState.metadata?.paymentDay.getRussianStringWithTime ?? "")
+                   date: store.state.bankSelectedDocumentState.metadata?.paymentTime.getRussianStringWithTime ?? "")
 
             switch store.state.bankSelectedDocumentState.docContent {
             case .singleFile(let content), .fileWithDetachedCMS(file: let content, cms: _):
@@ -164,7 +164,7 @@ struct DocumentProcessView_Previews: PreviewProvider {
 
         let metadata = BankDocument(
             name: "Платежное поручение №00121", action: .encrypt, amount: 14500,
-            companyName: "ОАО “Нефтегаз”", paymentDay: Date(timeIntervalSince1970: 1720000000))
+            companyName: "ОАО “Нефтегаз”", paymentTime: Date(timeIntervalSince1970: 1720000000))
         let url = Bundle.main.url(forResource: metadata.name, withExtension: ".pdf", subdirectory: "BankDocuments")!
         let data = try? Data(contentsOf: url)
         let content = BankFileContent.singleFile(data!)
@@ -196,7 +196,7 @@ struct DocumentProcessView_Previews: PreviewProvider {
 
         let encryptMetadata = BankDocument(
             name: "Платежное поручение №00121", action: .decrypt, amount: 14500,
-            companyName: "ОАО “Нефтегаз”", paymentDay: Date(timeIntervalSince1970: 1720000000))
+            companyName: "ОАО “Нефтегаз”", paymentTime: Date(timeIntervalSince1970: 1720000000))
 
         let encryptedDoc = BankSelectedDocumentState(metadata: encryptMetadata,
                                                      docContent: .singleFile(encrypted.data(using: .utf8)!))

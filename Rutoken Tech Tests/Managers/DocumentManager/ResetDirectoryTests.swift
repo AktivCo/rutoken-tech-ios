@@ -32,7 +32,7 @@ class DocumentManagerResetDirectoryTests: XCTestCase {
                                action: .encrypt,
                                amount: amount,
                                companyName: company,
-                               paymentDay: paymentDay)
+                               paymentTime: paymentDay)
 
         let exp1 = XCTestExpectation(description: "Clear temp directory")
         let exp2 = XCTestExpectation(description: "Copy files to temp directory")
@@ -56,13 +56,13 @@ class DocumentManagerResetDirectoryTests: XCTestCase {
                                 action: .sign,
                                 amount: 35600,
                                 companyName: "ОАО \"Нефтегаз\"",
-                                paymentDay: Date())
+                                paymentTime: Date())
 
         let anotherDocument = BankDocument(name: "Платежное поручение №03423543.pdf",
                                 action: .verify,
                                 amount: 3561100,
                                 companyName: "ОАО \"Нефтегаз\"",
-                                paymentDay: Date())
+                                paymentTime: Date())
 
         helper.readFileCallback = { url in
             XCTAssertEqual(Bundle.getUrl(for: "documents.json", in: "BankDocuments"), url)

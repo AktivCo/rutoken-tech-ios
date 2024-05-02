@@ -171,31 +171,31 @@ struct PaymentListView_Previews: PreviewProvider {
         var archivedDocument = BankDocument(
             name: "Платежное поручение №121", action: .decrypt, amount: 1500,
             companyName: "ОАО “Нефтегаз”",
-            paymentDay: Calendar.current.date(byAdding: .day, value: -2, to: date)!)
+            paymentTime: Calendar.current.date(byAdding: .day, value: -2, to: date)!)
         var _ = archivedDocument.inArchive = true
         let docListState = BankDocumentListState(documents: [
             BankDocument(
                 name: "Платежное поручение №121", action: .verify, amount: 14500,
-                companyName: "ОАО “Нефтегаз”", paymentDay: date),
+                companyName: "ОАО “Нефтегаз”", paymentTime: date),
             BankDocument(
                 name: "Платежное поручение №121", action: .decrypt, amount: 29345,
-                companyName: "ОАО “Нефтегаз”", paymentDay: date),
+                companyName: "ОАО “Нефтегаз”", paymentTime: date),
             BankDocument(
                 name: "Платежное поручение №121", action: .verify, amount: 356000,
-                companyName: "ОАО “Нефтегаз”", paymentDay: Calendar.current.date(byAdding: .day, value: -2, to: date)!),
+                companyName: "ОАО “Нефтегаз”", paymentTime: Calendar.current.date(byAdding: .day, value: -2, to: date)!),
             archivedDocument,
             BankDocument(
                 name: "Платежное поручение №121", action: .sign, amount: 14500,
-                companyName: "ОАО “Нефтегаз”", paymentDay: date),
+                companyName: "ОАО “Нефтегаз”", paymentTime: date),
             BankDocument(
                 name: "Платежное поручение №121", action: .encrypt, amount: 29345,
-                companyName: "ОАО “Нефтегаз”", paymentDay: Calendar.current.date(byAdding: .day, value: -3, to: date)!),
+                companyName: "ОАО “Нефтегаз”", paymentTime: Calendar.current.date(byAdding: .day, value: -3, to: date)!),
             BankDocument(
                 name: "Платежное поручение №121", action: .sign, amount: 356000,
-                companyName: "ОАО “Нефтегаз”", paymentDay: Calendar.current.date(byAdding: .day, value: -4, to: date)!),
+                companyName: "ОАО “Нефтегаз”", paymentTime: Calendar.current.date(byAdding: .day, value: -4, to: date)!),
             BankDocument(
                 name: "Платежное поручение №121", action: .encrypt, amount: 1500,
-                companyName: "ОАО “Нефтегаз”", paymentDay: Calendar.current.date(byAdding: .day, value: -2, to: date)!)
+                companyName: "ОАО “Нефтегаз”", paymentTime: Calendar.current.date(byAdding: .day, value: -2, to: date)!)
         ])
         let store = Store(initialState: AppState(bankDocumentListState: docListState), reducer: AppReducer(), middlewares: [])
         PaymentListView()

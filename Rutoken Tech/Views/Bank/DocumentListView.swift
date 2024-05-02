@@ -12,7 +12,7 @@ import TinyAsyncRedux
 struct DocumentListView: View {
     let documents: [BankDocument]
     var body: some View {
-        let docsDictionary = Dictionary(grouping: documents, by: { $0.paymentDay })
+        let docsDictionary = Dictionary(grouping: documents, by: { $0.paymentTime })
         ForEach(docsDictionary.keys.sorted(by: { $0 > $1 }), id: \.timeIntervalSince1970) { key in
             VStack(alignment: .leading, spacing: 0) {
                 if let documents = docsDictionary[key] {
@@ -42,18 +42,18 @@ struct DocumentListView_Previews: PreviewProvider {
         let documents = [
             BankDocument(
                 name: "Платежное поручение №121", action: .verify, amount: 14500,
-                companyName: "ОАО “Нефтегаз”", paymentDay: date),
+                companyName: "ОАО “Нефтегаз”", paymentTime: date),
             BankDocument(
                 name: "Платежное поручение №121", action: .decrypt, amount: 29345,
-                companyName: "ОАО “Нефтегаз”", paymentDay: date),
+                companyName: "ОАО “Нефтегаз”", paymentTime: date),
             BankDocument(
                 name: "Платежное поручение №121", action: .verify, amount: 356000,
                 companyName: "ОАО “Нефтегаз”",
-                paymentDay: Calendar.current.date(byAdding: .day, value: -2, to: date)!),
+                paymentTime: Calendar.current.date(byAdding: .day, value: -2, to: date)!),
             BankDocument(
                 name: "Платежное поручение №121", action: .decrypt, amount: 1500,
                 companyName: "ОАО “Нефтегаз”",
-                paymentDay: Calendar.current.date(byAdding: .day, value: -2, to: date)!)
+                paymentTime: Calendar.current.date(byAdding: .day, value: -2, to: date)!)
         ]
         VStack(spacing: 0) {
             DocumentListView(documents: documents)

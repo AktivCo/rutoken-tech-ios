@@ -28,7 +28,7 @@ class DocumentManagerReadFileTests: XCTestCase {
                                 action: .sign,
                                 amount: 35600,
                                 companyName: "ОАО \"Нефтегаз\"",
-                                paymentDay: Date())
+                                paymentTime: Date())
         helper.readFileCallback = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
 
         manager = DocumentManager(helper: helper)
@@ -55,7 +55,7 @@ class DocumentManagerReadFileTests: XCTestCase {
                                 action: .verify,
                                 amount: 35600,
                                 companyName: "ОАО \"Нефтегаз\"",
-                                paymentDay: Date())
+                                paymentTime: Date())
         helper.readFileCallback = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
 
         manager = DocumentManager(helper: helper)
@@ -93,7 +93,7 @@ class DocumentManagerReadFileTests: XCTestCase {
                                 action: .verify,
                                 amount: 35600,
                                 companyName: "ОАО \"Нефтегаз\"",
-                                paymentDay: Date())
+                                paymentTime: Date())
         helper.readFileCallback = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
 
         manager = DocumentManager(helper: helper)
@@ -122,7 +122,7 @@ class DocumentManagerReadFileTests: XCTestCase {
                                 action: .encrypt,
                                 amount: 35600,
                                 companyName: "ОАО \"Нефтегаз\"",
-                                paymentDay: Date())
+                                paymentTime: Date())
         helper.readFileCallback = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
 
         manager = DocumentManager(helper: helper)
@@ -146,7 +146,7 @@ class DocumentManagerReadFileTests: XCTestCase {
                                 action: .decrypt,
                                 amount: 35600,
                                 companyName: "ОАО \"Нефтегаз\"",
-                                paymentDay: Date())
+                                paymentTime: Date())
         helper.readFileCallback = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
 
         manager = DocumentManager(helper: helper)
@@ -178,7 +178,7 @@ class DocumentManagerReadFileTests: XCTestCase {
                                 action: .sign,
                                 amount: 35600,
                                 companyName: "ОАО \"Нефтегаз\"",
-                                paymentDay: Date())
+                                paymentTime: Date())
         helper.readFileCallback = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
         manager = DocumentManager(helper: helper)
         try manager.resetDirectory()

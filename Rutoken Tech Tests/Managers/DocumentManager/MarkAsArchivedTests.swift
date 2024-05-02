@@ -30,7 +30,7 @@ class DocumentManagerMarkAsArchivedTests: XCTestCase {
                                 action: .sign,
                                 amount: 35600,
                                 companyName: "ОАО \"Нефтегаз\"",
-                                paymentDay: Date())
+                                paymentTime: Date())
         helper.readFileCallback = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
 
         manager = DocumentManager(helper: helper)
