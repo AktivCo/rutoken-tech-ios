@@ -31,6 +31,8 @@ int exposed_sk_X509_push(STACK_OF(X509)* certStack, X509* cert);
 
 void exposed_sk_X509_pop_free(STACK_OF(X509)* certStack);
 
+STACK_OF(X509_EXTENSION)* exposed_sk_X509_EXTENSION_new_null(void);
+
 int exposed_sk_X509_EXTENSION_num(STACK_OF(X509_EXTENSION) *sk);
 
 X509_EXTENSION * exposed_sk_X509_EXTENSION_value(STACK_OF(X509_EXTENSION) *sk, int idx);

@@ -147,12 +147,14 @@ class CryptoManager: CryptoManagerProtocol {
         return try token.generateKeyPair(with: id)
     }
 
-    func createCert(for id: String, with info: CsrModel) async throws {
+    func createCert(for id: String, with model: CsrModel) async throws {
         guard let token = connectedToken else {
             throw CryptoManagerError.tokenNotFound
         }
-        let wrappedPrivateKey = try token.getWrappedKey(with: id)
-        let csr = try openSslHelper.createCsr(with: wrappedPrivateKey, for: info)
+
+        guard let keyPair = try token.enumerateKeys(by: id, with: .gostR3410_2012_256).first else {
+            throw CryptoManagerError.unknown
+        }
 
         guard let caKeyUrl = Bundle.getUrl(for: RtFile.caKey.rawValue, in: RtFile.subdir),
               let caCertUrl = Bundle.getUrl(for: RtFile.caCert.rawValue, in: RtFile.subdir),
@@ -161,6 +163,13 @@ class CryptoManager: CryptoManagerProtocol {
             throw CryptoManagerError.unknown
         }
 
+        let startDateData = try keyPair.privateKey.getValue(for: .init(type: .startDate))
+        let endDateData = try keyPair.privateKey.getValue(for: .init(type: .endDate))
+        let info = CertInfo(startDate: startDateData?.getDate(with: "YYYYMMdd"),
+                            endDate: endDateData?.getDate(with: "YYYYMMdd"))
+
+        let wrappedKey = try token.getWrappedKey(with: id)
+        let csr = try openSslHelper.createCsr(with: wrappedKey, for: model, with: info)
         let cert = try openSslHelper.createCert(for: csr, with: caKeyData, cert: caCertData)
         try token.importCert(cert, for: id)
     }

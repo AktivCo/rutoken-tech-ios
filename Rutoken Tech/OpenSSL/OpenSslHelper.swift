@@ -13,7 +13,7 @@ enum OpenSslError: Error, Equatable {
 }
 
 protocol OpenSslHelperProtocol {
-    func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String
+    func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel, with info: CertInfo) throws -> String
     func createCert(for csr: String, with caKey: Data, cert caCert: Data) throws -> Data
     func signCms(for content: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String
     func signCms(for content: Data, key: Data, cert: Data) throws -> String
@@ -28,6 +28,9 @@ enum VerifyCmsResult {
 }
 
 class OpenSslHelper: OpenSslHelperProtocol {
+    private let requestExtensionsSection = "req_extensions"
+    private let requestAttributesSection = "req_attributes"
+
     let engine: RtEngineWrapperProtocol
 
     init(engine: RtEngineWrapperProtocol) {
@@ -138,7 +141,53 @@ class OpenSslHelper: OpenSslHelperProtocol {
         return .success
     }
 
-    func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel) throws -> String {
+    private func makeConfig(name: String, value: String, isExtension: Bool = true) throws -> WrappedPointer<UnsafeMutablePointer<CONF>> {
+        guard let conf = WrappedPointer<UnsafeMutablePointer<CONF>>({ NCONF_new(nil) }, { NCONF_free($0) }) else {
+            throw OpenSslError.generalError(#line, getLastError())
+        }
+
+        let resultString = """
+        [\(isExtension ? requestExtensionsSection : requestAttributesSection)]
+        \(name)=\(value)
+        """
+
+        var eline: Int = 0
+        guard let confFileBio = stringToBio(resultString),
+              NCONF_load_bio(conf.pointer, confFileBio.pointer, &eline) != 0 else {
+            throw OpenSslError.generalError(#line, getLastError())
+        }
+        return conf
+    }
+
+    private func addV3Extensions(request: WrappedPointer<OpaquePointer>, exts: [String: String]) throws {
+        guard let stackOfExts = WrappedPointer<OpaquePointer>(exposed_sk_X509_EXTENSION_new_null, {
+            exposed_sk_X509_EXTENSION_pop_free($0, X509_EXTENSION_free)
+        }) else {
+            throw OpenSslError.generalError(#line, getLastError())
+        }
+
+        for ext in exts {
+            let extNid = OBJ_txt2nid(ext.key.cString(using: .utf8))
+            let extensionName = extNid == NID_undef ? ext.key : String(cString: OBJ_nid2sn(extNid))
+            let value = ext.value
+
+            var extCtx = X509V3_CTX()
+            let conf = try makeConfig(name: extensionName, value: value)
+
+            X509V3_set_ctx(&extCtx, nil, nil, request.pointer, nil, 0)
+            X509V3_set_nconf(&extCtx, conf.pointer)
+
+            var stackPtr: OpaquePointer? = stackOfExts.pointer
+            guard X509V3_EXT_add_nconf_sk(conf.pointer, &extCtx, requestExtensionsSection, &stackPtr) != 0 else {
+                throw OpenSslError.generalError(#line, getLastError())
+            }
+        }
+        guard X509_REQ_add_extensions(request.pointer, stackOfExts.pointer) != 0 else {
+            throw OpenSslError.generalError(#line, getLastError())
+        }
+    }
+
+    func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel, with info: CertInfo) throws -> String {
         guard let csr = WrappedPointer<OpaquePointer>(X509_REQ_new, X509_REQ_free) else {
             throw OpenSslError.generalError(#line, getLastError())
         }
@@ -219,18 +268,16 @@ class OpenSslHelper: OpenSslHelperProtocol {
         // Set IdentificationKind as raw TLV, for possible values see:
         // https://datatracker.ietf.org/doc/html/rfc9215
         let valueData = Data([0x02, 0x01, 0x00])
-        guard let valueOctetString = WrappedPointer<UnsafeMutablePointer<ASN1_OCTET_STRING>>({
-            let newString = ASN1_OCTET_STRING_new()
-            return valueData.withUnsafeBytes {
-                let pointerValueData = $0.baseAddress?.assumingMemoryBound(to: UInt8.self)
-                guard 1 == ASN1_OCTET_STRING_set(newString, pointerValueData, Int32(valueData.count)) else {
-                    ASN1_OCTET_STRING_free(newString)
-                    return nil
-                }
-                return newString
-            }
-        }, ASN1_OCTET_STRING_free) else {
+        guard let valueOctetString = WrappedPointer<UnsafeMutablePointer<ASN1_OCTET_STRING>>(ASN1_OCTET_STRING_new, {
+            ASN1_OCTET_STRING_free($0)
+        }) else {
             throw OpenSslError.generalError(#line, getLastError())
+        }
+        try valueData.withUnsafeBytes {
+            let pointerValueData = $0.baseAddress?.assumingMemoryBound(to: UInt8.self)
+            guard 1 == ASN1_OCTET_STRING_set(valueOctetString.pointer, pointerValueData, Int32(valueData.count)) else {
+                throw OpenSslError.generalError(#line, getLastError())
+            }
         }
 
         guard let identificationKindByObj = WrappedPointer<OpaquePointer>({
@@ -255,6 +302,16 @@ class OpenSslHelper: OpenSslHelperProtocol {
         // MARK: Setting of the extensions for the request
         guard X509_REQ_add_extensions(csr.pointer, extensions) == 1 else {
             throw OpenSslError.generalError(#line, getLastError())
+        }
+
+        if let start = info.startDate?.getString(as: "YYYYMMdd"),
+           let end = info.endDate?.getString(as: "YYYYMMdd") {
+            var valueStr = "ASN1:SEQUENCE:privateKeyUsagePeriod\n"
+            valueStr += "[privateKeyUsagePeriod]\n"
+            valueStr += "notBefore=IMP:0,GENERALIZEDTIME:\(start)000000Z\n"
+            valueStr += "notAfter=IMP:1,GENERALIZEDTIME:\(end)000000Z"
+
+            try addV3Extensions(request: csr, exts: ["2.5.29.16": valueStr])
         }
 
         // MARK: Setting of the public key

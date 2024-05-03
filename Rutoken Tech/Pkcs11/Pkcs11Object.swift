@@ -12,6 +12,7 @@ protocol Pkcs11ObjectProtocol {
     var id: String? { get }
     var body: Data? { get }
     var handle: CK_OBJECT_HANDLE { get }
+    func getValue(for attr: BufferAttribute) throws -> Data?
 }
 
 class Pkcs11Object: Pkcs11ObjectProtocol {
@@ -24,20 +25,20 @@ class Pkcs11Object: Pkcs11ObjectProtocol {
     }
 
     lazy var id: String? = {
-        guard let dataId = try? getValue(for: BufferAttribute(type: .id), with: handle, with: session) else {
+        guard let dataId = try? getValue(for: BufferAttribute(type: .id)) else {
             return nil
         }
         return String(decoding: dataId, as: UTF8.self)
     }()
 
     lazy var body: Data? = {
-        guard let value = try? getValue(for: BufferAttribute(type: .value), with: handle, with: session) else {
+        guard let value = try? getValue(for: BufferAttribute(type: .value)) else {
             return nil
         }
         return value
     }()
 
-    private func getValue(for attr: BufferAttribute, with handle: CK_OBJECT_HANDLE, with session: Pkcs11Session?) throws -> Data {
+    func getValue(for attr: BufferAttribute) throws -> Data? {
         guard let session else {
             throw TokenError.generalError
         }
@@ -48,18 +49,15 @@ class Pkcs11Object: Pkcs11ObjectProtocol {
             throw TokenError.generalError
         }
 
-        template[0].pValue = UnsafeMutableRawPointer.allocate(byteCount: Int(template[0].ulValueLen), alignment: 1)
-        defer {
-            template[0].pValue.deallocate()
-        }
+        let attr = BufferAttribute(type: attr.type, count: Int(template[0].ulValueLen))
+        template = [attr.attribute]
 
         rv = C_GetAttributeValue(session.handle, handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             throw TokenError.generalError
         }
 
-        return Data(buffer: UnsafeBufferPointer(start: template[0].pValue.assumingMemoryBound(to: UInt8.self),
-                                                count: Int(template[0].ulValueLen)))
+        return attr.getValue
     }
 }
 

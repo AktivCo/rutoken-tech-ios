@@ -61,8 +61,67 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         }
     }
 
+    func testCreateCertPrivateKeyUsagePeriodGetValueNil() async throws {
+        token.enumerateKeysCallback = { _, _ in
+            let pkcsObject = Pkcs11ObjectMock(id: nil, body: nil, getValueCallback: { nil })
+            return [Pkcs11KeyPair(pubKey: pkcsObject, privateKey: pkcsObject)]
+        }
+
+        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
+            await assertNoThrowAsync(try await manager.createCert(for: "001",
+                                                                  with: CsrModel.makeDefaultModel()))
+        }
+    }
+
+    func testCreateCertPrivateKeyUsagePeriodGetValueError() async throws {
+        token.enumerateKeysCallback = { _, _ in
+            let pkcsObject = Pkcs11ObjectMock(id: nil, body: nil, getValueCallback: { throw CryptoManagerError.unknown })
+            return [Pkcs11KeyPair(pubKey: pkcsObject, privateKey: pkcsObject)]
+        }
+
+        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
+            await assertErrorAsync(
+                try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
+                throws: CryptoManagerError.unknown)
+        }
+    }
+
+    func testCreateCertReadFileFromBundleError() async throws {
+        fileHelper.readFileCallback = { _ in throw DocumentManagerError.general("") }
+
+        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
+            await assertErrorAsync(
+                try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
+                throws: CryptoManagerError.unknown)
+        }
+    }
+
     func testCreateCertCreateCsrError() async throws {
         openSslHelper.createCsrCallback = { _, _ in
+            throw CryptoManagerError.unknown
+        }
+
+        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
+            await assertErrorAsync(
+                try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
+                throws: CryptoManagerError.unknown)
+        }
+    }
+
+    func testCreateCertCreateCertError() async throws {
+        openSslHelper.createCertCallback = {
+            throw CryptoManagerError.unknown
+        }
+
+        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
+            await assertErrorAsync(
+                try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
+                throws: CryptoManagerError.unknown)
+        }
+    }
+
+    func testCreateCertImportCertError() async throws {
+        token.importCertCallback = { _, _ in
             throw CryptoManagerError.unknown
         }
 
@@ -82,16 +141,6 @@ final class CryptoManagerCreateCertTests: XCTestCase {
             await assertErrorAsync(
                 try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
                 throws: TokenError.tokenDisconnected)
-        }
-    }
-
-    func testCreateCertReadFileFromBundleError() async throws {
-        fileHelper.readFileCallback = { _ in throw DocumentManagerError.general("") }
-
-        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
-            await assertErrorAsync(
-                try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
-                throws: CryptoManagerError.unknown)
         }
     }
 }

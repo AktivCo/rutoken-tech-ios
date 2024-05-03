@@ -105,8 +105,8 @@ class Token: TokenProtocol, Identifiable {
             ULongAttribute(type: .certType, value: CKC_X_509)
         ]
 
-        if let id {
-            certTemplate.append(BufferAttribute(type: .id, value: Array(id.utf8)))
+        if let idData = id?.data(using: .utf8) {
+            certTemplate.append(BufferAttribute(type: .id, value: idData))
         }
 
         let certObjects = try findObjects(certTemplate.map { $0.attribute })
@@ -139,9 +139,9 @@ class Token: TokenProtocol, Identifiable {
         case .none: break
         }
 
-        if let id {
-            pubKeyTemplate.append(BufferAttribute(type: .id, value: Array(id.utf8)))
-            privateKeyTemplate.append(BufferAttribute(type: .id, value: Array(id.utf8)))
+        if let idData = id?.data(using: .utf8) {
+            pubKeyTemplate.append(BufferAttribute(type: .id, value: idData))
+            privateKeyTemplate.append(BufferAttribute(type: .id, value: idData))
         }
 
         // MARK: Find public keys
@@ -185,30 +185,35 @@ class Token: TokenProtocol, Identifiable {
         var privateKey = CK_OBJECT_HANDLE()
 
         let currentDate = Date()
+        guard let startDateData = PkcsConstants.createDateObject(with: currentDate),
+              let endDateData = PkcsConstants.createDateObject(with: currentDate.addingTimeInterval(3 * 365 * 24 * 60 * 60)),
+              let idData = id.data(using: .utf8) else {
+            throw TokenError.generalError
+        }
 
         let publicKeyAttributes: [PkcsAttribute] = [
             ULongAttribute(type: .classObject, value: CKO_PUBLIC_KEY),
-            BufferAttribute(type: .id, value: Array(id.utf8)),
+            BufferAttribute(type: .id, value: idData),
             ULongAttribute(type: .keyType, value: CKK_GOSTR3410),
             BoolAttribute(type: .token, value: true),
             BoolAttribute(type: .privateness, value: false),
-            ObjectAttribute(type: .startDate(currentDate)),
-            ObjectAttribute(type: .endDate(currentDate.addingTimeInterval(3 * 365 * 24 * 60 * 60))),
-            BufferAttribute(type: .gostR3410Params, value: PkcsConstants.parametersGostR3410_2012_256),
-            BufferAttribute(type: .gostR3411Params, value: PkcsConstants.parametersGostR3411_2012_256)
+            BufferAttribute(type: .startDate, value: startDateData),
+            BufferAttribute(type: .endDate, value: endDateData),
+            BufferAttribute(type: .gostR3410Params, value: Data(PkcsConstants.parametersGostR3410_2012_256)),
+            BufferAttribute(type: .gostR3411Params, value: Data(PkcsConstants.parametersGostR3411_2012_256))
         ]
 
         let privateKeyAttributes: [PkcsAttribute] = [
             ULongAttribute(type: .classObject, value: CKO_PRIVATE_KEY),
-            BufferAttribute(type: .id, value: Array(id.utf8)),
+            BufferAttribute(type: .id, value: idData),
             ULongAttribute(type: .keyType, value: CKK_GOSTR3410),
             BoolAttribute(type: .token, value: true),
             BoolAttribute(type: .privateness, value: true),
             BoolAttribute(type: .derive, value: true),
-            ObjectAttribute(type: .startDate(currentDate)),
-            ObjectAttribute(type: .endDate(currentDate.addingTimeInterval(3 * 365 * 24 * 60 * 60))),
-            BufferAttribute(type: .gostR3410Params, value: PkcsConstants.parametersGostR3410_2012_256),
-            BufferAttribute(type: .gostR3411Params, value: PkcsConstants.parametersGostR3411_2012_256)
+            BufferAttribute(type: .startDate, value: startDateData),
+            BufferAttribute(type: .endDate, value: endDateData),
+            BufferAttribute(type: .gostR3410Params, value: Data(PkcsConstants.parametersGostR3410_2012_256)),
+            BufferAttribute(type: .gostR3411Params, value: Data(PkcsConstants.parametersGostR3411_2012_256))
         ]
         var publicKeyTemplate = publicKeyAttributes.map { $0.attribute }
         var privateKeyTemplate = privateKeyAttributes.map { $0.attribute }
@@ -225,8 +230,12 @@ class Token: TokenProtocol, Identifiable {
     }
 
     func deleteObjects(with id: String) throws {
+        guard let idData = id.data(using: .utf8) else {
+            throw TokenError.generalError
+        }
+
         let template: [PkcsAttribute] = [
-            BufferAttribute(type: .id, value: Array(id.utf8))
+            BufferAttribute(type: .id, value: idData)
         ]
 
         let objects = try findObjects(template.map { $0.attribute })
@@ -244,13 +253,14 @@ class Token: TokenProtocol, Identifiable {
     }
 
     func importCert(_ cert: Data, for id: String) throws {
-        guard (try enumerateKeys(by: id, with: .gostR3410_2012_256).first) != nil else {
+        guard (try enumerateKeys(by: id, with: .gostR3410_2012_256).first) != nil,
+              let idData = id.data(using: .utf8) else {
             throw TokenError.generalError
         }
         let certAttributes: [PkcsAttribute] = [
-            BufferAttribute(type: .value, value: [UInt8](cert)),
+            BufferAttribute(type: .value, value: cert),
             ULongAttribute(type: .classObject, value: CKO_CERTIFICATE),
-            BufferAttribute(type: .id, value: Array(id.utf8)),
+            BufferAttribute(type: .id, value: idData),
             BoolAttribute(type: .token, value: true),
             BoolAttribute(type: .privateness, value: false),
             ULongAttribute(type: .certType, value: CKC_X_509),
@@ -293,20 +303,23 @@ class Token: TokenProtocol, Identifiable {
         guard let handle = try? findObjects(objectAttributes.map { $0.attribute }).first else {
             throw TokenError.generalError
         }
-        guard let wrappedTemplate = readAttributes(handle: handle, attributes: attributes) else {
+        guard let attributes = readAttributes(handle: handle, attributes: attributes) else {
             throw TokenError.generalError
         }
-        let template = wrappedTemplate.value
 
-        let currentInterfaceBits = UnsafeRawBufferPointer(start: template[0].pValue.assumingMemoryBound(to: UInt8.self),
-                                                          count: Int(template[0].ulValueLen)).load(as: CK_ULONG.self)
-        let supportedInterfacesBits = UnsafeRawBufferPointer(start: template[1].pValue.assumingMemoryBound(to: UInt8.self),
-                                                             count: Int(template[1].ulValueLen)).load(as: CK_ULONG.self)
+        guard let currentInterfaceBits = attributes.first(where: { $0.type == .vendorCurrentInterface})?.getValue,
+              let supportedInterfacesBits = attributes.first(where: { $0.type == .vendorSupportedInterface})?.getValue else {
+                  throw TokenError.generalError
+              }
 
-        guard let currentInterface = TokenInterface(currentInterfaceBits) else {
+        guard let currentInterface = TokenInterface(currentInterfaceBits.withUnsafeBytes { rawBuffer in
+            rawBuffer.load(as: CK_ULONG.self)
+        }) else {
             throw TokenError.generalError
         }
-        return (currentInterface, Set([TokenInterface](bits: supportedInterfacesBits)))
+        return (currentInterface, Set([TokenInterface](bits: supportedInterfacesBits.withUnsafeBytes { rawBuffer in
+            rawBuffer.load(as: CK_ULONG.self)
+        })))
     }
 
     private func initTokenInfo() throws {
@@ -401,41 +414,36 @@ class Token: TokenProtocol, Identifiable {
         ]
         let attribute = BufferAttribute(type: .vendorModelName)
 
-        guard let handle = try? findObjects(objectAttributes.map { $0.attribute }).first else {
+        guard let handle = try? findObjects(objectAttributes.map { $0.attribute }).first,
+              let attributes = readAttributes(handle: handle, attributes: [attribute]),
+              let data = attributes.first?.getValue,
+              let result = String(data: data, encoding: .utf8) else {
             return nil
         }
-        guard let wrappedTemplate = readAttributes(handle: handle, attributes: [attribute]) else {
-            return nil
-        }
-        let template = wrappedTemplate.value
-
-        guard let stringPtr = UnsafeRawBufferPointer(start: template[0].pValue.assumingMemoryBound(to: UInt8.self),
-                                                     count: Int(template[0].ulValueLen)).assumingMemoryBound(to: CChar.self).baseAddress else {
-            return nil
-        }
-        return String(cString: stringPtr)
+        return result
     }
 
     private func readAttributes(handle: CK_OBJECT_HANDLE,
-                                attributes: [PkcsAttribute]) -> WrappedValue<[CK_ATTRIBUTE]>? {
+                                attributes: [BufferAttribute]) -> [BufferAttribute]? {
         var template = attributes.map { $0.attribute }
         var rv = C_GetAttributeValue(session.handle, handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             return nil
         }
 
-        for i in 0..<template.count {
-            template[i].pValue = UnsafeMutableRawPointer.allocate(byteCount: Int(template[i].ulValueLen), alignment: 1)
-        }
+        let result: [BufferAttribute] = attributes.map {
+            if let length = template.first(where: { $0.type == $0.type })?.ulValueLen {
+                return BufferAttribute(type: $0.type, count: Int(length))
+            }
+            return nil
+        }.compactMap { $0 }
+        template = result.map { $0.attribute }
 
         rv = C_GetAttributeValue(session.handle, handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             return nil
         }
 
-        let result = WrappedValue(template, { $0.forEach { attrib in
-            attrib.pValue.deallocate()
-        }})
         return result
     }
 

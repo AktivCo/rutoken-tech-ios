@@ -12,7 +12,10 @@ extension String {
                 let ptr = UnsafeMutablePointer<UInt8>.allocate(capacity: self.count)
                 ptr.initialize(from: stringPtr, count: self.count)
                 return ptr
-            }, { $0.deallocate() })
+            }, { [count = self.count] in
+                $0.deinitialize(count: count)
+                $0.deallocate()
+            })
         }
     }
 }
