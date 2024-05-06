@@ -18,6 +18,7 @@ protocol OpenSslHelperProtocol {
     func signCms(for content: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String
     func signCms(for content: Data, key: Data, cert: Data) throws -> String
     func verifyCms(signedCms: String, for content: Data, with cert: Data, certChain: [Data]) throws -> VerifyCmsResult
+    func encryptCms(for content: Data, with cert: Data) throws -> Data
 }
 
 enum VerifyCmsResult {
@@ -55,6 +56,9 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         let cmsLength = i2d_CMS_ContentInfo(cms.pointer, nil)
+        guard cmsLength >= 0 else {
+            throw OpenSslError.generalError(#line, getLastError())
+        }
         var cmsData = Data(repeating: 0x00, count: Int(cmsLength))
         try cmsData.withUnsafeMutableBytes {
             var pointer = $0.baseAddress?.assumingMemoryBound(to: UInt8.self)
@@ -399,6 +403,38 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         return generatedCertData
+    }
+
+    func encryptCms(for content: Data, with cert: Data) throws -> Data {
+        guard let contentBio = dataToBio(content),
+              let certStack = createX509Stack(with: [cert]),
+              /* Receiving encryption algorithm.
+               To use other encryption modes and algorithms, replace rt_eng_nid_gost28147_cfb with:
+               - NID_magma_ctr_acpkm_omac for MAGMA-CTR-ACPKM-OMAC
+               - NID_id_tc26_cipher_gostr3412_2015_kuznyechik_ctracpkm for KUZNYECHIK-CTR-ACPKM
+               - NID_id_tc26_cipher_gostr3412_2015_magma_ctracpkm for MAGMA-CTR-ACPKM */
+              let cipher = exposed_EVP_get_cipherbynid(Int32(rt_eng_nid_gost28147_cfb)) else {
+            throw OpenSslError.generalError(#line, getLastError())
+        }
+
+        guard let cms = WrappedPointer<OpaquePointer>({
+            CMS_encrypt(certStack.pointer, contentBio.pointer, cipher, UInt32(CMS_KEY_PARAM | CMS_BINARY))
+        }, CMS_ContentInfo_free) else {
+            throw OpenSslError.generalError(#line, getLastError())
+        }
+
+        let cmsLength = i2d_CMS_ContentInfo(cms.pointer, nil)
+        guard cmsLength >= 0 else {
+            throw OpenSslError.generalError(#line, getLastError())
+        }
+        var cmsData = Data(repeating: 0x00, count: Int(cmsLength))
+        try cmsData.withUnsafeMutableBytes {
+            var pointer = $0.baseAddress?.assumingMemoryBound(to: UInt8.self)
+            guard i2d_CMS_ContentInfo(cms.pointer, &pointer) >= 0 else {
+                throw OpenSslError.generalError(#line, getLastError())
+            }
+        }
+        return cmsData
     }
 
     private func createX509Stack(with certs: [Data]) -> WrappedPointer<OpaquePointer>? {

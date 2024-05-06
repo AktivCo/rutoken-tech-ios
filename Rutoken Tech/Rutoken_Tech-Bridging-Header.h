@@ -23,6 +23,8 @@
 
 const EVP_MD * exposed_EVP_get_digestbynid(int type);
 
+const EVP_CIPHER * exposed_EVP_get_cipherbynid(int type);
+
 STACK_OF(X509)* exposed_sk_X509_new_null(void);
 
 int exposed_sk_X509_push(STACK_OF(X509)* certStack, X509* cert);

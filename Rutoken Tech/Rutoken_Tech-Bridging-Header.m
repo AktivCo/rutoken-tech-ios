@@ -12,6 +12,10 @@ const EVP_MD * exposed_EVP_get_digestbynid(int type) {
     return EVP_get_digestbynid(type);
 }
 
+const EVP_CIPHER * exposed_EVP_get_cipherbynid(int type) {
+    return EVP_get_cipherbynid(type);
+}
+
 STACK_OF(X509)* exposed_sk_X509_new_null(void) {
     return sk_X509_new_null();
 }
