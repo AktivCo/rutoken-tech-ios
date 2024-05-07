@@ -22,6 +22,7 @@ protocol CryptoManagerProtocol {
     func createCert(for id: String, with info: CsrModel) async throws
     func signDocument(document: Data, with id: String) throws -> String
     func verifyCms(signedCms: Data, document: Data) async throws
+    func encryptDocument(document: Data, with cert: CertSource) throws -> Data
     func startMonitoring() throws
 }
 
@@ -48,6 +49,11 @@ enum RtFile: String {
     static var subdir: String {
         "Credentials"
     }
+}
+
+enum CertSource {
+    case token(String)
+    case file(RtFile)
 }
 
 class CryptoManager: CryptoManagerProtocol {
@@ -194,6 +200,26 @@ class CryptoManager: CryptoManagerProtocol {
         } catch {
             throw CryptoManagerError.unknown
         }
+    }
+
+    func encryptDocument(document: Data, with cert: CertSource) throws -> Data {
+        let certData: Data
+        switch cert {
+        case .token(let id):
+            guard let token = connectedToken else {
+                throw CryptoManagerError.tokenNotFound
+            }
+            guard let data = try token.enumerateCerts(by: id).first?.body else {
+                throw CryptoManagerError.noSuitCert
+            }
+            certData = data
+        case .file(let rtFile):
+            guard let certUrl = Bundle.getUrl(for: rtFile.rawValue, in: RtFile.subdir) else {
+                throw CryptoManagerError.unknown
+            }
+            certData = try fileHelper.readFile(from: certUrl)
+        }
+        return try openSslHelper.encryptDocument(for: document, with: certData)
     }
 
     func withToken(connectionType: ConnectionType,

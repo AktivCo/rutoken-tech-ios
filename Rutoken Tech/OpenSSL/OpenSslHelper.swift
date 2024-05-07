@@ -18,7 +18,7 @@ protocol OpenSslHelperProtocol {
     func signCms(for content: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String
     func signCms(for content: Data, key: Data, cert: Data) throws -> String
     func verifyCms(signedCms: String, for content: Data, with cert: Data, certChain: [Data]) throws -> VerifyCmsResult
-    func encryptCms(for content: Data, with cert: Data) throws -> Data
+    func encryptDocument(for content: Data, with cert: Data) throws -> Data
 }
 
 enum VerifyCmsResult {
@@ -405,8 +405,8 @@ class OpenSslHelper: OpenSslHelperProtocol {
         return generatedCertData
     }
 
-    func encryptCms(for content: Data, with cert: Data) throws -> Data {
-        guard let contentBio = dataToBio(content),
+    func encryptDocument(for document: Data, with cert: Data) throws -> Data {
+        guard let contentBio = dataToBio(document),
               let certStack = createX509Stack(with: [cert]),
               /* Receiving encryption algorithm.
                To use other encryption modes and algorithms, replace rt_eng_nid_gost28147_cfb with:
