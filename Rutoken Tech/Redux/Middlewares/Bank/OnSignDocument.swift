@@ -39,7 +39,7 @@ class OnSignDocument: Middleware {
                         guard let cmsData = cms.data(using: .utf8) else {
                             throw CryptoManagerError.unknown
                         }
-                        try documentManager.saveToFile(documentName: documentName, fileName: documentName + ".sig", data: cmsData)
+                        try documentManager.saveToFile(fileName: documentName + ".sig", data: cmsData)
                         try documentManager.markAsArchived(documentName: documentName)
                         continuation.yield(.hideSheet)
                         continuation.yield(.showAlert(.documentSigned))

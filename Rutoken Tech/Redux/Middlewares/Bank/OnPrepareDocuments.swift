@@ -55,9 +55,7 @@ class OnPrepareDocuments: Middleware {
                                 guard let signatureData = signature.data(using: .utf8) else {
                                     throw CryptoManagerError.unknown
                                 }
-                                try documentsManager.saveToFile(documentName: $0.name,
-                                                                fileName: $0.name + ".sig",
-                                                                data: signatureData)
+                                try documentsManager.saveToFile(fileName: $0.name + ".sig", data: signatureData)
                             }
                         } catch {
                             continuation.yield(.showAlert(.unknownError))

@@ -37,12 +37,6 @@ class DocumentManagerSaveToFileTests: XCTestCase {
     }
 
     func testSaveToFileSuccess() throws {
-        let doc2 = BankDocument(name: document.name + "2",
-                                action: .encrypt,
-                                amount: document.amount + 5000,
-                                companyName: document.companyName,
-                                paymentDay: document.paymentDay)
-
         let documentFileName = document.name + ".sig"
         helper.saveFileToTempDirCallback = { fileName, _ in
             XCTAssertEqual(fileName, documentFileName)
@@ -50,7 +44,7 @@ class DocumentManagerSaveToFileTests: XCTestCase {
         manager = DocumentManager(helper: helper)
 
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
-            try manager.saveToFile(documentName: document.name, fileName: documentFileName, data: dataToSave!)
+            try manager.saveToFile(fileName: documentFileName, data: dataToSave!)
         }
     }
 
@@ -59,7 +53,7 @@ class DocumentManagerSaveToFileTests: XCTestCase {
             throw FileHelperError.generalError(33, "File helper error")
         }
 
-        assertError(try manager.saveToFile(documentName: document.name, fileName: document.name + ".sig", data: dataToSave!),
+        assertError(try manager.saveToFile(fileName: document.name + ".sig", data: dataToSave!),
                     throws: DocumentManagerError.general("33: \(String(describing: Optional("File helper error")))"))
     }
 }

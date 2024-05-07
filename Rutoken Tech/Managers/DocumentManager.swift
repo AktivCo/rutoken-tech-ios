@@ -14,7 +14,7 @@ protocol DocumentManagerProtocol {
     var documents: AnyPublisher<[BankDocument], Never> { get }
     func resetDirectory() throws
     func readFile(with name: String) throws -> BankFileContent
-    func saveToFile(documentName: String, fileName: String, data: Data) throws
+    func saveToFile(fileName: String, data: Data) throws
     func markAsArchived(documentName: String) throws
 }
 
@@ -76,7 +76,7 @@ class DocumentManager: DocumentManagerProtocol {
         }
     }
 
-    func saveToFile(documentName: String, fileName: String, data: Data) throws {
+    func saveToFile(fileName: String, data: Data) throws {
         do {
             try fileHelper.saveFileToTempDir(with: fileName, content: data)
         } catch FileHelperError.generalError(let line, let str) {
