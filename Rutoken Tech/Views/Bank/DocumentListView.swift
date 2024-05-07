@@ -16,7 +16,7 @@ struct DocumentListView: View {
         ForEach(docsDictionary.keys.sorted(by: { $0 > $1 }), id: \.timeIntervalSince1970) { key in
             VStack(alignment: .leading, spacing: 0) {
                 if let documents = docsDictionary[key] {
-                    Text(key.getRussianString)
+                    Text(key.getString(as: "d MMMM yyyy"))
                         .textCase(.uppercase)
                         .font(.footnote)
                         .foregroundStyle(Color.RtColors.rtLabelSecondary)

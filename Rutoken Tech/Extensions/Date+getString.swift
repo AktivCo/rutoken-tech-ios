@@ -9,23 +9,10 @@ import Foundation
 
 
 extension Date {
-    func getString(with format: String) -> String {
+    func getString(as format: String, locale: Locale = Locale(identifier: "ru_RU")) -> String {
         let dateFormatter = DateFormatter()
+        dateFormatter.locale = locale
         dateFormatter.dateFormat = format
-        return dateFormatter.string(from: self)
-    }
-
-    var getRussianString: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "ru_RU")
-        dateFormatter.dateFormat = "dd MMMM yyyy"
-        return dateFormatter.string(from: self)
-    }
-
-    var getRussianStringWithTime: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "ru_RU")
-        dateFormatter.dateFormat = "dd MMMM yyyy 'г. в' HH:mm"
         return dateFormatter.string(from: self)
     }
 }

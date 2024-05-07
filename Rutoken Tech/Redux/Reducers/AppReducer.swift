@@ -106,6 +106,10 @@ struct AppReducer: Reducer {
         case .updateDocuments(let docs):
             newState.bankDocumentListState.isLoading = false
             newState.bankDocumentListState.documents = docs
+            if let selectedDoc = state.bankSelectedDocumentState.metadata,
+               let updatedDocument = newState.bankDocumentListState.documents.first(where: { $0.name == selectedDoc.name }) {
+                newState.bankSelectedDocumentState.metadata = updatedDocument
+            }
         case .signDocument:
             break
         case .cmsVerify:

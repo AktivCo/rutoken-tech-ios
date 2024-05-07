@@ -23,6 +23,7 @@ struct BankDocument: Codable, Identifiable {
     let companyName: String
     let paymentTime: Date
     var inArchive: Bool = false
+    var dateOfChange: Date?
 
     static var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
@@ -66,7 +67,7 @@ extension BankDocument: Equatable {
         lhs.amount == rhs.amount &&
         lhs.companyName == rhs.companyName &&
         lhs.inArchive == rhs.inArchive &&
-        lhs.paymentTime.getString(with: dateFormatter.dateFormat) == rhs.paymentTime.getString(with: dateFormatter.dateFormat)
+        lhs.paymentTime.getString(as: dateFormatter.dateFormat) == rhs.paymentTime.getString(as: dateFormatter.dateFormat)
     }
 }
 

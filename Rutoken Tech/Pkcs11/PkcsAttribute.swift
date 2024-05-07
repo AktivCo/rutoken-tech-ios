@@ -16,9 +16,9 @@ enum PkcsConstants {
     static func createDateObject(with date: Date = Date()) -> CK_DATE? {
         var result = CK_DATE()
 
-        guard let day = date.getString(with: "dd").createPointer(),
-              let month = date.getString(with: "MM").createPointer(),
-              let year = date.getString(with: "YYYY").createPointer() else {
+        guard let day = date.getString(as: "dd").createPointer(),
+              let month = date.getString(as: "MM").createPointer(),
+              let year = date.getString(as: "YYYY").createPointer() else {
             return nil
         }
         memcpy(&(result.day), day.pointer, 2)

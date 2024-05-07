@@ -71,46 +71,67 @@ struct DocumentProcessView: View {
         .background(Color("IOSElementsTitleBarSurface"))
     }
 
-    private var bottomBar: some View {
+    private func actionButton(for action: BankDocument.ActionType) -> some View {
         var title: String {
-            switch store.state.bankSelectedDocumentState.metadata?.action {
+            switch action {
             case .decrypt: "Расшифровать"
             case .encrypt: "Зашифровать"
             case .sign: "Подписать"
             case .verify: "Проверить подпись"
-            case .none: ""
             }
         }
-        return VStack(spacing: 0) {
-            Button {
-                guard let document = store.state.bankSelectedDocumentState.metadata else {
+
+        return Button {
+            guard let document = store.state.bankSelectedDocumentState.metadata else {
+                return
+            }
+            switch document.action {
+            case .decrypt: return
+            case .encrypt: return
+            case .sign:
+                guard store.state.bankSelectedDocumentState.metadata?.inArchive == false,
+                      let tokenSerial = store.state.bankSelectUserState.selectedUser?.tokenSerial,
+                      let certId = store.state.bankSelectUserState.selectedUser?.keyId else {
                     return
                 }
-                switch document.action {
-                case .decrypt: return
-                case .encrypt: return
-                case .sign:
-                    guard store.state.bankSelectedDocumentState.metadata?.inArchive == false,
-                          let tokenSerial = store.state.bankSelectUserState.selectedUser?.tokenSerial,
-                          let certId = store.state.bankSelectUserState.selectedUser?.keyId else {
-                        return
+                store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
+                    RtAuthView(defaultPinGetter: { store.send(.getPin(tokenSerial)) },
+                               onSubmit: { tokenType, pin in
+                        store.send(.signDocument(tokenType: tokenType, serial: tokenSerial, pin: pin,
+                                                 documentName: store.state.bankSelectedDocumentState.metadata?.name ?? "",
+                                                 certId: certId))
+                    },
+                               onCancel: { store.send(.hideSheet) })
+                    .environmentObject(store.state.routingState.pinInputModel)
+                }()))
+            case .verify:
+                store.send(.cmsVerify(fileName: document.name))
+            }
+        } label: {
+            Text(title)
+                .font(.body)
+                .foregroundStyle(Color.RtColors.rtColorsSecondary)
+        }
+    }
+
+    private func bottomBar() -> some View {
+        VStack(spacing: 0) {
+            if let doc = store.state.bankSelectedDocumentState.metadata {
+                var completedActionText: String {
+                    switch doc.action {
+                    case .decrypt: "Расшифрован"
+                    case .encrypt: "Зашифрован"
+                    case .sign: "Подписан"
+                    case .verify: "Подпись проверена"
                     }
-                    store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
-                        RtAuthView(defaultPinGetter: { store.send(.getPin(tokenSerial)) },
-                                   onSubmit: { tokenType, pin in
-                            store.send(.signDocument(tokenType: tokenType, serial: tokenSerial, pin: pin,
-                                                     documentName: store.state.bankSelectedDocumentState.metadata?.name ?? "",
-                                                     certId: certId))
-                        },
-                                   onCancel: { store.send(.hideSheet) })
-                        .environmentObject(store.state.routingState.pinInputModel)
-                    }()))
-                case .verify: store.send(.cmsVerify(fileName: document.name))
                 }
-            } label: {
-                Text(title)
-                    .font(.body)
-                    .foregroundStyle(Color.RtColors.rtColorsSecondary)
+                if doc.inArchive {
+                    Text("\(completedActionText) \(doc.dateOfChange?.getString(as: "d MMMM yyyy 'г. в' HH:mm") ?? "")")
+                        .font(.footnote)
+                        .foregroundStyle(Color.RtColors.rtLabelSecondary)
+                } else {
+                    actionButton(for: doc.action)
+                }
             }
         }
         .frame(height: 49)
@@ -121,7 +142,7 @@ struct DocumentProcessView: View {
     var body: some View {
         VStack(spacing: 0) {
             navBar(title: store.state.bankSelectedDocumentState.metadata?.name ?? "",
-                   date: store.state.bankSelectedDocumentState.metadata?.paymentTime.getRussianStringWithTime ?? "")
+                   date: store.state.bankSelectedDocumentState.metadata?.paymentTime.getString(as: "d MMMM yyyy 'г. в' HH:mm") ?? "")
 
             switch store.state.bankSelectedDocumentState.docContent {
             case .singleFile(let content), .fileWithDetachedCMS(file: let content, cms: _):
@@ -149,7 +170,7 @@ struct DocumentProcessView: View {
                 Spacer()
             }
 
-            bottomBar
+            bottomBar()
         }
         .ignoresSafeArea(.keyboard)
     }

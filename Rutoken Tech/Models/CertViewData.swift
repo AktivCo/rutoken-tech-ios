@@ -19,7 +19,7 @@ enum CertInvalidReason {
         case .alreadyExist: return "Пользователь с таким сертификатом уже добавлен"
         case .expired: return "Сертификат истек"
         case .noKeyPair: return "Работа с сертификатом без ключевой пары в приложении невозможна"
-        case .notStartedBefore(let date): return "Сертификат начнет действовать \(date.getString(with: "dd.MM.YYYY"))"
+        case .notStartedBefore(let date): return "Сертификат начнет действовать \(date.getString(as: "dd.MM.YYYY"))"
         }
     }
 }
@@ -48,7 +48,7 @@ struct CertViewData: Identifiable {
         self.jobTitle = cert.jobTitle
         self.companyName = cert.companyName
         self.keyAlgo = cert.keyAlgo
-        self.expiryDate = cert.expiryDate.getString(with: "dd.MM.YYYY")
+        self.expiryDate = cert.expiryDate.getString(as: "dd.MM.YYYY")
         self.causeOfInvalid = reason
     }
 
@@ -66,7 +66,7 @@ struct CertViewData: Identifiable {
         self.jobTitle = jobTitle
         self.companyName = companyName
         self.keyAlgo = .gostR3410_2012_256
-        self.expiryDate = expiryDate.getString(with: "dd.MM.YYYY")
+        self.expiryDate = expiryDate.getString(as: "dd.MM.YYYY")
         self.causeOfInvalid = reason
     }
 #endif

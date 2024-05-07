@@ -90,6 +90,7 @@ class DocumentManager: DocumentManagerProtocol {
             throw DocumentManagerError.general("Something went wrong during reading the file")
         }
         documents[index].inArchive = true
+        documents[index].dateOfChange = Date()
         documentsPublisher.send(documents)
     }
 }
