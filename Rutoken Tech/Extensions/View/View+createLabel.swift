@@ -18,8 +18,8 @@ extension View {
             Text(value)
                 .font(.body)
                 .foregroundStyle(Color.RtColors.rtLabelSecondary)
+                .multilineTextAlignment(.trailing)
         }
-        .padding(.horizontal, 12)
-        .frame(height: 44)
+        .padding(12)
     }
 }
