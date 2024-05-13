@@ -70,6 +70,7 @@ enum AppAction {
     // MARK: Bank crypto operations
     case signDocument(tokenType: RtTokenType, serial: String, pin: String, documentName: String, certId: String)
     case cmsVerify(fileName: String)
+    case encryptDocument(documentName: String)
     case selectDocument(BankDocument)
     case updateCurrentDoc(BankDocument?, BankFileContent?)
 }

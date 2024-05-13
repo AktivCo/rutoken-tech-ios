@@ -114,6 +114,8 @@ struct AppReducer: Reducer {
             break
         case .cmsVerify:
             break
+        case .encryptDocument:
+            break
         case .selectDocument:
             break
         case let .updateCurrentDoc(metadata, content):

@@ -13,6 +13,7 @@ enum AppAlert {
     case certGenerated
     case keyGenerated
     case documentSigned
+    case documentEncrypted
     // MARK: Errors
     case unknownDevice
     case connectionLost
@@ -36,6 +37,9 @@ enum AppAlert {
         case .documentSigned:
             return .init(title: .titleOnly("Документ подписан"),
                          buttons: [.init(.regular("ОК"))])
+        case .documentEncrypted:
+            return .init(title: .titleOnly("Документ зашифрован"),
+                         buttons: [.init(.regular("OK"))])
         case .unknownDevice:
             return .init(title: .titleOnly("Устройство не распознано"),
                          subTitle: "Приложите поддерживаемый Рутокен",

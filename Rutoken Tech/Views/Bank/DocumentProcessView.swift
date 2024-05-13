@@ -87,18 +87,25 @@ struct DocumentProcessView: View {
             }
             switch document.action {
             case .decrypt: return
-            case .encrypt: return
+            case .encrypt:
+                guard let fileName = store.state.bankSelectedDocumentState.metadata?.name else {
+                    store.send(.showAlert(.unknownError))
+                    return
+                }
+                store.send(.encryptDocument(documentName: fileName))
             case .sign:
                 guard store.state.bankSelectedDocumentState.metadata?.inArchive == false,
                       let tokenSerial = store.state.bankSelectUserState.selectedUser?.tokenSerial,
-                      let certId = store.state.bankSelectUserState.selectedUser?.keyId else {
+                      let certId = store.state.bankSelectUserState.selectedUser?.keyId,
+                      let fileName = store.state.bankSelectedDocumentState.metadata?.name else {
+                    store.send(.showAlert(.unknownError))
                     return
                 }
                 store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
                     RtAuthView(defaultPinGetter: { store.send(.getPin(tokenSerial)) },
                                onSubmit: { tokenType, pin in
                         store.send(.signDocument(tokenType: tokenType, serial: tokenSerial, pin: pin,
-                                                 documentName: store.state.bankSelectedDocumentState.metadata?.name ?? "",
+                                                 documentName: fileName,
                                                  certId: certId))
                     },
                                onCancel: { store.send(.hideSheet) })
