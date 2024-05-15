@@ -29,4 +29,13 @@ class PcscHelperMock: PcscHelperProtocol {
         Empty<Void, Never>().eraseToAnyPublisher()
     }
 
+    func getNfcCooldown() -> AsyncThrowingStream<UInt, Error> {
+        nfcCooldownCounter
+    }
+
+    var nfcCooldownCounter: AsyncThrowingStream<UInt, Error> = {
+        AsyncThrowingStream { con in
+            con.finish()
+        }
+    }()
 }

@@ -11,6 +11,10 @@ import Foundation
 import RtPcscWrapper
 
 
+enum PcscHelperError: Error {
+    case general
+}
+
 enum NfcError: Error {
     case unknown
     case generalError
@@ -22,6 +26,7 @@ protocol PcscHelperProtocol {
     func startNfc() throws
     func stopNfc() throws
     func nfcExchangeIsStopped() -> AnyPublisher<Void, Never>
+    func getNfcCooldown() -> AsyncThrowingStream<UInt, Error>
 }
 
 class PcscHelper: PcscHelperProtocol {
@@ -40,10 +45,34 @@ class PcscHelper: PcscHelperProtocol {
         pcscWrapper.start()
     }
 
+    func getNfcCooldown() -> AsyncThrowingStream<UInt, Error> {
+        AsyncThrowingStream { continuation in
+            guard let reader = readers.first(where: { $0.type == .nfc ||  $0.type == .vcr }) else {
+                continuation.finish(throwing: PcscHelperError.general)
+                return
+            }
+
+            Task {
+                do {
+                    var cooldownLeft: UInt = 1
+                    while cooldownLeft > 0 {
+                        try? await Task.sleep(for: .seconds(0.1))
+                        cooldownLeft = try self.pcscWrapper.getNfcCooldown(for: reader.name)
+                        continuation.yield(cooldownLeft)
+                    }
+                    continuation.finish()
+                } catch {
+                    continuation.finish(throwing: PcscHelperError.general)
+                }
+            }
+        }
+    }
+
     func stopNfc() throws {
         guard let reader = readers.first(where: { $0.type == .nfc ||  $0.type == .vcr }) else {
             throw NfcError.generalError
         }
+
         do {
             try pcscWrapper.stopNfc(onReader: reader.name, withMessage: NfcMessages.stopNfc.rawValue)
         } catch {

@@ -13,7 +13,6 @@ import TinyAsyncRedux
 
 struct CaGenerateKeyPairView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
-    @State private var inProgress: Bool = false
 
     func infoRow(label: String, value: String) -> some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -47,7 +46,7 @@ struct CaGenerateKeyPairView: View {
                             Color("iOSElementsCloseButtonSurface")
                         )
                 }
-                .disabled(inProgress)
+                .disabled(store.state.routingState.actionWithTokenButtonState == .inProgress)
             }
             .padding(.horizontal, 20)
             .padding(.bottom, 12)
@@ -74,23 +73,20 @@ struct CaGenerateKeyPairView: View {
             .frame(maxWidth: .infinity, alignment: .topLeading)
 
             Spacer()
-            RtLoadingButton(action: {
-                if let connectedToken = store.state.caConnectedTokenState.connectedToken,
-                   let pin = store.state.caConnectedTokenState.pin,
-                   let id = store.state.caGenerateKeyPairState.key?.ckaId {
-                    store.send(.generateKeyPair(connectedToken.connectionType, serial: connectedToken.serial, pin: pin, id: id))
-                } else {
-                    store.send(.showAlert(.unknownError))
-                }
-            }, title: "Сгенерировать",
-                     inProgress: $inProgress)
-            .disabled(store.state.nfcState.isLocked)
+            RtLoadingButton(
+                action: {
+                    if let connectedToken = store.state.caConnectedTokenState.connectedToken,
+                       let pin = store.state.caConnectedTokenState.pin,
+                       let id = store.state.caGenerateKeyPairState.key?.ckaId {
+                        store.send(.generateKeyPair(connectedToken.connectionType, serial: connectedToken.serial, pin: pin, id: id))
+                    } else {
+                        store.send(.showAlert(.unknownError))
+                    }},
+                title: "Сгенерировать",
+                state: store.state.routingState.actionWithTokenButtonState)
             .frame(maxWidth: UIDevice.isPhone ? .infinity : 350)
             .padding(.horizontal, 20)
             .padding(.bottom, UIDevice.isPhone ? 34 : 24)
-        }
-        .onChange(of: store.state.caGenerateKeyPairState.inProgress) { newValue in
-            inProgress = newValue
         }
     }
 }

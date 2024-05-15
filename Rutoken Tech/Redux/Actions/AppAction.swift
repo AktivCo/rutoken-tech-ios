@@ -18,6 +18,7 @@ enum AppAction {
     case hideSheet
     case showPinInputError(String)
     case hidePinInputError
+    case updateActionWithTokenButtonState(RtContinueButtonState)
 
     // MARK: Initialization
     case appLoaded
@@ -29,12 +30,10 @@ enum AppAction {
 
     // MARK: Cert generation
     case generateCert(ConnectionType, serial: String, pin: String, id: String, commonName: String)
-    case finishGenerateCert
 
     // MARK: Key Pair generation
     case generateKeyId
     case generateKeyPair(ConnectionType, serial: String, pin: String, id: String)
-    case finishGenerateKeyPair
     case updateKeys([KeyModel])
 
     // MARK: Reading certs from token
@@ -57,11 +56,6 @@ enum AppAction {
     case getPin(String)
     case updatePin(String)
     case deletePin(String)
-
-    // MARK: NFC interactions
-    case lockNfc
-    case willUnlockNfc
-    case unlockNfc
 
     // MARK: Bank Documents
     case resetDocuments

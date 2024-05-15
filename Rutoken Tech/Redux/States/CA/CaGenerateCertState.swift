@@ -6,6 +6,5 @@
 //
 
 struct CaGenerateCertState {
-    var inProgress = false
     var keys: [KeyModel] = []
 }

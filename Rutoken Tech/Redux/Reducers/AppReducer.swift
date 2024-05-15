@@ -37,28 +37,23 @@ struct AppReducer: Reducer {
             newState.routingState.pinInputModel.errorDescription = errorText
         case .hidePinInputError:
             newState.routingState.pinInputModel.errorDescription = ""
+        case .updateActionWithTokenButtonState(let state):
+            newState.routingState.actionWithTokenButtonState = state
+            newState.routingState.pinInputModel.buttonState = state
         case .generateKeyId:
             newState.caGenerateKeyPairState.key = KeyModel(ckaId: String.generateID(),
                                                            type: .gostR3410_2012_256)
         case .generateKeyPair:
-            newState.caGenerateKeyPairState.inProgress = true
-            newState.routingState.pinInputModel.inProgress = true
-        case .finishGenerateKeyPair:
-            newState.caGenerateKeyPairState.inProgress = false
-            newState.routingState.pinInputModel.inProgress = false
+            break
         case let .updateKeys(keys):
             newState.caGenerateCertState.keys = keys
         case .generateCert:
-            newState.caGenerateCertState.inProgress = true
-        case .finishGenerateCert:
-            newState.caGenerateCertState.inProgress = false
+            break
         case .logout:
             // MARK: logout ca
             newState.caConnectedTokenState.connectedToken = nil
             newState.caConnectedTokenState.pin = nil
-            newState.caGenerateKeyPairState.inProgress = false
             newState.caGenerateKeyPairState.key = nil
-            newState.caGenerateCertState.inProgress = false
             newState.caGenerateCertState.keys = []
 
             // MARK: logout bank
@@ -94,14 +89,6 @@ struct AppReducer: Reducer {
             break
         case .deletePin:
             newState.routingState.pinInputModel.pin = ""
-        case .lockNfc:
-            newState.nfcState.isLocked = true
-            newState.routingState.pinInputModel.isContinueButtonDisabled = true
-        case .unlockNfc:
-            newState.nfcState.isLocked = false
-            newState.routingState.pinInputModel.isContinueButtonDisabled = false
-        case .willUnlockNfc:
-            break
         case .resetDocuments:
             newState.bankDocumentListState.isLoading = true
         case .updateDocuments(let docs):

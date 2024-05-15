@@ -24,6 +24,7 @@ protocol CryptoManagerProtocol {
     func verifyCms(signedCms: Data, document: Data) async throws
     func encryptDocument(document: Data, with cert: CertSource) throws -> Data
     func startMonitoring() throws
+    var tokenState: AnyPublisher<TokenInteractionState, Never> { get }
 }
 
 enum CryptoManagerError: Error, Equatable {
@@ -57,6 +58,10 @@ enum CertSource {
 }
 
 class CryptoManager: CryptoManagerProtocol {
+    var tokenState: AnyPublisher<TokenInteractionState, Never> {
+        tokenStatePublisher.eraseToAnyPublisher()
+    }
+
     private let pkcs11Helper: Pkcs11HelperProtocol
     private let pcscHelper: PcscHelperProtocol
     private let openSslHelper: OpenSslHelperProtocol
@@ -65,6 +70,8 @@ class CryptoManager: CryptoManagerProtocol {
     private var cancellable = [UUID: AnyCancellable]()
     @Atomic var tokens: [TokenProtocol] = []
     private var connectedToken: TokenProtocol?
+
+    private var tokenStatePublisher = PassthroughSubject<TokenInteractionState, Never>()
 
     init(pkcs11Helper: Pkcs11HelperProtocol,
          pcscHelper: PcscHelperProtocol,
@@ -235,9 +242,22 @@ class CryptoManager: CryptoManagerProtocol {
                    serial: String?,
                    pin: String?,
                    callback: () async throws -> Void) async throws {
+        tokenStatePublisher.send(.inProgress)
+
         defer {
             if connectionType == .nfc {
                 try? pcscHelper.stopNfc()
+                Task {
+                    do {
+                        for try await cd in pcscHelper.getNfcCooldown() {
+                            tokenStatePublisher.send(cd > 0 ? .cooldown(cd) : .ready)
+                        }
+                    } catch {
+                        tokenStatePublisher.send(.ready)
+                    }
+                }
+            } else {
+                tokenStatePublisher.send(.ready)
             }
         }
         do {

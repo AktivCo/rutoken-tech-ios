@@ -18,9 +18,10 @@ struct CaCertGenView: View {
     @GestureState private var dragOffset: CGSize = .zero
     @State private var isTopViewShown = false
     @State private var isBottomViewShown = true
-    @State private var inProgress: Bool = false
     @State private var wholeContentSize: CGSize = .zero
     @State private var scrollContentSize: CGSize = .zero
+
+    @State private var buttonState: RtContinueButtonState = .disabled
 
     @State var bottomPadding: CGFloat = UIDevice.isPhone ? 34 : 24
 
@@ -63,9 +64,6 @@ struct CaCertGenView: View {
         }
         .rtAdaptToKeyboard(onAppear: { if UIDevice.isPhone { bottomPadding = 12 }},
                            onDisappear: { if UIDevice.isPhone { bottomPadding = 34 }})
-        .onChange(of: store.state.caGenerateCertState.inProgress) { newValue in
-            inProgress = newValue
-        }
     }
 
     private func inputTextLabel(_ text: String) -> some View {
@@ -153,7 +151,7 @@ struct CaCertGenView: View {
                         .foregroundStyle(Color("iOSElementsCloseButtonIcon"),
                                          Color("iOSElementsCloseButtonSurface"))
                 }
-                .disabled(inProgress)
+                .disabled(store.state.routingState.actionWithTokenButtonState == .inProgress)
             }
             .padding(.horizontal, 20)
             .padding(.bottom, 12)
@@ -174,21 +172,43 @@ struct CaCertGenView: View {
             Divider()
                 .overlay(Color("IOSElementsTitleBarSeparator"))
                 .opacity(isBottomViewShown ? 1 : 0)
-            RtLoadingButton(action: {
-                if let token = store.state.caConnectedTokenState.connectedToken,
-                   let pin = store.state.caConnectedTokenState.pin {
-                    let id = store.state.caGenerateCertState.keys[selectedKey].ckaId
-                    store.send(.generateCert(token.connectionType, serial: token.serial, pin: pin, id: id, commonName: nameInput))
-                } else {
-                    store.send(.showAlert(.unknownError))
-                }
-            }, title: "Сгенерировать",
-                     inProgress: $inProgress)
-            .disabled(nameInput.isEmpty || store.state.nfcState.isLocked)
+            RtLoadingButton(
+                action: {
+                    if let token = store.state.caConnectedTokenState.connectedToken,
+                       let pin = store.state.caConnectedTokenState.pin {
+                        let id = store.state.caGenerateCertState.keys[selectedKey].ckaId
+                        store.send(.generateCert(token.connectionType, serial: token.serial, pin: pin, id: id, commonName: nameInput))
+                    } else {
+                        store.send(.showAlert(.unknownError))
+                    }
+                },
+                title: "Сгенерировать",
+                state: buttonState)
             .frame(maxWidth: UIDevice.isPhone ? .infinity : 350)
             .padding(.horizontal, 20)
             .padding(.top, 12)
             .padding(.bottom, bottomPadding)
+            .onAppear {
+                buttonState = calculateButtonState()
+            }
+            .onChange(of: store.state.routingState.actionWithTokenButtonState) { _ in
+                buttonState = calculateButtonState()
+            }
+            .onChange(of: nameInput) { _ in
+                buttonState = calculateButtonState()
+            }
+        }
+    }
+
+    private func calculateButtonState() -> RtContinueButtonState {
+        switch (store.state.routingState.actionWithTokenButtonState,
+                store.state.caConnectedTokenState.connectedToken?.connectionType) {
+        case (.ready, _):
+            return nameInput.isEmpty ? .disabled : .ready
+        case (.cooldown, .usb):
+            return .ready
+        default:
+            return store.state.routingState.actionWithTokenButtonState
         }
     }
 }

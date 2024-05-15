@@ -14,4 +14,5 @@ struct RoutingState {
     var alert: RtAlertModel?
     var sheet: RtSheetModel = RtSheetModel(size: .largePhone, isDraggable: false)
     let pinInputModel = RtPinInputModel(pin: "")
+    var actionWithTokenButtonState: RtContinueButtonState = .ready
 }

@@ -60,8 +60,7 @@ struct RutokenTechApp: App {
                 OnSelectDocument(documentManager: documentManager),
                 OnUpdateUrlsCurrentDoc(documentManager: documentManager),
                 // About
-                OnHandleOpenLink(),
-                OnInitCooldownNfc()
+                OnHandleOpenLink()
             ]
         }
 

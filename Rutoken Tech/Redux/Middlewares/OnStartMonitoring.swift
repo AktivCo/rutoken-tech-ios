@@ -17,7 +17,9 @@ class OnStartMonitoring: Middleware {
 
     private var cancellable = Set<AnyCancellable>()
 
-    init(cryptoManager: CryptoManagerProtocol, userManager: UserManagerProtocol, documentManager: DocumentManagerProtocol) {
+    init(cryptoManager: CryptoManagerProtocol,
+         userManager: UserManagerProtocol,
+         documentManager: DocumentManagerProtocol) {
         self.cryptoManager = cryptoManager
         self.userManager = userManager
         self.documentManager = documentManager
@@ -40,6 +42,15 @@ class OnStartMonitoring: Middleware {
             .store(in: &cancellable)
             documentManager.documents.sink {
                 continuation.yield(.updateDocuments($0))
+            }
+            .store(in: &cancellable)
+
+            cryptoManager.tokenState.sink {
+                switch $0 {
+                case .ready, .cooldown(0): continuation.yield(.updateActionWithTokenButtonState(.ready))
+                case .inProgress: continuation.yield(.updateActionWithTokenButtonState(.inProgress))
+                case .cooldown(let left): continuation.yield(.updateActionWithTokenButtonState(.cooldown(left)))
+                }
             }
             .store(in: &cancellable)
         }

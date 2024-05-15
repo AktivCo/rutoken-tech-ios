@@ -7,6 +7,5 @@
 
 
 struct CaGenerateKeyPairState {
-    var inProgress = false
     var key: KeyModel?
 }
