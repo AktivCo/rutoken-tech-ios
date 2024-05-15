@@ -19,10 +19,7 @@ class OnPerformReadCerts: Middleware {
         self.userManager = userManager
     }
 
-    func getReason(for cert: CertMetaData) async throws -> CertInvalidReason? {
-        let users = userManager.listUsers()
-        let keys = try await cryptoManager.enumerateKeys()
-
+    private func getReason(for cert: CertMetaData, keys: [KeyModel], users: [BankUserInfo]) -> CertInvalidReason? {
         if Date() > cert.expiryDate { return .expired } else
         if users.contains(where: { $0.certHash == cert.hash }) { return .alreadyExist } else
         if cert.startDate > Date() { return .notStartedBefore(cert.startDate)} else
@@ -53,8 +50,10 @@ class OnPerformReadCerts: Middleware {
                         }
 
                         var certModels: [CertViewData] = []
+                        let keys = try await cryptoManager.enumerateKeys()
+                        let users = userManager.listUsers()
                         for cert in certs {
-                            certModels.append(CertViewData(from: cert, reason: try await getReason(for: cert)))
+                            certModels.append(CertViewData(from: cert, reason: getReason(for: cert, keys: keys, users: users)))
                         }
 
                         continuation.yield(.updateBankCerts(certModels))

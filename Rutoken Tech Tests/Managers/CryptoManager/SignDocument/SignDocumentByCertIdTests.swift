@@ -1,5 +1,5 @@
 //
-//  SignDocumentTests.swift
+//  SignDocumentByCertIdTests.swift
 //  Rutoken Tech Tests
 //
 //  Created by Никита Девятых on 10.04.2024.
@@ -10,7 +10,7 @@ import XCTest
 @testable import Rutoken_Tech
 
 
-class CryptoManagerSignDocumentTests: XCTestCase {
+class SignDocumentByCertIdTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: Pkcs11HelperMock!
     var pcscHelper: PcscHelperMock!
@@ -63,28 +63,20 @@ class CryptoManagerSignDocumentTests: XCTestCase {
         }
     }
 
-    func testSignDocumentFileSuccess() async throws {
-        openSslHelper.signDocumentCallback = {
-            self.signed
-        }
-        let result = try manager.signDocument(dataToSign, keyFile: .rootCaKey, certFile: .rootCaCert)
-        XCTAssertEqual(signed, result)
+    func testSignDocumentTokenNotFoundError() throws {
+        assertError(try manager.signDocument(dataToSign, certId: keyId), throws: CryptoManagerError.tokenNotFound)
     }
 
-    func testSignDocumentFileOpenSslError() async throws {
-        let error = OpenSslError.generalError(100, "error")
-        openSslHelper.signDocumentCallback = {
+    func testSignDocumentTokenError() async throws {
+        let error = Pkcs11Error.internalError()
+        token.getWrappedKeyCallback = {
+            XCTAssertEqual($0, self.keyId)
             throw error
         }
-        assertError(try manager.signDocument(dataToSign, keyFile: .rootCaKey, certFile: .rootCaCert), throws: error)
-    }
 
-    func testSignDocumentFileHelperError() async throws {
-        let error = FileHelperError.generalError(100, "error")
-        fileHelper.readFileCallback = { _ in
-            throw error
+        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
+            assertError(try manager.signDocument(dataToSign, certId: keyId), throws: error)
         }
-        assertError(try manager.signDocument(dataToSign, keyFile: .rootCaKey, certFile: .rootCaCert), throws: error)
     }
 
     func testSignDocumentNoSuitCertError() async throws {
@@ -97,8 +89,18 @@ class CryptoManagerSignDocumentTests: XCTestCase {
         }
     }
 
-    func testSignDocumentTokenNotFoundError() throws {
-        assertError(try manager.signDocument(dataToSign, certId: keyId), throws: CryptoManagerError.tokenNotFound)
+    func testSignDocumentFileHelperError() async throws {
+        let error = FileHelperError.generalError(32, "FileHelper error")
+        token.enumerateCertsWithIdCallback = {
+            XCTAssertEqual($0, self.keyId)
+            return [Pkcs11ObjectMock()]
+        }
+        fileHelper.readFileCallback = { _ in
+            throw error
+        }
+        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
+            assertError(try manager.signDocument(dataToSign, certId: keyId), throws: error)
+        }
     }
 
     func testSignDocumentTokenOpenSslError() async throws {
@@ -119,18 +121,6 @@ class CryptoManagerSignDocumentTests: XCTestCase {
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
             assertError(try manager.signDocument(dataToSign, certId: self.keyId), throws: error)
-        }
-    }
-
-    func testSignDocumentTokenError() async throws {
-        let error = Pkcs11Error.internalError()
-        token.getWrappedKeyCallback = {
-            XCTAssertEqual($0, self.keyId)
-            throw error
-        }
-
-        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
-            assertError(try manager.signDocument(dataToSign, certId: keyId), throws: error)
         }
     }
 }

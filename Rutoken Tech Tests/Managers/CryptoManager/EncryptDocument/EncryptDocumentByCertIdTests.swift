@@ -1,8 +1,8 @@
 //
-//  EncryptDocumentTests.swift
+//  EncryptDocumentByCertIdTests.swift
 //  Rutoken Tech Tests
 //
-//  Created by Никита Девятых on 07.05.2024.
+//  Created by Никита Девятых on 25.06.2024.
 //
 
 import XCTest
@@ -10,7 +10,7 @@ import XCTest
 @testable import Rutoken_Tech
 
 
-class CryptoManagerEncryptDocumentTests: XCTestCase {
+class EncryptDocumentByCertIdTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: Pkcs11HelperMock!
     var pcscHelper: PcscHelperMock!
@@ -38,33 +38,7 @@ class CryptoManagerEncryptDocumentTests: XCTestCase {
         pkcs11Helper.tokenPublisher.send([token])
     }
 
-    func testEncryptCmsFileSuccess() throws {
-        let certUrl = Bundle.getUrl(for: RtFile.bankCert.rawValue, in: RtFile.subdir)
-        let certData = Data("bankCertData".utf8)
-        let encryptedData = Data("encryptedData".utf8)
-        fileHelper.readFileCallback = {
-            XCTAssertEqual(certUrl, $0)
-            return certData
-        }
-        openSslHelper.encryptCmsCallback = {
-            XCTAssertEqual($1, certData)
-            return encryptedData
-        }
-        let result = try manager.encryptDocument(documentData, certFile: .bankCert)
-        XCTAssertEqual(result, encryptedData)
-    }
-
-    func testEncryptCmsReadFileError() throws {
-        let certUrl = Bundle.getUrl(for: RtFile.bankCert.rawValue, in: RtFile.subdir)
-        let error = FileHelperError.generalError(23, "reading file error")
-        fileHelper.readFileCallback = {
-            XCTAssertEqual(certUrl, $0)
-            throw error
-        }
-        assertError(try manager.encryptDocument(documentData, certFile: .bankCert), throws: error)
-    }
-
-    func testEncryptCmsTokenSuccess() async throws {
+    func testEncryptDocumentTokenSuccess() async throws {
         let encryptedData = Data("encryptedData".utf8)
         let certBodyData = Data("certBodyData".utf8)
 
@@ -84,12 +58,12 @@ class CryptoManagerEncryptDocumentTests: XCTestCase {
         }
     }
 
-    func testEncryptCmsTokenNotFoundError() async throws {
+    func testEncryptDocumentTokenNotFoundError() async throws {
         assertError(try manager.encryptDocument(documentData, certId: certId), throws: CryptoManagerError.tokenNotFound)
     }
 
 
-    func testEncryptCmsTokenNoSuitCertError() async throws {
+    func testEncryptDocumentTokenNoSuitCertError() async throws {
         token.enumerateCertsWithIdCallback = {
             XCTAssertEqual($0, self.certId)
             return []
@@ -99,7 +73,7 @@ class CryptoManagerEncryptDocumentTests: XCTestCase {
         }
     }
 
-    func testEncryptCmsTokenOpenSslError() async throws {
+    func testEncryptDocumentTokenOpenSslError() async throws {
         let error = OpenSslError.generalError(23, "qwerty")
         token.enumerateCertsWithIdCallback = {
             XCTAssertEqual($0, self.certId)

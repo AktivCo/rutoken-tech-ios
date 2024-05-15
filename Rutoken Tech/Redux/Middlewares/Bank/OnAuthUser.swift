@@ -27,19 +27,19 @@ class OnAuthUser: Middleware {
                     continuation.finish()
                 }
                 do {
+                    var certs: [CertMetaData] = []
                     try await self.cryptoManager.withToken(connectionType: connectionType,
                                                            serial: user.tokenSerial, pin: pin) {
-                        let certs = try await cryptoManager.enumerateCerts()
-
-                        guard certs.contains(where: {$0.hash == user.certHash}) else {
-                            throw CryptoManagerError.noSuitCert
-                        }
+                        certs = try await cryptoManager.enumerateCerts()
+                    }
+                    guard let cert = certs.first(where: { $0.hash == user.certHash }) else {
+                        throw CryptoManagerError.noSuitCert
                     }
                     continuation.yield(.selectUser(user))
                     continuation.yield(.savePin(pin, user.tokenSerial, true))
                     continuation.yield(.hideSheet)
                     continuation.yield(.updatePin(""))
-                    continuation.yield(.prepareDocuments)
+                    continuation.yield(.prepareDocuments(cert.body))
                 } catch CryptoManagerError.incorrectPin(let attemptsLeft) {
                     continuation.yield(.showPinInputError("Неверный PIN-код. Осталось попыток: \(attemptsLeft)"))
                     continuation.yield(.deletePin(user.tokenSerial))

@@ -23,7 +23,7 @@ class OnPrepareDocuments: Middleware {
     }
 
     func handle(action: AppAction) -> AsyncStream<AppAction>? {
-        guard case .prepareDocuments = action else {
+        guard case let .prepareDocuments(certData) = action else {
             return nil
         }
 
@@ -49,8 +49,8 @@ class OnPrepareDocuments: Middleware {
                     case .encrypt, .sign:
                         processedDocs.append(DocumentData(name: docName, content: docContent))
                     case .decrypt:
-                        // encryption will be added soon
-                        processedDocs.append(DocumentData(name: docName, content: docContent))
+                        let encryptedData = try cryptoManager.encryptDocument(docContent, certData: certData)
+                        processedDocs.append(DocumentData(name: docName + ".enc", content: encryptedData))
                     }
                 }
                 try documentManager.initBackup(docs: processedDocs)

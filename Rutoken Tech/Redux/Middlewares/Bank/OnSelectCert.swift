@@ -31,7 +31,7 @@ class OnSelectCert: Middleware {
                 return
             }
             continuation.yield(.selectUser(user.toBankUserInfo()))
-            continuation.yield(.prepareDocuments)
+            continuation.yield(.prepareDocuments(cert.certInfo.body))
             continuation.yield(.hideSheet)
         }
     }

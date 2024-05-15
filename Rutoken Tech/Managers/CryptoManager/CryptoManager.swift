@@ -25,6 +25,7 @@ protocol CryptoManagerProtocol {
     func verifyCms(signedCms: Data, document: Data) async throws
     func encryptDocument(_ document: Data, certId: String) throws -> Data
     func encryptDocument(_ document: Data, certFile: RtFile) throws -> Data
+    func encryptDocument(_ document: Data, certData: Data) throws -> Data
     func decryptCms(encryptedData: Data, with id: String) throws -> Data
     func startMonitoring() throws
     var tokenState: AnyPublisher<TokenInteractionState, Never> { get }
@@ -255,6 +256,10 @@ class CryptoManager: CryptoManagerProtocol {
             throw CryptoManagerError.unknown
         }
         let certData = try fileHelper.readFile(from: certUrl)
+        return try openSslHelper.encryptDocument(for: document, with: certData)
+    }
+
+    func encryptDocument(_ document: Data, certData: Data) throws -> Data {
         return try openSslHelper.encryptDocument(for: document, with: certData)
     }
 
