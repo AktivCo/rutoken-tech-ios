@@ -39,4 +39,8 @@ class OpenSslHelperMock: OpenSslHelperProtocol {
     }
     var encryptCmsCallback: (Data, Data) throws -> Data = { _, _ in Data() }
 
+    func decryptCms(content: Data, wrappedKey: WrappedPointer<OpaquePointer>) throws -> Data {
+        try decryptCmsCallback()
+    }
+    var decryptCmsCallback: () throws -> Data = { Data() }
 }

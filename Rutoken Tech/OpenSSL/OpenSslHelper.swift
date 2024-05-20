@@ -19,6 +19,7 @@ protocol OpenSslHelperProtocol {
     func signCms(for content: Data, key: Data, cert: Data) throws -> String
     func verifyCms(signedCms: String, for content: Data, with cert: Data, certChain: [Data]) throws -> VerifyCmsResult
     func encryptDocument(for content: Data, with cert: Data) throws -> Data
+    func decryptCms(content: Data, wrappedKey: WrappedPointer<OpaquePointer>) throws -> Data
 }
 
 enum VerifyCmsResult {
@@ -104,10 +105,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
 
                   return cmsData.withUnsafeBytes {
                       var pointer: UnsafePointer<UInt8>? = $0.baseAddress?.assumingMemoryBound(to: UInt8.self)
-                      guard let pointer = d2i_CMS_ContentInfo(nil, &pointer, data.count) else {
-                          return nil
-                      }
-                      return pointer
+                      return d2i_CMS_ContentInfo(nil, &pointer, data.count)
                   }
               }, CMS_ContentInfo_free) else {
             throw OpenSslError.generalError(#line, getLastError())
@@ -493,6 +491,24 @@ class OpenSslHelper: OpenSslHelperProtocol {
             }
         }
         return cmsData
+    }
+
+    func decryptCms(content: Data, wrappedKey: WrappedPointer<OpaquePointer>) throws -> Data {
+        guard let cms = WrappedPointer<OpaquePointer>({
+            return content.withUnsafeBytes {
+                var pointer: UnsafePointer<UInt8>? = $0.baseAddress?.assumingMemoryBound(to: UInt8.self)
+                return d2i_CMS_ContentInfo(nil, &pointer, content.count)
+            }
+        }, CMS_ContentInfo_free) else {
+            throw OpenSslError.generalError(#line, getLastError())
+        }
+
+        guard let wrappedBio = WrappedPointer<OpaquePointer>({ BIO_new(BIO_s_mem()) }, { BIO_free($0) }),
+              CMS_decrypt(cms.pointer, wrappedKey.pointer, nil, nil, wrappedBio.pointer, 0) > 0,
+              let decryptedData = bioToData(wrappedBio.pointer) else {
+            throw OpenSslError.generalError(#line, getLastError())
+        }
+        return decryptedData
     }
 
     private func createX509Stack(with certs: [Data]) -> WrappedPointer<OpaquePointer>? {
