@@ -410,6 +410,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
               let certStack = createX509Stack(with: [cert]),
               /* Receiving encryption algorithm.
                To use other encryption modes and algorithms, replace rt_eng_nid_gost28147_cfb with:
+               - NID_kuznyechik_ctr_acpkm_omac for KUZNYECHIK-CTR-ACPKM-OMAC
                - NID_magma_ctr_acpkm_omac for MAGMA-CTR-ACPKM-OMAC
                - NID_id_tc26_cipher_gostr3412_2015_kuznyechik_ctracpkm for KUZNYECHIK-CTR-ACPKM
                - NID_id_tc26_cipher_gostr3412_2015_magma_ctracpkm for MAGMA-CTR-ACPKM */
