@@ -23,6 +23,7 @@ protocol CryptoManagerProtocol {
     func signDocument(document: Data, with id: String) throws -> String
     func verifyCms(signedCms: Data, document: Data) async throws
     func encryptDocument(document: Data, with cert: CertSource) throws -> Data
+    func decryptCms(encryptedData: Data, with id: String) throws -> Data
     func startMonitoring() throws
     var tokenState: AnyPublisher<TokenInteractionState, Never> { get }
 }
@@ -191,6 +192,14 @@ class CryptoManager: CryptoManagerProtocol {
             throw CryptoManagerError.noSuitCert
         }
         return try openSslHelper.signCms(for: document, wrappedKey: key, cert: certData)
+    }
+
+    func decryptCms(encryptedData: Data, with id: String) throws -> Data {
+        guard let token = connectedToken else {
+            throw CryptoManagerError.tokenNotFound
+        }
+        let key = try token.getWrappedKey(with: id)
+        return try openSslHelper.decryptCms(content: encryptedData, wrappedKey: key)
     }
 
     func verifyCms(signedCms: Data, document: Data) async throws {
