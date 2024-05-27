@@ -9,10 +9,11 @@ import Foundation
 
 
 protocol Pkcs11ObjectProtocol {
-    var id: String? { get }
-    var body: Data? { get }
     var handle: CK_OBJECT_HANDLE { get }
-    func getValue(for attr: BufferAttribute) throws -> Data?
+
+    func getValue(forAttr attrType: BufferAttribute.AttrType) throws -> Data
+    func getValue(forAttr attrType: ULongAttribute.AttrType) throws -> CK_ULONG
+    func getValue(forAttr attrType: BoolAttribute.AttrType) throws -> Bool
 }
 
 class Pkcs11Object: Pkcs11ObjectProtocol {
@@ -24,32 +25,20 @@ class Pkcs11Object: Pkcs11ObjectProtocol {
         self.session = session
     }
 
-    lazy var id: String? = {
-        guard let dataId = try? getValue(for: BufferAttribute(type: .id)) else {
-            return nil
-        }
-        return String(decoding: dataId, as: UTF8.self)
-    }()
-
-    lazy var body: Data? = {
-        guard let value = try? getValue(for: BufferAttribute(type: .value)) else {
-            return nil
-        }
-        return value
-    }()
-
-    func getValue(for attr: BufferAttribute) throws -> Data? {
+    func getValue(forAttr attrType: BufferAttribute.AttrType) throws -> Data {
         guard let session else {
             throw TokenError.generalError
         }
 
-        var template = [attr.attribute]
+        // We have to calculate buffer size with C_GetAttributeValue call with nil-pointed Attribute
+        // This step is neccessary only for buffer attributes and can be skipped for plain ones.
+        var template = [BufferAttribute(type: attrType).attribute]
         var rv = C_GetAttributeValue(session.handle, handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
             throw TokenError.generalError
         }
 
-        let attr = BufferAttribute(type: attr.type, count: Int(template[0].ulValueLen))
+        let attr = BufferAttribute(type: attrType, count: Int(template[0].ulValueLen))
         template = [attr.attribute]
 
         rv = C_GetAttributeValue(session.handle, handle, &template, CK_ULONG(template.count))
@@ -57,15 +46,37 @@ class Pkcs11Object: Pkcs11ObjectProtocol {
             throw TokenError.generalError
         }
 
-        return attr.getValue
+        return Data(buffer: UnsafeBufferPointer(start: template[0].pValue.assumingMemoryBound(to: UInt8.self),
+                                                count: Int(template[0].ulValueLen)))
     }
-}
 
-struct Pkcs11KeyPair {
-    let pubKey: Pkcs11ObjectProtocol
-    let privateKey: Pkcs11ObjectProtocol
+    func getValue(forAttr attrType: ULongAttribute.AttrType) throws -> CK_ULONG {
+        guard let session else {
+            throw TokenError.generalError
+        }
 
-    var algorithm: KeyAlgorithm {
-        .gostR3410_2012_256
+        let attr = ULongAttribute(type: attrType, value: 0)
+        var template = [attr.attribute]
+        let rv = C_GetAttributeValue(session.handle, handle, &template, CK_ULONG(template.count))
+        guard rv == CKR_OK else {
+            throw TokenError.generalError
+        }
+
+        return template[0].pValue.assumingMemoryBound(to: CK_ULONG.self).pointee
+    }
+
+    func getValue(forAttr attrType: BoolAttribute.AttrType) throws -> Bool {
+        guard let session else {
+            throw TokenError.generalError
+        }
+
+        let attr = BoolAttribute(type: attrType, value: false)
+        var template = [attr.attribute]
+        let rv = C_GetAttributeValue(session.handle, handle, &template, CK_ULONG(template.count))
+        guard rv == CKR_OK else {
+            throw TokenError.generalError
+        }
+
+        return template[0].pValue.assumingMemoryBound(to: Bool.self).pointee
     }
 }

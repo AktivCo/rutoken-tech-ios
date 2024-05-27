@@ -69,7 +69,9 @@ class CryptoManagerEncryptDocumentTests: XCTestCase {
         let certBodyData = "certBodyData".data(using: .utf8)!
         token.enumerateCertsCallback = {
             XCTAssertEqual($0, self.certId)
-            return [Pkcs11ObjectMock(id: self.certId, body: certBodyData)]
+            var object = Pkcs11ObjectMock()
+            object.setValue(forAttr: .value, value: .success(certBodyData))
+            return [object]
         }
         openSslHelper.encryptCmsCallback = {
             XCTAssertEqual($1, certBodyData)
@@ -99,7 +101,7 @@ class CryptoManagerEncryptDocumentTests: XCTestCase {
         let error = OpenSslError.generalError(23, "qwerty")
         token.enumerateCertsCallback = {
             XCTAssertEqual($0, self.certId)
-            return [Pkcs11ObjectMock(id: self.certId, body: Data(repeating: 0x07, count: 10))]
+            return [Pkcs11ObjectMock()]
         }
         openSslHelper.encryptCmsCallback = { _, _ in throw error }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {

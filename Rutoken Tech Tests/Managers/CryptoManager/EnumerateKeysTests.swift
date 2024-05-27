@@ -36,8 +36,9 @@ final class CryptoManagerEnumerateKeysTests: XCTestCase {
         pkcs11Helper.tokenPublisher.send([token])
 
         token.enumerateKeysCallback = { _, _ in
-            return [Pkcs11KeyPair(pubKey: Pkcs11ObjectMock(id: testId, body: nil),
-                                  privateKey: Pkcs11ObjectMock(id: testId, body: nil))]
+            var object = Pkcs11ObjectMock()
+            object.setValue(forAttr: .id, value: .success(Data(testId.utf8)))
+            return [Pkcs11KeyPair(publicKey: object, privateKey: object)]
         }
 
         var result: [KeyModel]?

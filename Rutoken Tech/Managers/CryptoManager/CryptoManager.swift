@@ -125,7 +125,7 @@ class CryptoManager: CryptoManagerProtocol {
         }
 
         return try token.enumerateKeys(by: nil, with: .gostR3410_2012_256).compactMap {
-            guard let ckaId = $0.privateKey.id else {
+            guard let ckaId = try String(data: $0.privateKey.getValue(forAttr: .id), encoding: .utf8) else {
                 return nil
             }
             return KeyModel(ckaId: ckaId, type: $0.algorithm)
@@ -138,8 +138,8 @@ class CryptoManager: CryptoManagerProtocol {
         }
 
         return try token.enumerateCerts(by: nil).compactMap { (cert: Pkcs11ObjectProtocol) -> CertMetaData? in
-            guard let certData = cert.body,
-                  let keyId = cert.id else {
+            let certData = try cert.getValue(forAttr: .value)
+            guard let keyId = try String(data: cert.getValue(forAttr: .id), encoding: .utf8) else {
                 return nil
             }
 
@@ -164,16 +164,17 @@ class CryptoManager: CryptoManagerProtocol {
         }
 
         guard let caKeyUrl = Bundle.getUrl(for: RtFile.caKey.rawValue, in: RtFile.subdir),
-              let caCertUrl = Bundle.getUrl(for: RtFile.caCert.rawValue, in: RtFile.subdir),
-              let caKeyData = try? fileHelper.readFile(from: caKeyUrl),
-              let caCertData = try? fileHelper.readFile(from: caCertUrl) else {
+              let caCertUrl = Bundle.getUrl(for: RtFile.caCert.rawValue, in: RtFile.subdir) else {
             throw CryptoManagerError.unknown
         }
 
-        let startDateData = try keyPair.privateKey.getValue(for: .init(type: .startDate))
-        let endDateData = try keyPair.privateKey.getValue(for: .init(type: .endDate))
-        let info = CertInfo(startDate: startDateData?.getDate(with: "YYYYMMdd"),
-                            endDate: endDateData?.getDate(with: "YYYYMMdd"))
+        let caKeyData = try fileHelper.readFile(from: caKeyUrl)
+        let caCertData = try fileHelper.readFile(from: caCertUrl)
+
+        let startDateData = try keyPair.privateKey.getValue(forAttr: .startDate)
+        let endDateData = try keyPair.privateKey.getValue(forAttr: .endDate)
+        let info = CertInfo(startDate: startDateData.getDate(with: "YYYYMMdd"),
+                            endDate: endDateData.getDate(with: "YYYYMMdd"))
 
         let wrappedKey = try token.getWrappedKey(with: id)
         let csr = try openSslHelper.createCsr(with: wrappedKey, for: model, with: info)
@@ -186,7 +187,7 @@ class CryptoManager: CryptoManagerProtocol {
             throw CryptoManagerError.tokenNotFound
         }
         let key = try token.getWrappedKey(with: id)
-        guard let certData = try token.enumerateCerts(by: id).first?.body else {
+        guard let certData = try token.enumerateCerts(by: id).first?.getValue(forAttr: .value) else {
             throw CryptoManagerError.noSuitCert
         }
         return try openSslHelper.signCms(for: document, wrappedKey: key, cert: certData)
@@ -225,7 +226,7 @@ class CryptoManager: CryptoManagerProtocol {
             guard let token = connectedToken else {
                 throw CryptoManagerError.tokenNotFound
             }
-            guard let data = try token.enumerateCerts(by: id).first?.body else {
+            guard let data = try token.enumerateCerts(by: id).first?.getValue(forAttr: .value) else {
                 throw CryptoManagerError.noSuitCert
             }
             certData = data

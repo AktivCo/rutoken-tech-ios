@@ -46,7 +46,7 @@ class CryptoManagerSignDocumentTests: XCTestCase {
         }
         token.enumerateCertsCallback = {
             XCTAssertEqual($0, self.keyId)
-            return [Pkcs11ObjectMock(id: self.keyId, body: Data(repeating: 0x07, count: 10))]
+            return [Pkcs11ObjectMock()]
         }
         token.getWrappedKeyCallback = {
             XCTAssertEqual($0, self.keyId)
@@ -82,7 +82,7 @@ class CryptoManagerSignDocumentTests: XCTestCase {
         }
         token.enumerateCertsCallback = {
             XCTAssertEqual($0, self.keyId)
-            return [Pkcs11ObjectMock(id: self.keyId, body: Data(repeating: 0x07, count: 10))]
+            return [Pkcs11ObjectMock()]
         }
         token.getWrappedKeyCallback = {
             XCTAssertEqual($0, self.keyId)

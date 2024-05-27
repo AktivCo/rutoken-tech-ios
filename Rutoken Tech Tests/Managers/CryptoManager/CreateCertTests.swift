@@ -30,8 +30,8 @@ final class CryptoManagerCreateCertTests: XCTestCase {
 
         token = TokenMock(serial: "87654321", currentInterface: .usb)
         token.enumerateKeysCallback = { _, _ in
-            return [Pkcs11KeyPair(pubKey: Pkcs11ObjectMock(id: "001", body: nil),
-                                  privateKey: Pkcs11ObjectMock(id: "001", body: nil))]
+            return [Pkcs11KeyPair(publicKey: Pkcs11ObjectMock(),
+                                  privateKey: Pkcs11ObjectMock())]
         }
         pkcs11Helper.tokenPublisher.send([token])
     }
@@ -61,28 +61,17 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         }
     }
 
-    func testCreateCertPrivateKeyUsagePeriodGetValueNil() async throws {
-        token.enumerateKeysCallback = { _, _ in
-            let pkcsObject = Pkcs11ObjectMock(id: nil, body: nil, getValueCallback: { nil })
-            return [Pkcs11KeyPair(pubKey: pkcsObject, privateKey: pkcsObject)]
-        }
-
-        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
-            await assertNoThrowAsync(try await manager.createCert(for: "001",
-                                                                  with: CsrModel.makeDefaultModel()))
-        }
-    }
-
     func testCreateCertPrivateKeyUsagePeriodGetValueError() async throws {
         token.enumerateKeysCallback = { _, _ in
-            let pkcsObject = Pkcs11ObjectMock(id: nil, body: nil, getValueCallback: { throw CryptoManagerError.unknown })
-            return [Pkcs11KeyPair(pubKey: pkcsObject, privateKey: pkcsObject)]
+            var object = Pkcs11ObjectMock()
+            object.setValue(forAttr: .startDate, value: .failure(TokenError.generalError))
+            return [Pkcs11KeyPair(publicKey: object, privateKey: object)]
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
                 try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
-                throws: CryptoManagerError.unknown)
+                throws: TokenError.generalError)
         }
     }
 
@@ -92,7 +81,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
                 try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
-                throws: CryptoManagerError.unknown)
+                throws: DocumentManagerError.general(""))
         }
     }
 

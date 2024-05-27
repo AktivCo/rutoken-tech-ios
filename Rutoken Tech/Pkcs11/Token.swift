@@ -98,8 +98,7 @@ class Token: TokenProtocol, Identifiable {
     }
 
     func enumerateCerts(by id: String?) throws -> [Pkcs11ObjectProtocol] {
-        var certs: [Pkcs11Object] = []
-        var certTemplate: [PkcsAttribute] = [
+        var certTemplate: [any PkcsAttribute] = [
             ULongAttribute(type: .classObject, value: CKO_CERTIFICATE),
             BoolAttribute(type: .token, value: true),
             ULongAttribute(type: .certType, value: CKC_X_509)
@@ -109,24 +108,17 @@ class Token: TokenProtocol, Identifiable {
             certTemplate.append(BufferAttribute(type: .id, value: idData))
         }
 
-        let certObjects = try findObjects(certTemplate.map { $0.attribute })
-
-        for obj in certObjects {
-            certs.append(Pkcs11Object(with: obj, session))
-        }
-        return certs
+        return try session.findObjects(certTemplate.map { $0.attribute })
     }
 
     func enumerateKeys(by id: String?, with type: KeyAlgorithm?) throws -> [Pkcs11KeyPair] {
-        var keyPairs: [Pkcs11KeyPair] = []
-
         // MARK: Prepare key templates
-        var pubKeyTemplate: [PkcsAttribute] = [
+        var pubKeyTemplate: [any PkcsAttribute] = [
             ULongAttribute(type: .classObject, value: CKO_PUBLIC_KEY),
             BoolAttribute(type: .token, value: true),
             BoolAttribute(type: .privateness, value: false)
         ]
-        var privateKeyTemplate: [PkcsAttribute] = [
+        var privateKeyTemplate: [any PkcsAttribute] = [
             ULongAttribute(type: .classObject, value: CKO_PRIVATE_KEY),
             BoolAttribute(type: .token, value: true),
             BoolAttribute(type: .privateness, value: true)
@@ -145,24 +137,17 @@ class Token: TokenProtocol, Identifiable {
         }
 
         // MARK: Find public keys
-        let pubKeyObjects = try findObjects(pubKeyTemplate.map { $0.attribute })
-
-        var publicKeys: [Pkcs11Object] = []
-        for obj in pubKeyObjects {
-            publicKeys.append(Pkcs11Object(with: obj, session))
-        }
+        let publicKeys = try session.findObjects(pubKeyTemplate.map { $0.attribute })
 
         // MARK: Find private keys
-        let privateKeyObjects = try findObjects(privateKeyTemplate.map { $0.attribute })
+        let privateKeys = try session.findObjects(privateKeyTemplate.map { $0.attribute })
 
-        for obj in privateKeyObjects {
-            let privateKey = Pkcs11Object(with: obj, session)
-            if let pubKey = publicKeys.first(where: { $0.id == privateKey.id }) {
-                keyPairs.append(.init(pubKey: pubKey, privateKey: privateKey))
+        return try privateKeys.compactMap { privateKey in
+            guard let publicKey = try publicKeys.first(where: { try $0.getValue(forAttr: .id) == privateKey.getValue(forAttr: .id) }) else {
+                return nil
             }
+            return Pkcs11KeyPair(publicKey: publicKey, privateKey: privateKey)
         }
-
-        return keyPairs
     }
 
     func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer> {
@@ -173,7 +158,7 @@ class Token: TokenProtocol, Identifiable {
         guard let wrappedKey = WrappedPointer<OpaquePointer>({
             try? engine.wrapKeys(with: session.handle,
                                  privateKeyHandle: keyPair.privateKey.handle,
-                                 pubKeyHandle: keyPair.pubKey.handle)
+                                 pubKeyHandle: keyPair.publicKey.handle)
         }, EVP_PKEY_free) else {
             throw TokenError.generalError
         }
@@ -185,33 +170,31 @@ class Token: TokenProtocol, Identifiable {
         var privateKey = CK_OBJECT_HANDLE()
 
         let currentDate = Date()
-        guard let startDateData = PkcsConstants.createDateObject(with: currentDate),
-              let endDateData = PkcsConstants.createDateObject(with: currentDate.addingTimeInterval(3 * 365 * 24 * 60 * 60)),
-              let idData = id.data(using: .utf8) else {
-            throw TokenError.generalError
-        }
+        var startDateData = Pkcs11Date(date: currentDate)
+        var endDateData = Pkcs11Date(date: currentDate.addingTimeInterval(3 * 365 * 24 * 60 * 60))
+        let idData = Data(id.utf8)
 
-        let publicKeyAttributes: [PkcsAttribute] = [
+        let publicKeyAttributes: [any PkcsAttribute] = [
             ULongAttribute(type: .classObject, value: CKO_PUBLIC_KEY),
             BufferAttribute(type: .id, value: idData),
             ULongAttribute(type: .keyType, value: CKK_GOSTR3410),
             BoolAttribute(type: .token, value: true),
             BoolAttribute(type: .privateness, value: false),
-            BufferAttribute(type: .startDate, value: startDateData),
-            BufferAttribute(type: .endDate, value: endDateData),
+            BufferAttribute(type: .startDate, value: startDateData.data()),
+            BufferAttribute(type: .endDate, value: endDateData.data()),
             BufferAttribute(type: .gostR3410Params, value: Data(PkcsConstants.parametersGostR3410_2012_256)),
             BufferAttribute(type: .gostR3411Params, value: Data(PkcsConstants.parametersGostR3411_2012_256))
         ]
 
-        let privateKeyAttributes: [PkcsAttribute] = [
+        let privateKeyAttributes: [any PkcsAttribute] = [
             ULongAttribute(type: .classObject, value: CKO_PRIVATE_KEY),
             BufferAttribute(type: .id, value: idData),
             ULongAttribute(type: .keyType, value: CKK_GOSTR3410),
             BoolAttribute(type: .token, value: true),
             BoolAttribute(type: .privateness, value: true),
             BoolAttribute(type: .derive, value: true),
-            BufferAttribute(type: .startDate, value: startDateData),
-            BufferAttribute(type: .endDate, value: endDateData),
+            BufferAttribute(type: .startDate, value: startDateData.data()),
+            BufferAttribute(type: .endDate, value: endDateData.data()),
             BufferAttribute(type: .gostR3410Params, value: Data(PkcsConstants.parametersGostR3410_2012_256)),
             BufferAttribute(type: .gostR3411Params, value: Data(PkcsConstants.parametersGostR3411_2012_256))
         ]
@@ -234,18 +217,18 @@ class Token: TokenProtocol, Identifiable {
             throw TokenError.generalError
         }
 
-        let template: [PkcsAttribute] = [
+        let template: [any PkcsAttribute] = [
             BufferAttribute(type: .id, value: idData)
         ]
 
-        let objects = try findObjects(template.map { $0.attribute })
+        let objects = try session.findObjects(template.map { $0.attribute })
 
         guard !objects.isEmpty else {
             throw TokenError.generalError
         }
 
         for obj in objects {
-            let rv = C_DestroyObject(session.handle, obj)
+            let rv = C_DestroyObject(session.handle, obj.handle)
             guard rv == CKR_OK else {
                 throw TokenError.generalError
             }
@@ -257,7 +240,7 @@ class Token: TokenProtocol, Identifiable {
               let idData = id.data(using: .utf8) else {
             throw TokenError.generalError
         }
-        let certAttributes: [PkcsAttribute] = [
+        let certAttributes: [any PkcsAttribute] = [
             BufferAttribute(type: .value, value: cert),
             ULongAttribute(type: .classObject, value: CKO_CERTIFICATE),
             BufferAttribute(type: .id, value: idData),
@@ -295,22 +278,13 @@ class Token: TokenProtocol, Identifiable {
             ULongAttribute(type: .classObject, value: CKO_HW_FEATURE),
             ULongAttribute(type: .hwFeatureType, value: CKH_VENDOR_TOKEN_INFO)
         ]
-        let attributes = [
-            BufferAttribute(type: .vendorCurrentInterface),
-            BufferAttribute(type: .vendorSupportedInterface)
-        ]
 
-        guard let handle = try? findObjects(objectAttributes.map { $0.attribute }).first else {
-            throw TokenError.generalError
-        }
-        guard let attributes = readAttributes(handle: handle, attributes: attributes) else {
+        guard let hwFeature = try? session.findObjects(objectAttributes.map { $0.attribute }).first else {
             throw TokenError.generalError
         }
 
-        guard let currentInterfaceBits = attributes.first(where: { $0.type == .vendorCurrentInterface})?.getValue,
-              let supportedInterfacesBits = attributes.first(where: { $0.type == .vendorSupportedInterface})?.getValue else {
-                  throw TokenError.generalError
-              }
+        let currentInterfaceBits = try hwFeature.getValue(forAttr: .vendorCurrentInterface)
+        let supportedInterfacesBits = try hwFeature.getValue(forAttr: .vendorSupportedInterface)
 
         guard let currentInterface = TokenInterface(currentInterfaceBits.withUnsafeBytes { rawBuffer in
             rawBuffer.load(as: CK_ULONG.self)
@@ -338,9 +312,7 @@ class Token: TokenProtocol, Identifiable {
 
         // MARK: Get token model
         if tokenInfo.firmwareVersion.major >= 32 {
-            guard let modelName = getTokenModelFromToken() else {
-                throw TokenError.generalError
-            }
+            let modelName = try getTokenModelFromToken()
             model = .rutokenSelfIdentify(modelName)
         } else {
             guard let model = computeTokenModel() else {
@@ -407,71 +379,16 @@ class Token: TokenProtocol, Identifiable {
         }
     }
 
-    private func getTokenModelFromToken() -> String? {
+    private func getTokenModelFromToken() throws -> String {
         let objectAttributes = [
             ULongAttribute(type: .classObject, value: CKO_HW_FEATURE),
             ULongAttribute(type: .hwFeatureType, value: CKH_VENDOR_TOKEN_INFO)
         ]
-        let attribute = BufferAttribute(type: .vendorModelName)
 
-        guard let handle = try? findObjects(objectAttributes.map { $0.attribute }).first,
-              let attributes = readAttributes(handle: handle, attributes: [attribute]),
-              let data = attributes.first?.getValue,
-              let result = String(data: data, encoding: .utf8) else {
-            return nil
+        guard let object = try session.findObjects(objectAttributes.map { $0.attribute }).first,
+              let result = try String(data: object.getValue(forAttr: .vendorModelName), encoding: .utf8) else {
+            throw TokenError.generalError
         }
         return result
-    }
-
-    private func readAttributes(handle: CK_OBJECT_HANDLE,
-                                attributes: [BufferAttribute]) -> [BufferAttribute]? {
-        var template = attributes.map { $0.attribute }
-        var rv = C_GetAttributeValue(session.handle, handle, &template, CK_ULONG(template.count))
-        guard rv == CKR_OK else {
-            return nil
-        }
-
-        let result: [BufferAttribute] = attributes.map {
-            if let length = template.first(where: { $0.type == $0.type })?.ulValueLen {
-                return BufferAttribute(type: $0.type, count: Int(length))
-            }
-            return nil
-        }.compactMap { $0 }
-        template = result.map { $0.attribute }
-
-        rv = C_GetAttributeValue(session.handle, handle, &template, CK_ULONG(template.count))
-        guard rv == CKR_OK else {
-            return nil
-        }
-
-        return result
-    }
-
-    private func findObjects(_ attributes: [CK_ATTRIBUTE]) throws -> [CK_OBJECT_HANDLE] {
-        var template = attributes
-        var rv = C_FindObjectsInit(session.handle, &template, CK_ULONG(template.count))
-        guard rv == CKR_OK else {
-            throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
-        }
-        defer {
-            C_FindObjectsFinal(session.handle)
-        }
-
-        var count: CK_ULONG = 0
-        // You can define your own number of required objects.
-        let maxCount: CK_ULONG = 16
-        var objects: [CK_OBJECT_HANDLE] = []
-        repeat {
-            var handles: [CK_OBJECT_HANDLE] = Array(repeating: 0x00, count: Int(maxCount))
-
-            rv = C_FindObjects(session.handle, &handles, maxCount, &count)
-            guard rv == CKR_OK else {
-                throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
-            }
-
-            objects += handles.prefix(Int(count))
-        } while count == maxCount
-
-        return objects
     }
 }

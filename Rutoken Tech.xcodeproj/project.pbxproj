@@ -75,6 +75,8 @@
 		5E1F3AAE2BA364D5008158EF /* openssl in Frameworks */ = {isa = PBXBuildFile; productRef = 5E1F3AAD2BA364D5008158EF /* openssl */; };
 		5E1F3AB82BA4B302008158EF /* RutokenKeychainManager in Frameworks */ = {isa = PBXBuildFile; productRef = 5E1F3AB72BA4B302008158EF /* RutokenKeychainManager */; };
 		5E1F3AC22BA4BA2E008158EF /* RoutingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1F3AC02BA4BA2E008158EF /* RoutingState.swift */; };
+		5E4C26E72C051606006F0B66 /* Pkcs11KeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4C26E62C051606006F0B66 /* Pkcs11KeyPair.swift */; };
+		5E4C26E92C051721006F0B66 /* Pkcs11Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4C26E82C051721006F0B66 /* Pkcs11Date.swift */; };
 		5E7331A72B6D71D400E96C06 /* Pkcs11Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E7331A62B6D71D400E96C06 /* Pkcs11Session.swift */; };
 		5EC532012BD0189200AD5854 /* BankUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC532002BD0189200AD5854 /* BankUserInfo.swift */; };
 		5EF30EDE2B1A823700E48627 /* OnPerformTokenConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF30EDD2B1A823700E48627 /* OnPerformTokenConnection.swift */; };
@@ -231,6 +233,8 @@
 		44F032392B5125BC00466080 /* Pkcs11ObjectMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11ObjectMock.swift; sourceTree = "<group>"; };
 		44F55C942BF21B0D007F441C /* OnEncryptDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnEncryptDocument.swift; sourceTree = "<group>"; };
 		5E1F3AC02BA4BA2E008158EF /* RoutingState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutingState.swift; sourceTree = "<group>"; };
+		5E4C26E62C051606006F0B66 /* Pkcs11KeyPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11KeyPair.swift; sourceTree = "<group>"; };
+		5E4C26E82C051721006F0B66 /* Pkcs11Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Date.swift; sourceTree = "<group>"; };
 		5E7331A62B6D71D400E96C06 /* Pkcs11Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Session.swift; sourceTree = "<group>"; };
 		5EC532002BD0189200AD5854 /* BankUserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankUserInfo.swift; sourceTree = "<group>"; };
 		5EF30EDD2B1A823700E48627 /* OnPerformTokenConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnPerformTokenConnection.swift; sourceTree = "<group>"; };
@@ -715,8 +719,10 @@
 				D4B130B22B0DD52A00AD390F /* Token.swift */,
 				D4B130AF2B0CFFCD00AD390F /* TokenModel.swift */,
 				D4B130D72B0E4F8200AD390F /* TokenInterface.swift */,
+				5E4C26E82C051721006F0B66 /* Pkcs11Date.swift */,
 				4469F7872B34512E000DCF8B /* PkcsAttribute.swift */,
 				4464FAA72B359ED5005F732F /* Pkcs11Object.swift */,
+				5E4C26E62C051606006F0B66 /* Pkcs11KeyPair.swift */,
 				5E7331A62B6D71D400E96C06 /* Pkcs11Session.swift */,
 				4443EA0A2B96F5160003436D /* KeyAlgorithm.swift */,
 			);
@@ -986,6 +992,7 @@
 				5EF75DE12AC707BD001834BE /* RootView.swift in Sources */,
 				4416A27A2B70F9F600645800 /* View+createLabel.swift in Sources */,
 				44E6FCA32BA97AB1001D35A5 /* OpenSslUtils.swift in Sources */,
+				5E4C26E92C051721006F0B66 /* Pkcs11Date.swift in Sources */,
 				D433144C2B76848900442809 /* LinkType.swift in Sources */,
 				D4B130A82B0CFD2F00AD390F /* CryptoManager.swift in Sources */,
 				446F71062B6271C400684E0D /* OnPerformGenCert.swift in Sources */,
@@ -1006,6 +1013,7 @@
 				7DCC9AF12B3B2C9A002788B5 /* KeyModel.swift in Sources */,
 				7D7D51832BB59DC200428107 /* BankFileContent.swift in Sources */,
 				5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */,
+				5E4C26E72C051606006F0B66 /* Pkcs11KeyPair.swift in Sources */,
 				4469F7882B34512E000DCF8B /* PkcsAttribute.swift in Sources */,
 				44A502CA2BB1B8BA006236E7 /* String+withoutPathExtension.swift in Sources */,
 				44A415042B60F67600D78653 /* FileHelper.swift in Sources */,

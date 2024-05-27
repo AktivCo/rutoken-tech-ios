@@ -6,7 +6,7 @@
 //
 
 extension String {
-    func createPointer() -> WrappedPointer<UnsafeMutablePointer<UInt8>>? {
+    func createPointer() -> WrappedPointer<UnsafeMutablePointer<UInt8>> {
         self.withCString(encodedAs: UTF8.self) { stringPtr in
             WrappedPointer<UnsafeMutablePointer<UInt8>>({
                 let ptr = UnsafeMutablePointer<UInt8>.allocate(capacity: self.count)

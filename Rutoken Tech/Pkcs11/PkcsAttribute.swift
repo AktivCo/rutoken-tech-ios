@@ -12,20 +12,6 @@ enum PkcsConstants {
     static let parametersGostR3410_2012_256: [CK_BYTE] = [ 0x06, 0x07, 0x2a, 0x85, 0x03, 0x02, 0x02, 0x23, 0x02 ]
     static let parametersGostR3411_2012_256: [CK_BYTE] = [ 0x06, 0x08, 0x2a, 0x85, 0x03, 0x07, 0x01, 0x01, 0x02, 0x02 ]
     static let CK_CERTIFICATE_CATEGORY_TOKEN_USER: CK_ULONG = 1
-
-    static func createDateObject(with date: Date = Date()) -> Data? {
-        var ckDate = CK_DATE()
-
-        guard let day = date.getString(as: "dd").createPointer(),
-              let month = date.getString(as: "MM").createPointer(),
-              let year = date.getString(as: "YYYY").createPointer() else {
-            return nil
-        }
-        memcpy(&(ckDate.day), day.pointer, 2)
-        memcpy(&(ckDate.month), month.pointer, 2)
-        memcpy(&(ckDate.year), year.pointer, 4)
-        return Data(bytes: &ckDate, count: 8)
-    }
 }
 
 protocol PkcsAttribute {
@@ -97,7 +83,7 @@ class ULongAttribute: PkcsAttribute {
 
     init(type: AttrType, value: CK_ULONG) {
         self.type = type
-        wrappedPointer = WrappedPointer<UnsafeMutablePointer<CK_ULONG>>({
+        self.wrappedPointer = WrappedPointer<UnsafeMutablePointer<CK_ULONG>>({
             var temp = value
             let ptr = UnsafeMutablePointer<CK_ULONG>.allocate(capacity: 1)
             ptr.initialize(from: &temp, count: 1)
@@ -144,40 +130,37 @@ class BufferAttribute: PkcsAttribute {
     }
 
     let type: AttrType
-    private let wrappedPointer: WrappedPointer<UnsafeMutablePointer<UInt8>?>
+    private let wrappedPointer: WrappedPointer<UnsafeMutablePointer<UInt8>>?
     private let size: Int
 
     init(type: AttrType, value: Data) {
         self.type = type
         self.size = value.count
-        wrappedPointer = WrappedPointer<UnsafeMutablePointer<UInt8>?>({
+        self.wrappedPointer = WrappedPointer<UnsafeMutablePointer<UInt8>>({
             value.withUnsafeBytes { bytes in
                 let ptr = UnsafeMutablePointer<UInt8>.allocate(capacity: bytes.count)
                 ptr.initialize(from: bytes.baseAddress!.assumingMemoryBound(to: UInt8.self), count: bytes.count)
                 return ptr
             }
         }, { [count = value.count] in
-            $0?.deinitialize(count: count)
-            $0?.deallocate()
+            $0.deinitialize(count: count)
+            $0.deallocate()
         })
     }
 
-    init(type: AttrType, count: Int = 0) {
+    init(type: AttrType) {
         self.type = type
-        self.size = count
-        wrappedPointer = WrappedPointer<UnsafeMutablePointer<UInt8>?>({
-            count > 0 ? UnsafeMutablePointer<UInt8>.allocate(capacity: count) : nil
-        }, { $0?.deallocate() })
+        self.size = 0
+        self.wrappedPointer = nil
     }
 
-    var getValue: Data? {
-        guard let ptr = wrappedPointer.pointer else { return nil }
-        return Data(bytes: ptr, count: size)
+    convenience init(type: AttrType, count: Int) {
+        self.init(type: type, value: Data(repeating: 0, count: count))
     }
 
     var attribute: CK_ATTRIBUTE {
         CK_ATTRIBUTE(type: type.rawValue,
-                     pValue: wrappedPointer.pointer,
+                     pValue: wrappedPointer?.pointer,
                      ulValueLen: CK_ULONG(size))
     }
 }

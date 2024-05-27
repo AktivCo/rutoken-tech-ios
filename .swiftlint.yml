@@ -7,9 +7,6 @@ opt_in_rules:
   - sorted_imports
   - empty_count
 
-empty_count:
-  only_after_dot: true
-
 disabled_rules:
   - identifier_name
   - trailing_newline

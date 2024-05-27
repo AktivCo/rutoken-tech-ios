@@ -75,7 +75,10 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
     func testEnumerateCertsSuccess() async throws {
         token.enumerateCertsCallback = {
             XCTAssertNil($0)
-            return [Pkcs11ObjectMock(id: self.keyId, body: unitTestCert.data(using: .utf8))]
+            var object = Pkcs11ObjectMock()
+            object.setValue(forAttr: .id, value: .success(Data(self.keyId.utf8)))
+            object.setValue(forAttr: .value, value: .success(Data(unitTestCert.utf8)))
+            return [object]
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
             let result = try await manager.enumerateCerts()
@@ -91,7 +94,7 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
     func testEnumerateCertsNoData() async throws {
         token.enumerateCertsCallback = {
             XCTAssertNil($0)
-            return [Pkcs11ObjectMock(id: self.keyId, body: nil)]
+            return [Pkcs11ObjectMock()]
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
@@ -103,7 +106,7 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
     func testEnumerateCertsBadData() async throws {
         token.enumerateCertsCallback = {
             XCTAssertNil($0)
-            return [Pkcs11ObjectMock(id: self.keyId, body: Data(repeating: 0x01, count: 1))]
+            return [Pkcs11ObjectMock()]
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
@@ -115,7 +118,7 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
     func testEnumerateCertsNoId() async throws {
         token.enumerateCertsCallback = {
             XCTAssertNil($0)
-            return [Pkcs11ObjectMock(id: nil, body: unitTestCert.data(using: .utf8))]
+            return [Pkcs11ObjectMock()]
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
