@@ -29,11 +29,11 @@ class OnEncryptDocument: Middleware {
                 }
                 do {
                     let file = try documentManager.readFile(with: documentName)
-                    guard case let .singleFile(content) = file else {
+                    guard case let .singleFile(document) = file else {
                         continuation.yield(.showAlert(.unknownError))
                         return
                     }
-                    let encryptedData = try cryptoManager.encryptDocument(document: content, with: .file(.bankCert))
+                    let encryptedData = try cryptoManager.encryptDocument(document, certFile: .bankCert)
                     try documentManager.saveToFile(fileName: documentName + ".enc", data: encryptedData)
                     try documentManager.markAsArchived(documentName: documentName)
                     continuation.yield(.updateUrlsForCurrentDoc(documentName: documentName, action: .encrypt, inArchive: true))

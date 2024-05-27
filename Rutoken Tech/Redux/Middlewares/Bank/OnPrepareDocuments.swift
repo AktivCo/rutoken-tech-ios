@@ -12,16 +12,14 @@ import TinyAsyncRedux
 
 
 class OnPrepareDocuments: Middleware {
-    private let documentsManager: DocumentManagerProtocol
-    private let fileHelper: FileHelperProtocol
-    private let openSslHelper: OpenSslHelperProtocol
+    private let cryptoManager: CryptoManagerProtocol
+    private let documentManager: DocumentManagerProtocol
 
     private var cancellable = [UUID: AnyCancellable]()
 
-    init(documentsManager: DocumentManagerProtocol, fileHelper: FileHelperProtocol, openSslHelper: OpenSslHelperProtocol) {
-        self.documentsManager = documentsManager
-        self.fileHelper = fileHelper
-        self.openSslHelper = openSslHelper
+    init(cryptoManager: CryptoManagerProtocol, documentManager: DocumentManagerProtocol) {
+        self.cryptoManager = cryptoManager
+        self.documentManager = documentManager
     }
 
     func handle(action: AppAction) -> AsyncStream<AppAction>? {
@@ -31,15 +29,9 @@ class OnPrepareDocuments: Middleware {
 
         return AsyncStream<AppAction> { continuation in
             do {
-                try documentsManager.resetDirectory()
-                guard let bankKeyUrl = Bundle.getUrl(for: RtFile.rootCaKey.rawValue, in: RtFile.subdir),
-                      let bankCertUrl = Bundle.getUrl(for: RtFile.rootCaCert.rawValue, in: RtFile.subdir) else {
-                    throw CryptoManagerError.unknown
-                }
-                let bankKey = try fileHelper.readFile(from: bankKeyUrl)
-                let bankCert = try fileHelper.readFile(from: bankCertUrl)
+                try documentManager.resetDirectory()
                 let uuid = UUID()
-                documentsManager.documents
+                documentManager.documents
                     .first()
                     .sink { [self] documents in
                         defer {
@@ -48,14 +40,14 @@ class OnPrepareDocuments: Middleware {
                         }
                         do {
                             try documents.filter({ $0.action == .verify }).forEach {
-                                guard case let .singleFile(document) = try documentsManager.readFile(with: $0.name) else {
+                                guard case let .singleFile(document) = try documentManager.readFile(with: $0.name) else {
                                     return
                                 }
-                                let signature = try openSslHelper.signDocument(document, key: bankKey, cert: bankCert)
+                                let signature = try cryptoManager.signDocument(document, keyFile: .rootCaKey, certFile: .rootCaCert)
                                 guard let signatureData = signature.data(using: .utf8) else {
                                     throw CryptoManagerError.unknown
                                 }
-                                try documentsManager.saveToFile(fileName: $0.name + ".sig", data: signatureData)
+                                try documentManager.saveToFile(fileName: $0.name + ".sig", data: signatureData)
                             }
                         } catch {
                             continuation.yield(.showAlert(.unknownError))

@@ -20,9 +20,11 @@ protocol CryptoManagerProtocol {
     func enumerateCerts() async throws -> [CertMetaData]
     func generateKeyPair(with id: String) async throws
     func createCert(for id: String, with info: CsrModel) async throws
-    func signDocument(_ document: Data, with id: String) throws -> String
+    func signDocument(_ document: Data, certId: String) throws -> String
+    func signDocument(_ document: Data, keyFile: RtFile, certFile: RtFile) throws -> String
     func verifyCms(signedCms: Data, document: Data) async throws
-    func encryptDocument(document: Data, with cert: CertSource) throws -> Data
+    func encryptDocument(_ document: Data, certId: String) throws -> Data
+    func encryptDocument(_ document: Data, certFile: RtFile) throws -> Data
     func decryptCms(encryptedData: Data, with id: String) throws -> Data
     func startMonitoring() throws
     var tokenState: AnyPublisher<TokenInteractionState, Never> { get }
@@ -53,10 +55,6 @@ enum RtFile: String {
     }
 }
 
-enum CertSource {
-    case token(String)
-    case file(RtFile)
-}
 
 class CryptoManager: CryptoManagerProtocol {
     var tokenState: AnyPublisher<TokenInteractionState, Never> {
@@ -183,23 +181,25 @@ class CryptoManager: CryptoManagerProtocol {
         try token.importCert(cert, for: id)
     }
 
-    func signDocument(_ document: Data, with id: String) throws -> String {
+    func signDocument(_ document: Data, certId: String) throws -> String {
         guard let token = connectedToken else {
             throw CryptoManagerError.tokenNotFound
         }
-        let key = try token.getWrappedKey(with: id)
-        guard let certData = try token.enumerateCerts(by: id).first?.getValue(forAttr: .value) else {
+        let key = try token.getWrappedKey(with: certId)
+        guard let certData = try token.enumerateCerts(by: certId).first?.getValue(forAttr: .value) else {
             throw CryptoManagerError.noSuitCert
         }
         return try openSslHelper.signDocument(document, wrappedKey: key, cert: certData)
     }
 
-    func decryptCms(encryptedData: Data, with id: String) throws -> Data {
-        guard let token = connectedToken else {
-            throw CryptoManagerError.tokenNotFound
+    func signDocument(_ document: Data, keyFile: RtFile, certFile: RtFile) throws -> String {
+        guard let bankKeyUrl = Bundle.getUrl(for: keyFile.rawValue, in: RtFile.subdir),
+              let bankCertUrl = Bundle.getUrl(for: certFile.rawValue, in: RtFile.subdir) else {
+            throw CryptoManagerError.unknown
         }
-        let key = try token.getWrappedKey(with: id)
-        return try openSslHelper.decryptCms(content: encryptedData, wrappedKey: key)
+        let bankKey = try fileHelper.readFile(from: bankKeyUrl)
+        let bankCert = try fileHelper.readFile(from: bankCertUrl)
+        return try openSslHelper.signDocument(document, key: bankKey, cert: bankCert)
     }
 
     func verifyCms(signedCms: Data, document: Data) async throws {
@@ -228,24 +228,30 @@ class CryptoManager: CryptoManagerProtocol {
         }
     }
 
-    func encryptDocument(document: Data, with cert: CertSource) throws -> Data {
-        let certData: Data
-        switch cert {
-        case .token(let id):
-            guard let token = connectedToken else {
-                throw CryptoManagerError.tokenNotFound
-            }
-            guard let data = try token.enumerateCerts(by: id).first?.getValue(forAttr: .value) else {
-                throw CryptoManagerError.noSuitCert
-            }
-            certData = data
-        case .file(let rtFile):
-            guard let certUrl = Bundle.getUrl(for: rtFile.rawValue, in: RtFile.subdir) else {
-                throw CryptoManagerError.unknown
-            }
-            certData = try fileHelper.readFile(from: certUrl)
+    func encryptDocument(_ document: Data, certId: String) throws -> Data {
+        guard let token = connectedToken else {
+            throw CryptoManagerError.tokenNotFound
+        }
+        guard let certData = try token.enumerateCerts(by: certId).first?.getValue(forAttr: .value) else {
+            throw CryptoManagerError.noSuitCert
         }
         return try openSslHelper.encryptDocument(for: document, with: certData)
+    }
+
+    func encryptDocument(_ document: Data, certFile: RtFile) throws -> Data {
+        guard let certUrl = Bundle.getUrl(for: certFile.rawValue, in: RtFile.subdir) else {
+            throw CryptoManagerError.unknown
+        }
+        let certData = try fileHelper.readFile(from: certUrl)
+        return try openSslHelper.encryptDocument(for: document, with: certData)
+    }
+
+    func decryptCms(encryptedData: Data, with id: String) throws -> Data {
+        guard let token = connectedToken else {
+            throw CryptoManagerError.tokenNotFound
+        }
+        let key = try token.getWrappedKey(with: id)
+        return try openSslHelper.decryptCms(content: encryptedData, wrappedKey: key)
     }
 
     func withToken(connectionType: ConnectionType,

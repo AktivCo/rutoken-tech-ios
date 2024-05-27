@@ -35,7 +35,7 @@ class OnSignDocument: Middleware {
                         return
                     }
                     try await cryptoManager.withToken(connectionType: connectionType, serial: serial, pin: pin) {
-                        let cms = try cryptoManager.signDocument(document, with: certId)
+                        let cms = try cryptoManager.signDocument(document, certId: certId)
                         guard let cmsData = cms.data(using: .utf8) else {
                             throw CryptoManagerError.unknown
                         }

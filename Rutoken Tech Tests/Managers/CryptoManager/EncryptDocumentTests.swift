@@ -38,7 +38,7 @@ class CryptoManagerEncryptDocumentTests: XCTestCase {
         pkcs11Helper.tokenPublisher.send([token])
     }
 
-    func testEncryptCmsSuccessFile() throws {
+    func testEncryptCmsFileSuccess() throws {
         let certUrl = Bundle.getUrl(for: RtFile.bankCert.rawValue, in: RtFile.subdir)
         let certData = "bankCertData".data(using: .utf8)!
         let encryptedData = "encryptedData".data(using: .utf8)!
@@ -50,7 +50,7 @@ class CryptoManagerEncryptDocumentTests: XCTestCase {
             XCTAssertEqual($1, certData)
             return encryptedData
         }
-        let result = try manager.encryptDocument(document: documentData, with: .file(.bankCert))
+        let result = try manager.encryptDocument(documentData, certFile: .bankCert)
         XCTAssertEqual(result, encryptedData)
     }
 
@@ -61,10 +61,10 @@ class CryptoManagerEncryptDocumentTests: XCTestCase {
             XCTAssertEqual(certUrl, $0)
             throw error
         }
-        assertError(try manager.encryptDocument(document: documentData, with: .file(.bankCert)), throws: error)
+        assertError(try manager.encryptDocument(documentData, certFile: .bankCert), throws: error)
     }
 
-    func testEncryptCmsSuccessToken() async throws {
+    func testEncryptCmsTokenSuccess() async throws {
         let encryptedData = "encryptedData".data(using: .utf8)!
         let certBodyData = "certBodyData".data(using: .utf8)!
         token.enumerateCertsCallback = {
@@ -78,26 +78,26 @@ class CryptoManagerEncryptDocumentTests: XCTestCase {
             return encryptedData
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
-            let result = (try manager.encryptDocument(document: documentData, with: .token(certId)))
+            let result = (try manager.encryptDocument(documentData, certId: certId))
             XCTAssertEqual(result, encryptedData)
         }
     }
 
     func testEncryptCmsTokenNotFoundError() async throws {
-        assertError(try manager.encryptDocument(document: documentData, with: .token(certId)), throws: CryptoManagerError.tokenNotFound)
+        assertError(try manager.encryptDocument(documentData, certId: certId), throws: CryptoManagerError.tokenNotFound)
     }
 
-    func testEncryptCmsNoSuitCertErrorToken() async throws {
+    func testEncryptCmsTokenNoSuitCertError() async throws {
         token.enumerateCertsCallback = {
             XCTAssertEqual($0, self.certId)
             return []
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
-            assertError(try manager.encryptDocument(document: documentData, with: .token(certId)), throws: CryptoManagerError.noSuitCert)
+            assertError(try manager.encryptDocument(documentData, certId: certId), throws: CryptoManagerError.noSuitCert)
         }
     }
 
-    func testEncryptCmsOpenSslErrorToken() async throws {
+    func testEncryptCmsTokenOpenSslError() async throws {
         let error = OpenSslError.generalError(23, "qwerty")
         token.enumerateCertsCallback = {
             XCTAssertEqual($0, self.certId)
@@ -105,7 +105,7 @@ class CryptoManagerEncryptDocumentTests: XCTestCase {
         }
         openSslHelper.encryptCmsCallback = { _, _ in throw error }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
-            assertError(try manager.encryptDocument(document: documentData, with: .token(certId)), throws: error)
+            assertError(try manager.encryptDocument(documentData, certId: certId), throws: error)
         }
     }
 }

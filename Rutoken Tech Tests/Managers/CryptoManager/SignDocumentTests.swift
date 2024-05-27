@@ -20,6 +20,7 @@ class CryptoManagerSignDocumentTests: XCTestCase {
     var token: TokenMock!
     var keyId: String!
     var dataToSign: Data!
+    var signed: String!
 
     override func setUp() {
         super.setUp()
@@ -37,12 +38,12 @@ class CryptoManagerSignDocumentTests: XCTestCase {
 
         keyId = "123"
         dataToSign = "Data to sign".data(using: .utf8)!
+        signed = "12345678qwerty"
     }
 
-    func testSignDocumentSuccess() async throws {
-        let signed = "12345678qwerty"
+    func testSignDocumentTokenSuccess() async throws {
         openSslHelper.signDocumentCallback = {
-            signed
+            self.signed
         }
         token.enumerateCertsCallback = {
             XCTAssertEqual($0, self.keyId)
@@ -56,9 +57,33 @@ class CryptoManagerSignDocumentTests: XCTestCase {
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
-            let result = try manager.signDocument(dataToSign, with: self.keyId!)
+            let result = try manager.signDocument(dataToSign, certId: keyId)
             XCTAssertEqual(signed, result)
         }
+    }
+
+    func testSignDocumentFileSuccess() async throws {
+        openSslHelper.signDocumentCallback = {
+            self.signed
+        }
+        let result = try manager.signDocument(dataToSign, keyFile: .rootCaKey, certFile: .rootCaCert)
+        XCTAssertEqual(signed, result)
+    }
+
+    func testSignDocumentFileOpenSslError() async throws {
+        let error = OpenSslError.generalError(100, "error")
+        openSslHelper.signDocumentCallback = {
+            throw error
+        }
+        assertError(try manager.signDocument(dataToSign, keyFile: .rootCaKey, certFile: .rootCaCert), throws: error)
+    }
+
+    func testSignDocumentFileHelperError() async throws {
+        let error = FileHelperError.generalError(100, "error")
+        fileHelper.readFileCallback = { _ in
+            throw error
+        }
+        assertError(try manager.signDocument(dataToSign, keyFile: .rootCaKey, certFile: .rootCaCert), throws: error)
     }
 
     func testSignDocumentNoSuitCertError() async throws {
@@ -67,15 +92,15 @@ class CryptoManagerSignDocumentTests: XCTestCase {
             return []
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
-            assertError(try manager.signDocument(dataToSign, with: keyId), throws: CryptoManagerError.noSuitCert)
+            assertError(try manager.signDocument(dataToSign, certId: keyId), throws: CryptoManagerError.noSuitCert)
         }
     }
 
     func testSignDocumentTokenNotFoundError() throws {
-        assertError(try manager.signDocument(dataToSign, with: self.keyId), throws: CryptoManagerError.tokenNotFound)
+        assertError(try manager.signDocument(dataToSign, certId: keyId), throws: CryptoManagerError.tokenNotFound)
     }
 
-    func testSignDocumentOpenSslError() async throws {
+    func testSignDocumentTokenOpenSslError() async throws {
         let error = OpenSslError.generalError(100, "error")
         openSslHelper.signDocumentCallback = {
             throw error
@@ -92,7 +117,7 @@ class CryptoManagerSignDocumentTests: XCTestCase {
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
-            assertError(try manager.signDocument(dataToSign, with: self.keyId), throws: error)
+            assertError(try manager.signDocument(dataToSign, certId: self.keyId), throws: error)
         }
     }
 
@@ -104,7 +129,7 @@ class CryptoManagerSignDocumentTests: XCTestCase {
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
-            assertError(try manager.signDocument(dataToSign, with: self.keyId), throws: error)
+            assertError(try manager.signDocument(dataToSign, certId: keyId), throws: error)
         }
     }
 }

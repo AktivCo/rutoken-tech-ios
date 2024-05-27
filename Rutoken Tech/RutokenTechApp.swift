@@ -52,7 +52,7 @@ struct RutokenTechApp: App {
                 OnDeletePin(pinCodeManager: pinCodeManager),
                 OnDeleteUser(userManager: userManager),
                 OnAuthUser(cryptoManager: cryptoManager),
-                OnPrepareDocuments(documentsManager: documentManager, fileHelper: fileHelper, openSslHelper: openSslHelper),
+                OnPrepareDocuments(cryptoManager: cryptoManager, documentManager: documentManager),
                 OnResetDocuments(manager: documentManager),
                 OnSignDocument(cryptoManager: cryptoManager, documentManager: documentManager),
                 OnCmsVerify(cryptoManager: cryptoManager, documentManager: documentManager),
