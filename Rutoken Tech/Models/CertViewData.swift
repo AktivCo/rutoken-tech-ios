@@ -27,28 +27,11 @@ enum CertInvalidReason {
 struct CertViewData: Identifiable {
     let id: String
 
-    let keyId: String
-    let tokenSerial: String
-
-    let name: String
-    let jobTitle: String
-    let companyName: String
-    let keyAlgo: Pkcs11KeyAlgorithm
-    let expiryDate: String
+    let certInfo: CertMetaData
     let causeOfInvalid: CertInvalidReason?
-
     init(from cert: CertMetaData, reason: CertInvalidReason? = nil) {
+        self.certInfo = cert
         self.id = cert.hash
-
-        self.keyId = cert.keyId
-        self.tokenSerial = cert.tokenSerial
-
-        // displayed fields
-        self.name = cert.name
-        self.jobTitle = cert.jobTitle
-        self.companyName = cert.companyName
-        self.keyAlgo = cert.keyAlgo
-        self.expiryDate = cert.expiryDate.getString(as: "dd.MM.YYYY")
         self.causeOfInvalid = reason
     }
 
@@ -57,17 +40,13 @@ struct CertViewData: Identifiable {
          jobTitle: String = "Дизайнер",
          companyName: String = "Рутокен",
          expiryDate: Date = Date(),
-         reason: CertInvalidReason? = nil) {
-        self.id = UUID().uuidString
-        self.keyId = ""
-        self.tokenSerial = ""
-
-        self.name = name
-        self.jobTitle = jobTitle
-        self.companyName = companyName
-        self.keyAlgo = .gostR3410_2012_256
-        self.expiryDate = expiryDate.getString(as: "dd.MM.YYYY")
+         reason: CertInvalidReason? = nil,
+         body: Data = Data()) {
+        self.certInfo = CertMetaData(keyId: "", tokenSerial: "12345678", hash: "qwerty123",
+                                             name: name, jobTitle: jobTitle, companyName: companyName,
+                                             startDate: Date(), expiryDate: Date())
         self.causeOfInvalid = reason
+        self.id = UUID().uuidString
     }
 #endif
 }

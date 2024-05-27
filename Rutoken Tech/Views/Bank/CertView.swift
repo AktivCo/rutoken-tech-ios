@@ -26,15 +26,15 @@ struct CertView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(cert.name)
+            Text(cert.certInfo.name)
                 .font(.headline)
                 .foregroundStyle(Color.RtColors.rtLabelPrimary)
                 .opacity(cert.causeOfInvalid != nil ? 0.4 : 1)
             VStack(alignment: .leading, spacing: 8) {
-                infoField(for: "Должность", with: cert.jobTitle)
-                infoField(for: "Организация", with: cert.companyName)
-                infoField(for: "Алгоритм", with: cert.keyAlgo.description)
-                infoField(for: "Сертификат истекает", with: cert.expiryDate)
+                infoField(for: "Должность", with: cert.certInfo.jobTitle)
+                infoField(for: "Организация", with: cert.certInfo.companyName)
+                infoField(for: "Алгоритм", with: cert.certInfo.keyAlgo.description)
+                infoField(for: "Сертификат истекает", with: cert.certInfo.expiryDate.getString(as: "dd.MM.YYYY"))
             }
             .opacity(cert.causeOfInvalid != nil ? 0.4 : 1)
             .frame(maxHeight: 200)

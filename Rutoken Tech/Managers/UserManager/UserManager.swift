@@ -18,7 +18,7 @@ protocol UserManagerProtocol {
     var users: AnyPublisher<[BankUserInfo], Never> { get }
     func listUsers() -> [BankUserInfo]
     func deleteUser(user: BankUserInfo) throws
-    func createUser(from cert: CertViewData) throws -> ManagedBankUser
+    func createUser(from cert: CertMetaData) throws -> ManagedBankUser
 }
 
 class UserManager: UserManagerProtocol {
@@ -78,20 +78,17 @@ class UserManager: UserManagerProtocol {
         return newUser
     }
 
-    func createUser(from cert: CertViewData) throws -> ManagedBankUser {
+    func createUser(from cert: CertMetaData) throws -> ManagedBankUser {
         guard let entity = NSEntityDescription.entity(forEntityName: ManagedBankUser.entityName, in: context) else {
             throw UserManagerError.general
         }
-        guard let date = cert.expiryDate.getDate(with: "dd.MM.yyyy") else {
-            throw UserManagerError.general
-        }
         let newUser = ManagedBankUser(entity: entity, insertInto: context)
-        newUser.certHash = cert.id
+        newUser.certHash = cert.hash
         newUser.keyId = cert.keyId
         newUser.tokenSerial = cert.tokenSerial
         newUser.fullname = cert.name
         newUser.title = cert.jobTitle
-        newUser.expiryDate = date
+        newUser.expiryDate = cert.expiryDate
         try context.save()
         updateUsers()
         return newUser

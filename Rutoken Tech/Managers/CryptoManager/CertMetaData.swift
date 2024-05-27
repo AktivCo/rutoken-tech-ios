@@ -12,6 +12,7 @@ struct CertMetaData: Equatable {
     let keyId: String
     let tokenSerial: String
 
+    let body: Data
     let hash: String
     let name: String
     let jobTitle: String
@@ -33,6 +34,7 @@ struct CertMetaData: Equatable {
 
         self.keyId = keyId
         self.tokenSerial = tokenSerial
+        self.body = cert
         self.hash = subjectNameHash
         self.name = commonName
         self.jobTitle = title
@@ -41,4 +43,22 @@ struct CertMetaData: Equatable {
         self.startDate = notBefore
         self.expiryDate = notAfter
     }
+
+#if DEBUG
+    init(keyId: String, tokenSerial: String, hash: String, name: String,
+         jobTitle: String, companyName: String, keyAlgo: Pkcs11KeyAlgorithm = .gostR3410_2012_256,
+         startDate: Date, expiryDate: Date) {
+        self.keyId = keyId
+        self.tokenSerial = tokenSerial
+        self.hash = hash
+        self.name = name
+        self.jobTitle = jobTitle
+        self.companyName = companyName
+        self.keyAlgo = keyAlgo
+        self.startDate = startDate
+        self.expiryDate = expiryDate
+
+        self.body = Data()
+    }
+#endif
 }

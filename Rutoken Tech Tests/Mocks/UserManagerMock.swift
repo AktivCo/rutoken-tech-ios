@@ -41,9 +41,9 @@ class UserManagerMock: UserManagerProtocol {
         throw UserManagerError.general
     }
 
-    func createUser(from cert: CertViewData) throws -> ManagedBankUser {
+    func createUser(from cert: CertMetaData) throws -> ManagedBankUser {
         try createUserFromCertCallback(cert)
     }
 
-    var createUserFromCertCallback: (CertViewData) throws -> ManagedBankUser = { _ in throw UserManagerError.general }
+    var createUserFromCertCallback: (CertMetaData) throws -> ManagedBankUser = { _ in throw UserManagerError.general }
 }

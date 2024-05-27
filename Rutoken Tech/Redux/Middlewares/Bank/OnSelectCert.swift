@@ -25,7 +25,7 @@ class OnSelectCert: Middleware {
                 continuation.finish()
             }
 
-            let user = try? userManager.createUser(from: cert)
+            let user = try? userManager.createUser(from: cert.certInfo)
             guard let user else {
                 continuation.yield(.showAlert(.unknownError))
                 return
