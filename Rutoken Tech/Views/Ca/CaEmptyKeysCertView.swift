@@ -16,6 +16,8 @@ struct CaEmptyKeysCertView: View {
         ZStack(alignment: .top) {
             certViewHeader
                 .padding(.horizontal, 20)
+                .padding(.bottom, 12)
+                .padding(.top, 15)
             VStack {
                 Spacer()
                 Text("На Рутокене нет ни одной ключевой пары")
@@ -45,9 +47,6 @@ struct CaEmptyKeysCertView: View {
                                          Color("iOSElementsCloseButtonSurface"))
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 12)
-            .padding(.top, 15)
         }
     }
 }
