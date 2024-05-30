@@ -14,12 +14,11 @@ import RtUiComponents
 
 struct RootView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
-    @State private var selectedTab: RtAppTab = .ca
 
     var body: some View {
         VStack {
             if UIDevice.isPhone {
-                IphoneRootView(selectedTab: $selectedTab)
+                IphoneRootView()
             } else {
                 IpadRootView()
             }
@@ -27,9 +26,6 @@ struct RootView: View {
         .rtSheet(sheetModel: store.state.routingState.sheet)
         .rtAlert(alertModel: Binding(get: { store.state.routingState.alert },
                                      set: { if $0 == nil { store.send(.hideAlert) } }))
-        .onChange(of: selectedTab) { _ in
-            store.send(.logout)
-        }
     }
 }
 

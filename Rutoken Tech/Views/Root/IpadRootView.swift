@@ -41,6 +41,9 @@ struct IpadRootView: View {
             .listStyle(.sidebar)
             .scrollContentBackground(.hidden)
             .toolbar(.hidden, for: .navigationBar)
+            .background {
+                Color("IOSElementsTitleBarSurface")
+            }
         } detail: {
             if let selectedTab {
                 Group {
@@ -65,6 +68,9 @@ struct IpadRootView: View {
         }
         .navigationSplitViewStyle(.balanced)
         .tint(Color.RtColors.rtColorsSecondary)
+        .onChange(of: selectedTab) { _ in
+            store.send(.logout)
+        }
     }
 }
 

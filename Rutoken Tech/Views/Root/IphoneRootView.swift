@@ -13,7 +13,7 @@ import TinyAsyncRedux
 
 struct IphoneRootView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
-    @Binding var selectedTab: RtAppTab
+    @State var selectedTab: RtAppTab = .ca
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -41,8 +41,13 @@ struct IphoneRootView: View {
                         .ignoresSafeArea()
                 }
             }
+            .toolbar(store.state.bankSelectedDocumentState.metadata == nil ? .visible : .hidden,
+                     for: .tabBar)
         }
         .tint(Color.RtColors.rtColorsSecondary)
+        .onChange(of: selectedTab) { _ in
+            store.send(.logout)
+        }
     }
 }
 
@@ -51,7 +56,7 @@ struct IphoneRootView_Previews: PreviewProvider {
         let store = Store(initialState: AppState(),
                           reducer: AppReducer(),
                           middlewares: [])
-        IphoneRootView(selectedTab: .constant(.ca))
+        IphoneRootView()
             .environmentObject(store)
     }
 }

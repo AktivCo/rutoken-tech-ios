@@ -17,13 +17,61 @@ struct PaymentListView: View {
     @State private var docsType: DocType = .income
     @State private var isArchivedDocsShown = true
     @State private var isTopViewShown = false
-    @State private var topSafeAreaHeight: CGFloat = 0
+    @State private var topSafeAreaHeight: CGFloat = getSafeAreaInsets()?.top ?? 0
 
     var body: some View {
+        Group {
+            if UIDevice.isPhone {
+                iphoneView
+            } else {
+                ipadView
+            }
+        }
+        .background(Color.RtColors.rtSurfaceSecondary)
+    }
+
+    private var commonView: some View {
+        VStack(spacing: 0) {
+            navBar
+            mainView
+                .frame(maxWidth: 642)
+                .padding(.horizontal, 20)
+            Spacer()
+        }
+        .background(Color.RtColors.rtSurfaceSecondary)
+    }
+
+    private var iphoneView: some View {
+        commonView
+            .navigationDestination(isPresented: Binding(
+                get: { store.state.bankSelectedDocumentState.docContent != nil },
+                set: { ok in if !ok { store.send(.updateCurrentDoc(nil, nil))} })) {
+                    DocumentProcessView()
+                        .navigationBarBackButtonHidden(true)
+                }
+    }
+
+    // due to incorrect interaction between NavigationStack inside of NavigationSplitView
+    // we add two different view declarations
+    private var ipadView: some View {
+        Group {
+            if store.state.bankSelectedDocumentState.docContent != nil {
+                DocumentProcessView()
+            } else {
+                commonView
+            }
+        }
+    }
+
+    private var navBar: some View {
         VStack(spacing: 0) {
             CustomNavBar(left: {
                 Button {
-                    dismiss()
+                    if UIDevice.isPhone {
+                        dismiss()
+                    } else {
+                        store.send(.logout)
+                    }
                 } label: {
                     backButton
                         .padding(.leading, 11)
@@ -57,22 +105,7 @@ struct PaymentListView: View {
             Divider()
                 .overlay(Color("IOSElementsTitleBarSeparator"))
                 .opacity(isTopViewShown ? 1 : 0)
-            mainView
-                .frame(maxWidth: 642)
-                .padding(.horizontal, 20)
-            Spacer()
         }
-        .background(Color.RtColors.rtSurfaceSecondary)
-        .onAppear {
-            topSafeAreaHeight = getSafeAreaInsets()?.top ?? 0
-        }
-        .navigationDestination(isPresented: Binding(
-            get: { store.state.bankSelectedDocumentState.docContent != nil },
-            set: { ok in if !ok { store.send(.updateCurrentDoc(nil, nil))} })) {
-                DocumentProcessView()
-                    .navigationBarBackButtonHidden(true)
-                    .toolbar(.hidden, for: .tabBar)
-            }
     }
 
     private var backButton: some View {

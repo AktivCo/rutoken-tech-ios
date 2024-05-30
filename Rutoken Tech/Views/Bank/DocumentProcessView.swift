@@ -15,6 +15,7 @@ import TinyAsyncRedux
 struct DocumentProcessView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
     @Environment(\.dismiss) private var dismiss
+    @State private var topSafeAreaHeight: CGFloat = UIDevice.isPhone ? 0 : getSafeAreaInsets()?.top ?? 0
 
     private var backButtonLabel: some View {
         Image(systemName: "chevron.backward")
@@ -54,23 +55,32 @@ struct DocumentProcessView: View {
     }
 
     private func navBar(title: String, date: String) -> some View {
-        CustomNavBar {
-            Button {
-                dismiss()
-            } label: {
-                backButtonLabel
-                    .padding(.leading, 13)
-                Spacer()
+        Group {
+            CustomNavBar {
+                Button {
+                    if UIDevice.isPhone {
+                        dismiss()
+                    } else {
+                        store.send(.updateCurrentDoc(nil, nil))
+                    }
+                } label: {
+                    backButtonLabel
+                        .padding(.leading, 13)
+                    Spacer()
+                }
+                .frame(maxHeight: .infinity)
+                .frame(width: 44)
+            } center: {
+                mainTitle(title, date)
+            } right: {
+                shareButton(urls: store.state.bankSelectedDocumentState.urlsForShare)
             }
-            .frame(maxHeight: .infinity)
-            .frame(width: 44)
-        } center: {
-            mainTitle(title, date)
-        } right: {
-            shareButton(urls: store.state.bankSelectedDocumentState.urlsForShare)
+            .frame(height: 44)
+            .padding(.top, topSafeAreaHeight)
+            .background(Color("IOSElementsTitleBarSurface"))
+            Divider()
+                .overlay(Color("IOSElementsTitleBarSeparator"))
         }
-        .frame(height: 44)
-        .background(Color("IOSElementsTitleBarSurface"))
     }
 
     private func actionButton(for action: BankDocument.ActionType) -> some View {

@@ -19,23 +19,57 @@ struct BankUserListView: View {
     let maxUserCount = 3
 
     var body: some View {
+        if UIDevice.isPhone {
+            iphoneView
+        } else {
+            ipadView
+        }
+    }
+
+    private var iphoneView: some View {
         NavigationStack {
             ZStack {
                 Color.RtColors.rtSurfaceSecondary
                     .ignoresSafeArea()
-                VStack(spacing: 0) {
-                    HeaderTitleView(title: "Пользователи")
-                    if store.state.bankSelectUserState.users.isEmpty {
-                        noUsersView
-                    } else {
-                        usersListView
-                    }
-                    bottomView
-                }
-                .padding(.top, 44)
-                .padding(.horizontal, 20)
+                mainView
+                    .navigationDestination(isPresented: Binding(
+                        get: { store.state.bankSelectUserState.selectedUser != nil },
+                        set: { ok in if !ok { store.send(.selectUser(nil)) } })) {
+                            PaymentListView()
+                                .navigationBarBackButtonHidden(true)
+                                .ignoresSafeArea(.container, edges: [.top])
+                        }
             }
         }
+    }
+
+    // due to incorrect interaction between NavigationStack inside of NavigationSplitView
+    // we add two different view declarations
+    private var ipadView: some View {
+        ZStack {
+            Color.RtColors.rtSurfaceSecondary
+                .ignoresSafeArea()
+            if store.state.bankSelectUserState.selectedUser != nil {
+                PaymentListView()
+                    .ignoresSafeArea(.container, edges: [.top])
+            } else {
+                mainView
+            }
+        }
+    }
+
+    private var mainView: some View {
+        VStack(spacing: 0) {
+            HeaderTitleView(title: "Пользователи")
+            if store.state.bankSelectUserState.users.isEmpty {
+                noUsersView
+            } else {
+                usersListView
+            }
+            bottomView
+        }
+        .padding(.top, 44)
+        .padding(.horizontal, 20)
     }
 
     private var noUsersView: some View {
@@ -65,13 +99,6 @@ struct BankUserListView: View {
                     }()))
                 })
             }
-            .navigationDestination(isPresented: Binding(
-                get: { store.state.bankSelectUserState.selectedUser != nil },
-                set: { ok in if !ok { store.send(.selectUser(nil)) } })) {
-                    PaymentListView()
-                        .navigationBarBackButtonHidden(true)
-                        .ignoresSafeArea(.container, edges: [.top])
-                }
         }
         .padding(.top, 12)
     }
