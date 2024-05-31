@@ -284,10 +284,6 @@ class CryptoManager: CryptoManagerProtocol {
             }
 
             try await callback()
-        } catch Pkcs11Error.connectionLost {
-            throw CryptoManagerError.connectionLost
-        } catch Pkcs11Error.tokenNotFound {
-            throw CryptoManagerError.tokenNotFound
         } catch NfcError.cancelledByUser, NfcError.timeout {
             throw CryptoManagerError.nfcStopped
         } catch TokenError.tokenDisconnected {

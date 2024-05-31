@@ -16,8 +16,6 @@ protocol Pkcs11HelperProtocol {
 
 enum Pkcs11Error: Error {
     case unknownError
-    case connectionLost
-    case tokenNotFound
 }
 
 class Pkcs11Helper: Pkcs11HelperProtocol {
