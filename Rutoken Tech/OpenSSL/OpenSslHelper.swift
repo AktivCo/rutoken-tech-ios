@@ -98,8 +98,8 @@ class OpenSslHelper: OpenSslHelperProtocol {
               let certsStack = createX509Stack(with: [cert]),
               let certStore = WrappedPointer<OpaquePointer>(X509_STORE_new, X509_STORE_free),
               let cms = WrappedPointer<OpaquePointer>({
-                  guard let data = rawBase64Cms.data(using: .utf8),
-                        let cmsData = Data(base64Encoded: data) else {
+                  let data = Data(rawBase64Cms.utf8)
+                  guard let cmsData = Data(base64Encoded: data) else {
                       return nil
                   }
 

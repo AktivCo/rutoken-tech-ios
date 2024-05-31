@@ -34,8 +34,8 @@ class CryptoManagerDecryptCmsTests: XCTestCase {
                                 openSslHelper: openSslHelper, fileHelper: fileHelper)
 
         certId = "certId"
-        documentData = "data to decrypt".data(using: .utf8)
-        decryptedData = "decrypted data".data(using: .utf8)!
+        documentData = Data("data to decrypt".utf8)
+        decryptedData = Data("decrypted data".utf8)
         token = TokenMock(serial: "87654321", currentInterface: .usb, supportedInterfaces: [.usb])
         pkcs11Helper.tokenPublisher.send([token])
     }

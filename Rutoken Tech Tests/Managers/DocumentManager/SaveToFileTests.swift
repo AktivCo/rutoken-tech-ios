@@ -23,7 +23,7 @@ class DocumentManagerSaveToFileTests: XCTestCase {
         helper = FileHelperMock()
         manager = DocumentManager(helper: helper)
 
-        dataToSave = "Data to save".data(using: .utf8)
+        dataToSave = Data("Data to save".utf8)
 
         let name = "Платежное \"поручение\" №121"
         let amount: Int = 35600

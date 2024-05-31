@@ -5,6 +5,8 @@
 //  Created by Никита Девятых on 11.04.2024.
 //
 
+import Foundation
+
 import TinyAsyncRedux
 
 
@@ -36,9 +38,8 @@ class OnSignDocument: Middleware {
                     }
                     try await cryptoManager.withToken(connectionType: connectionType, serial: serial, pin: pin) {
                         let cms = try cryptoManager.signDocument(document, certId: certId)
-                        guard let cmsData = cms.data(using: .utf8) else {
-                            throw CryptoManagerError.unknown
-                        }
+                        let cmsData = Data(cms.utf8)
+
                         try documentManager.saveToFile(fileName: documentName + ".sig", data: cmsData)
                         try documentManager.markAsArchived(documentName: documentName)
 

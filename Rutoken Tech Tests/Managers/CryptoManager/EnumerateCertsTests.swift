@@ -82,7 +82,7 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
             let result = try await manager.enumerateCerts()
-            XCTAssertEqual(result, [.init(keyId: keyId, tokenSerial: token.serial, from: unitTestCert.data(using: .utf8)!)!])
+            XCTAssertEqual(result, [.init(keyId: keyId, tokenSerial: token.serial, from: Data(unitTestCert.utf8))!])
         }
     }
 

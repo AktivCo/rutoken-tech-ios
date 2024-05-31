@@ -241,7 +241,7 @@ struct DocumentProcessView_Previews: PreviewProvider {
             companyName: "ОАО “Нефтегаз”", paymentTime: Date(timeIntervalSince1970: 1720000000))
 
         let encryptedDoc = BankSelectedDocumentState(metadata: encryptMetadata,
-                                                     docContent: .singleFile(encrypted.data(using: .utf8)!))
+                                                     docContent: .singleFile(Data(encrypted.utf8)))
         let stateForEncrypted = AppState(bankSelectedDocumentState: encryptedDoc)
         let storeForEncrypted = Store(initialState: stateForEncrypted, reducer: AppReducer(), middlewares: [])
 

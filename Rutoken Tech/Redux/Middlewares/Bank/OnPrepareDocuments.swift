@@ -43,11 +43,12 @@ class OnPrepareDocuments: Middleware {
                                 guard case let .singleFile(document) = try documentManager.readFile(with: $0.name) else {
                                     return
                                 }
+
                                 let signature = try cryptoManager.signDocument(document, keyFile: .rootCaKey, certFile: .rootCaCert)
-                                guard let signatureData = signature.data(using: .utf8) else {
-                                    throw CryptoManagerError.unknown
-                                }
+                                let signatureData = Data(signature.utf8)
+
                                 try documentManager.saveToFile(fileName: $0.name + ".sig", data: signatureData)
+
                             }
                         } catch {
                             continuation.yield(.showAlert(.unknownError))

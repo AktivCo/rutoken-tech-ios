@@ -66,9 +66,7 @@ func dataToBio(_ data: Data) -> WrappedPointer<OpaquePointer>? {
 }
 
 func stringToBio(_ str: String) -> WrappedPointer<OpaquePointer>? {
-    guard let data = str.data(using: .utf8) else {
-        return nil
-    }
+    let data = Data(str.utf8)
 
     return dataToBio(data)
 }

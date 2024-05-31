@@ -91,7 +91,7 @@ class DocumentManagerResetDirectoryTests: XCTestCase {
     }
 
     func testResetTempDirectoryEmptyList() throws {
-        helper.readFileCallback = { _ in "[]".data(using: .utf8)! }
+        helper.readFileCallback = { _ in Data("[]".utf8) }
 
         let docs = try awaitPublisherUnwrapped(manager.documents.dropFirst()) {
             XCTAssertNoThrow(try manager.resetDirectory())
@@ -112,7 +112,7 @@ class DocumentManagerResetDirectoryTests: XCTestCase {
     }
 
     func testResetTmpDirectoryBadJson() throws {
-        helper.readFileCallback = { _ in "{}".data(using: .utf8)! }
+        helper.readFileCallback = { _ in Data("{}".utf8) }
 
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
             XCTAssertThrowsError(try manager.resetDirectory())
@@ -122,7 +122,7 @@ class DocumentManagerResetDirectoryTests: XCTestCase {
     func testResetTempDirectoryCopyFilesError() throws {
         let error = DocumentManagerError.general("")
         helper.copyFilesToTempDirCallback = { _ in throw error }
-        helper.readFileCallback = { _ in "[]".data(using: .utf8)! }
+        helper.readFileCallback = { _ in Data("[]".utf8) }
 
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
             XCTAssertThrowsError(try manager.resetDirectory()) {

@@ -44,7 +44,7 @@ class DocumentManagerMarkAsArchivedTests: XCTestCase {
     }
 
     func testMarkAsArchivedNoDocument() throws {
-        helper.readFileCallback = { _ in "[]".data(using: .utf8)! }
+        helper.readFileCallback = { _ in Data("[]".utf8) }
         try manager.resetDirectory()
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true)
         XCTAssertThrowsError(try manager.markAsArchived(documentName: "some name")) {

@@ -224,10 +224,11 @@ class Token: TokenProtocol, Identifiable {
     }
 
     func importCert(_ cert: Data, for id: String) throws {
-        guard (try enumerateKeys(by: id, with: .gostR3410_2012_256).first) != nil,
-              let idData = id.data(using: .utf8) else {
+        guard (try enumerateKeys(by: id, with: .gostR3410_2012_256).first) != nil else {
             throw TokenError.generalError
         }
+
+        let idData = Data(id.utf8)
         let certAttributes: [any PkcsAttribute] = [
             BufferAttribute(type: .value, value: cert),
             ULongAttribute(type: .classObject, value: CKO_CERTIFICATE),

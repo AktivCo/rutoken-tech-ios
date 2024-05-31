@@ -37,7 +37,8 @@ class CryptoManagerSignDocumentTests: XCTestCase {
         pkcs11Helper.tokenPublisher.send([token])
 
         keyId = "123"
-        dataToSign = "Data to sign".data(using: .utf8)!
+
+        dataToSign = Data("Data to sign".utf8)
         signed = "12345678qwerty"
     }
 

@@ -33,15 +33,15 @@ class CryptoManagerEncryptDocumentTests: XCTestCase {
                                 openSslHelper: openSslHelper, fileHelper: fileHelper)
 
         certId = "certId"
-        documentData = "document to encrypt data".data(using: .utf8)
+        documentData = Data("document to encrypt data".utf8)
         token = TokenMock(serial: "87654321", currentInterface: .usb, supportedInterfaces: [.usb])
         pkcs11Helper.tokenPublisher.send([token])
     }
 
     func testEncryptCmsFileSuccess() throws {
         let certUrl = Bundle.getUrl(for: RtFile.bankCert.rawValue, in: RtFile.subdir)
-        let certData = "bankCertData".data(using: .utf8)!
-        let encryptedData = "encryptedData".data(using: .utf8)!
+        let certData = Data("bankCertData".utf8)
+        let encryptedData = Data("encryptedData".utf8)
         fileHelper.readFileCallback = {
             XCTAssertEqual(certUrl, $0)
             return certData
@@ -65,8 +65,9 @@ class CryptoManagerEncryptDocumentTests: XCTestCase {
     }
 
     func testEncryptCmsTokenSuccess() async throws {
-        let encryptedData = "encryptedData".data(using: .utf8)!
-        let certBodyData = "certBodyData".data(using: .utf8)!
+        let encryptedData = Data("encryptedData".utf8)
+        let certBodyData = Data("certBodyData".utf8)
+
         token.enumerateCertsCallback = {
             XCTAssertEqual($0, self.certId)
             var object = Pkcs11ObjectMock()

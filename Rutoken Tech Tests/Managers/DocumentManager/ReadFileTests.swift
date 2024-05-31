@@ -152,7 +152,7 @@ class DocumentManagerReadFileTests: XCTestCase {
         manager = DocumentManager(helper: helper)
         try manager.resetDirectory()
 
-        let encodedFile = "some text".data(using: .utf8)!.base64EncodedString().data(using: .utf8)!
+        let encodedFile = Data(Data("some text".utf8).base64EncodedString().utf8)
         helper.readDataFromTempDirCallback = { _ in
             encodedFile
         }
@@ -166,7 +166,7 @@ class DocumentManagerReadFileTests: XCTestCase {
     }
 
     func testReadFileNoDocument() throws {
-        helper.readFileCallback = { _ in "[]".data(using: .utf8)! }
+        helper.readFileCallback = { _ in Data("[]".utf8) }
         try manager.resetDirectory()
         XCTAssertThrowsError(try manager.readFile(with: "some name")) {
             XCTAssertEqual($0 as? DocumentManagerError, DocumentManagerError.general("Something went wrong during reading the file"))
