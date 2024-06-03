@@ -47,13 +47,18 @@ class TokenMock: TokenProtocol {
 
     var generateKeyPairCallback: (String) throws -> Void = { _ in }
 
-    func enumerateCerts(by id: String?) throws -> [Pkcs11ObjectProtocol] { try enumerateCertsCallback(id) }
+    func enumerateCerts() throws -> [Pkcs11ObjectProtocol] { try enumerateCertsCallback() }
+    func enumerateCerts(by id: String) throws -> [Pkcs11ObjectProtocol] { try enumerateCertsWithIdCallback(id) }
 
-    var enumerateCertsCallback: (_ id: String?) throws -> [Pkcs11ObjectProtocol] = { _ in [] }
+    var enumerateCertsCallback: () throws -> [Pkcs11ObjectProtocol] = { [] }
+    var enumerateCertsWithIdCallback: (_ id: String) throws -> [Pkcs11ObjectProtocol] = { _ in [] }
 
-    func enumerateKeys(by id: String?, with type: KeyAlgorithm?) throws -> [Pkcs11KeyPair] { try enumerateKeysCallback(id, type) }
+    func enumerateKey(by id: String) throws -> Pkcs11KeyPair { try enumerateKeyWithIdCallback(id) }
+    func enumerateKeys(by algo: KeyAlgorithm) throws -> [Pkcs11KeyPair] { try enumerateKeysWithAlgoCallback(algo) }
 
-    var enumerateKeysCallback: (String?, KeyAlgorithm?) throws -> [Pkcs11KeyPair] = { _, _ in [] }
+    var enumerateKeyWithIdCallback: (String) throws -> Pkcs11KeyPair = { _ in Pkcs11KeyPair(publicKey: Pkcs11ObjectMock(),
+                                                                                             privateKey: Pkcs11ObjectMock()) }
+    var enumerateKeysWithAlgoCallback: (KeyAlgorithm) throws -> [Pkcs11KeyPair] = { _ in [] }
 
     func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer> {
         try getWrappedKeyCallback(id)

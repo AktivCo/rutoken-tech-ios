@@ -21,8 +21,11 @@ protocol TokenProtocol {
 
     func generateKeyPair(with id: String) throws
 
-    func enumerateCerts(by id: String?) throws -> [Pkcs11ObjectProtocol]
-    func enumerateKeys(by id: String?, with type: KeyAlgorithm?) throws -> [Pkcs11KeyPair]
+    func enumerateCerts() throws -> [Pkcs11ObjectProtocol]
+    func enumerateCerts(by id: String) throws -> [Pkcs11ObjectProtocol]
+
+    func enumerateKeys(by algo: KeyAlgorithm) throws -> [Pkcs11KeyPair]
+    func enumerateKey(by id: String) throws -> Pkcs11KeyPair
 
     func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer>
 
@@ -99,43 +102,26 @@ class Token: TokenProtocol, Identifiable {
         session.logout()
     }
 
-    func enumerateCerts(by id: String?) throws -> [Pkcs11ObjectProtocol] {
-        var certTemplate: [any PkcsAttribute] = [
-            ULongAttribute(type: .classObject, value: CKO_CERTIFICATE),
-            BoolAttribute(type: .token, value: true),
-            ULongAttribute(type: .certType, value: CKC_X_509)
-        ]
-
-        if let idData = id?.data(using: .utf8) {
-            certTemplate.append(BufferAttribute(type: .id, value: idData))
-        }
-
-        return try session.findObjects(certTemplate.map { $0.attribute })
+    func enumerateCerts() throws -> [Pkcs11ObjectProtocol] {
+        let template = Pkcs11Object.getCertBaseTemplate()
+        return try session.findObjects(template.map { $0.attribute })
     }
 
-    func enumerateKeys(by id: String?, with type: KeyAlgorithm?) throws -> [Pkcs11KeyPair] {
-        // MARK: Prepare key templates
-        var pubKeyTemplate: [any PkcsAttribute] = [
-            ULongAttribute(type: .classObject, value: CKO_PUBLIC_KEY),
-            BoolAttribute(type: .token, value: true),
-            BoolAttribute(type: .privateness, value: false)
-        ]
-        var privateKeyTemplate: [any PkcsAttribute] = [
-            ULongAttribute(type: .classObject, value: CKO_PRIVATE_KEY),
-            BoolAttribute(type: .token, value: true),
-            BoolAttribute(type: .privateness, value: true)
-        ]
+    func enumerateCerts(by id: String) throws -> [Pkcs11ObjectProtocol] {
+        var template = Pkcs11Object.getCertBaseTemplate()
+        template.append(BufferAttribute(type: .id, value: Data(id.utf8)))
+        return try session.findObjects(template.map { $0.attribute })
+    }
 
-        switch type {
+    func enumerateKeys(by algo: KeyAlgorithm) throws -> [Pkcs11KeyPair] {
+        // MARK: Prepare key templates
+        var pubKeyTemplate = Pkcs11Object.getPubKeyBaseTemplate()
+        var privateKeyTemplate = Pkcs11Object.getPrivKeyBaseTemplate()
+
+        switch algo {
         case .gostR3410_2012_256:
             pubKeyTemplate.append(ULongAttribute(type: .keyType, value: CKK_GOSTR3410))
             privateKeyTemplate.append(ULongAttribute(type: .keyType, value: CKK_GOSTR3410))
-        case .none: break
-        }
-
-        if let idData = id?.data(using: .utf8) {
-            pubKeyTemplate.append(BufferAttribute(type: .id, value: idData))
-            privateKeyTemplate.append(BufferAttribute(type: .id, value: idData))
         }
 
         // MARK: Find public keys
@@ -152,10 +138,31 @@ class Token: TokenProtocol, Identifiable {
         }
     }
 
-    func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer> {
-        guard let keyPair = try enumerateKeys(by: id, with: .gostR3410_2012_256).first else {
-            throw TokenError.keyNotFound
+    func enumerateKey(by id: String) throws -> Pkcs11KeyPair {
+        // MARK: Prepare key templates
+        var pubKeyTemplate = Pkcs11Object.getPubKeyBaseTemplate()
+        var privateKeyTemplate = Pkcs11Object.getPrivKeyBaseTemplate()
+
+        pubKeyTemplate.append(BufferAttribute(type: .id, value: Data(id.utf8)))
+        privateKeyTemplate.append(BufferAttribute(type: .id, value: Data(id.utf8)))
+
+        // MARK: Find public keys
+        let publicKeys = try session.findObjects(pubKeyTemplate.map { $0.attribute })
+
+        // MARK: Find private keys
+        let privateKeys = try session.findObjects(privateKeyTemplate.map { $0.attribute })
+
+        // MARK: There should be only one key of each type with same id
+        guard publicKeys.count == 1,
+              privateKeys.count == 1 else {
+            throw TokenError.generalError
         }
+
+        return Pkcs11KeyPair(publicKey: publicKeys[0], privateKey: privateKeys[0])
+    }
+
+    func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer> {
+        let keyPair = try enumerateKey(by: id)
 
         guard let wrappedKey = WrappedPointer<OpaquePointer>({
             try? engine.wrapKeys(with: session.handle,
@@ -224,9 +231,7 @@ class Token: TokenProtocol, Identifiable {
     }
 
     func importCert(_ cert: Data, for id: String) throws {
-        guard (try enumerateKeys(by: id, with: .gostR3410_2012_256).first) != nil else {
-            throw TokenError.generalError
-        }
+        _ = try enumerateKey(by: id)
 
         let idData = Data(id.utf8)
         let certAttributes: [any PkcsAttribute] = [

@@ -46,7 +46,7 @@ class CryptoManagerSignDocumentTests: XCTestCase {
         openSslHelper.signDocumentCallback = {
             self.signed
         }
-        token.enumerateCertsCallback = {
+        token.enumerateCertsWithIdCallback = {
             XCTAssertEqual($0, self.keyId)
             return [Pkcs11ObjectMock()]
         }
@@ -88,7 +88,7 @@ class CryptoManagerSignDocumentTests: XCTestCase {
     }
 
     func testSignDocumentNoSuitCertError() async throws {
-        token.enumerateCertsCallback = {
+        token.enumerateCertsWithIdCallback = {
             XCTAssertEqual($0, self.keyId)
             return []
         }
@@ -106,7 +106,7 @@ class CryptoManagerSignDocumentTests: XCTestCase {
         openSslHelper.signDocumentCallback = {
             throw error
         }
-        token.enumerateCertsCallback = {
+        token.enumerateCertsWithIdCallback = {
             XCTAssertEqual($0, self.keyId)
             return [Pkcs11ObjectMock()]
         }

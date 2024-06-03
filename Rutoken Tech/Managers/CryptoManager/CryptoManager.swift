@@ -123,7 +123,7 @@ class CryptoManager: CryptoManagerProtocol {
             throw CryptoManagerError.tokenNotFound
         }
 
-        return try token.enumerateKeys(by: nil, with: .gostR3410_2012_256).compactMap {
+        return try token.enumerateKeys(by: .gostR3410_2012_256).compactMap {
             guard let ckaId = try String(data: $0.privateKey.getValue(forAttr: .id), encoding: .utf8) else {
                 return nil
             }
@@ -136,7 +136,7 @@ class CryptoManager: CryptoManagerProtocol {
             throw CryptoManagerError.tokenNotFound
         }
 
-        return try token.enumerateCerts(by: nil).compactMap { (cert: Pkcs11ObjectProtocol) -> CertMetaData? in
+        return try token.enumerateCerts().compactMap { (cert: Pkcs11ObjectProtocol) -> CertMetaData? in
             let certData = try cert.getValue(forAttr: .value)
             guard let keyId = try String(data: cert.getValue(forAttr: .id), encoding: .utf8) else {
                 return nil
@@ -158,9 +158,7 @@ class CryptoManager: CryptoManagerProtocol {
             throw CryptoManagerError.tokenNotFound
         }
 
-        guard let keyPair = try token.enumerateKeys(by: id, with: .gostR3410_2012_256).first else {
-            throw CryptoManagerError.unknown
-        }
+        let keyPair = try token.enumerateKey(by: id)
 
         guard let caKeyUrl = Bundle.getUrl(for: RtFile.caKey.rawValue, in: RtFile.subdir),
               let caCertUrl = Bundle.getUrl(for: RtFile.caCert.rawValue, in: RtFile.subdir) else {

@@ -17,6 +17,30 @@ protocol Pkcs11ObjectProtocol {
 }
 
 class Pkcs11Object: Pkcs11ObjectProtocol {
+    static func getCertBaseTemplate() -> [any PkcsAttribute] {
+        [
+            ULongAttribute(type: .classObject, value: CKO_CERTIFICATE),
+            BoolAttribute(type: .token, value: true),
+            ULongAttribute(type: .certType, value: CKC_X_509)
+        ]
+    }
+
+    static func getPubKeyBaseTemplate() -> [any PkcsAttribute] {
+        [
+            ULongAttribute(type: .classObject, value: CKO_PUBLIC_KEY),
+            BoolAttribute(type: .token, value: true),
+            BoolAttribute(type: .privateness, value: false)
+        ]
+    }
+
+    static func getPrivKeyBaseTemplate() -> [any PkcsAttribute] {
+        [
+            ULongAttribute(type: .classObject, value: CKO_PRIVATE_KEY),
+            BoolAttribute(type: .token, value: true),
+            BoolAttribute(type: .privateness, value: true)
+        ]
+    }
+
     private(set) var handle: CK_OBJECT_HANDLE
     private weak var session: Pkcs11Session?
 

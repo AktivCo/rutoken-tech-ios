@@ -29,7 +29,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper, openSslHelper: openSslHelper, fileHelper: fileHelper)
 
         token = TokenMock(serial: "87654321", currentInterface: .usb)
-        token.enumerateKeysCallback = { _, _ in
+        token.enumerateKeysWithAlgoCallback = { _ in
             return [Pkcs11KeyPair(publicKey: Pkcs11ObjectMock(),
                                   privateKey: Pkcs11ObjectMock())]
         }
@@ -62,10 +62,10 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     }
 
     func testCreateCertPrivateKeyUsagePeriodGetValueError() async throws {
-        token.enumerateKeysCallback = { _, _ in
+        token.enumerateKeyWithIdCallback = { _ in
             var object = Pkcs11ObjectMock()
             object.setValue(forAttr: .startDate, value: .failure(TokenError.generalError))
-            return [Pkcs11KeyPair(publicKey: object, privateKey: object)]
+            return Pkcs11KeyPair(publicKey: object, privateKey: object)
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {

@@ -74,7 +74,6 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
 
     func testEnumerateCertsSuccess() async throws {
         token.enumerateCertsCallback = {
-            XCTAssertNil($0)
             var object = Pkcs11ObjectMock()
             object.setValue(forAttr: .id, value: .success(Data(self.keyId.utf8)))
             object.setValue(forAttr: .value, value: .success(Data(unitTestCert.utf8)))
@@ -93,7 +92,6 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
 
     func testEnumerateCertsNoData() async throws {
         token.enumerateCertsCallback = {
-            XCTAssertNil($0)
             return [Pkcs11ObjectMock()]
         }
 
@@ -105,7 +103,6 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
 
     func testEnumerateCertsBadData() async throws {
         token.enumerateCertsCallback = {
-            XCTAssertNil($0)
             return [Pkcs11ObjectMock()]
         }
 
@@ -117,7 +114,6 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
 
     func testEnumerateCertsNoId() async throws {
         token.enumerateCertsCallback = {
-            XCTAssertNil($0)
             return [Pkcs11ObjectMock()]
         }
 

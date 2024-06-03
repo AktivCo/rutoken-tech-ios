@@ -68,7 +68,7 @@ class CryptoManagerEncryptDocumentTests: XCTestCase {
         let encryptedData = Data("encryptedData".utf8)
         let certBodyData = Data("certBodyData".utf8)
 
-        token.enumerateCertsCallback = {
+        token.enumerateCertsWithIdCallback = {
             XCTAssertEqual($0, self.certId)
             var object = Pkcs11ObjectMock()
             object.setValue(forAttr: .value, value: .success(certBodyData))
@@ -88,8 +88,9 @@ class CryptoManagerEncryptDocumentTests: XCTestCase {
         assertError(try manager.encryptDocument(documentData, certId: certId), throws: CryptoManagerError.tokenNotFound)
     }
 
+
     func testEncryptCmsTokenNoSuitCertError() async throws {
-        token.enumerateCertsCallback = {
+        token.enumerateCertsWithIdCallback = {
             XCTAssertEqual($0, self.certId)
             return []
         }
@@ -100,7 +101,7 @@ class CryptoManagerEncryptDocumentTests: XCTestCase {
 
     func testEncryptCmsTokenOpenSslError() async throws {
         let error = OpenSslError.generalError(23, "qwerty")
-        token.enumerateCertsCallback = {
+        token.enumerateCertsWithIdCallback = {
             XCTAssertEqual($0, self.certId)
             return [Pkcs11ObjectMock()]
         }
