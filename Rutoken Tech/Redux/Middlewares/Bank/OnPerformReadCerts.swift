@@ -41,7 +41,6 @@ class OnPerformReadCerts: Middleware {
                     continuation.finish()
                 }
 
-                continuation.yield(.updateCerts([]))
                 let tokenInterface: ConnectionType = connectionType == .nfc ? .nfc : .usb
                 do {
                     try await self.cryptoManager.withToken(connectionType: tokenInterface,
@@ -58,7 +57,7 @@ class OnPerformReadCerts: Middleware {
                             certModels.append(CertViewData(from: cert, reason: try await getReason(for: cert)))
                         }
 
-                        continuation.yield(.updateCerts(certModels))
+                        continuation.yield(.updateBankCerts(certModels))
                         let info = try await cryptoManager.getTokenInfo()
                         continuation.yield(.savePin(pin, info.serial, true))
                         await continuation.yield(.showSheet(false,

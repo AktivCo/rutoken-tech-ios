@@ -177,7 +177,15 @@ struct CaCertGenView: View {
                     if let token = store.state.caConnectedTokenState.connectedToken,
                        let pin = store.state.caConnectedTokenState.pin {
                         let id = store.state.caGenerateCertState.keys[selectedKey].ckaId
-                        store.send(.generateCert(token.connectionType, serial: token.serial, pin: pin, id: id, commonName: nameInput))
+                        if store.state.caConnectedTokenState.certs.contains(where: { $0.keyId == id }) {
+                            store.send(.showAlert(.rewriteCert({
+                                store.send(.generateCert(token.connectionType, serial: token.serial,
+                                                         pin: pin, id: id, commonName: nameInput))
+                            })))
+                        } else {
+                            store.send(.generateCert(token.connectionType, serial: token.serial,
+                                                     pin: pin, id: id, commonName: nameInput))
+                        }
                     } else {
                         store.send(.showAlert(.unknownError))
                     }

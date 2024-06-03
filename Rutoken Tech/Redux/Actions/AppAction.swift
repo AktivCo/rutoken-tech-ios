@@ -38,7 +38,8 @@ enum AppAction {
 
     // MARK: Reading certs from token
     case readCerts(RtTokenType, String)
-    case updateCerts([CertViewData])
+    case cacheCaCerts([CertMetaData])
+    case updateBankCerts([CertViewData])
     case selectCert(CertViewData)
 
     // MARK: User handling

@@ -34,6 +34,8 @@ class OnPerformGenCert: Middleware {
                                                       pin: pin) {
                         try await cryptoManager.deleteCert(with: id)
                         try await cryptoManager.createCert(for: id, with: model)
+                        let certs = try await cryptoManager.enumerateCerts()
+                        continuation.yield(.cacheCaCerts(certs))
                     }
 
                     continuation.yield(.showAlert(.certGenerated))

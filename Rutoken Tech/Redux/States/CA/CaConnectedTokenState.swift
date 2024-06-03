@@ -8,5 +8,6 @@
 
 struct CaConnectedTokenState {
     var connectedToken: TokenInfo?
+    var certs: [CertMetaData] = []
     var pin: String?
 }

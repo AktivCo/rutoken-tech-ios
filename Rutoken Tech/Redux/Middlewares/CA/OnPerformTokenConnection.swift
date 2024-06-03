@@ -32,7 +32,9 @@ class OnPerformTokenConnection: Middleware {
                         let info = try await self.cryptoManager.getTokenInfo()
                         continuation.yield(.tokenSelected(info, pin))
                         let keys = try await self.cryptoManager.enumerateKeys()
+                        let certs = try await self.cryptoManager.enumerateCerts()
                         continuation.yield(.updateKeys(keys))
+                        continuation.yield(.cacheCaCerts(certs))
                     }
                     continuation.yield(.hideSheet)
                 } catch CryptoManagerError.incorrectPin(let attemptsLeft) {

@@ -53,6 +53,7 @@ struct AppReducer: Reducer {
             // MARK: logout ca
             newState.caConnectedTokenState.connectedToken = nil
             newState.caConnectedTokenState.pin = nil
+            newState.caConnectedTokenState.certs = []
             newState.caGenerateKeyPairState.key = nil
             newState.caGenerateCertState.keys = []
 
@@ -67,8 +68,10 @@ struct AppReducer: Reducer {
             break
         case .readCerts:
             break
-        case let .updateCerts(certs):
+        case let .updateBankCerts(certs):
             newState.bankCertListState.certs = certs
+        case let .cacheCaCerts(certs):
+            newState.caConnectedTokenState.certs = certs
         case .selectCert:
             break
         case let .updateUsers(users):

@@ -26,6 +26,8 @@ enum AppAlert {
     case invalidSignature
     case unknownError
     case pinHasChanged
+    // MARK: Notification
+    case rewriteCert(() -> Void)
 
     var alertModel: RtAlertModel {
         switch self {
@@ -76,6 +78,10 @@ enum AppAlert {
         case .failedChain:
             return .init(title: .success("Подпись верна"), subTitle: "Но не удалось построить цепочку доверия для сертификата",
                          buttons: [.init(.regular("OK"))])
+        case .rewriteCert(let callback):
+            return .init(title: .titleOnly("Перезаписать сертификат?"),
+                         subTitle: "Для этой ключевой пары уже выпущен сертификат. Текущий сертификат будет перезаписан",
+                         buttons: [.init(.regular("Перезаписать"), action: callback), .init(.bold("Отменить"))])
         case .unknownError:
             return .init(title: .titleOnly("Неизвестная ошибка"),
                          subTitle: "Попробуйте еще раз или обратитесь в Техническую поддержку",
