@@ -32,6 +32,7 @@ class OnPerformGenCert: Middleware {
                     try await cryptoManager.withToken(connectionType: connectionType,
                                                       serial: serial,
                                                       pin: pin) {
+                        try await cryptoManager.deleteCert(with: id)
                         try await cryptoManager.createCert(for: id, with: model)
                     }
 

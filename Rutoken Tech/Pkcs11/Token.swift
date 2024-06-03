@@ -27,6 +27,8 @@ protocol TokenProtocol {
     func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer>
 
     func importCert(_ cert: Data, for id: String) throws
+
+    func deleteCert(with id: String) throws
 }
 
 enum TokenError: Error, Equatable {
@@ -212,27 +214,13 @@ class Token: TokenProtocol, Identifiable {
         }
     }
 
-    func deleteObjects(with id: String) throws {
-        guard let idData = id.data(using: .utf8) else {
-            throw TokenError.generalError
-        }
-
+    func deleteCert(with id: String) throws {
         let template: [any PkcsAttribute] = [
-            BufferAttribute(type: .id, value: idData)
+            ULongAttribute(type: .classObject, value: CKO_CERTIFICATE),
+            BufferAttribute(type: .id, value: Data(id.utf8)),
+            ULongAttribute(type: .certType, value: CKC_X_509)
         ]
-
-        let objects = try session.findObjects(template.map { $0.attribute })
-
-        guard !objects.isEmpty else {
-            throw TokenError.generalError
-        }
-
-        for obj in objects {
-            let rv = C_DestroyObject(session.handle, obj.handle)
-            guard rv == CKR_OK else {
-                throw TokenError.generalError
-            }
-        }
+        try deleteObjects(with: template)
     }
 
     func importCert(_ cert: Data, for id: String) throws {
@@ -319,6 +307,17 @@ class Token: TokenProtocol, Identifiable {
                 throw TokenError.generalError
             }
             self.model = model
+        }
+    }
+
+    private func deleteObjects(with template: [any PkcsAttribute]) throws {
+        let objects = try session.findObjects(template.map { $0.attribute })
+
+        for obj in objects {
+            let rv = C_DestroyObject(session.handle, obj.handle)
+            guard rv == CKR_OK else {
+                throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
+            }
         }
     }
 

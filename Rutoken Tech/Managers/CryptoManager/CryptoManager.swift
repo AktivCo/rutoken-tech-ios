@@ -14,7 +14,6 @@ protocol CryptoManagerProtocol {
                    serial: String?,
                    pin: String?,
                    callback: () async throws -> Void) async throws
-
     func getTokenInfo() async throws -> TokenInfo
     func enumerateKeys() async throws -> [KeyModel]
     func enumerateCerts() async throws -> [CertMetaData]
@@ -22,6 +21,7 @@ protocol CryptoManagerProtocol {
     func createCert(for id: String, with info: CsrModel) async throws
     func signDocument(_ document: Data, certId: String) throws -> String
     func signDocument(_ document: Data, keyFile: RtFile, certFile: RtFile) throws -> String
+    func deleteCert(with id: String) async throws
     func verifyCms(signedCms: Data, document: Data) async throws
     func encryptDocument(_ document: Data, certId: String) throws -> Data
     func encryptDocument(_ document: Data, certFile: RtFile) throws -> Data
@@ -179,6 +179,14 @@ class CryptoManager: CryptoManagerProtocol {
         let csr = try openSslHelper.createCsr(with: wrappedKey, for: model, with: info)
         let cert = try openSslHelper.createCert(for: csr, with: caKeyData, cert: caCertData)
         try token.importCert(cert, for: id)
+    }
+
+    func deleteCert(with id: String) async throws {
+        guard let token = connectedToken else {
+            throw CryptoManagerError.tokenNotFound
+        }
+
+        try token.deleteCert(with: id)
     }
 
     func signDocument(_ document: Data, certId: String) throws -> String {

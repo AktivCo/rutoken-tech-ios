@@ -70,4 +70,10 @@ class TokenMock: TokenProtocol {
     }
 
     var importCertCallback: (Data, String) throws -> Void = { _, _ in }
+
+    func deleteCert(with id: String) throws {
+        try deleteCertCallback(id)
+    }
+
+    var deleteCertCallback: (String) throws -> Void = { _ in }
 }

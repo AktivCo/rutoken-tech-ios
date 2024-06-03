@@ -31,6 +31,7 @@
 		4443EA0D2B96F59A0003436D /* KeyAlgorithm+description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4443EA0C2B96F59A0003436D /* KeyAlgorithm+description.swift */; };
 		444D9F5C2B8DECC600C1EB0B /* Date+getString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444D9F5B2B8DECC600C1EB0B /* Date+getString.swift */; };
 		4453EFF32BC9172C00F2CD07 /* CertViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4453EFF22BC9172C00F2CD07 /* CertViewData.swift */; };
+		4459B8FE2C0DCB6E004AAEE5 /* DeleteCertTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4459B8FD2C0DCB6E004AAEE5 /* DeleteCertTests.swift */; };
 		4464FAA82B359ED5005F732F /* Pkcs11Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464FAA72B359ED5005F732F /* Pkcs11Object.swift */; };
 		44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */; };
 		4469F7882B34512E000DCF8B /* PkcsAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4469F7872B34512E000DCF8B /* PkcsAttribute.swift */; };
@@ -197,6 +198,7 @@
 		4443EA0C2B96F59A0003436D /* KeyAlgorithm+description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyAlgorithm+description.swift"; sourceTree = "<group>"; };
 		444D9F5B2B8DECC600C1EB0B /* Date+getString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+getString.swift"; sourceTree = "<group>"; };
 		4453EFF22BC9172C00F2CD07 /* CertViewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertViewData.swift; sourceTree = "<group>"; };
+		4459B8FD2C0DCB6E004AAEE5 /* DeleteCertTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteCertTests.swift; sourceTree = "<group>"; };
 		4464FAA72B359ED5005F732F /* Pkcs11Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Object.swift; sourceTree = "<group>"; };
 		44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtEngineWrapper.swift; sourceTree = "<group>"; };
 		4469F7872B34512E000DCF8B /* PkcsAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PkcsAttribute.swift; sourceTree = "<group>"; };
@@ -650,6 +652,7 @@
 				7DACCE252B569CCF00FB3F2C /* CreateCertTests.swift */,
 				7D9D3C1A2B3C76F000BF2EE1 /* EnumerateKeysTests.swift */,
 				44868B082B87306D00EA274D /* EnumerateCertsTests.swift */,
+				4459B8FD2C0DCB6E004AAEE5 /* DeleteCertTests.swift */,
 				D4871D6A2BC693A2008B027C /* SignDocumentTests.swift */,
 				44311EFC2BCE9B7500D16B0C /* VerifyCmsTests.swift */,
 				D43478F32BEB63C300986F79 /* EncryptDocumentTests.swift */,
@@ -1127,6 +1130,7 @@
 				44311EFD2BCE9B7500D16B0C /* VerifyCmsTests.swift in Sources */,
 				4407C1DA2BD68E6F00DBA7D3 /* MarkAsArchivedTests.swift in Sources */,
 				D47302C52B91E2000049E8F8 /* KeychainManagerMock.swift in Sources */,
+				4459B8FE2C0DCB6E004AAEE5 /* DeleteCertTests.swift in Sources */,
 				D4B130D32B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift in Sources */,
 				4413CFB82B597206000987A8 /* OpenSslHelperMock.swift in Sources */,
 				7DEBBDD62B3B1FCE00C35BA5 /* WithTokenTests.swift in Sources */,
