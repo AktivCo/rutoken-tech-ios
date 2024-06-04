@@ -160,7 +160,7 @@ struct DocumentProcessView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            navBar(title: store.state.bankSelectedDocumentState.metadata?.name ?? "",
+            navBar(title: String(store.state.bankSelectedDocumentState.metadata?.name.split(separator: ".").first ?? ""),
                    date: store.state.bankSelectedDocumentState.metadata?.paymentTime.getString(as: "d MMMM yyyy 'г. в' HH:mm") ?? "")
 
             switch store.state.bankSelectedDocumentState.docContent {
