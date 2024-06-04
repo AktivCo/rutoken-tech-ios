@@ -11,8 +11,8 @@ The application is built with iOS SDK 16.2 and newer and launches on iOS ans iPa
 External dependencies can be found in the [RutokenSDK](http://www.rutoken.ru/developers/sdk/)
 
 Needed files and frameworks:
-•  openssl/bin/3.0/openssl-3.0/openssl-tool-3.0/macos-x86_64+arm64/*
-•  openssl/bin/3.0/rtengine-3.0/ios+iossim+macos-x86_64+arm64-xcframework/rtengine.xcframework
+- openssl/bin/3.0/openssl-3.0/openssl-tool-3.0/macos-x86_64+arm64/*
+- openssl/bin/3.0/rtengine-3.0/ios+iossim+macos-x86_64+arm64-xcframework/rtengine.xcframework
 
  **Pay attention: this is an instruction on how to setup the Rutoken Technologies application. Read more about the features and embedding tokens into your apps in [features of embedding Rutoken ECP line with NFC into your own applications](https://dev.rutoken.ru/pages/viewpage.action?pageId=81527019)**.
 

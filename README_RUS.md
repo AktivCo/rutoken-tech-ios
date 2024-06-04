@@ -11,8 +11,8 @@
 Внешние зависимости находятся в [Рутокен SDK](http://www.rutoken.ru/developers/sdk/)
 
 Необходимые файлы и фреймворки:
-•  openssl/bin/3.0/openssl-3.0/openssl-tool-3.0/macos-x86_64+arm64/*
-•  openssl/bin/3.0/rtengine-3.0/ios+iossim+macos-x86_64+arm64-xcframework/rtengine.xcframework
+- openssl/bin/3.0/openssl-3.0/openssl-tool-3.0/macos-x86_64+arm64/*
+- openssl/bin/3.0/rtengine-3.0/ios+iossim+macos-x86_64+arm64-xcframework/rtengine.xcframework
 
  **Внимание, это инструкция по настройке приложения Рутокен Технологии. Подробнее о возможностях и встраивании токенов в ваши приложения читайте в [особенностях встраивания NFC-устройств семейства Рутокен ЭЦП в собственные приложения](https://dev.rutoken.ru/pages/viewpage.action?pageId=81527019)**.
 
