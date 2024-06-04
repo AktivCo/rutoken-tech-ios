@@ -191,8 +191,8 @@ class Token: TokenProtocol, Identifiable {
             BoolAttribute(type: .privateness, value: false),
             BufferAttribute(type: .startDate, value: startDateData.data()),
             BufferAttribute(type: .endDate, value: endDateData.data()),
-            BufferAttribute(type: .gostR3410Params, value: Data(PkcsConstants.parametersGostR3410_2012_256)),
-            BufferAttribute(type: .gostR3411Params, value: Data(PkcsConstants.parametersGostR3411_2012_256))
+            BufferAttribute(type: .gostR3410Params, value: Data(PkcsConstants.gostR3410_2012_256_paramset_B)),
+            BufferAttribute(type: .gostR3411Params, value: Data(PkcsConstants.gostR3411_2012_256_params_oid))
         ]
 
         let privateKeyAttributes: [any PkcsAttribute] = [
@@ -204,8 +204,8 @@ class Token: TokenProtocol, Identifiable {
             BoolAttribute(type: .derive, value: true),
             BufferAttribute(type: .startDate, value: startDateData.data()),
             BufferAttribute(type: .endDate, value: endDateData.data()),
-            BufferAttribute(type: .gostR3410Params, value: Data(PkcsConstants.parametersGostR3410_2012_256)),
-            BufferAttribute(type: .gostR3411Params, value: Data(PkcsConstants.parametersGostR3411_2012_256))
+            BufferAttribute(type: .gostR3410Params, value: Data(PkcsConstants.gostR3410_2012_256_paramset_B)),
+            BufferAttribute(type: .gostR3411Params, value: Data(PkcsConstants.gostR3411_2012_256_params_oid))
         ]
         var publicKeyTemplate = publicKeyAttributes.map { $0.attribute }
         var privateKeyTemplate = privateKeyAttributes.map { $0.attribute }
