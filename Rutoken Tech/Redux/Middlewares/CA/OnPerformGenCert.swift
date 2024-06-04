@@ -42,6 +42,10 @@ class OnPerformGenCert: Middleware {
                     continuation.yield(.showAlert(.connectionLost))
                 } catch CryptoManagerError.wrongToken {
                     continuation.yield(.showAlert(.wrongToken))
+                } catch CryptoManagerError.incorrectPin {
+                    continuation.yield(.hideSheet)
+                    continuation.yield(.logout)
+                    continuation.yield(.showAlert(.pinHasChanged))
                 } catch {
                     continuation.yield(.showAlert(.unknownError))
                 }

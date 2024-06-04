@@ -25,6 +25,7 @@ enum AppAlert {
     case failedChain
     case invalidSignature
     case unknownError
+    case pinHasChanged
 
     var alertModel: RtAlertModel {
         switch self {
@@ -55,6 +56,10 @@ enum AppAlert {
         case .tokenNotFound:
             return .init(title: .titleOnly("Рутокен не обнаружен"),
                          subTitle: "Убедитесь, что Рутокен подключен к мобильному устройству",
+                         buttons: [.init(.regular("ОК"))])
+        case .pinHasChanged:
+            return .init(title: .titleOnly("PIN-код Рутокена был изменен"),
+                         subTitle: "Необходимо заново подключить Рутокен в разделе «Удостоверяющий центр»",
                          buttons: [.init(.regular("ОК"))])
         case .noCerts:
             return .init(title: .titleOnly("На Рутокене нет сертификатов"),
