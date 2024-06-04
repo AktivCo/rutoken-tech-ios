@@ -7,16 +7,31 @@
 
 import Combine
 import Foundation
-import PDFKit
 
 
 protocol DocumentManagerProtocol {
     var documents: AnyPublisher<[BankDocument], Never> { get }
-    func resetDirectory() throws
-    func readFile(with name: String) throws -> BankFileContent
-    func saveToFile(fileName: String, data: Data) throws
+    func initBackup(docs: [DocumentData]) throws
+    func reset() throws
+    func readDocsFromBundle() throws -> [DocBundleData]
+    func writeDocument(fileName: String, data: Data) throws -> URL
+    func readDocument(with name: String) throws -> BankFileContent
     func markAsArchived(documentName: String) throws
-    func getUrl(for documentName: String) -> URL?
+}
+
+struct DocumentData {
+    let name: String
+    let content: Data
+}
+
+struct DocBundleData {
+    let doc: DocumentData
+    let action: BankDocument.ActionType
+}
+
+enum DocumentDir: String {
+    case core = "BankCoreDir"
+    case temp = "BankTempDir"
 }
 
 enum DocumentManagerError: Error, Equatable {
@@ -32,54 +47,72 @@ class DocumentManager: DocumentManagerProtocol {
     private var documentsPublisher = CurrentValueSubject<[BankDocument], Never>([])
     private let documentListFileName = "documents.json"
     private let documentsBundleSubdir = "BankDocuments"
+    private let documentsUrl: URL
 
-    init(helper: FileHelperProtocol) {
+    init?(helper: FileHelperProtocol) {
         self.fileHelper = helper
+
+        guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+        self.documentsUrl = url
     }
 
-    func resetDirectory() throws {
-        try fileHelper.clearTempDir()
-
-        guard let jsonUrl = Bundle.getUrl(for: documentListFileName, in: documentsBundleSubdir) else {
-            throw DocumentManagerError.general("Something went wrong during reset directory")
+    func initBackup(docs: [DocumentData]) throws {
+        try fileHelper.clearDir(dirUrl: getUrl(dirType: .core))
+        try docs.forEach { doc in
+            try fileHelper.saveFile(content: doc.content, url: getUrl(dirType: .core, name: doc.name))
         }
+    }
 
-        let json = try fileHelper.readFile(from: jsonUrl)
-        let documents = try BankDocument.jsonDecoder.decode([BankDocument].self, from: json)
-
-        let urls = documents.compactMap { Bundle.getUrl(for: $0.name, in: documentsBundleSubdir) }
+    func reset() throws {
         do {
-            try fileHelper.copyFilesToTempDir(from: urls)
+            try fileHelper.clearDir(dirUrl: getUrl(dirType: .temp))
+            documentsPublisher.send(try readDocsMetaData())
         } catch FileHelperError.generalError(let line, let str) {
             throw DocumentManagerError.general("\(line): \(String(describing: str))")
         }
-        documentsPublisher.send(documents)
     }
 
-    func readFile(with name: String) throws -> BankFileContent {
+    func readDocument(with name: String) throws -> BankFileContent {
         do {
             guard let documentModel = documentsPublisher.value.first(where: { $0.name == name }) else {
                 throw DocumentManagerError.general("Something went wrong during reading the file")
             }
-            let content = try fileHelper.readDataFromTempDir(filename: name)
-
-            switch documentModel.action {
-            case .encrypt, .sign, .decrypt:
-                return .singleFile(content)
-            case .verify:
-                if let signedCms = try? fileHelper.readDataFromTempDir(filename: name + ".sig") {
-                    return .fileWithDetachedCMS(file: content, cms: signedCms)
-                }
-                return .singleFile(content)
+            let urls = documentModel.urls
+            guard !urls.isEmpty else {
+                throw DocumentManagerError.general("Something went wrong during reading the file")
+            }
+            if urls.count == 1 {
+                return .singleFile(try fileHelper.readFile(from: urls[0]))
+            } else if urls.count == 2 {
+                return .fileWithDetachedCMS(file: try fileHelper.readFile(from: urls[0]),
+                                            cms: try fileHelper.readFile(from: urls[1]))
+            } else {
+                throw DocumentManagerError.general("Something went wrong during reading the file")
             }
         } catch FileHelperError.generalError(let line, let str) {
             throw DocumentManagerError.general("\(line): \(String(describing: str))")
         }
     }
 
-    func saveToFile(fileName: String, data: Data) throws {
+    func readDocsFromBundle() throws -> [DocBundleData] {
+        let docsInfo = try readDocsMetaData()
+        return try docsInfo.map { doc in
+            guard let url = Bundle.getUrl(for: doc.name, in: documentsBundleSubdir) else {
+                throw DocumentManagerError.general("Something went wrong during reading the file")
+            }
+            let content = try fileHelper.readFile(from: url)
+            return DocBundleData(doc: DocumentData(name: doc.name, content: content),
+                                 action: doc.action)
+        }
+    }
+
+    func writeDocument(fileName: String, data: Data) throws -> URL {
         do {
-            try fileHelper.saveFileToTempDir(with: fileName, content: data)
+            let url = getUrl(dirType: .temp, name: fileName)
+            try fileHelper.saveFile(content: data, url: url)
+            return url
         } catch FileHelperError.generalError(let line, let str) {
             throw DocumentManagerError.general("\(line): \(String(describing: str))")
         }
@@ -95,7 +128,19 @@ class DocumentManager: DocumentManagerProtocol {
         documentsPublisher.send(documents)
     }
 
-    func getUrl(for documentName: String) -> URL? {
-        fileHelper.getUrlFromTempDir(for: documentName)
+    private func getUrl(dirType: DocumentDir, name: String? = nil) -> URL {
+        guard let name else {
+            return documentsUrl.appendingPathComponent(dirType.rawValue)
+        }
+        return documentsUrl.appendingPathComponent(dirType.rawValue).appendingPathComponent(name)
+    }
+
+    private func readDocsMetaData() throws -> [BankDocument] {
+        guard let jsonUrl = Bundle.getUrl(for: documentListFileName, in: documentsBundleSubdir) else {
+            throw DocumentManagerError.general("Something went wrong during reset directory")
+        }
+
+        let json = try fileHelper.readFile(from: jsonUrl)
+        return try BankDocument.jsonDecoder.decode([BankDocument].self, from: json)
     }
 }

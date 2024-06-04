@@ -1,5 +1,5 @@
 //
-//  SaveToFileTests.swift
+//  WriteDocumentTests.swift
 //  Rutoken Tech Tests
 //
 //  Created by Никита Девятых on 16.04.2024.
@@ -10,7 +10,7 @@ import XCTest
 @testable import Rutoken_Tech
 
 
-class DocumentManagerSaveToFileTests: XCTestCase {
+class DocumentManagerWriteDocumentTests: XCTestCase {
     var manager: DocumentManager!
     var helper: FileHelperMock!
     var dataToSave: Data!
@@ -36,24 +36,23 @@ class DocumentManagerSaveToFileTests: XCTestCase {
                                 paymentTime: paymentDay)
     }
 
-    func testSaveToFileSuccess() throws {
+    func testWriteDocumentSuccess() throws {
         let documentFileName = document.name + ".sig"
-        helper.saveFileToTempDirCallback = { fileName, _ in
-            XCTAssertEqual(fileName, documentFileName)
+        helper.saveFileCallback = { _, url in
+            XCTAssertEqual(url.lastPathComponent, documentFileName)
         }
-        manager = DocumentManager(helper: helper)
 
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
-            try manager.saveToFile(fileName: documentFileName, data: dataToSave!)
+            _ = try manager.writeDocument(fileName: documentFileName, data: dataToSave!)
         }
     }
 
-    func testSaveToFileError() throws {
-        helper.saveFileToTempDirCallback = { _, _ in
+    func testWriteDocumentError() throws {
+        helper.saveFileCallback = { _, _ in
             throw FileHelperError.generalError(33, "File helper error")
         }
 
-        assertError(try manager.saveToFile(fileName: document.name + ".sig", data: dataToSave!),
+        assertError(try manager.writeDocument(fileName: document.name + ".sig", data: dataToSave!),
                     throws: DocumentManagerError.general("33: \(String(describing: Optional("File helper error")))"))
     }
 }

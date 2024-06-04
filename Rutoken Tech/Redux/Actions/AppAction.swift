@@ -64,10 +64,9 @@ enum AppAction {
 
     // MARK: Bank crypto operations
     case signDocument(tokenType: RtTokenType, serial: String, pin: String, documentName: String, certId: String)
-    case cmsVerify(fileName: String)
+    case cmsVerify(documentName: String)
     case encryptDocument(documentName: String)
     case selectDocument(BankDocument)
     case updateCurrentDoc(BankDocument?, BankFileContent?)
-    case updateUrlsForCurrentDoc(documentName: String, action: BankDocument.ActionType, inArchive: Bool)
     case updateUrlsForShare([URL])
 }

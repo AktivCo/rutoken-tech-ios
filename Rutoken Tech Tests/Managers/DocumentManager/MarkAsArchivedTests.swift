@@ -32,20 +32,17 @@ class DocumentManagerMarkAsArchivedTests: XCTestCase {
                                 companyName: "ОАО \"Нефтегаз\"",
                                 paymentTime: Date())
         helper.readFileCallback = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
-
-        manager = DocumentManager(helper: helper)
-        try manager.resetDirectory()
+        try manager.reset()
 
         let docs = try awaitPublisherUnwrapped(manager.documents.dropFirst()) {
             try manager.markAsArchived(documentName: document.name)
         }
-
         XCTAssertTrue(docs.first!.inArchive)
     }
 
     func testMarkAsArchivedNoDocument() throws {
         helper.readFileCallback = { _ in Data("[]".utf8) }
-        try manager.resetDirectory()
+        try manager.reset()
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true)
         XCTAssertThrowsError(try manager.markAsArchived(documentName: "some name")) {
             XCTAssertEqual($0 as? DocumentManagerError, DocumentManagerError.general("Something went wrong during reading the file"))

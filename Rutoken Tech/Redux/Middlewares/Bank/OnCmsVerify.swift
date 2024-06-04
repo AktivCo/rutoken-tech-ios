@@ -28,7 +28,8 @@ class OnCmsVerify: Middleware {
                     continuation.finish()
                 }
                 do {
-                    guard case let .fileWithDetachedCMS(content, cms: cms) = try documentManager.readFile(with: fileName) else {
+                    guard case let .fileWithDetachedCMS(content, cms: cms) =
+                            try documentManager.readDocument(with: fileName) else {
                         continuation.yield(.showAlert(.unknownError))
                         return
                     }

@@ -25,9 +25,9 @@ class OnSelectDocument: Middleware {
                 continuation.finish()
             }
             do {
-                let content = try documentManager.readFile(with: doc.name)
-                continuation.yield(.updateCurrentDoc(doc, content))
-                continuation.yield(.updateUrlsForCurrentDoc(documentName: doc.name, action: doc.action, inArchive: doc.inArchive))
+                let result = try documentManager.readDocument(with: doc.name)
+                continuation.yield(.updateCurrentDoc(doc, result))
+                continuation.yield(.updateUrlsForShare(doc.urls))
             } catch {
                 continuation.yield(.showAlert(.unknownError))
             }

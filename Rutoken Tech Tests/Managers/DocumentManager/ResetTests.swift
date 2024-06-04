@@ -1,5 +1,5 @@
 //
-//  ResetDirectoryTests.swift
+//  ResetTests.swift
 //  Rutoken Tech Tests
 //
 //  Created by Vova Badyaev on 11.03.2024.
@@ -10,7 +10,7 @@ import XCTest
 @testable import Rutoken_Tech
 
 
-class DocumentManagerResetDirectoryTests: XCTestCase {
+class DocumentManagerResetTests: XCTestCase {
     var manager: DocumentManager!
     var helper: FileHelperMock!
 
@@ -35,19 +35,17 @@ class DocumentManagerResetDirectoryTests: XCTestCase {
                                paymentTime: paymentDay)
 
         let exp1 = XCTestExpectation(description: "Clear temp directory")
-        let exp2 = XCTestExpectation(description: "Copy files to temp directory")
-        helper.clearTempDirCallback = { exp1.fulfill() }
-        helper.copyFilesToTempDirCallback = { _ in exp2.fulfill() }
+        helper.clearDirCallback = { _ in exp1.fulfill() }
         helper.readFileCallback = { url in
             XCTAssertEqual(Bundle.getUrl(for: "documents.json", in: "BankDocuments"), url)
             return try BankDocument.jsonEncoder.encode([doc])
         }
 
         let docs = try awaitPublisherUnwrapped(manager.documents.dropFirst()) {
-            XCTAssertNoThrow(try manager.resetDirectory())
+            XCTAssertNoThrow(try manager.reset())
         }
 
-        wait(for: [exp1, exp2], timeout: 0.3)
+        wait(for: [exp1], timeout: 0.3)
         XCTAssertEqual(docs, [doc])
     }
 
@@ -68,12 +66,9 @@ class DocumentManagerResetDirectoryTests: XCTestCase {
             XCTAssertEqual(Bundle.getUrl(for: "documents.json", in: "BankDocuments"), url)
             return try BankDocument.jsonEncoder.encode([document, anotherDocument])
         }
-        helper.copyFilesToTempDirCallback = { urls in
-            XCTAssertEqual(urls, [Bundle.getUrl(for: document.name, in: "BankDocuments")])
-        }
         let manager = DocumentManager(helper: helper)
-        try manager.resetDirectory()
-        let documents = try awaitPublisherUnwrapped(manager.documents)
+        try manager!.reset()
+        let documents = try awaitPublisherUnwrapped(manager!.documents)
         XCTAssertTrue(documents.contains(document))
         XCTAssertTrue(documents.contains(anotherDocument))
         XCTAssertEqual(documents.count, 2)
@@ -81,10 +76,10 @@ class DocumentManagerResetDirectoryTests: XCTestCase {
 
     func testResetTempDirectoryClearTempDirError() throws {
         let error = DocumentManagerError.general("")
-        helper.clearTempDirCallback = { throw error }
+        helper.clearDirCallback = { _ in throw error }
 
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
-            XCTAssertThrowsError(try manager.resetDirectory()) {
+            XCTAssertThrowsError(try manager.reset()) {
                 XCTAssertEqual($0 as? DocumentManagerError, error)
             }
         }
@@ -94,7 +89,7 @@ class DocumentManagerResetDirectoryTests: XCTestCase {
         helper.readFileCallback = { _ in Data("[]".utf8) }
 
         let docs = try awaitPublisherUnwrapped(manager.documents.dropFirst()) {
-            XCTAssertNoThrow(try manager.resetDirectory())
+            XCTAssertNoThrow(try manager.reset())
         }
 
         XCTAssertTrue(docs.isEmpty)
@@ -105,7 +100,7 @@ class DocumentManagerResetDirectoryTests: XCTestCase {
         helper.readFileCallback = { _ in throw error }
 
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
-            XCTAssertThrowsError(try manager.resetDirectory()) {
+            XCTAssertThrowsError(try manager.reset()) {
                 XCTAssertEqual($0 as? DocumentManagerError, error)
             }
         }
@@ -115,19 +110,7 @@ class DocumentManagerResetDirectoryTests: XCTestCase {
         helper.readFileCallback = { _ in Data("{}".utf8) }
 
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
-            XCTAssertThrowsError(try manager.resetDirectory())
-        }
-    }
-
-    func testResetTempDirectoryCopyFilesError() throws {
-        let error = DocumentManagerError.general("")
-        helper.copyFilesToTempDirCallback = { _ in throw error }
-        helper.readFileCallback = { _ in Data("[]".utf8) }
-
-        try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
-            XCTAssertThrowsError(try manager.resetDirectory()) {
-                XCTAssertEqual($0 as? DocumentManagerError, error)
-            }
+            XCTAssertThrowsError(try manager.reset())
         }
     }
 }

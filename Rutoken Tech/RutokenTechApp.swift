@@ -21,10 +21,10 @@ struct RutokenTechApp: App {
 
         if !ProcessInfo.isPreview {
             let userManager = UserManager()
-            guard let fileHelper = FileHelper(dirName: "BankTempDir") else {
-                fatalError("Failed to initialize FileHelper")
+            let fileHelper = FileHelper()
+            guard let documentManager = DocumentManager(helper: fileHelper) else {
+                fatalError("Failed to initialize DocumentManager")
             }
-            let documentManager = DocumentManager(helper: fileHelper)
             let engineWrapper = RtEngineWrapper()
             let openSslHelper = OpenSslHelper(engine: engineWrapper)
 
@@ -57,7 +57,6 @@ struct RutokenTechApp: App {
                 OnCmsVerify(cryptoManager: cryptoManager, documentManager: documentManager),
                 OnEncryptDocument(cryptoManager: cryptoManager, documentManager: documentManager),
                 OnSelectDocument(documentManager: documentManager),
-                OnUpdateUrlsCurrentDoc(documentManager: documentManager),
                 // About
                 OnHandleOpenLink()
             ]

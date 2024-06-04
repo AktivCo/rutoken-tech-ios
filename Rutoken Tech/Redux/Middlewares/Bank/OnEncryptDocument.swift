@@ -28,17 +28,22 @@ class OnEncryptDocument: Middleware {
                     continuation.finish()
                 }
                 do {
-                    let file = try documentManager.readFile(with: documentName)
-                    guard case let .singleFile(document) = file else {
+                    let file = try documentManager.readDocument(with: documentName)
+                    guard case let .singleFile(content) = file else {
                         continuation.yield(.showAlert(.unknownError))
                         return
                     }
-                    let encryptedData = try cryptoManager.encryptDocument(document, certFile: .bankCert)
-                    try documentManager.saveToFile(fileName: documentName + ".enc", data: encryptedData)
+                    let encryptedData = try cryptoManager.encryptDocument(content, certFile: .bankCert)
+                    let encryptedDocUrl = try documentManager.writeDocument(fileName: documentName + ".enc", data: encryptedData)
                     try documentManager.markAsArchived(documentName: documentName)
-                    continuation.yield(.updateUrlsForCurrentDoc(documentName: documentName, action: .encrypt, inArchive: true))
-                    continuation.yield(.hideSheet)
-                    continuation.yield(.showAlert(.documentEncrypted))
+
+                    _ = documentManager.documents.first().sink { docs in
+                        let updatedDoc = docs.first { documentName == $0.name }
+                        continuation.yield(.updateUrlsForShare([encryptedDocUrl]))
+                        continuation.yield(.updateCurrentDoc(updatedDoc, .singleFile(encryptedData)))
+                        continuation.yield(.hideSheet)
+                        continuation.yield(.showAlert(.documentEncrypted))
+                    }
                 } catch let error as CryptoManagerError {
                     continuation.yield(.showAlert(AppAlert(from: error)))
                 } catch {

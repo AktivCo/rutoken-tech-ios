@@ -30,7 +30,7 @@ class OnResetDocuments: Middleware {
 
                 try? await Task.sleep(for: .seconds(3.6))
                 do {
-                    try manager.resetDirectory()
+                    try manager.reset()
                 } catch {
                     continuation.yield(.showAlert(.unknownError))
                 }

@@ -31,23 +31,24 @@ class OnSignDocument: Middleware {
                     continuation.finish()
                 }
                 do {
-                    let file = try documentManager.readFile(with: documentName)
-                    guard case let .singleFile(document) = file else {
+                    let bankContent = try documentManager.readDocument(with: documentName)
+                    guard case let .singleFile(document) = bankContent else {
                         continuation.yield(.showAlert(.unknownError))
                         return
                     }
+                    var cmsData: Data = Data()
                     try await cryptoManager.withToken(connectionType: connectionType, serial: serial, pin: pin) {
                         let cms = try cryptoManager.signDocument(document, certId: certId)
-                        let cmsData = Data(cms.utf8)
-
-                        try documentManager.saveToFile(fileName: documentName + ".sig", data: cmsData)
-                        try documentManager.markAsArchived(documentName: documentName)
-
-                        continuation.yield(.updateUrlsForCurrentDoc(documentName: documentName, action: .sign, inArchive: true))
-
-                        continuation.yield(.hideSheet)
-                        continuation.yield(.showAlert(.documentSigned))
+                        cmsData = Data(cms.utf8)
                     }
+                    let documentUrl = try documentManager.writeDocument(fileName: documentName, data: document)
+                    let signatureUrl = try documentManager.writeDocument(fileName: documentName + ".sig", data: cmsData)
+                    try documentManager.markAsArchived(documentName: documentName)
+
+                    continuation.yield(.updateUrlsForShare([documentUrl, signatureUrl]))
+
+                    continuation.yield(.hideSheet)
+                    continuation.yield(.showAlert(.documentSigned))
                 } catch CryptoManagerError.incorrectPin(let attemptsLeft) {
                     continuation.yield(.showPinInputError("Неверный PIN-код. Осталось попыток: \(attemptsLeft)"))
                 } catch CryptoManagerError.nfcStopped {

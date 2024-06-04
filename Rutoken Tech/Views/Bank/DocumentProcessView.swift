@@ -100,11 +100,7 @@ struct DocumentProcessView: View {
             switch document.action {
             case .decrypt: return
             case .encrypt:
-                guard let fileName = store.state.bankSelectedDocumentState.metadata?.name else {
-                    store.send(.showAlert(.unknownError))
-                    return
-                }
-                store.send(.encryptDocument(documentName: fileName))
+                store.send(.encryptDocument(documentName: document.name))
             case .sign:
                 guard store.state.bankSelectedDocumentState.metadata?.inArchive == false,
                       let tokenSerial = store.state.bankSelectUserState.selectedUser?.tokenSerial,
@@ -124,7 +120,7 @@ struct DocumentProcessView: View {
                     .environmentObject(store.state.routingState.pinInputModel)
                 }()))
             case .verify:
-                store.send(.cmsVerify(fileName: document.name))
+                store.send(.cmsVerify(documentName: document.name))
             }
         } label: {
             Text(title)
@@ -169,9 +165,7 @@ struct DocumentProcessView: View {
 
             switch store.state.bankSelectedDocumentState.docContent {
             case .singleFile(let content), .fileWithDetachedCMS(file: let content, cms: _):
-                if store.state.bankSelectedDocumentState.metadata?.action == .decrypt ||
-                    (store.state.bankSelectedDocumentState.metadata?.action == .encrypt &&
-                     store.state.bankSelectedDocumentState.metadata?.inArchive == true) {
+                if !isRtPDFViewShown {
                     VStack {
                         Text(content.base64EncodedString())
                             .font(.caption)
@@ -198,6 +192,12 @@ struct DocumentProcessView: View {
             bottomBar()
         }
         .ignoresSafeArea(.keyboard)
+    }
+
+    private var isRtPDFViewShown: Bool {
+        let action = store.state.bankSelectedDocumentState.metadata?.action
+        let inArchive = store.state.bankSelectedDocumentState.metadata?.inArchive ?? false
+        return !(action == .decrypt && !inArchive || action == .encrypt && inArchive)
     }
 }
 

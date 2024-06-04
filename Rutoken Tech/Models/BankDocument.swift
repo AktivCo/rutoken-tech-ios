@@ -59,6 +59,53 @@ struct BankDocument: Codable, Identifiable {
             return .outcome
         }
     }
+
+    var urls: [URL] {
+        switch (self.action, self.inArchive) {
+        case (.encrypt, false), (.sign, false):
+            guard let url = getUrl(dirType: .core, name: name) else {
+                return []
+            }
+            return [url]
+        case (.decrypt, false):
+            guard let encryptedUrl = getUrl(dirType: .core, name: name + ".enc") else {
+                return []
+            }
+            return [encryptedUrl]
+        case (.verify, _):
+            guard let docUrl = getUrl(dirType: .core, name: name),
+                  let signUrl = getUrl(dirType: .core, name: name + ".sig") else {
+                return []
+            }
+            return [docUrl, signUrl]
+        case (.decrypt, true):
+            guard let url = getUrl(dirType: .temp, name: name) else {
+                return []
+            }
+            return [url]
+        case (.encrypt, true):
+            guard let encryptedUrl = getUrl(dirType: .temp, name: name + ".enc") else {
+                return []
+            }
+            return [encryptedUrl]
+        case (.sign, true):
+            guard let docUrl = getUrl(dirType: .temp, name: name),
+                  let signUrl = getUrl(dirType: .temp, name: name + ".sig") else {
+                return []
+            }
+            return [docUrl, signUrl]
+        }
+    }
+
+    private func getUrl(dirType: DocumentDir, name: String? = nil) -> URL? {
+        guard let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+        guard let name else {
+            return documentsUrl.appendingPathComponent(dirType.rawValue)
+        }
+        return documentsUrl.appendingPathComponent(dirType.rawValue).appendingPathComponent(name)
+    }
 }
 
 extension BankDocument: Equatable {

@@ -28,37 +28,37 @@ class OnPrepareDocuments: Middleware {
         }
 
         return AsyncStream<AppAction> { continuation in
-            do {
-                try documentManager.resetDirectory()
-                let uuid = UUID()
-                documentManager.documents
-                    .first()
-                    .sink { [self] documents in
-                        defer {
-                            cancellable.removeValue(forKey: uuid)
-                            continuation.finish()
-                        }
-                        do {
-                            try documents.filter({ $0.action == .verify }).forEach {
-                                guard case let .singleFile(document) = try documentManager.readFile(with: $0.name) else {
-                                    return
-                                }
-
-                                let signature = try cryptoManager.signDocument(document, keyFile: .rootCaKey, certFile: .rootCaCert)
-                                let signatureData = Data(signature.utf8)
-
-                                try documentManager.saveToFile(fileName: $0.name + ".sig", data: signatureData)
-
-                            }
-                        } catch {
-                            continuation.yield(.showAlert(.unknownError))
-                        }
-                    }
-                    .store(in: &cancellable, for: uuid)
-            } catch {
-                continuation.yield(.showAlert(.unknownError))
+            defer {
                 continuation.finish()
             }
+            do {
+                let documents = try documentManager.readDocsFromBundle()
+                var processedDocs: [DocumentData] = []
+
+                try documents.forEach { doc in
+                    let docContent = doc.doc.content
+                    let docName = doc.doc.name
+                    switch doc.action {
+                    case .verify:
+                        let signature = try cryptoManager.signDocument(docContent, keyFile: .rootCaKey, certFile: .rootCaCert)
+                        guard let signatureData = signature.data(using: .utf8) else {
+                            throw CryptoManagerError.unknown
+                        }
+                        processedDocs.append(DocumentData(name: docName + ".sig", content: signatureData))
+                        processedDocs.append(DocumentData(name: docName, content: docContent))
+                    case .encrypt, .sign:
+                        processedDocs.append(DocumentData(name: docName, content: docContent))
+                    case .decrypt:
+                        // encryption will be added soon
+                        processedDocs.append(DocumentData(name: docName, content: docContent))
+                    }
+                }
+                try documentManager.initBackup(docs: processedDocs)
+                try documentManager.reset()
+            } catch {
+                continuation.yield(.showAlert(.unknownError))
+            }
+
         }
     }
 }
