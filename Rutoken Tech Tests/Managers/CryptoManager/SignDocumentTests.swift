@@ -41,7 +41,7 @@ class CryptoManagerSignDocumentTests: XCTestCase {
 
     func testSignDocumentSuccess() async throws {
         let signed = "12345678qwerty"
-        openSslHelper.signCmsCallback = {
+        openSslHelper.signDocumentCallback = {
             signed
         }
         token.enumerateCertsCallback = {
@@ -56,7 +56,7 @@ class CryptoManagerSignDocumentTests: XCTestCase {
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
-            let result = try manager.signDocument(document: dataToSign, with: self.keyId!)
+            let result = try manager.signDocument(dataToSign, with: self.keyId!)
             XCTAssertEqual(signed, result)
         }
     }
@@ -67,17 +67,17 @@ class CryptoManagerSignDocumentTests: XCTestCase {
             return []
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
-            assertError(try manager.signDocument(document: dataToSign, with: keyId), throws: CryptoManagerError.noSuitCert)
+            assertError(try manager.signDocument(dataToSign, with: keyId), throws: CryptoManagerError.noSuitCert)
         }
     }
 
     func testSignDocumentTokenNotFoundError() throws {
-        assertError(try manager.signDocument(document: dataToSign, with: self.keyId), throws: CryptoManagerError.tokenNotFound)
+        assertError(try manager.signDocument(dataToSign, with: self.keyId), throws: CryptoManagerError.tokenNotFound)
     }
 
     func testSignDocumentOpenSslError() async throws {
         let error = OpenSslError.generalError(100, "error")
-        openSslHelper.signCmsCallback = {
+        openSslHelper.signDocumentCallback = {
             throw error
         }
         token.enumerateCertsCallback = {
@@ -92,7 +92,7 @@ class CryptoManagerSignDocumentTests: XCTestCase {
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
-            assertError(try manager.signDocument(document: dataToSign, with: self.keyId), throws: error)
+            assertError(try manager.signDocument(dataToSign, with: self.keyId), throws: error)
         }
     }
 
@@ -104,7 +104,7 @@ class CryptoManagerSignDocumentTests: XCTestCase {
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
-            assertError(try manager.signDocument(document: dataToSign, with: self.keyId), throws: error)
+            assertError(try manager.signDocument(dataToSign, with: self.keyId), throws: error)
         }
     }
 }

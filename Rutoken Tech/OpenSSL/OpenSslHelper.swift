@@ -15,8 +15,8 @@ enum OpenSslError: Error, Equatable {
 protocol OpenSslHelperProtocol {
     func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel, with info: CertInfo) throws -> String
     func createCert(for csr: String, with caKey: Data, cert caCert: Data) throws -> Data
-    func signCms(for content: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String
-    func signCms(for content: Data, key: Data, cert: Data) throws -> String
+    func signDocument(_ document: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String
+    func signDocument(_ document: Data, key: Data, cert: Data) throws -> String
     func verifyCms(signedCms: String, for content: Data, with cert: Data, certChain: [Data]) throws -> VerifyCmsResult
     func encryptDocument(for content: Data, with cert: Data) throws -> Data
     func decryptCms(content: Data, wrappedKey: WrappedPointer<OpaquePointer>) throws -> Data
@@ -45,8 +45,8 @@ class OpenSslHelper: OpenSslHelperProtocol {
         OPENSSL_cleanup()
     }
 
-    func signCms(for content: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String {
-        guard let contentBio = dataToBio(content),
+    func signDocument(_ document: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String {
+        guard let contentBio = dataToBio(document),
               let x509 = WrappedX509(from: cert)
         else {
             throw OpenSslError.generalError(#line, getLastError())
@@ -80,11 +80,11 @@ class OpenSslHelper: OpenSslHelperProtocol {
         return "-----BEGIN CMS-----\n" + rawSignature + "\n-----END CMS-----"
     }
 
-    func signCms(for content: Data, key: Data, cert: Data) throws -> String {
+    func signDocument(_ document: Data, key: Data, cert: Data) throws -> String {
         guard let privateKey = wrapKey(key) else {
             throw OpenSslError.generalError(#line, getLastError())
         }
-        return try self.signCms(for: content, wrappedKey: privateKey, cert: cert)
+        return try self.signDocument(document, wrappedKey: privateKey, cert: cert)
     }
 
     func verifyCms(signedCms: String, for content: Data, with cert: Data, certChain: [Data]) throws -> VerifyCmsResult {

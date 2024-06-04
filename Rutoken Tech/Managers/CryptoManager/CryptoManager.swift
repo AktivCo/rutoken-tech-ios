@@ -20,7 +20,7 @@ protocol CryptoManagerProtocol {
     func enumerateCerts() async throws -> [CertMetaData]
     func generateKeyPair(with id: String) async throws
     func createCert(for id: String, with info: CsrModel) async throws
-    func signDocument(document: Data, with id: String) throws -> String
+    func signDocument(_ document: Data, with id: String) throws -> String
     func verifyCms(signedCms: Data, document: Data) async throws
     func encryptDocument(document: Data, with cert: CertSource) throws -> Data
     func decryptCms(encryptedData: Data, with id: String) throws -> Data
@@ -183,7 +183,7 @@ class CryptoManager: CryptoManagerProtocol {
         try token.importCert(cert, for: id)
     }
 
-    func signDocument(document: Data, with id: String) throws -> String {
+    func signDocument(_ document: Data, with id: String) throws -> String {
         guard let token = connectedToken else {
             throw CryptoManagerError.tokenNotFound
         }
@@ -191,7 +191,7 @@ class CryptoManager: CryptoManagerProtocol {
         guard let certData = try token.enumerateCerts(by: id).first?.getValue(forAttr: .value) else {
             throw CryptoManagerError.noSuitCert
         }
-        return try openSslHelper.signCms(for: document, wrappedKey: key, cert: certData)
+        return try openSslHelper.signDocument(document, wrappedKey: key, cert: certData)
     }
 
     func decryptCms(encryptedData: Data, with id: String) throws -> Data {

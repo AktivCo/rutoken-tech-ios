@@ -21,13 +21,13 @@ class OpenSslHelperMock: OpenSslHelperProtocol {
     }
     var createCertCallback: () throws -> Data = { return Data() }
 
-    func signCms(for content: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String {
-        try signCmsCallback()
+    func signDocument(_ document: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String {
+        try signDocumentCallback()
     }
-    func signCms(for content: Data, key: Data, cert: Data) throws -> String {
-        try signCmsCallback()
+    func signDocument(_ document: Data, key: Data, cert: Data) throws -> String {
+        try signDocumentCallback()
     }
-    var signCmsCallback: () throws -> String = { "" }
+    var signDocumentCallback: () throws -> String = { "" }
 
     func verifyCms(signedCms: String, for content: Data, with cert: Data, certChain: [Data]) throws -> VerifyCmsResult {
         try verifyCmsCallback()

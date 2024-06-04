@@ -30,12 +30,12 @@ class OnSignDocument: Middleware {
                 }
                 do {
                     let file = try documentManager.readFile(with: documentName)
-                    guard case let .singleFile(content) = file else {
+                    guard case let .singleFile(document) = file else {
                         continuation.yield(.showAlert(.unknownError))
                         return
                     }
                     try await cryptoManager.withToken(connectionType: connectionType, serial: serial, pin: pin) {
-                        let cms = try cryptoManager.signDocument(document: content, with: certId)
+                        let cms = try cryptoManager.signDocument(document, with: certId)
                         guard let cmsData = cms.data(using: .utf8) else {
                             throw CryptoManagerError.unknown
                         }
