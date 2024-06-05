@@ -192,34 +192,40 @@ class CryptoManager: CryptoManagerProtocol {
             throw CryptoManagerError.tokenNotFound
         }
         let key = try token.getWrappedKey(with: certId)
-        guard let certData = try token.enumerateCerts(by: certId).first?.getValue(forAttr: .value) else {
+        guard let userCertData = try token.enumerateCerts(by: certId).first?.getValue(forAttr: .value) else {
             throw CryptoManagerError.noSuitCert
         }
-        return try openSslHelper.signDocument(document, wrappedKey: key, cert: certData)
+        guard let caCertUrl = Bundle.getUrl(for: RtFile.caCert.rawValue, in: RtFile.subdir) else {
+            throw CryptoManagerError.unknown
+        }
+        let caCertData = try fileHelper.readFile(from: caCertUrl)
+
+        return try openSslHelper.signDocument(document, wrappedKey: key, cert: userCertData, certChain: [caCertData])
     }
 
     func signDocument(_ document: Data, keyFile: RtFile, certFile: RtFile) throws -> String {
-        guard let bankKeyUrl = Bundle.getUrl(for: keyFile.rawValue, in: RtFile.subdir),
-              let bankCertUrl = Bundle.getUrl(for: certFile.rawValue, in: RtFile.subdir) else {
+        guard let keyUrl = Bundle.getUrl(for: keyFile.rawValue, in: RtFile.subdir),
+              let certUrl = Bundle.getUrl(for: certFile.rawValue, in: RtFile.subdir),
+              let caCertUrl = Bundle.getUrl(for: RtFile.caCert.rawValue, in: RtFile.subdir) else {
             throw CryptoManagerError.unknown
         }
-        let bankKey = try fileHelper.readFile(from: bankKeyUrl)
-        let bankCert = try fileHelper.readFile(from: bankCertUrl)
-        return try openSslHelper.signDocument(document, key: bankKey, cert: bankCert)
+        let keyData = try fileHelper.readFile(from: keyUrl)
+        let certData = try fileHelper.readFile(from: certUrl)
+        let caCertData = try fileHelper.readFile(from: caCertUrl)
+
+        return try openSslHelper.signDocument(document, key: keyData, cert: certData, certChain: [caCertData])
     }
 
     func verifyCms(signedCms: Data, document: Data) async throws {
         guard let cms = String(data: signedCms, encoding: .utf8),
-              let bankCertUrl = Bundle.getUrl(for: RtFile.bankCert.rawValue, in: RtFile.subdir),
               let rootCaCertUrl = Bundle.getUrl(for: RtFile.rootCaCert.rawValue, in: RtFile.subdir) else {
             throw CryptoManagerError.unknown
         }
 
         do {
-            let bankCertData = try fileHelper.readFile(from: bankCertUrl)
             let rootCaCertData = try fileHelper.readFile(from: rootCaCertUrl)
 
-            switch try openSslHelper.verifyCms(signedCms: cms, for: document, with: bankCertData, certChain: [rootCaCertData]) {
+            switch try openSslHelper.verifyCms(signedCms: cms, for: document, trustedRoots: [rootCaCertData]) {
             case .success:
                 return
             case .failedChain:

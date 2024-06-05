@@ -15,9 +15,9 @@ enum OpenSslError: Error, Equatable {
 protocol OpenSslHelperProtocol {
     func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel, with info: CertInfo) throws -> String
     func createCert(for csr: String, with caKey: Data, cert caCert: Data) throws -> Data
-    func signDocument(_ document: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String
-    func signDocument(_ document: Data, key: Data, cert: Data) throws -> String
-    func verifyCms(signedCms: String, for content: Data, with cert: Data, certChain: [Data]) throws -> VerifyCmsResult
+    func signDocument(_ document: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data, certChain: [Data]) throws -> String
+    func signDocument(_ document: Data, key: Data, cert: Data, certChain: [Data]) throws -> String
+    func verifyCms(signedCms: String, for content: Data, trustedRoots: [Data]) throws -> VerifyCmsResult
     func encryptDocument(for content: Data, with cert: Data) throws -> Data
     func decryptCms(content: Data, wrappedKey: WrappedPointer<OpaquePointer>) throws -> Data
 }
@@ -45,15 +45,16 @@ class OpenSslHelper: OpenSslHelperProtocol {
         OPENSSL_cleanup()
     }
 
-    func signDocument(_ document: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data) throws -> String {
+    func signDocument(_ document: Data, wrappedKey: WrappedPointer<OpaquePointer>, cert: Data, certChain: [Data]) throws -> String {
         guard let contentBio = dataToBio(document),
-              let x509 = WrappedX509(from: cert)
+              let x509 = WrappedX509(from: cert),
+              let certsStack = createX509Stack(with: certChain)
         else {
             throw OpenSslError.generalError(#line, getLastError())
         }
 
         guard let cms = WrappedPointer<OpaquePointer>({
-            CMS_sign(x509.wrappedPointer.pointer, wrappedKey.pointer, nil,
+            CMS_sign(x509.wrappedPointer.pointer, wrappedKey.pointer, certsStack.pointer,
                      contentBio.pointer, UInt32(CMS_BINARY | CMS_NOSMIMECAP | CMS_DETACHED))
         }, CMS_ContentInfo_free) else {
             throw OpenSslError.generalError(#line, getLastError())
@@ -80,14 +81,14 @@ class OpenSslHelper: OpenSslHelperProtocol {
         return "-----BEGIN CMS-----\n" + rawSignature + "\n-----END CMS-----"
     }
 
-    func signDocument(_ document: Data, key: Data, cert: Data) throws -> String {
+    func signDocument(_ document: Data, key: Data, cert: Data, certChain: [Data]) throws -> String {
         guard let privateKey = wrapKey(key) else {
             throw OpenSslError.generalError(#line, getLastError())
         }
-        return try self.signDocument(document, wrappedKey: privateKey, cert: cert)
+        return try self.signDocument(document, wrappedKey: privateKey, cert: cert, certChain: certChain)
     }
 
-    func verifyCms(signedCms: String, for content: Data, with cert: Data, certChain: [Data]) throws -> VerifyCmsResult {
+    func verifyCms(signedCms: String, for content: Data, trustedRoots: [Data]) throws -> VerifyCmsResult {
         var rawBase64Cms = signedCms
             .replacingOccurrences(of: "-----BEGIN CMS-----", with: "")
             .replacingOccurrences(of: "-----END CMS-----", with: "")
@@ -95,7 +96,6 @@ class OpenSslHelper: OpenSslHelperProtocol {
         rawBase64Cms.removeAll { $0 == "\n" }
 
         guard let contentBio = dataToBio(content),
-              let certsStack = createX509Stack(with: [cert]),
               let certStore = WrappedPointer<OpaquePointer>(X509_STORE_new, X509_STORE_free),
               let cms = WrappedPointer<OpaquePointer>({
                   let data = Data(rawBase64Cms.utf8)
@@ -111,7 +111,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
             throw OpenSslError.generalError(#line, getLastError())
         }
 
-        for cert in certChain {
+        for cert in trustedRoots {
             guard let caCert = WrappedX509(from: cert),
                   X509_STORE_add_cert(certStore.pointer, caCert.wrappedPointer.pointer) == 1 else {
                 throw OpenSslError.generalError(#line, getLastError())
@@ -119,7 +119,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         guard CMS_verify(cms.pointer,
-                         certsStack.pointer,
+                         nil,
                          certStore.pointer,
                          contentBio.pointer,
                          nil,
@@ -127,7 +127,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
             // If we receive an error on CMS verify we try to verify without chain cheking
             // and send appropriate error
             guard CMS_verify(cms.pointer,
-                             certsStack.pointer,
+                             nil,
                              certStore.pointer,
                              contentBio.pointer,
                              nil,

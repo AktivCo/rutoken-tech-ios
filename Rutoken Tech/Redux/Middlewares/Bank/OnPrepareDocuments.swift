@@ -40,7 +40,7 @@ class OnPrepareDocuments: Middleware {
                     let docName = doc.doc.name
                     switch doc.action {
                     case .verify:
-                        let signature = try cryptoManager.signDocument(docContent, keyFile: .rootCaKey, certFile: .rootCaCert)
+                        let signature = try cryptoManager.signDocument(docContent, keyFile: .bankKey, certFile: .bankCert)
                         guard let signatureData = signature.data(using: .utf8) else {
                             throw CryptoManagerError.unknown
                         }
