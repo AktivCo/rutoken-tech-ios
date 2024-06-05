@@ -134,28 +134,32 @@ struct DocumentProcessView: View {
     }
 
     private func bottomBar() -> some View {
-        VStack(spacing: 0) {
-            if let doc = store.state.bankSelectedDocumentState.metadata {
-                var completedActionText: String {
-                    switch doc.action {
-                    case .decrypt: "Расшифрован"
-                    case .encrypt: "Зашифрован"
-                    case .sign: "Подписан"
-                    case .verify: "Подпись проверена"
+        Group {
+            Divider()
+                .overlay(Color("IOSElementsTitleBarSeparator"))
+            Group {
+                if let doc = store.state.bankSelectedDocumentState.metadata {
+                    var completedActionText: String {
+                        switch doc.action {
+                        case .decrypt: "Расшифрован"
+                        case .encrypt: "Зашифрован"
+                        case .sign: "Подписан"
+                        case .verify: "Подпись проверена"
+                        }
+                    }
+                    if doc.inArchive {
+                        Text("\(completedActionText) \(doc.dateOfChange?.getString(as: "d MMMM yyyy 'г. в' HH:mm") ?? "")")
+                            .font(.footnote)
+                            .foregroundStyle(Color.RtColors.rtLabelSecondary)
+                    } else {
+                        actionButton(for: doc.action)
                     }
                 }
-                if doc.inArchive {
-                    Text("\(completedActionText) \(doc.dateOfChange?.getString(as: "d MMMM yyyy 'г. в' HH:mm") ?? "")")
-                        .font(.footnote)
-                        .foregroundStyle(Color.RtColors.rtLabelSecondary)
-                } else {
-                    actionButton(for: doc.action)
-                }
             }
+            .frame(height: 49)
+            .frame(maxWidth: .infinity)
+            .background(Color("IOSElementsTitleBarSurface"))
         }
-        .frame(height: 49)
-        .frame(maxWidth: .infinity)
-        .background(Color("IOSElementsTitleBarSurface"))
     }
 
     var body: some View {

@@ -36,7 +36,6 @@ struct PaymentListView: View {
             mainView
                 .frame(maxWidth: 642)
                 .padding(.horizontal, 20)
-            Spacer()
         }
         .background(Color.RtColors.rtSurfaceSecondary)
     }
@@ -156,7 +155,6 @@ struct PaymentListView: View {
                         }
                     }
                 }
-
             }
         }
     }
