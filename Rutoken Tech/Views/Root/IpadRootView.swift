@@ -44,6 +44,7 @@ struct IpadRootView: View {
             .background {
                 Color("IOSElementsTitleBarSurface")
             }
+            .ignoresSafeArea(.container, edges: [.top, .bottom])
         } detail: {
             if let selectedTab {
                 Group {
