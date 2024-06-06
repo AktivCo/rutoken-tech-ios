@@ -10,7 +10,7 @@ struct Pkcs11KeyPair {
     let publicKey: Pkcs11ObjectProtocol
     let privateKey: Pkcs11ObjectProtocol
 
-    var algorithm: KeyAlgorithm {
+    var algorithm: Pkcs11KeyAlgorithm {
         .gostR3410_2012_256
     }
 }

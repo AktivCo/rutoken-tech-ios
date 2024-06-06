@@ -84,7 +84,7 @@ class WrappedX509 {
         return String(hash)
     }
 
-    public var publicKeyAlgorithm: KeyAlgorithm? {
+    public var publicKeyAlgorithm: Pkcs11KeyAlgorithm? {
         guard let publicKey = WrappedPointer<OpaquePointer>({
             X509_get_pubkey(wrappedPointer.pointer)
         }, EVP_PKEY_free) else {

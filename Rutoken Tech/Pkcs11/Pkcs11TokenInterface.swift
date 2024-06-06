@@ -1,18 +1,18 @@
 //
-//  TokenType.swift
+//  Pkcs11TokenInterface.swift
 //  Rutoken Tech
 //
 //  Created by Никита Девятых on 22.11.2023.
 //
 
 
-enum TokenInterface {
+enum Pkcs11TokenInterface {
     case usb
     case nfc
     case sc
 }
 
-extension TokenInterface {
+extension Pkcs11TokenInterface {
     init?(_ value: CK_ULONG) {
         switch value {
         case CK_ULONG(INTERFACE_TYPE_NFC_TYPE_A), CK_ULONG(INTERFACE_TYPE_NFC_TYPE_B):
@@ -27,8 +27,8 @@ extension TokenInterface {
     }
 }
 
-extension Sequence where Iterator.Element == TokenInterface {
-    init(bits: CK_ULONG) where Self == [TokenInterface] {
+extension Sequence where Iterator.Element == Pkcs11TokenInterface {
+    init(bits: CK_ULONG) where Self == [Pkcs11TokenInterface] {
         self = [INTERFACE_TYPE_ISO,
                 INTERFACE_TYPE_NFC_TYPE_A,
                 INTERFACE_TYPE_NFC_TYPE_B,
@@ -36,7 +36,7 @@ extension Sequence where Iterator.Element == TokenInterface {
                    .compactMap({
                        let mask = CK_ULONG($0)
                        guard bits & mask == mask else { return nil }
-                       return TokenInterface(mask)
+                       return Pkcs11TokenInterface(mask)
                    })
     }
 }

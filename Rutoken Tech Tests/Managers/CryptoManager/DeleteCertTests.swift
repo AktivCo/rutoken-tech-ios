@@ -51,13 +51,13 @@ final class CryptoManagerDeleteCertTests: XCTestCase {
 
     func testDeleteCertError() async throws {
         token.deleteCertCallback = { _ in
-            throw TokenError.keyNotFound
+            throw Pkcs11TokenError.keyNotFound
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
                 try await manager.deleteCert(with: someId),
-                throws: TokenError.keyNotFound)
+                throws: Pkcs11TokenError.keyNotFound)
         }
     }
 }

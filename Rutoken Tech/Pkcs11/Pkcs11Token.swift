@@ -1,5 +1,5 @@
 //
-//  Token.swift
+//  Pkcs11Token.swift
 //  Rutoken Tech
 //
 //  Created by Никита Девятых on 21.11.2023.
@@ -8,13 +8,13 @@
 import Foundation
 
 
-protocol TokenProtocol {
+protocol Pkcs11TokenProtocol {
     var label: String { get }
     var serial: String { get }
-    var model: TokenModel { get }
+    var model: Pkcs11TokenModel { get }
 
-    var currentInterface: TokenInterface { get }
-    var supportedInterfaces: Set<TokenInterface> { get }
+    var currentInterface: Pkcs11TokenInterface { get }
+    var supportedInterfaces: Set<Pkcs11TokenInterface> { get }
 
     func login(with pin: String) throws
     func logout()
@@ -24,7 +24,7 @@ protocol TokenProtocol {
     func enumerateCerts() throws -> [Pkcs11ObjectProtocol]
     func enumerateCerts(by id: String) throws -> [Pkcs11ObjectProtocol]
 
-    func enumerateKeys(by algo: KeyAlgorithm) throws -> [Pkcs11KeyPair]
+    func enumerateKeys(by algo: Pkcs11KeyAlgorithm) throws -> [Pkcs11KeyPair]
     func enumerateKey(by id: String) throws -> Pkcs11KeyPair
 
     func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer>
@@ -34,7 +34,7 @@ protocol TokenProtocol {
     func deleteCert(with id: String) throws
 }
 
-enum TokenError: Error, Equatable {
+enum Pkcs11TokenError: Error, Equatable {
     case incorrectPin(attemptsLeft: UInt)
     case lockedPin
     case generalError
@@ -42,7 +42,7 @@ enum TokenError: Error, Equatable {
     case keyNotFound
 }
 
-class Token: TokenProtocol, Identifiable {
+class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
     private let slot: CK_SLOT_ID
     private let session: Pkcs11Session
     private let engine: RtEngineWrapperProtocol
@@ -51,9 +51,9 @@ class Token: TokenProtocol, Identifiable {
 
     var label: String = ""
     var serial: String = ""
-    var model: TokenModel = .rutoken2_2000
-    var currentInterface: TokenInterface = .usb
-    var supportedInterfaces: Set<TokenInterface> = .init()
+    var model: Pkcs11TokenModel = .rutoken2_2000
+    var currentInterface: Pkcs11TokenInterface = .usb
+    var supportedInterfaces: Set<Pkcs11TokenInterface> = .init()
 
     init?(with slot: CK_SLOT_ID, _ engine: RtEngineWrapperProtocol) {
         self.slot = slot
@@ -109,19 +109,19 @@ class Token: TokenProtocol, Identifiable {
 
     func enumerateCerts(by id: String) throws -> [Pkcs11ObjectProtocol] {
         var template = Pkcs11Object.getCertBaseTemplate()
-        template.append(BufferAttribute(type: .id, value: Data(id.utf8)))
+        template.append(Pkcs11BufferAttribute(type: .id, value: Data(id.utf8)))
         return try session.findObjects(template.map { $0.attribute })
     }
 
-    func enumerateKeys(by algo: KeyAlgorithm) throws -> [Pkcs11KeyPair] {
+    func enumerateKeys(by algo: Pkcs11KeyAlgorithm) throws -> [Pkcs11KeyPair] {
         // MARK: Prepare key templates
         var pubKeyTemplate = Pkcs11Object.getPubKeyBaseTemplate()
         var privateKeyTemplate = Pkcs11Object.getPrivKeyBaseTemplate()
 
         switch algo {
         case .gostR3410_2012_256:
-            pubKeyTemplate.append(ULongAttribute(type: .keyType, value: CKK_GOSTR3410))
-            privateKeyTemplate.append(ULongAttribute(type: .keyType, value: CKK_GOSTR3410))
+            pubKeyTemplate.append(Pkcs11ULongAttribute(type: .keyType, value: CKK_GOSTR3410))
+            privateKeyTemplate.append(Pkcs11ULongAttribute(type: .keyType, value: CKK_GOSTR3410))
         }
 
         // MARK: Find public keys
@@ -143,8 +143,8 @@ class Token: TokenProtocol, Identifiable {
         var pubKeyTemplate = Pkcs11Object.getPubKeyBaseTemplate()
         var privateKeyTemplate = Pkcs11Object.getPrivKeyBaseTemplate()
 
-        pubKeyTemplate.append(BufferAttribute(type: .id, value: Data(id.utf8)))
-        privateKeyTemplate.append(BufferAttribute(type: .id, value: Data(id.utf8)))
+        pubKeyTemplate.append(Pkcs11BufferAttribute(type: .id, value: Data(id.utf8)))
+        privateKeyTemplate.append(Pkcs11BufferAttribute(type: .id, value: Data(id.utf8)))
 
         // MARK: Find public keys
         let publicKeys = try session.findObjects(pubKeyTemplate.map { $0.attribute })
@@ -155,7 +155,7 @@ class Token: TokenProtocol, Identifiable {
         // MARK: There should be only one key of each type with same id
         guard publicKeys.count == 1,
               privateKeys.count == 1 else {
-            throw TokenError.generalError
+            throw Pkcs11TokenError.generalError
         }
 
         return Pkcs11KeyPair(publicKey: publicKeys[0], privateKey: privateKeys[0])
@@ -169,7 +169,7 @@ class Token: TokenProtocol, Identifiable {
                                  privateKeyHandle: keyPair.privateKey.handle,
                                  pubKeyHandle: keyPair.publicKey.handle)
         }, EVP_PKEY_free) else {
-            throw TokenError.generalError
+            throw Pkcs11TokenError.generalError
         }
         return wrappedKey
     }
@@ -183,29 +183,29 @@ class Token: TokenProtocol, Identifiable {
         var endDateData = Pkcs11Date(date: currentDate.addingTimeInterval(3 * 365 * 24 * 60 * 60))
         let idData = Data(id.utf8)
 
-        let publicKeyAttributes: [any PkcsAttribute] = [
-            ULongAttribute(type: .classObject, value: CKO_PUBLIC_KEY),
-            BufferAttribute(type: .id, value: idData),
-            ULongAttribute(type: .keyType, value: CKK_GOSTR3410),
-            BoolAttribute(type: .token, value: true),
-            BoolAttribute(type: .privateness, value: false),
-            BufferAttribute(type: .startDate, value: startDateData.data()),
-            BufferAttribute(type: .endDate, value: endDateData.data()),
-            BufferAttribute(type: .gostR3410Params, value: Data(PkcsConstants.gostR3410_2012_256_paramset_B)),
-            BufferAttribute(type: .gostR3411Params, value: Data(PkcsConstants.gostR3411_2012_256_params_oid))
+        let publicKeyAttributes: [any Pkcs11Attribute] = [
+            Pkcs11ULongAttribute(type: .classObject, value: CKO_PUBLIC_KEY),
+            Pkcs11BufferAttribute(type: .id, value: idData),
+            Pkcs11ULongAttribute(type: .keyType, value: CKK_GOSTR3410),
+            Pkcs11BoolAttribute(type: .token, value: true),
+            Pkcs11BoolAttribute(type: .privateness, value: false),
+            Pkcs11BufferAttribute(type: .startDate, value: startDateData.data()),
+            Pkcs11BufferAttribute(type: .endDate, value: endDateData.data()),
+            Pkcs11BufferAttribute(type: .gostR3410Params, value: Data(Pkcs11Constants.gostR3410_2012_256_paramset_B)),
+            Pkcs11BufferAttribute(type: .gostR3411Params, value: Data(Pkcs11Constants.gostR3411_2012_256_params_oid))
         ]
 
-        let privateKeyAttributes: [any PkcsAttribute] = [
-            ULongAttribute(type: .classObject, value: CKO_PRIVATE_KEY),
-            BufferAttribute(type: .id, value: idData),
-            ULongAttribute(type: .keyType, value: CKK_GOSTR3410),
-            BoolAttribute(type: .token, value: true),
-            BoolAttribute(type: .privateness, value: true),
-            BoolAttribute(type: .derive, value: true),
-            BufferAttribute(type: .startDate, value: startDateData.data()),
-            BufferAttribute(type: .endDate, value: endDateData.data()),
-            BufferAttribute(type: .gostR3410Params, value: Data(PkcsConstants.gostR3410_2012_256_paramset_B)),
-            BufferAttribute(type: .gostR3411Params, value: Data(PkcsConstants.gostR3411_2012_256_params_oid))
+        let privateKeyAttributes: [any Pkcs11Attribute] = [
+            Pkcs11ULongAttribute(type: .classObject, value: CKO_PRIVATE_KEY),
+            Pkcs11BufferAttribute(type: .id, value: idData),
+            Pkcs11ULongAttribute(type: .keyType, value: CKK_GOSTR3410),
+            Pkcs11BoolAttribute(type: .token, value: true),
+            Pkcs11BoolAttribute(type: .privateness, value: true),
+            Pkcs11BoolAttribute(type: .derive, value: true),
+            Pkcs11BufferAttribute(type: .startDate, value: startDateData.data()),
+            Pkcs11BufferAttribute(type: .endDate, value: endDateData.data()),
+            Pkcs11BufferAttribute(type: .gostR3410Params, value: Data(Pkcs11Constants.gostR3410_2012_256_paramset_B)),
+            Pkcs11BufferAttribute(type: .gostR3411Params, value: Data(Pkcs11Constants.gostR3411_2012_256_params_oid))
         ]
         var publicKeyTemplate = publicKeyAttributes.map { $0.attribute }
         var privateKeyTemplate = privateKeyAttributes.map { $0.attribute }
@@ -217,15 +217,15 @@ class Token: TokenProtocol, Identifiable {
                                    &privateKeyTemplate, CK_ULONG(privateKeyTemplate.count),
                                    &publicKey, &privateKey)
         guard rv == CKR_OK else {
-            throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
+            throw rv == CKR_DEVICE_REMOVED ? Pkcs11TokenError.tokenDisconnected: Pkcs11TokenError.generalError
         }
     }
 
     func deleteCert(with id: String) throws {
-        let template: [any PkcsAttribute] = [
-            ULongAttribute(type: .classObject, value: CKO_CERTIFICATE),
-            BufferAttribute(type: .id, value: Data(id.utf8)),
-            ULongAttribute(type: .certType, value: CKC_X_509)
+        let template: [any Pkcs11Attribute] = [
+            Pkcs11ULongAttribute(type: .classObject, value: CKO_CERTIFICATE),
+            Pkcs11BufferAttribute(type: .id, value: Data(id.utf8)),
+            Pkcs11ULongAttribute(type: .certType, value: CKC_X_509)
         ]
         try deleteObjects(with: template)
     }
@@ -234,21 +234,21 @@ class Token: TokenProtocol, Identifiable {
         _ = try enumerateKey(by: id)
 
         let idData = Data(id.utf8)
-        let certAttributes: [any PkcsAttribute] = [
-            BufferAttribute(type: .value, value: cert),
-            ULongAttribute(type: .classObject, value: CKO_CERTIFICATE),
-            BufferAttribute(type: .id, value: idData),
-            BoolAttribute(type: .token, value: true),
-            BoolAttribute(type: .privateness, value: false),
-            ULongAttribute(type: .certType, value: CKC_X_509),
-            ULongAttribute(type: .certCategory, value: PkcsConstants.CK_CERTIFICATE_CATEGORY_TOKEN_USER)
+        let certAttributes: [any Pkcs11Attribute] = [
+            Pkcs11BufferAttribute(type: .value, value: cert),
+            Pkcs11ULongAttribute(type: .classObject, value: CKO_CERTIFICATE),
+            Pkcs11BufferAttribute(type: .id, value: idData),
+            Pkcs11BoolAttribute(type: .token, value: true),
+            Pkcs11BoolAttribute(type: .privateness, value: false),
+            Pkcs11ULongAttribute(type: .certType, value: CKC_X_509),
+            Pkcs11ULongAttribute(type: .certCategory, value: Pkcs11Constants.CK_CERTIFICATE_CATEGORY_TOKEN_USER)
         ]
         var certTemplate = certAttributes.map { $0.attribute }
 
         var certHandle = CK_OBJECT_HANDLE()
         let rv = C_CreateObject(session.handle, &certTemplate, CK_ULONG(certTemplate.count), &certHandle)
         guard rv == CKR_OK else {
-            throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
+            throw rv == CKR_DEVICE_REMOVED ? Pkcs11TokenError.tokenDisconnected: Pkcs11TokenError.generalError
         }
     }
 
@@ -261,31 +261,31 @@ class Token: TokenProtocol, Identifiable {
             let rv = C_GetSlotInfo(slot, &slotInfo)
             guard rv == CKR_OK,
                   slotInfo.flags & UInt(CKF_TOKEN_PRESENT) != 0 else {
-                throw TokenError.tokenDisconnected
+                throw Pkcs11TokenError.tokenDisconnected
             }
             throw error
         }
     }
 
-    private func getTokenInterfaces() throws -> (TokenInterface, Set<TokenInterface>) {
+    private func getTokenInterfaces() throws -> (Pkcs11TokenInterface, Set<Pkcs11TokenInterface>) {
         let objectAttributes = [
-            ULongAttribute(type: .classObject, value: CKO_HW_FEATURE),
-            ULongAttribute(type: .hwFeatureType, value: CKH_VENDOR_TOKEN_INFO)
+            Pkcs11ULongAttribute(type: .classObject, value: CKO_HW_FEATURE),
+            Pkcs11ULongAttribute(type: .hwFeatureType, value: CKH_VENDOR_TOKEN_INFO)
         ]
 
         guard let hwFeature = try? session.findObjects(objectAttributes.map { $0.attribute }).first else {
-            throw TokenError.generalError
+            throw Pkcs11TokenError.generalError
         }
 
         let currentInterfaceBits = try hwFeature.getValue(forAttr: .vendorCurrentInterface)
         let supportedInterfacesBits = try hwFeature.getValue(forAttr: .vendorSupportedInterface)
 
-        guard let currentInterface = TokenInterface(currentInterfaceBits.withUnsafeBytes { rawBuffer in
+        guard let currentInterface = Pkcs11TokenInterface(currentInterfaceBits.withUnsafeBytes { rawBuffer in
             rawBuffer.load(as: CK_ULONG.self)
         }) else {
-            throw TokenError.generalError
+            throw Pkcs11TokenError.generalError
         }
-        return (currentInterface, Set([TokenInterface](bits: supportedInterfacesBits.withUnsafeBytes { rawBuffer in
+        return (currentInterface, Set([Pkcs11TokenInterface](bits: supportedInterfacesBits.withUnsafeBytes { rawBuffer in
             rawBuffer.load(as: CK_ULONG.self)
         })))
     }
@@ -294,13 +294,13 @@ class Token: TokenProtocol, Identifiable {
         // MARK: Get serial number
         guard let hexSerial = String.getFrom(tokenInfo.serialNumber),
               let decimalSerial = Int(hexSerial.trimmingCharacters(in: .whitespacesAndNewlines), radix: 16) else {
-            throw TokenError.generalError
+            throw Pkcs11TokenError.generalError
         }
         serial = String(format: "%0.10d", decimalSerial)
 
         // MARK: Get label
         guard let label = String.getFrom(tokenInfo.label)?.trimmingCharacters(in: .whitespacesAndNewlines) else {
-            throw TokenError.generalError
+            throw Pkcs11TokenError.generalError
         }
         self.label = label
 
@@ -310,24 +310,24 @@ class Token: TokenProtocol, Identifiable {
             model = .rutokenSelfIdentify(modelName)
         } else {
             guard let model = computeTokenModel() else {
-                throw TokenError.generalError
+                throw Pkcs11TokenError.generalError
             }
             self.model = model
         }
     }
 
-    private func deleteObjects(with template: [any PkcsAttribute]) throws {
+    private func deleteObjects(with template: [any Pkcs11Attribute]) throws {
         let objects = try session.findObjects(template.map { $0.attribute })
 
         for obj in objects {
             let rv = C_DestroyObject(session.handle, obj.handle)
             guard rv == CKR_OK else {
-                throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
+                throw rv == CKR_DEVICE_REMOVED ? Pkcs11TokenError.tokenDisconnected: Pkcs11TokenError.generalError
             }
         }
     }
 
-    private func computeTokenModel() -> TokenModel? {
+    private func computeTokenModel() -> Pkcs11TokenModel? {
         let AA = tokenInfo.hardwareVersion.major
         let BB = tokenInfo.hardwareVersion.minor
         let CC = tokenInfo.firmwareVersion.major
@@ -386,13 +386,13 @@ class Token: TokenProtocol, Identifiable {
 
     private func getTokenModelFromToken() throws -> String {
         let objectAttributes = [
-            ULongAttribute(type: .classObject, value: CKO_HW_FEATURE),
-            ULongAttribute(type: .hwFeatureType, value: CKH_VENDOR_TOKEN_INFO)
+            Pkcs11ULongAttribute(type: .classObject, value: CKO_HW_FEATURE),
+            Pkcs11ULongAttribute(type: .hwFeatureType, value: CKH_VENDOR_TOKEN_INFO)
         ]
 
         guard let object = try session.findObjects(objectAttributes.map { $0.attribute }).first,
               let result = try String(data: object.getValue(forAttr: .vendorModelName), encoding: .utf8) else {
-            throw TokenError.generalError
+            throw Pkcs11TokenError.generalError
         }
         return result
     }

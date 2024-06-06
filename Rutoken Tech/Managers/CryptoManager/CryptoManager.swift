@@ -67,8 +67,8 @@ class CryptoManager: CryptoManagerProtocol {
     private let fileHelper: FileHelperProtocol
 
     private var cancellable = [UUID: AnyCancellable]()
-    @Atomic var tokens: [TokenProtocol] = []
-    private var connectedToken: TokenProtocol?
+    @Atomic var tokens: [Pkcs11TokenProtocol] = []
+    private var connectedToken: Pkcs11TokenProtocol?
 
     private var tokenStatePublisher = PassthroughSubject<TokenInteractionState, Never>()
 
@@ -307,11 +307,11 @@ class CryptoManager: CryptoManagerProtocol {
             try await callback()
         } catch NfcError.cancelledByUser, NfcError.timeout {
             throw CryptoManagerError.nfcStopped
-        } catch TokenError.tokenDisconnected {
+        } catch Pkcs11TokenError.tokenDisconnected {
             throw CryptoManagerError.connectionLost
-        } catch TokenError.incorrectPin(let attemptsLeft) {
+        } catch Pkcs11TokenError.incorrectPin(let attemptsLeft) {
             throw CryptoManagerError.incorrectPin(attemptsLeft)
-        } catch TokenError.lockedPin {
+        } catch Pkcs11TokenError.lockedPin {
             throw CryptoManagerError.incorrectPin(0)
         } catch let error as CryptoManagerError {
             throw error
@@ -320,7 +320,7 @@ class CryptoManager: CryptoManagerProtocol {
         }
     }
 
-    private func waitForToken(with type: ConnectionType) async throws -> TokenProtocol {
+    private func waitForToken(with type: ConnectionType) async throws -> Pkcs11TokenProtocol {
         try await withCheckedThrowingContinuation { continuation in
             switch type {
             case .nfc:

@@ -1,5 +1,5 @@
 //
-//  PkcsAttribute.swift
+//  Pkcs11Attribute.swift
 //  Rutoken Tech
 //
 //  Created by Vova Badyaev on 21.12.2023.
@@ -8,17 +8,17 @@
 import Foundation
 
 
-enum PkcsConstants {
+enum Pkcs11Constants {
     static let gostR3410_2012_256_paramset_B: [CK_BYTE] = [ 0x06, 0x09, 0x2A, 0x85, 0x03, 0x07, 0x01, 0x02, 0x01, 0x01, 0x02 ]
     static let gostR3411_2012_256_params_oid: [CK_BYTE] = [ 0x06, 0x08, 0x2a, 0x85, 0x03, 0x07, 0x01, 0x01, 0x02, 0x02 ]
     static let CK_CERTIFICATE_CATEGORY_TOKEN_USER: CK_ULONG = 1
 }
 
-protocol PkcsAttribute {
+protocol Pkcs11Attribute {
     var attribute: CK_ATTRIBUTE { get }
 }
 
-class BoolAttribute: PkcsAttribute {
+class Pkcs11BoolAttribute: Pkcs11Attribute {
     enum AttrType {
         case token
         case derive
@@ -58,7 +58,7 @@ class BoolAttribute: PkcsAttribute {
     }
 }
 
-class ULongAttribute: PkcsAttribute {
+class Pkcs11ULongAttribute: Pkcs11Attribute {
     enum AttrType {
         case classObject
         case keyType
@@ -102,7 +102,7 @@ class ULongAttribute: PkcsAttribute {
     }
 }
 
-class BufferAttribute: PkcsAttribute {
+class Pkcs11BufferAttribute: Pkcs11Attribute {
     enum AttrType {
         case id
         case value

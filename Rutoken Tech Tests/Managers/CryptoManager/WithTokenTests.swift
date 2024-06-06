@@ -109,7 +109,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         pkcs11Helper.tokenPublisher.send([token])
 
         token.loginCallback = { _ in
-            throw TokenError.tokenDisconnected
+            throw Pkcs11TokenError.tokenDisconnected
         }
 
         await assertErrorAsync(
@@ -150,7 +150,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         pkcs11Helper.tokenPublisher.send([token])
 
         token.loginCallback = { _ in
-            throw TokenError.incorrectPin(attemptsLeft: 2)
+            throw Pkcs11TokenError.incorrectPin(attemptsLeft: 2)
         }
         token.logoutCallback = {
             exp.fulfill()
@@ -180,7 +180,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
 
         await assertErrorAsync(
             try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "123456") {
-                throw TokenError.keyNotFound
+                throw Pkcs11TokenError.keyNotFound
             },
             throws: CryptoManagerError.unknown)
     }

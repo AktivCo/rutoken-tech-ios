@@ -17,9 +17,9 @@ class Pkcs11HelperMock: Pkcs11HelperProtocol {
 
     var startMonitoringCallback: () throws -> Void = {}
 
-    var tokens: AnyPublisher<[TokenProtocol], Never> {
+    var tokens: AnyPublisher<[Pkcs11TokenProtocol], Never> {
         tokenPublisher.eraseToAnyPublisher()
     }
 
-    var tokenPublisher = CurrentValueSubject<[TokenProtocol], Never>([])
+    var tokenPublisher = CurrentValueSubject<[Pkcs11TokenProtocol], Never>([])
 }

@@ -1,11 +1,11 @@
 //
-//  TokenModel.swift
+//  Pkcs11TokenModel.swift
 //  Rutoken Tech
 //
 //  Created by Никита Девятых on 21.11.2023.
 //
 
-enum TokenModel: Equatable {
+enum Pkcs11TokenModel: Equatable {
     case rutoken2_2000
     case rutoken2_2010
     case rutoken2_2100

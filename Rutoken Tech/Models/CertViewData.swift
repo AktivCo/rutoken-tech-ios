@@ -33,7 +33,7 @@ struct CertViewData: Identifiable {
     let name: String
     let jobTitle: String
     let companyName: String
-    let keyAlgo: KeyAlgorithm
+    let keyAlgo: Pkcs11KeyAlgorithm
     let expiryDate: String
     let causeOfInvalid: CertInvalidReason?
 

@@ -34,11 +34,11 @@ class Pkcs11Session {
         guard rv == CKR_OK || rv == CKR_USER_ALREADY_LOGGED_IN else {
             switch rv {
             case CKR_PIN_INCORRECT:
-                throw TokenError.incorrectPin(attemptsLeft: try getPinAttempts())
+                throw Pkcs11TokenError.incorrectPin(attemptsLeft: try getPinAttempts())
             case CKR_PIN_LOCKED:
-                throw TokenError.lockedPin
+                throw Pkcs11TokenError.lockedPin
             default:
-                throw TokenError.generalError
+                throw Pkcs11TokenError.generalError
             }
         }
     }
@@ -51,7 +51,7 @@ class Pkcs11Session {
         var template = attributes
         var rv = C_FindObjectsInit(handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
-            throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
+            throw rv == CKR_DEVICE_REMOVED ? Pkcs11TokenError.tokenDisconnected: Pkcs11TokenError.generalError
         }
         defer {
             C_FindObjectsFinal(handle)
@@ -66,7 +66,7 @@ class Pkcs11Session {
 
             rv = C_FindObjects(handle, &handles, maxCount, &count)
             guard rv == CKR_OK else {
-                throw rv == CKR_DEVICE_REMOVED ? TokenError.tokenDisconnected: TokenError.generalError
+                throw rv == CKR_DEVICE_REMOVED ? Pkcs11TokenError.tokenDisconnected: Pkcs11TokenError.generalError
             }
 
             objects += handles.prefix(Int(count))
@@ -80,7 +80,7 @@ class Pkcs11Session {
         exInfo.ulSizeofThisStructure = UInt(MemoryLayout.size(ofValue: exInfo))
         let rv = C_EX_GetTokenInfoExtended(slot, &exInfo)
         guard rv == CKR_OK else {
-            throw TokenError.generalError
+            throw Pkcs11TokenError.generalError
         }
 
         return exInfo.ulUserRetryCountLeft

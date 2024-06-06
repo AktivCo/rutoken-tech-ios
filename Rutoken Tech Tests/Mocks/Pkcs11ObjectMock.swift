@@ -13,11 +13,11 @@ import Foundation
 struct Pkcs11ObjectMock: Pkcs11ObjectProtocol {
     let handle = CK_OBJECT_HANDLE(NULL_PTR)
 
-    var bufferValues: [BufferAttribute.AttrType: Result<Data, Error>] = [:]
-    var uLongValues: [ULongAttribute.AttrType: Result<CK_ULONG, Error>] = [:]
-    var boolValues: [BoolAttribute.AttrType: Result<Bool, Error>] = [:]
+    var bufferValues: [Pkcs11BufferAttribute.AttrType: Result<Data, Error>] = [:]
+    var uLongValues: [Pkcs11ULongAttribute.AttrType: Result<CK_ULONG, Error>] = [:]
+    var boolValues: [Pkcs11BoolAttribute.AttrType: Result<Bool, Error>] = [:]
 
-    func getValue(forAttr attrType: BufferAttribute.AttrType) throws -> Data {
+    func getValue(forAttr attrType: Pkcs11BufferAttribute.AttrType) throws -> Data {
         guard let value = bufferValues[attrType] else {
             return Data()
         }
@@ -30,7 +30,7 @@ struct Pkcs11ObjectMock: Pkcs11ObjectProtocol {
         }
     }
 
-    func getValue(forAttr attrType: ULongAttribute.AttrType) throws -> CK_ULONG {
+    func getValue(forAttr attrType: Pkcs11ULongAttribute.AttrType) throws -> CK_ULONG {
         guard let value = uLongValues[attrType] else {
             return CK_ULONG()
         }
@@ -43,7 +43,7 @@ struct Pkcs11ObjectMock: Pkcs11ObjectProtocol {
         }
     }
 
-    func getValue(forAttr attrType: BoolAttribute.AttrType) throws -> Bool {
+    func getValue(forAttr attrType: Pkcs11BoolAttribute.AttrType) throws -> Bool {
         guard let value = boolValues[attrType] else {
             return Bool()
         }
@@ -56,15 +56,15 @@ struct Pkcs11ObjectMock: Pkcs11ObjectProtocol {
         }
     }
 
-    mutating func setValue(forAttr attrType: BufferAttribute.AttrType, value: Result<Data, Error>) {
+    mutating func setValue(forAttr attrType: Pkcs11BufferAttribute.AttrType, value: Result<Data, Error>) {
         bufferValues[attrType] = value
     }
 
-    mutating func setValue(forAttr attrType: ULongAttribute.AttrType, value: Result<CK_ULONG, Error>) {
+    mutating func setValue(forAttr attrType: Pkcs11ULongAttribute.AttrType, value: Result<CK_ULONG, Error>) {
         uLongValues[attrType] = value
     }
 
-    mutating func setValue(forAttr attrType: BoolAttribute.AttrType, value: Result<Bool, Error>) {
+    mutating func setValue(forAttr attrType: Pkcs11BoolAttribute.AttrType, value: Result<Bool, Error>) {
         boolValues[attrType] = value
     }
 }

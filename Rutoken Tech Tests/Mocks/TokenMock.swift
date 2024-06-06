@@ -10,18 +10,18 @@ import Foundation
 @testable import Rutoken_Tech
 
 
-class TokenMock: TokenProtocol {
+class TokenMock: Pkcs11TokenProtocol {
     let label: String
     let serial: String
-    let model: TokenModel
-    let currentInterface: TokenInterface
-    let supportedInterfaces: Set<TokenInterface>
+    let model: Pkcs11TokenModel
+    let currentInterface: Pkcs11TokenInterface
+    let supportedInterfaces: Set<Pkcs11TokenInterface>
 
     init(label: String = "",
          serial: String = "",
-         model: TokenModel = .rutoken3Nfc_3100,
-         currentInterface: TokenInterface = .nfc,
-         supportedInterfaces: Set<TokenInterface> = [.nfc]) {
+         model: Pkcs11TokenModel = .rutoken3Nfc_3100,
+         currentInterface: Pkcs11TokenInterface = .nfc,
+         supportedInterfaces: Set<Pkcs11TokenInterface> = [.nfc]) {
         self.label = label
         self.serial = serial
         self.model = model
@@ -54,11 +54,11 @@ class TokenMock: TokenProtocol {
     var enumerateCertsWithIdCallback: (_ id: String) throws -> [Pkcs11ObjectProtocol] = { _ in [] }
 
     func enumerateKey(by id: String) throws -> Pkcs11KeyPair { try enumerateKeyWithIdCallback(id) }
-    func enumerateKeys(by algo: KeyAlgorithm) throws -> [Pkcs11KeyPair] { try enumerateKeysWithAlgoCallback(algo) }
+    func enumerateKeys(by algo: Pkcs11KeyAlgorithm) throws -> [Pkcs11KeyPair] { try enumerateKeysWithAlgoCallback(algo) }
 
     var enumerateKeyWithIdCallback: (String) throws -> Pkcs11KeyPair = { _ in Pkcs11KeyPair(publicKey: Pkcs11ObjectMock(),
                                                                                              privateKey: Pkcs11ObjectMock()) }
-    var enumerateKeysWithAlgoCallback: (KeyAlgorithm) throws -> [Pkcs11KeyPair] = { _ in [] }
+    var enumerateKeysWithAlgoCallback: (Pkcs11KeyAlgorithm) throws -> [Pkcs11KeyPair] = { _ in [] }
 
     func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer> {
         try getWrappedKeyCallback(id)

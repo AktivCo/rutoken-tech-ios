@@ -10,5 +10,5 @@ import Foundation
 
 struct KeyModel: Equatable {
     let ckaId: String
-    let type: KeyAlgorithm
+    let type: Pkcs11KeyAlgorithm
 }

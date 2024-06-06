@@ -16,7 +16,7 @@ struct CertMetaData: Equatable {
     let name: String
     let jobTitle: String
     let companyName: String
-    let keyAlgo: KeyAlgorithm
+    let keyAlgo: Pkcs11KeyAlgorithm
     let startDate: Date
     let expiryDate: Date
 

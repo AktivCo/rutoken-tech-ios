@@ -10,7 +10,7 @@ import Foundation
 
 
 protocol Pkcs11HelperProtocol {
-    var tokens: AnyPublisher<[TokenProtocol], Never> { get }
+    var tokens: AnyPublisher<[Pkcs11TokenProtocol], Never> { get }
     func startMonitoring() throws
 }
 
@@ -19,9 +19,9 @@ enum Pkcs11Error: Error {
 }
 
 class Pkcs11Helper: Pkcs11HelperProtocol {
-    private var availableTokens: [CK_SLOT_ID: Token] = [:]
-    private var tokenPublisher = CurrentValueSubject<[TokenProtocol], Never>([])
-    public var tokens: AnyPublisher<[TokenProtocol], Never> {
+    private var availableTokens: [CK_SLOT_ID: Pkcs11Token] = [:]
+    private var tokenPublisher = CurrentValueSubject<[Pkcs11TokenProtocol], Never>([])
+    public var tokens: AnyPublisher<[Pkcs11TokenProtocol], Never> {
         tokenPublisher.eraseToAnyPublisher()
     }
 
@@ -57,7 +57,7 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
 
                 availableTokens.removeValue(forKey: slot)
 
-                if isPresent(slot), let token = Token(with: slot, engine) {
+                if isPresent(slot), let token = Pkcs11Token(with: slot, engine) {
                     availableTokens[slot] = token
                 }
                 tokenPublisher.send(Array(availableTokens.values))
@@ -70,7 +70,7 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
     }
 
     // MARK: - Private API
-    private func getTokens() throws -> [CK_SLOT_ID: Token] {
+    private func getTokens() throws -> [CK_SLOT_ID: Pkcs11Token] {
         var ctr: UInt = 0
         var rv = C_GetSlotList(CK_BBOOL(CK_TRUE), nil, &ctr)
         guard rv == CKR_OK else {
@@ -87,9 +87,9 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
             throw Pkcs11Error.unknownError
         }
 
-        return slots.reduce([CK_SLOT_ID: Token]()) { (dict, slot) -> [CK_SLOT_ID: Token] in
+        return slots.reduce([CK_SLOT_ID: Pkcs11Token]()) { (dict, slot) -> [CK_SLOT_ID: Pkcs11Token] in
             var dict = dict
-            dict[slot] = Token(with: slot, engine)
+            dict[slot] = Pkcs11Token(with: slot, engine)
             return dict
         }
     }
