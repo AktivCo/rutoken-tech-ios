@@ -13,6 +13,7 @@
 		4413CFB22B592EDE000987A8 /* String+hasCyrillic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4413CFB12B592EDE000987A8 /* String+hasCyrillic.swift */; };
 		4413CFB42B592F13000987A8 /* String+isNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4413CFB32B592F13000987A8 /* String+isNumber.swift */; };
 		4413CFB82B597206000987A8 /* OpenSslHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4413CFB72B597206000987A8 /* OpenSslHelperMock.swift */; };
+		44146BCF2C11939F00283586 /* OnDecryptCms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44146BCE2C11939F00283586 /* OnDecryptCms.swift */; };
 		441658472B5988F000225948 /* WrappedPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 441658462B5988F000225948 /* WrappedPointer.swift */; };
 		4416A2772B70F9A500645800 /* View+InfoListStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416A2762B70F9A500645800 /* View+InfoListStyle.swift */; };
 		4416A27A2B70F9F600645800 /* View+createLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416A2792B70F9F600645800 /* View+createLabel.swift */; };
@@ -184,6 +185,7 @@
 		4413CFB12B592EDE000987A8 /* String+hasCyrillic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+hasCyrillic.swift"; sourceTree = "<group>"; };
 		4413CFB32B592F13000987A8 /* String+isNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+isNumber.swift"; sourceTree = "<group>"; };
 		4413CFB72B597206000987A8 /* OpenSslHelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSslHelperMock.swift; sourceTree = "<group>"; };
+		44146BCE2C11939F00283586 /* OnDecryptCms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDecryptCms.swift; sourceTree = "<group>"; };
 		441658462B5988F000225948 /* WrappedPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedPointer.swift; sourceTree = "<group>"; };
 		4416A2762B70F9A500645800 /* View+InfoListStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+InfoListStyle.swift"; sourceTree = "<group>"; };
 		4416A2792B70F9F600645800 /* View+createLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+createLabel.swift"; sourceTree = "<group>"; };
@@ -450,6 +452,7 @@
 				D4871D6C2BC81036008B027C /* OnSignDocument.swift */,
 				44CBDBE72BCD777E00F28E61 /* OnCmsVerify.swift */,
 				44F55C942BF21B0D007F441C /* OnEncryptDocument.swift */,
+				44146BCE2C11939F00283586 /* OnDecryptCms.swift */,
 			);
 			path = Bank;
 			sourceTree = "<group>";
@@ -1069,6 +1072,7 @@
 				D499FDBD2BD294160053FB28 /* OnPrepareDocuments.swift in Sources */,
 				D44833A22B8C78A800A9B7A2 /* UserManager.swift in Sources */,
 				D4FEB5C72B62675400D3BAD2 /* ScrollViewOffset.swift in Sources */,
+				44146BCF2C11939F00283586 /* OnDecryptCms.swift in Sources */,
 				D49953C52B58343200E62B5B /* CaGenerateCertState.swift in Sources */,
 				44CBDBE82BCD777E00F28E61 /* OnCmsVerify.swift in Sources */,
 				7D28BD842B3083460079AE1C /* CaGenerateKeyPairView.swift in Sources */,

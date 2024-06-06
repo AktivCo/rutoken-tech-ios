@@ -107,6 +107,8 @@ struct AppReducer: Reducer {
             break
         case .encryptDocument:
             break
+        case .decryptCms:
+            break
         case .selectDocument:
             break
         case let .updateCurrentDoc(metadata, content):

@@ -56,6 +56,7 @@ struct RutokenTechApp: App {
                 OnSignDocument(cryptoManager: cryptoManager, documentManager: documentManager),
                 OnCmsVerify(cryptoManager: cryptoManager, documentManager: documentManager),
                 OnEncryptDocument(cryptoManager: cryptoManager, documentManager: documentManager),
+                OnDecryptCms(cryptoManager: cryptoManager, documentManager: documentManager),
                 OnSelectDocument(documentManager: documentManager),
                 // About
                 OnHandleOpenLink()

@@ -14,6 +14,7 @@ enum AppAlert {
     case keyGenerated
     case documentSigned
     case documentEncrypted
+    case documentDecrypted
     // MARK: Errors
     case unknownDevice
     case connectionLost
@@ -42,6 +43,9 @@ enum AppAlert {
                          buttons: [.init(.regular("ОК"))])
         case .documentEncrypted:
             return .init(title: .titleOnly("Документ зашифрован"),
+                         buttons: [.init(.regular("OK"))])
+        case .documentDecrypted:
+            return .init(title: .titleOnly("Документ расшифрован"),
                          buttons: [.init(.regular("OK"))])
         case .unknownDevice:
             return .init(title: .titleOnly("Устройство не распознано"),

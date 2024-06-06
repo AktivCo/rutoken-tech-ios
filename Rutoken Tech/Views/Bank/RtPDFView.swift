@@ -10,7 +10,7 @@ import SwiftUI
 
 
 struct RtPDFView: UIViewRepresentable {
-    let pdf: PDFDocument
+    let data: Data
 
     func makeUIView(context: UIViewRepresentableContext<RtPDFView>) -> PDFView {
         let pdfView = PDFView()
@@ -18,10 +18,12 @@ struct RtPDFView: UIViewRepresentable {
                                                 bottom: 0, right: UIDevice.isPhone ? 29 : 49)
         pdfView.pageShadowsEnabled = false
         pdfView.autoScales = true
-        pdfView.document = pdf
+        pdfView.document = PDFDocument(data: data) ?? PDFDocument()
         pdfView.backgroundColor = UIColor(Color.RtColors.rtSurfaceSecondary)
         return pdfView
     }
 
-    func updateUIView(_ uiView: PDFView, context: UIViewRepresentableContext<RtPDFView>) { }
+    func updateUIView(_ uiView: PDFView, context: UIViewRepresentableContext<RtPDFView>) {
+        uiView.document = PDFDocument(data: data) ?? PDFDocument()
+    }
 }

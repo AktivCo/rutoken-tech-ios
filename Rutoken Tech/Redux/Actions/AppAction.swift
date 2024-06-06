@@ -66,6 +66,7 @@ enum AppAction {
     case signDocument(tokenType: RtTokenType, serial: String, pin: String, documentName: String, certId: String)
     case cmsVerify(documentName: String)
     case encryptDocument(documentName: String)
+    case decryptCms(tokenType: RtTokenType, serial: String, pin: String, documentName: String, certId: String)
     case selectDocument(BankDocument)
     case updateCurrentDoc(BankDocument?, BankFileContent?)
     case updateUrlsForShare([URL])

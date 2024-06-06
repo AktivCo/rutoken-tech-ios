@@ -83,6 +83,23 @@ struct DocumentProcessView: View {
         }
     }
 
+    private func showAuthSheet(_ callback: @escaping (RtTokenType, String, String, String, String) -> Void) {
+        guard store.state.bankSelectedDocumentState.metadata?.inArchive == false,
+              let tokenSerial = store.state.bankSelectUserState.selectedUser?.tokenSerial,
+              let certId = store.state.bankSelectUserState.selectedUser?.keyId,
+              let fileName = store.state.bankSelectedDocumentState.metadata?.name else {
+            store.send(.showAlert(.unknownError))
+            return
+        }
+
+        store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
+            RtAuthView(defaultPinGetter: { store.send(.getPin(tokenSerial)) },
+                       onSubmit: { tokenType, pin in callback(tokenType, tokenSerial, pin, fileName, certId) },
+                       onCancel: { store.send(.hideSheet) })
+            .environmentObject(store.state.routingState.pinInputModel)
+        }()))
+    }
+
     private func actionButton(for action: BankDocument.ActionType) -> some View {
         var title: String {
             switch action {
@@ -98,27 +115,18 @@ struct DocumentProcessView: View {
                 return
             }
             switch document.action {
-            case .decrypt: return
+            case .decrypt:
+                showAuthSheet { tokenType, tokenSerial, pin, fileName, certId in
+                    store.send(.decryptCms(tokenType: tokenType, serial: tokenSerial, pin: pin,
+                                           documentName: fileName, certId: certId))
+                }
             case .encrypt:
                 store.send(.encryptDocument(documentName: document.name))
             case .sign:
-                guard store.state.bankSelectedDocumentState.metadata?.inArchive == false,
-                      let tokenSerial = store.state.bankSelectUserState.selectedUser?.tokenSerial,
-                      let certId = store.state.bankSelectUserState.selectedUser?.keyId,
-                      let fileName = store.state.bankSelectedDocumentState.metadata?.name else {
-                    store.send(.showAlert(.unknownError))
-                    return
+                showAuthSheet { tokenType, tokenSerial, pin, fileName, certId in
+                    store.send(.signDocument(tokenType: tokenType, serial: tokenSerial, pin: pin,
+                                           documentName: fileName, certId: certId))
                 }
-                store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
-                    RtAuthView(defaultPinGetter: { store.send(.getPin(tokenSerial)) },
-                               onSubmit: { tokenType, pin in
-                        store.send(.signDocument(tokenType: tokenType, serial: tokenSerial, pin: pin,
-                                                 documentName: fileName,
-                                                 certId: certId))
-                    },
-                               onCancel: { store.send(.hideSheet) })
-                    .environmentObject(store.state.routingState.pinInputModel)
-                }()))
             case .verify:
                 store.send(.cmsVerify(documentName: document.name))
             }
@@ -165,26 +173,7 @@ struct DocumentProcessView: View {
 
             switch store.state.bankSelectedDocumentState.docContent {
             case .singleFile(let content), .fileWithDetachedCMS(file: let content, cms: _):
-                if !isRtPDFViewShown {
-                    VStack {
-                        Text(content.base64EncodedString())
-                            .font(.caption)
-                            .padding(12)
-                            .frame(width: UIDevice.isPhone ? 350 : 437,
-                                   height: UIDevice.isPhone ? 495 : 618, alignment: .top)
-                            .background(Color.RtColors.rtColorsOnPrimary)
-                            .foregroundColor(Color("alwaysBlack"))
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color("otherSeparator"), lineWidth: 0.5)
-                            )
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color.RtColors.rtSurfaceSecondary)
-                } else {
-                    RtPDFView(pdf: PDFDocument(data: content) ?? PDFDocument())
-                }
+                displayContent(isRtPDFViewShown ? .pdf(content) : .text(content.base64EncodedString()))
             default:
                 Spacer()
             }
@@ -192,6 +181,36 @@ struct DocumentProcessView: View {
             bottomBar()
         }
         .ignoresSafeArea(.keyboard)
+    }
+
+    private enum ContentType {
+        case text(String)
+        case pdf(Data)
+    }
+
+    @ViewBuilder
+    private func displayContent(_ content: ContentType) -> some View {
+        switch content {
+        case .pdf(let data):
+            RtPDFView(data: data)
+        case .text(let text):
+            VStack {
+                Text(text)
+                    .font(.caption)
+                    .padding(12)
+                    .frame(width: UIDevice.isPhone ? 350 : 437,
+                           height: UIDevice.isPhone ? 495 : 618, alignment: .top)
+                    .background(Color.RtColors.rtColorsOnPrimary)
+                    .foregroundColor(Color("alwaysBlack"))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color("otherSeparator"), lineWidth: 0.5)
+                    )
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.RtColors.rtSurfaceSecondary)
+        }
     }
 
     private var isRtPDFViewShown: Bool {
