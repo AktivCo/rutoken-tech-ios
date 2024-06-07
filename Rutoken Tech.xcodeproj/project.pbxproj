@@ -384,7 +384,7 @@
 			path = CryptoManager;
 			sourceTree = "<group>";
 		};
-		44416B2D2B552CFC00EC5F66 /* OpenSSL */ = {
+		44416B2D2B552CFC00EC5F66 /* OpenSsl */ = {
 			isa = PBXGroup;
 			children = (
 				44416B2B2B552CCE00EC5F66 /* OpenSslHelper.swift */,
@@ -392,7 +392,7 @@
 				44E6FCA22BA97AB1001D35A5 /* OpenSslUtils.swift */,
 				442E40A12BDAA190004DE6A0 /* CertInfo.swift */,
 			);
-			path = OpenSSL;
+			path = OpenSsl;
 			sourceTree = "<group>";
 		};
 		44435FE32B5EACFC0072A1DD /* Engine */ = {
@@ -401,14 +401,6 @@
 				44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */,
 			);
 			path = Engine;
-			sourceTree = "<group>";
-		};
-		446F71022B624F7A00684E0D /* FileHelper */ = {
-			isa = PBXGroup;
-			children = (
-				44A415032B60F67600D78653 /* FileHelper.swift */,
-			);
-			path = FileHelper;
 			sourceTree = "<group>";
 		};
 		44B4A81D2B6CD16100E59F63 /* AboutApp */ = {
@@ -549,12 +541,9 @@
 				D4D9C9E62B2328B600DA702C /* Rutoken Tech.entitlements */,
 				7DAF6E742AFA35A5003A57D1 /* Extensions */,
 				D4F4FDED2B331D800087A1BB /* Utils */,
-				D4B130D42B0E4F1300AD390F /* Pcsc */,
-				D4B130B12B0DD50F00AD390F /* Pkcs11 */,
-				44416B2D2B552CFC00EC5F66 /* OpenSSL */,
 				44435FE32B5EACFC0072A1DD /* Engine */,
-				446F71022B624F7A00684E0D /* FileHelper */,
 				D4B130A92B0CFD6600AD390F /* Models */,
+				7D73F60C2C1359A600F0DB47 /* Helpers */,
 				D4B130A62B0CFD1B00AD390F /* Managers */,
 				D44997F12AEA6EB500B0AB64 /* Views */,
 				7D38D6D82B0E2B920045FBAD /* Redux */,
@@ -611,6 +600,17 @@
 				D455FCAD2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift */,
 			);
 			path = Ca;
+			sourceTree = "<group>";
+		};
+		7D73F60C2C1359A600F0DB47 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				44416B2D2B552CFC00EC5F66 /* OpenSsl */,
+				D4B130B12B0DD50F00AD390F /* Pkcs11 */,
+				D4B130D52B0E4F2400AD390F /* PcscHelper.swift */,
+				44A415032B60F67600D78653 /* FileHelper.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		7D9E5A5E2B0BA51600E2EAB7 /* States */ = {
@@ -780,14 +780,6 @@
 				44319A862C05D9AC00763E99 /* XCTestCase+AsyncExpectationWaiter.swift */,
 			);
 			path = Extensions;
-			sourceTree = "<group>";
-		};
-		D4B130D42B0E4F1300AD390F /* Pcsc */ = {
-			isa = PBXGroup;
-			children = (
-				D4B130D52B0E4F2400AD390F /* PcscHelper.swift */,
-			);
-			path = Pcsc;
 			sourceTree = "<group>";
 		};
 		D4C38F382B84CAD100BA50EC /* Common */ = {
