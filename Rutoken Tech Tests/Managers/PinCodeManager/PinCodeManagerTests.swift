@@ -5,7 +5,6 @@
 //  Created by Никита Девятых on 01.03.2024.
 //
 
-import RutokenKeychainManager
 import XCTest
 
 @testable import Rutoken_Tech
@@ -13,20 +12,20 @@ import XCTest
 
 class PinCodeManagerTests: XCTestCase {
     var manager: PinCodeManager!
-    var keychainManager: RutokenKeychainManagerMock!
+    var keychainHelper: KeychainHelperMock!
 
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
-        keychainManager = RutokenKeychainManagerMock()
-        manager = PinCodeManager(keychainManager: keychainManager)
+        keychainHelper = KeychainHelperMock()
+        manager = PinCodeManager(keychainManager: keychainHelper)
     }
 
     func testSaveWithBioSuccess() throws {
         let pin = "12345678"
         let serial = "qwerty1234"
         let exp = XCTestExpectation(description: "pin saved callback")
-        keychainManager.setCallback = { data, key, bio in
+        keychainHelper.setCallback = { data, key, bio in
             XCTAssertEqual(pin, data as? String)
             XCTAssertEqual(serial, key)
             XCTAssertEqual(bio, .biometryOrPasscode)
@@ -42,7 +41,7 @@ class PinCodeManagerTests: XCTestCase {
         let pin = "12345678"
         let serial = "qwerty1234"
         let exp = XCTestExpectation(description: "pin saved callback")
-        keychainManager.setCallback = { data, key, bio in
+        keychainHelper.setCallback = { data, key, bio in
             XCTAssertEqual(pin, data as? String)
             XCTAssertEqual(serial, key)
             XCTAssertEqual(bio, .any)
@@ -58,7 +57,7 @@ class PinCodeManagerTests: XCTestCase {
         let serial = "qwerty1234"
 
         let exp = XCTestExpectation(description: "pin is deleted")
-        keychainManager.deleteCallback = { key in
+        keychainHelper.deleteCallback = { key in
             XCTAssertEqual(serial, key)
             exp.fulfill()
             return true
@@ -71,7 +70,7 @@ class PinCodeManagerTests: XCTestCase {
     func testGetPinSuccess() throws {
         let tokenSerial = "qwerty1234"
         let pin = "12345678"
-        keychainManager.getCallback = { serial in
+        keychainHelper.getCallback = { serial in
             XCTAssertEqual(serial, tokenSerial)
             return pin
         }

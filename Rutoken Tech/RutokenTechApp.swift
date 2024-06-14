@@ -9,7 +9,6 @@ import CoreData
 import SwiftUI
 
 import RtPcscWrapper
-import RutokenKeychainManager
 import TinyAsyncRedux
 
 
@@ -31,7 +30,7 @@ struct RutokenTechApp: App {
 
             let pkcsHelper = Pkcs11Helper(with: engineWrapper)
             let pcscHelper = PcscHelper(pcscWrapper: RtPcscWrapper())
-            let pinCodeManager = PinCodeManager(keychainManager: RutokenKeychainManager())
+            let pinCodeManager = PinCodeManager(keychainManager: KeychainHelper())
 
             let cryptoManager = CryptoManager(pkcs11Helper: pkcsHelper,
                                               pcscHelper: pcscHelper,

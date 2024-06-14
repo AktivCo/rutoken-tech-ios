@@ -5,8 +5,6 @@
 //  Created by Никита Девятых on 26.02.2024.
 //
 
-import RutokenKeychainManager
-
 
 protocol PinCodeManagerProtocol {
     func savePin(pin: String, for serial: String, withBio: Bool)
@@ -15,9 +13,9 @@ protocol PinCodeManagerProtocol {
 }
 
 class PinCodeManager: PinCodeManagerProtocol {
-    private let keychainManager: RutokenKeychainManagerProtocol
+    private let keychainManager: KeychainHelperProtocol
 
-    init(keychainManager: RutokenKeychainManagerProtocol) {
+    init(keychainManager: KeychainHelperProtocol) {
         self.keychainManager = keychainManager
     }
 

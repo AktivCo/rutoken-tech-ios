@@ -74,7 +74,6 @@
 		5E1F3AA82BA3636C008158EF /* rtengine in Frameworks */ = {isa = PBXBuildFile; productRef = 5E1F3AA72BA3636C008158EF /* rtengine */; };
 		5E1F3AAB2BA36474008158EF /* rtpkcs11ecp in Frameworks */ = {isa = PBXBuildFile; productRef = 5E1F3AAA2BA36474008158EF /* rtpkcs11ecp */; };
 		5E1F3AAE2BA364D5008158EF /* openssl in Frameworks */ = {isa = PBXBuildFile; productRef = 5E1F3AAD2BA364D5008158EF /* openssl */; };
-		5E1F3AB82BA4B302008158EF /* RutokenKeychainManager in Frameworks */ = {isa = PBXBuildFile; productRef = 5E1F3AB72BA4B302008158EF /* RutokenKeychainManager */; };
 		5E1F3AC22BA4BA2E008158EF /* RoutingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1F3AC02BA4BA2E008158EF /* RoutingState.swift */; };
 		5E4C26E72C051606006F0B66 /* Pkcs11KeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4C26E62C051606006F0B66 /* Pkcs11KeyPair.swift */; };
 		5E4C26E92C051721006F0B66 /* Pkcs11Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4C26E82C051721006F0B66 /* Pkcs11Date.swift */; };
@@ -108,6 +107,7 @@
 		7DCC9AF12B3B2C9A002788B5 /* KeyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCC9AF02B3B2C9A002788B5 /* KeyModel.swift */; };
 		7DDBF5E62BC847B700B3AF30 /* DocumentProcessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBF5E52BC847B700B3AF30 /* DocumentProcessView.swift */; };
 		7DEBBDD62B3B1FCE00C35BA5 /* WithTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DEBBDD52B3B1FCE00C35BA5 /* WithTokenTests.swift */; };
+		7DF6204A2C1C75CD005B86D9 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF620492C1C75CD005B86D9 /* KeychainHelper.swift */; };
 		D42178192B205FD700D08948 /* AppAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42178182B205FD700D08948 /* AppAlert.swift */; };
 		D423F8BF2B3574BB0058ECDE /* GetTokenInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D423F8BE2B3574BB0058ECDE /* GetTokenInfoTests.swift */; };
 		D423F8C12B3574EC0058ECDE /* GenerateKeyPairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D423F8C02B3574EC0058ECDE /* GenerateKeyPairTests.swift */; };
@@ -127,7 +127,7 @@
 		D455FCAE2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D455FCAD2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift */; };
 		D46A55872BFDD5E100B33B3E /* DecryptCmsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46A55862BFDD5E100B33B3E /* DecryptCmsTests.swift */; };
 		D47302C32B91E07F0049E8F8 /* PinCodeManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47302C22B91E07F0049E8F8 /* PinCodeManagerTests.swift */; };
-		D47302C52B91E2000049E8F8 /* KeychainManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47302C42B91E2000049E8F8 /* KeychainManagerMock.swift */; };
+		D47302C52B91E2000049E8F8 /* KeychainHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47302C42B91E2000049E8F8 /* KeychainHelperMock.swift */; };
 		D4871D6B2BC693A2008B027C /* SignDocumentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4871D6A2BC693A2008B027C /* SignDocumentTests.swift */; };
 		D4871D6D2BC81036008B027C /* OnSignDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4871D6C2BC81036008B027C /* OnSignDocument.swift */; };
 		D49953BE2B55209E00E62B5B /* CaCertGenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49953BD2B55209E00E62B5B /* CaCertGenView.swift */; };
@@ -268,6 +268,7 @@
 		7DCC9AF02B3B2C9A002788B5 /* KeyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyModel.swift; sourceTree = "<group>"; };
 		7DDBF5E52BC847B700B3AF30 /* DocumentProcessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentProcessView.swift; sourceTree = "<group>"; };
 		7DEBBDD52B3B1FCE00C35BA5 /* WithTokenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithTokenTests.swift; sourceTree = "<group>"; };
+		7DF620492C1C75CD005B86D9 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		D42178182B205FD700D08948 /* AppAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlert.swift; sourceTree = "<group>"; };
 		D423F8BE2B3574BB0058ECDE /* GetTokenInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTokenInfoTests.swift; sourceTree = "<group>"; };
 		D423F8C02B3574EC0058ECDE /* GenerateKeyPairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateKeyPairTests.swift; sourceTree = "<group>"; };
@@ -287,7 +288,7 @@
 		D455FCAD2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaEmptyKeysCertView.swift; sourceTree = "<group>"; };
 		D46A55862BFDD5E100B33B3E /* DecryptCmsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecryptCmsTests.swift; sourceTree = "<group>"; };
 		D47302C22B91E07F0049E8F8 /* PinCodeManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCodeManagerTests.swift; sourceTree = "<group>"; };
-		D47302C42B91E2000049E8F8 /* KeychainManagerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManagerMock.swift; sourceTree = "<group>"; };
+		D47302C42B91E2000049E8F8 /* KeychainHelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelperMock.swift; sourceTree = "<group>"; };
 		D4871D6A2BC693A2008B027C /* SignDocumentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignDocumentTests.swift; sourceTree = "<group>"; };
 		D4871D6C2BC81036008B027C /* OnSignDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSignDocument.swift; sourceTree = "<group>"; };
 		D49953BD2B55209E00E62B5B /* CaCertGenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaCertGenView.swift; sourceTree = "<group>"; };
@@ -335,7 +336,6 @@
 				5E1F3AAE2BA364D5008158EF /* openssl in Frameworks */,
 				5E1F3AAB2BA36474008158EF /* rtpkcs11ecp in Frameworks */,
 				4496DABA2BF387160032FC29 /* RtPcscWrapper in Frameworks */,
-				5E1F3AB82BA4B302008158EF /* RutokenKeychainManager in Frameworks */,
 				5E1F3AA52BA362C5008158EF /* TinyAsyncRedux in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -609,6 +609,7 @@
 				D4B130B12B0DD50F00AD390F /* Pkcs11 */,
 				D4B130D52B0E4F2400AD390F /* PcscHelper.swift */,
 				44A415032B60F67600D78653 /* FileHelper.swift */,
+				7DF620492C1C75CD005B86D9 /* KeychainHelper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -754,7 +755,7 @@
 				44F032392B5125BC00466080 /* Pkcs11ObjectMock.swift */,
 				4413CFB72B597206000987A8 /* OpenSslHelperMock.swift */,
 				446F71032B62511F00684E0D /* FileHelperMock.swift */,
-				D47302C42B91E2000049E8F8 /* KeychainManagerMock.swift */,
+				D47302C42B91E2000049E8F8 /* KeychainHelperMock.swift */,
 				D44833A32B8C7B8B00A9B7A2 /* UserManagerMock.swift */,
 			);
 			path = Mocks;
@@ -841,7 +842,6 @@
 				5E1F3AA72BA3636C008158EF /* rtengine */,
 				5E1F3AAA2BA36474008158EF /* rtpkcs11ecp */,
 				5E1F3AAD2BA364D5008158EF /* openssl */,
-				5E1F3AB72BA4B302008158EF /* RutokenKeychainManager */,
 				4496DAB92BF387160032FC29 /* RtPcscWrapper */,
 				44D2616F2C062A8C000F5596 /* RtUiComponents */,
 			);
@@ -900,7 +900,6 @@
 				5E1F3AA62BA3636C008158EF /* XCRemoteSwiftPackageReference "swift-rtengine-binary" */,
 				5E1F3AA92BA36474008158EF /* XCRemoteSwiftPackageReference "swift-rtpkcs11ecp-binary" */,
 				5E1F3AAC2BA364D5008158EF /* XCRemoteSwiftPackageReference "swift-rtopenssl-binary" */,
-				5E1F3AB62BA4B302008158EF /* XCRemoteSwiftPackageReference "keychainmanager" */,
 				441323912BFB31A2005FADF9 /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */,
 				44D2616E2C062A8C000F5596 /* XCRemoteSwiftPackageReference "swift-ui-components" */,
 			);
@@ -993,6 +992,7 @@
 				5E4C26E92C051721006F0B66 /* Pkcs11Date.swift in Sources */,
 				D433144C2B76848900442809 /* LinkType.swift in Sources */,
 				D4B130A82B0CFD2F00AD390F /* CryptoManager.swift in Sources */,
+				7DF6204A2C1C75CD005B86D9 /* KeychainHelper.swift in Sources */,
 				446F71062B6271C400684E0D /* OnPerformGenCert.swift in Sources */,
 				44BB8F792B9F0DB400BF7438 /* BankDocument.swift in Sources */,
 				D4FAF1752B8338E50024EFDA /* UserListItem.swift in Sources */,
@@ -1121,7 +1121,7 @@
 				D423F8BF2B3574BB0058ECDE /* GetTokenInfoTests.swift in Sources */,
 				44311EFD2BCE9B7500D16B0C /* VerifyCmsTests.swift in Sources */,
 				4407C1DA2BD68E6F00DBA7D3 /* MarkAsArchivedTests.swift in Sources */,
-				D47302C52B91E2000049E8F8 /* KeychainManagerMock.swift in Sources */,
+				D47302C52B91E2000049E8F8 /* KeychainHelperMock.swift in Sources */,
 				4459B8FE2C0DCB6E004AAEE5 /* DeleteCertTests.swift in Sources */,
 				D4B130D32B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift in Sources */,
 				4413CFB82B597206000987A8 /* OpenSslHelperMock.swift in Sources */,
@@ -1471,14 +1471,6 @@
 				version = 3.0.8;
 			};
 		};
-		5E1F3AB62BA4B302008158EF /* XCRemoteSwiftPackageReference "keychainmanager" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/keychainmanager.git";
-			requirement = {
-				kind = revision;
-				revision = 99454f840d016cc386add7cf4f8ff5cec07f440b;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1510,11 +1502,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5E1F3AAC2BA364D5008158EF /* XCRemoteSwiftPackageReference "swift-rtopenssl-binary" */;
 			productName = openssl;
-		};
-		5E1F3AB72BA4B302008158EF /* RutokenKeychainManager */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5E1F3AB62BA4B302008158EF /* XCRemoteSwiftPackageReference "keychainmanager" */;
-			productName = RutokenKeychainManager;
 		};
 /* End XCSwiftPackageProductDependency section */
 

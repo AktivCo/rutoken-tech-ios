@@ -1,14 +1,14 @@
 //
-//  KeychainManagerMock.swift
+//  KeychainHelperMock.swift
 //  Rutoken Tech Tests
 //
 //  Created by Никита Девятых on 01.03.2024.
 //
 
-import RutokenKeychainManager
+@testable import Rutoken_Tech
 
 
-class RutokenKeychainManagerMock: RutokenKeychainManagerProtocol {
+class KeychainHelperMock: KeychainHelperProtocol {
     func set<T>(_ value: T, forKey key: String, with access: RTAccessibilityType) -> Bool where T: Codable {
         setCallback(value, key, access)
     }
