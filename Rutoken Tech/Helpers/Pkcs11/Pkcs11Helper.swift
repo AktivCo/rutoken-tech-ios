@@ -14,10 +14,6 @@ protocol Pkcs11HelperProtocol {
     func startMonitoring() throws
 }
 
-enum Pkcs11Error: Error {
-    case unknownError
-}
-
 class Pkcs11Helper: Pkcs11HelperProtocol {
     private var availableTokens: [CK_SLOT_ID: Pkcs11Token] = [:]
     private var tokenPublisher = CurrentValueSubject<[Pkcs11TokenProtocol], Never>([])
@@ -40,8 +36,9 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
         var initArgs = CK_C_INITIALIZE_ARGS()
         initArgs.flags = UInt(CKF_OS_LOCKING_OK)
 
-        guard CKR_OK == C_Initialize(&initArgs) else {
-            throw Pkcs11Error.unknownError
+        let rv = C_Initialize(&initArgs)
+        guard rv == CKR_OK else {
+            throw Pkcs11Error.internalError(rv: rv)
         }
 
         availableTokens = try getTokens()
@@ -74,7 +71,7 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
         var ctr: UInt = 0
         var rv = C_GetSlotList(CK_BBOOL(CK_TRUE), nil, &ctr)
         guard rv == CKR_OK else {
-            throw Pkcs11Error.unknownError
+            throw Pkcs11Error.internalError(rv: rv)
         }
 
         guard ctr != 0 else {
@@ -84,7 +81,7 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
         var slots = Array(repeating: CK_SLOT_ID(0), count: Int(ctr))
         rv = C_GetSlotList(CK_BBOOL(CK_TRUE), &slots, &ctr)
         guard rv == CKR_OK else {
-            throw Pkcs11Error.unknownError
+            throw Pkcs11Error.internalError(rv: rv)
         }
 
         return slots.reduce([CK_SLOT_ID: Pkcs11Token]()) { (dict, slot) -> [CK_SLOT_ID: Pkcs11Token] in

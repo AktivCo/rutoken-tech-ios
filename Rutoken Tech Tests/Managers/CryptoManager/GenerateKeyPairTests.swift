@@ -42,7 +42,7 @@ class CryptoManagerGenerateKeyPairTests: XCTestCase {
         let token = TokenMock(serial: "12345678", currentInterface: .usb)
         pkcs11Helper.tokenPublisher.send([token])
         token.generateKeyPairCallback = { _ in
-            throw Pkcs11TokenError.tokenDisconnected
+            throw Pkcs11Error.tokenDisconnected
         }
 
         await assertErrorAsync(

@@ -50,11 +50,11 @@ class RtEngineWrapper: RtEngineWrapperProtocol {
         var funcListPtr: UnsafeMutablePointer<CK_FUNCTION_LIST>?
         let rv = C_GetFunctionList(&funcListPtr)
         guard rv == CKR_OK else {
-            throw Pkcs11TokenError.generalError
+            throw Pkcs11Error.internalError()
         }
 
         guard let wrappedSession = rt_eng_p11_session_wrap(funcListPtr, session, 0, nil) else {
-            throw Pkcs11TokenError.generalError
+            throw Pkcs11Error.internalError()
         }
         defer {
             rt_eng_p11_session_free(wrappedSession)

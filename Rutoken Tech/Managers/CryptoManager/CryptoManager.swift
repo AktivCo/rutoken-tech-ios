@@ -281,6 +281,7 @@ class CryptoManager: CryptoManagerProtocol {
             } else {
                 tokenStatePublisher.send(.ready)
             }
+            connectedToken = nil
         }
         do {
             if connectionType == .nfc {
@@ -288,7 +289,6 @@ class CryptoManager: CryptoManagerProtocol {
             }
 
             connectedToken = try await waitForToken(with: connectionType)
-            defer { connectedToken = nil }
 
             if let serial {
                 guard connectedToken?.serial == serial else {
@@ -307,12 +307,10 @@ class CryptoManager: CryptoManagerProtocol {
             try await callback()
         } catch NfcError.cancelledByUser, NfcError.timeout {
             throw CryptoManagerError.nfcStopped
-        } catch Pkcs11TokenError.tokenDisconnected {
+        } catch Pkcs11Error.tokenDisconnected {
             throw CryptoManagerError.connectionLost
-        } catch Pkcs11TokenError.incorrectPin(let attemptsLeft) {
-            throw CryptoManagerError.incorrectPin(attemptsLeft)
-        } catch Pkcs11TokenError.lockedPin {
-            throw CryptoManagerError.incorrectPin(0)
+        } catch Pkcs11Error.incorrectPin {
+            throw CryptoManagerError.incorrectPin((try? connectedToken?.getPinAttempts()) ?? 0)
         } catch let error as CryptoManagerError {
             throw error
         } catch {

@@ -51,27 +51,27 @@ final class CryptoManagerCreateCertTests: XCTestCase {
 
     func testCreateCertWrappedKeyError() async throws {
         token.getWrappedKeyCallback = { _ in
-            throw Pkcs11TokenError.keyNotFound
+            throw Pkcs11Error.internalError()
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
                 try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
-                throws: Pkcs11TokenError.keyNotFound)
+                throws: Pkcs11Error.internalError())
         }
     }
 
     func testCreateCertPrivateKeyUsagePeriodGetValueError() async throws {
         token.enumerateKeyWithIdCallback = { _ in
             var object = Pkcs11ObjectMock()
-            object.setValue(forAttr: .startDate, value: .failure(Pkcs11TokenError.generalError))
+            object.setValue(forAttr: .startDate, value: .failure(Pkcs11Error.internalError()))
             return Pkcs11KeyPair(publicKey: object, privateKey: object)
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
                 try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
-                throws: Pkcs11TokenError.generalError)
+                throws: Pkcs11Error.internalError())
         }
     }
 
@@ -123,13 +123,13 @@ final class CryptoManagerCreateCertTests: XCTestCase {
 
     func testCreateCertTokenDisconnectedError() async throws {
         token.importCertCallback = { _, _ in
-            throw Pkcs11TokenError.tokenDisconnected
+            throw Pkcs11Error.tokenDisconnected
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
                 try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
-                throws: Pkcs11TokenError.tokenDisconnected)
+                throws: Pkcs11Error.tokenDisconnected)
         }
     }
 }

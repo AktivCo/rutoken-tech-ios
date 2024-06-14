@@ -81,4 +81,10 @@ class TokenMock: Pkcs11TokenProtocol {
     }
 
     var deleteCertCallback: (String) throws -> Void = { _ in }
+
+    func getPinAttempts() throws -> UInt {
+        try getPinAttemptsCallback()
+    }
+
+    var getPinAttemptsCallback: () throws -> UInt = { 0 }
 }

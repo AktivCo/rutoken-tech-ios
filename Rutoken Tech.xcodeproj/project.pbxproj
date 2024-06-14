@@ -78,6 +78,7 @@
 		5E4C26E72C051606006F0B66 /* Pkcs11KeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4C26E62C051606006F0B66 /* Pkcs11KeyPair.swift */; };
 		5E4C26E92C051721006F0B66 /* Pkcs11Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4C26E82C051721006F0B66 /* Pkcs11Date.swift */; };
 		5E7331A72B6D71D400E96C06 /* Pkcs11Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E7331A62B6D71D400E96C06 /* Pkcs11Session.swift */; };
+		5EB931172C1CFFFE00935DE7 /* Pkcs11Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EB931162C1CFFFE00935DE7 /* Pkcs11Error.swift */; };
 		5EC532012BD0189200AD5854 /* BankUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC532002BD0189200AD5854 /* BankUserInfo.swift */; };
 		5EF30EDE2B1A823700E48627 /* OnPerformTokenConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF30EDD2B1A823700E48627 /* OnPerformTokenConnection.swift */; };
 		5EF30EE02B1A840800E48627 /* Pkcs11TokenInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D72B0E4F8200AD390F /* Pkcs11TokenInterface.swift */; };
@@ -239,6 +240,7 @@
 		5E4C26E62C051606006F0B66 /* Pkcs11KeyPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11KeyPair.swift; sourceTree = "<group>"; };
 		5E4C26E82C051721006F0B66 /* Pkcs11Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Date.swift; sourceTree = "<group>"; };
 		5E7331A62B6D71D400E96C06 /* Pkcs11Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Session.swift; sourceTree = "<group>"; };
+		5EB931162C1CFFFE00935DE7 /* Pkcs11Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Error.swift; sourceTree = "<group>"; };
 		5EC532002BD0189200AD5854 /* BankUserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankUserInfo.swift; sourceTree = "<group>"; };
 		5EF30EDD2B1A823700E48627 /* OnPerformTokenConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnPerformTokenConnection.swift; sourceTree = "<group>"; };
 		5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rutoken Tech.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -732,6 +734,7 @@
 				5E4C26E62C051606006F0B66 /* Pkcs11KeyPair.swift */,
 				5E7331A62B6D71D400E96C06 /* Pkcs11Session.swift */,
 				4443EA0A2B96F5160003436D /* Pkcs11KeyAlgorithm.swift */,
+				5EB931162C1CFFFE00935DE7 /* Pkcs11Error.swift */,
 			);
 			path = Pkcs11;
 			sourceTree = "<group>";
@@ -1007,6 +1010,7 @@
 				D4B130B02B0CFFCD00AD390F /* Pkcs11TokenModel.swift in Sources */,
 				7D38D6DA2B0E2C190045FBAD /* AppState.swift in Sources */,
 				44251E6E2B8CD52400ADAA0D /* WrappedX509.swift in Sources */,
+				5EB931172C1CFFFE00935DE7 /* Pkcs11Error.swift in Sources */,
 				D433144A2B767E2700442809 /* OnHandleOpenLink.swift in Sources */,
 				7DCC9AF12B3B2C9A002788B5 /* KeyModel.swift in Sources */,
 				7D7D51832BB59DC200428107 /* BankFileContent.swift in Sources */,

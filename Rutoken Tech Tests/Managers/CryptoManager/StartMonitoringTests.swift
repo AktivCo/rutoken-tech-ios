@@ -34,7 +34,7 @@ class CryptoManagerStartMonitoringTests: XCTestCase {
     }
 
     func testStartMonitoringFailed() async throws {
-        pkcs11Helper.startMonitoringCallback = { throw Pkcs11Error.unknownError }
+        pkcs11Helper.startMonitoringCallback = { throw Pkcs11Error.internalError() }
         assertError(try manager.startMonitoring(), throws: CryptoManagerError.unknown)
     }
 }

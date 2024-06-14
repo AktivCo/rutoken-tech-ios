@@ -123,7 +123,7 @@ class CryptoManagerSignDocumentTests: XCTestCase {
     }
 
     func testSignDocumentTokenError() async throws {
-        let error = Pkcs11TokenError.generalError
+        let error = Pkcs11Error.internalError()
         token.getWrappedKeyCallback = {
             XCTAssertEqual($0, self.keyId)
             throw error

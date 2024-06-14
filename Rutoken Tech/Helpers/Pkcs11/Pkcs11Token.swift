@@ -32,14 +32,8 @@ protocol Pkcs11TokenProtocol {
     func importCert(_ cert: Data, for id: String) throws
 
     func deleteCert(with id: String) throws
-}
 
-enum Pkcs11TokenError: Error, Equatable {
-    case incorrectPin(attemptsLeft: UInt)
-    case lockedPin
-    case generalError
-    case tokenDisconnected
-    case keyNotFound
+    func getPinAttempts() throws -> UInt
 }
 
 class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
@@ -155,7 +149,7 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
         // MARK: There should be only one key of each type with same id
         guard publicKeys.count == 1,
               privateKeys.count == 1 else {
-            throw Pkcs11TokenError.generalError
+            throw Pkcs11Error.internalError()
         }
 
         return Pkcs11KeyPair(publicKey: publicKeys[0], privateKey: privateKeys[0])
@@ -169,7 +163,7 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
                                  privateKeyHandle: keyPair.privateKey.handle,
                                  pubKeyHandle: keyPair.publicKey.handle)
         }, EVP_PKEY_free) else {
-            throw Pkcs11TokenError.generalError
+            throw Pkcs11Error.internalError()
         }
         return wrappedKey
     }
@@ -217,7 +211,7 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
                                    &privateKeyTemplate, CK_ULONG(privateKeyTemplate.count),
                                    &publicKey, &privateKey)
         guard rv == CKR_OK else {
-            throw rv == CKR_DEVICE_REMOVED ? Pkcs11TokenError.tokenDisconnected: Pkcs11TokenError.generalError
+            throw rv == CKR_DEVICE_REMOVED ? Pkcs11Error.tokenDisconnected: Pkcs11Error.internalError(rv: rv)
         }
     }
 
@@ -248,8 +242,19 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
         var certHandle = CK_OBJECT_HANDLE()
         let rv = C_CreateObject(session.handle, &certTemplate, CK_ULONG(certTemplate.count), &certHandle)
         guard rv == CKR_OK else {
-            throw rv == CKR_DEVICE_REMOVED ? Pkcs11TokenError.tokenDisconnected: Pkcs11TokenError.generalError
+            throw rv == CKR_DEVICE_REMOVED ? Pkcs11Error.tokenDisconnected: Pkcs11Error.internalError(rv: rv)
         }
+    }
+
+    func getPinAttempts() throws -> UInt {
+        var exInfo = CK_TOKEN_INFO_EXTENDED()
+        exInfo.ulSizeofThisStructure = UInt(MemoryLayout.size(ofValue: exInfo))
+        let rv = C_EX_GetTokenInfoExtended(slot, &exInfo)
+        guard rv == CKR_OK else {
+            throw Pkcs11Error.internalError(rv: rv)
+        }
+
+        return exInfo.ulUserRetryCountLeft
     }
 
     // MARK: - Private API
@@ -261,7 +266,7 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
             let rv = C_GetSlotInfo(slot, &slotInfo)
             guard rv == CKR_OK,
                   slotInfo.flags & UInt(CKF_TOKEN_PRESENT) != 0 else {
-                throw Pkcs11TokenError.tokenDisconnected
+                throw Pkcs11Error.tokenDisconnected
             }
             throw error
         }
@@ -274,7 +279,7 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
         ]
 
         guard let hwFeature = try? session.findObjects(objectAttributes.map { $0.attribute }).first else {
-            throw Pkcs11TokenError.generalError
+            throw Pkcs11Error.internalError()
         }
 
         let currentInterfaceBits = try hwFeature.getValue(forAttr: .vendorCurrentInterface)
@@ -283,7 +288,7 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
         guard let currentInterface = Pkcs11TokenInterface(currentInterfaceBits.withUnsafeBytes { rawBuffer in
             rawBuffer.load(as: CK_ULONG.self)
         }) else {
-            throw Pkcs11TokenError.generalError
+            throw Pkcs11Error.internalError()
         }
         return (currentInterface, Set([Pkcs11TokenInterface](bits: supportedInterfacesBits.withUnsafeBytes { rawBuffer in
             rawBuffer.load(as: CK_ULONG.self)
@@ -294,13 +299,13 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
         // MARK: Get serial number
         guard let hexSerial = String.getFrom(tokenInfo.serialNumber),
               let decimalSerial = Int(hexSerial.trimmingCharacters(in: .whitespacesAndNewlines), radix: 16) else {
-            throw Pkcs11TokenError.generalError
+            throw Pkcs11Error.internalError()
         }
         serial = String(format: "%0.10d", decimalSerial)
 
         // MARK: Get label
         guard let label = String.getFrom(tokenInfo.label)?.trimmingCharacters(in: .whitespacesAndNewlines) else {
-            throw Pkcs11TokenError.generalError
+            throw Pkcs11Error.internalError()
         }
         self.label = label
 
@@ -310,7 +315,7 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
             model = .rutokenSelfIdentify(modelName)
         } else {
             guard let model = computeTokenModel() else {
-                throw Pkcs11TokenError.generalError
+                throw Pkcs11Error.internalError()
             }
             self.model = model
         }
@@ -322,7 +327,7 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
         for obj in objects {
             let rv = C_DestroyObject(session.handle, obj.handle)
             guard rv == CKR_OK else {
-                throw rv == CKR_DEVICE_REMOVED ? Pkcs11TokenError.tokenDisconnected: Pkcs11TokenError.generalError
+                throw rv == CKR_DEVICE_REMOVED ? Pkcs11Error.tokenDisconnected: Pkcs11Error.internalError(rv: rv)
             }
         }
     }
@@ -392,7 +397,7 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
 
         guard let object = try session.findObjects(objectAttributes.map { $0.attribute }).first,
               let result = try String(data: object.getValue(forAttr: .vendorModelName), encoding: .utf8) else {
-            throw Pkcs11TokenError.generalError
+            throw Pkcs11Error.internalError()
         }
         return result
     }

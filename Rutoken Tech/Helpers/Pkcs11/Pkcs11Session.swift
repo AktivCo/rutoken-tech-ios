@@ -9,12 +9,9 @@ import Foundation
 
 
 class Pkcs11Session {
-    private let slot: CK_SLOT_ID
     private(set) var handle = CK_SESSION_HANDLE(NULL_PTR)
 
     init?(slot: CK_SLOT_ID) {
-        self.slot = slot
-
         guard C_OpenSession(slot,
                             CK_FLAGS(CKF_SERIAL_SESSION | CKF_RW_SESSION),
                             nil,
@@ -33,12 +30,10 @@ class Pkcs11Session {
         let rv = C_Login(handle, CK_USER_TYPE(CKU_USER), &rawPin, CK_ULONG(rawPin.count))
         guard rv == CKR_OK || rv == CKR_USER_ALREADY_LOGGED_IN else {
             switch rv {
-            case CKR_PIN_INCORRECT:
-                throw Pkcs11TokenError.incorrectPin(attemptsLeft: try getPinAttempts())
-            case CKR_PIN_LOCKED:
-                throw Pkcs11TokenError.lockedPin
+            case CKR_PIN_INCORRECT, CKR_PIN_LOCKED:
+                throw Pkcs11Error.incorrectPin
             default:
-                throw Pkcs11TokenError.generalError
+                throw Pkcs11Error.internalError(rv: rv)
             }
         }
     }
@@ -51,7 +46,7 @@ class Pkcs11Session {
         var template = attributes
         var rv = C_FindObjectsInit(handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
-            throw rv == CKR_DEVICE_REMOVED ? Pkcs11TokenError.tokenDisconnected: Pkcs11TokenError.generalError
+            throw rv == CKR_DEVICE_REMOVED ? Pkcs11Error.tokenDisconnected: Pkcs11Error.internalError(rv: rv)
         }
         defer {
             C_FindObjectsFinal(handle)
@@ -66,23 +61,12 @@ class Pkcs11Session {
 
             rv = C_FindObjects(handle, &handles, maxCount, &count)
             guard rv == CKR_OK else {
-                throw rv == CKR_DEVICE_REMOVED ? Pkcs11TokenError.tokenDisconnected: Pkcs11TokenError.generalError
+                throw rv == CKR_DEVICE_REMOVED ? Pkcs11Error.tokenDisconnected: Pkcs11Error.internalError(rv: rv)
             }
 
             objects += handles.prefix(Int(count))
         } while count == maxCount
 
         return objects.map { Pkcs11Object(with: $0, self) }
-    }
-
-    private func getPinAttempts() throws -> UInt {
-        var exInfo = CK_TOKEN_INFO_EXTENDED()
-        exInfo.ulSizeofThisStructure = UInt(MemoryLayout.size(ofValue: exInfo))
-        let rv = C_EX_GetTokenInfoExtended(slot, &exInfo)
-        guard rv == CKR_OK else {
-            throw Pkcs11TokenError.generalError
-        }
-
-        return exInfo.ulUserRetryCountLeft
     }
 }
