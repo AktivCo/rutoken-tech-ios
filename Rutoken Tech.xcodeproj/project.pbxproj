@@ -1285,6 +1285,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = $CONFIGURATION_BUILD_DIR/rtpkcs11ecp.framework/Headers/;
 				INFOPLIST_FILE = info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "РуТех";
 				INFOPLIST_KEY_NFCReaderUsageDescription = "NFC будет использован для работы с устройствами Рутокен";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Приложение использует Face ID для более быстрого и удобного процесса аутентификации";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1327,6 +1328,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = $CONFIGURATION_BUILD_DIR/rtpkcs11ecp.framework/Headers/;
 				INFOPLIST_FILE = info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "РуТех";
 				INFOPLIST_KEY_NFCReaderUsageDescription = "NFC будет использован для работы с устройствами Рутокен";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Приложение использует Face ID для более быстрого и удобного процесса аутентификации";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
