@@ -183,4 +183,3 @@ struct CaEntryView_Previews: PreviewProvider {
         }
     }
 }
-

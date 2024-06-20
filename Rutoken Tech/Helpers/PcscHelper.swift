@@ -47,7 +47,7 @@ class PcscHelper: PcscHelperProtocol {
 
     func getNfcCooldown() -> AsyncThrowingStream<UInt, Error> {
         AsyncThrowingStream { continuation in
-            guard let reader = readers.first(where: { $0.type == .nfc ||  $0.type == .vcr }) else {
+            guard let reader = readers.first(where: { $0.type == .nfc || $0.type == .vcr }) else {
                 continuation.finish(throwing: PcscHelperError.general)
                 return
             }
@@ -69,7 +69,7 @@ class PcscHelper: PcscHelperProtocol {
     }
 
     func stopNfc() throws {
-        guard let reader = readers.first(where: { $0.type == .nfc ||  $0.type == .vcr }) else {
+        guard let reader = readers.first(where: { $0.type == .nfc || $0.type == .vcr }) else {
             throw NfcError.generalError
         }
 
@@ -81,7 +81,7 @@ class PcscHelper: PcscHelperProtocol {
     }
 
     func startNfc() throws {
-        guard let reader = readers.first(where: { $0.type == .nfc ||  $0.type == .vcr }) else {
+        guard let reader = readers.first(where: { $0.type == .nfc || $0.type == .vcr }) else {
             throw NfcError.generalError
         }
         do {

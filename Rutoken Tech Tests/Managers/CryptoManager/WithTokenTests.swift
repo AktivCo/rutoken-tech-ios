@@ -157,7 +157,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         }
 
         let attempts: UInt = 2
-        token.getPinAttemptsCallback = { attempts  }
+        token.getPinAttemptsCallback = { attempts }
 
         await assertErrorAsync(
             try await manager.withToken(connectionType: .usb, serial: "12345678", pin: "incorrectPin") {},

@@ -26,7 +26,7 @@ class UserManagerMock: UserManagerProtocol {
         try deleteUserCallback(user)
     }
 
-    var deleteUserCallback: (BankUserInfo) throws -> Void = { _ in  }
+    var deleteUserCallback: (BankUserInfo) throws -> Void = { _ in }
 
     func createUser(fullname: String,
                     title: String,
@@ -37,7 +37,7 @@ class UserManagerMock: UserManagerProtocol {
         try createUserCallback(fullname, title, expiryDate, keyId, certHash, tokenSerial)
     }
 
-    var createUserCallback: (String, String, Date, String, String, String) throws -> ManagedBankUser = { _, _, _, _, _, _  in
+    var createUserCallback: (String, String, Date, String, String, String) throws -> ManagedBankUser = { _, _, _, _, _, _ in
         throw UserManagerError.general
     }
 

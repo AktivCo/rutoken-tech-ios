@@ -53,4 +53,3 @@ final class CryptoManagerEnumerateKeysTests: XCTestCase {
                                throws: CryptoManagerError.tokenNotFound)
     }
 }
-

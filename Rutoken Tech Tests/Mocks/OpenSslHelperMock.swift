@@ -32,7 +32,7 @@ class OpenSslHelperMock: OpenSslHelperProtocol {
     func verifyCms(signedCms: String, for content: Data, trustedRoots: [Data]) throws -> VerifyCmsResult {
         try verifyCmsCallback()
     }
-    var verifyCmsCallback: () throws -> VerifyCmsResult  = { .success }
+    var verifyCmsCallback: () throws -> VerifyCmsResult = { .success }
 
     func encryptDocument(for content: Data, with cert: Data) throws -> Data {
         try encryptCmsCallback(content, cert)

@@ -22,4 +22,3 @@ class FileHelperMock: FileHelperProtocol {
     }
     var saveFileCallback: (Data, URL) throws -> Void = { _, _ in }
 }
-

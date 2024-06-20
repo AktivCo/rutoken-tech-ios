@@ -370,16 +370,16 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
         case (59, _, 30, _, false, false):
             return .rutoken3_3200
         case (65, _, 30, _, false, false):
-            return  .rutoken3_3220
+            return .rutoken3_3220
         case (60, _, 30, _, false, false),
             (60, _, 28, _, false, false):
             if supportedInterfaces.contains(.nfc) {
                 return .rutoken3Nfc_3100
             } else {
-                return  .rutoken3_3100
+                return .rutoken3_3100
             }
         case (60, _, 31, _, false, false):
-            return  .rutoken3NfcMf_3110
+            return .rutoken3NfcMf_3110
         case (_, _, 30, _, false, false):
             return .rutoken3Ble_8100
         case (_, _, 24, _, false, false):
