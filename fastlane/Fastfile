@@ -25,6 +25,7 @@ platform :ios do
       scheme: "Rutoken Tech",
       clean: true,
       skip_package_ipa: true,
+      xcargs: "-skipPackagePluginValidation -skipMacroValidation",
       archive_path: (options[:output_path] ? options[:output_path] : "./build/Rutoken Tech.xcarchive")
     )
 
@@ -33,7 +34,8 @@ platform :ios do
   lane :tests do
     run_tests(
       scheme: "Rutoken Tech",
-      device: "iPhone 14 (16.2)"
+      device: "iPhone 14 (16.2)",
+      xcargs: "-skipPackagePluginValidation -skipMacroValidation"
     )
   end
 

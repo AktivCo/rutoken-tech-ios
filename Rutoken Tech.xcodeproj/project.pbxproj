@@ -861,11 +861,11 @@
 				5EF75DD82AC707BD001834BE /* Frameworks */,
 				5EF75DD92AC707BD001834BE /* Resources */,
 				D4F27DD12B6A53FA003D8AE6 /* Set Commit Hash */,
-				7D98BD802AE1233400B6A281 /* Run Swiftlint */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				5EB636E32C29D04000DDCA0F /* PBXTargetDependency */,
 			);
 			name = "Rutoken Tech";
 			packageProductDependencies = (
@@ -891,6 +891,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				5EB636E52C29D04600DDCA0F /* PBXTargetDependency */,
 				D4B130BF2B0E379900AD390F /* PBXTargetDependency */,
 			);
 			name = "Rutoken Tech Tests";
@@ -933,6 +934,7 @@
 				5E1F3AAC2BA364D5008158EF /* XCRemoteSwiftPackageReference "swift-rtopenssl-binary" */,
 				441323912BFB31A2005FADF9 /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */,
 				44D2616E2C062A8C000F5596 /* XCRemoteSwiftPackageReference "swift-ui-components" */,
+				5EB636E12C29CFF900DDCA0F /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
 			);
 			productRefGroup = 5EF75DDC2AC707BD001834BE /* Products */;
 			projectDirPath = "";
@@ -966,25 +968,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		7D98BD802AE1233400B6A281 /* Run Swiftlint */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 12;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Run Swiftlint";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n  swiftlint lint --strict\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
-		};
 		D4F27DD12B6A53FA003D8AE6 /* Set Commit Hash */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -1173,6 +1156,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		5EB636E32C29D04000DDCA0F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 5EB636E22C29D04000DDCA0F /* SwiftLintBuildToolPlugin */;
+		};
+		5EB636E52C29D04600DDCA0F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 5EB636E42C29D04600DDCA0F /* SwiftLintBuildToolPlugin */;
+		};
 		D4B130BF2B0E379900AD390F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 5EF75DDA2AC707BD001834BE /* Rutoken Tech */;
@@ -1509,6 +1500,14 @@
 				version = 3.0.8;
 			};
 		};
+		5EB636E12C29CFF900DDCA0F /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SimplyDanny/SwiftLintPlugins";
+			requirement = {
+				kind = exactVersion;
+				version = 0.55.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1540,6 +1539,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5E1F3AAC2BA364D5008158EF /* XCRemoteSwiftPackageReference "swift-rtopenssl-binary" */;
 			productName = openssl;
+		};
+		5EB636E22C29D04000DDCA0F /* SwiftLintBuildToolPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5EB636E12C29CFF900DDCA0F /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
+			productName = "plugin:SwiftLintBuildToolPlugin";
+		};
+		5EB636E42C29D04600DDCA0F /* SwiftLintBuildToolPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5EB636E12C29CFF900DDCA0F /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
+			productName = "plugin:SwiftLintBuildToolPlugin";
 		};
 /* End XCSwiftPackageProductDependency section */
 
