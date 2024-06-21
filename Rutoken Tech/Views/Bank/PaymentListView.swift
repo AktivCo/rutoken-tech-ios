@@ -87,6 +87,9 @@ struct PaymentListView: View {
             }, right: {
                 Button {
                     store.send(.resetDocuments)
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isTopViewShown = false
+                    }
                 } label: {
                     resetButton
                         .padding(.trailing, 20)

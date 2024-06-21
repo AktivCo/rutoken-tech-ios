@@ -5,9 +5,7 @@
 //  Created by Никита Девятых on 14.02.2024.
 //
 
-import CoreData
 import SwiftUI
-import UIKit
 
 import RtUiComponents
 import TinyAsyncRedux
