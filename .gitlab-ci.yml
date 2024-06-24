@@ -1,5 +1,4 @@
 stages:
-  - analyse
   - build
   - test
   - archive
@@ -43,12 +42,4 @@ variables:
 
 
 include:
-  - project: rutoken/dev/devops/checker/code-quality
-    ref: latest
-    file: /code-quality.yaml
   - .ci/stage-*.yml
-
-
-code-quality:
-  stage: analyse
-  extends: .code-quality
