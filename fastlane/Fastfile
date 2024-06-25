@@ -101,6 +101,7 @@ platform :ios do
        ipa: (options[:ipa_path] ? options[:ipa_path] : "./build/Rutoken Tech.ipa"),
        notify_external_testers: true,
        distribute_external: true,
+       submit_beta_review: options[:publish_to] == "external",
        groups: groups,
        changelog: "New version avaliable"
      )
