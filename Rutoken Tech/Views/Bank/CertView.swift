@@ -47,8 +47,6 @@ struct CertView: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background { Color.RtColors.rtSurfaceQuaternary }
-        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
 

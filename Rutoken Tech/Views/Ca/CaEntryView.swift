@@ -51,6 +51,7 @@ struct CaEntryView: View {
                 } label: {
                     createLabel("Сгенерировать ключевую пару")
                 }
+                .buttonStyle(RtBackgroundAnimatedButtonStyle(pressedColor: .RtColors.rtOtherSelected))
                 Divider()
                     .padding(.horizontal, 12)
                 Button {
@@ -68,6 +69,7 @@ struct CaEntryView: View {
                 } label: {
                     createLabel("Выпустить тестовый сертификат")
                 }
+                .buttonStyle(RtBackgroundAnimatedButtonStyle(pressedColor: .RtColors.rtOtherSelected))
             }
             .infoListStyle()
             .padding(.vertical, 12)

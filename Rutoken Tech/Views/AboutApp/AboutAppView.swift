@@ -66,6 +66,7 @@ struct AboutAppView: View {
             } label: {
                 createLabel("Политика конфиденциальности")
             }
+            .buttonStyle(RtBackgroundAnimatedButtonStyle(pressedColor: .RtColors.rtOtherSelected))
             Divider()
                 .padding(.horizontal, 12)
             Button {
@@ -73,6 +74,7 @@ struct AboutAppView: View {
             } label: {
                 createLabel("Лицензионное соглашение Рутокен")
             }
+            .buttonStyle(RtBackgroundAnimatedButtonStyle(pressedColor: .RtColors.rtOtherSelected))
         }
         .infoListStyle()
         .padding(.vertical, 12)
@@ -101,6 +103,7 @@ struct AboutAppView: View {
                 .padding(.horizontal, 12)
                 .frame(height: 44)
             }
+            .buttonStyle(RtBackgroundAnimatedButtonStyle(pressedColor: .RtColors.rtOtherSelected))
             .infoListStyle()
         }
         .frame(height: 85)

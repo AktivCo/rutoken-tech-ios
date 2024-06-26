@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+import RtUiComponents
+
 
 struct UserListItem: View {
     @State private var offset = 0.0
@@ -19,22 +21,7 @@ struct UserListItem: View {
     let onDeleteUser: (() -> Void)
     let onSelectUser: (() -> Void)
     var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 12) {
-                Text(name)
-                    .font(.headline)
-                    .foregroundStyle(Color.RtColors.rtLabelPrimary)
-                VStack(alignment: .leading, spacing: 8) {
-                    infoField(for: "Должность", with: title)
-                    infoField(for: "Сертификат истекает", with: expiryDate.getString(as: "dd.MM.yyyy"))
-                }
-            }
-            Spacer()
-        }
-        .padding(.all, 12)
-        .background(Color("surfacePrimary"))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .onTapGesture {
+        Button {
             if offset == 0.0 {
                 onSelectUser()
             } else {
@@ -42,9 +29,26 @@ struct UserListItem: View {
                     offset = 0.0
                 }
             }
+        } label: {
+            HStack {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text(name)
+                        .font(.headline)
+                        .foregroundStyle(Color.RtColors.rtLabelPrimary)
+                    VStack(alignment: .leading, spacing: 8) {
+                        infoField(for: "Должность", with: title)
+                        infoField(for: "Сертификат истекает", with: expiryDate.getString(as: "dd.MM.yyyy"))
+                    }
+                }
+                Spacer()
+            }
+            .padding(.all, 12)
         }
+        .buttonStyle(RtBackgroundAnimatedButtonStyle(pressedColor: .RtColors.rtOtherSelected))
+        .background(Color("surfacePrimary"))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
         .offset(x: offset)
-        .gesture(
+        .highPriorityGesture(
             DragGesture(minimumDistance: 8, coordinateSpace: .local)
                 .onChanged {
                     let translation = $0.translation.width

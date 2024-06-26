@@ -115,7 +115,7 @@ struct BankUserListView: View {
                 } label: {
                     Text("Добавить пользователя")
                 }
-                .buttonStyle(RtRoundedFilledButtonStyle())
+                .buttonStyle(RtRoundedFilledButtonStyle(isPressable: true))
                 .frame(maxWidth: UIDevice.isPhone ? .infinity : 350)
                 .padding(.bottom, 20)
             } else {

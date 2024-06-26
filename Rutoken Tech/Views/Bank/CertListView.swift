@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+import RtUiComponents
 import TinyAsyncRedux
 
 
@@ -24,6 +25,9 @@ public struct CertListView: View {
                 } label: {
                     CertView(cert: cert)
                 }
+                .buttonStyle(RtBackgroundAnimatedButtonStyle(pressedColor: .RtColors.rtOtherSelected))
+                .background { Color.RtColors.rtSurfaceQuaternary }
+                .clipShape(RoundedRectangle(cornerRadius: 12))
                 .disabled(cert.causeOfInvalid != nil)
             }
         }

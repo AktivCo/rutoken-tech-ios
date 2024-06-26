@@ -1469,7 +1469,7 @@
 			repositoryURL = "https://github.com/AktivCo/swift-ui-components.git";
 			requirement = {
 				kind = revision;
-				revision = c221954474c011733f85757b365631156ef9e9a3;
+				revision = 30901d9a7ce07dc9763893b18668af2a69712b2f;
 			};
 		};
 		5E1F3AA32BA362C5008158EF /* XCRemoteSwiftPackageReference "tiny-redux" */ = {
