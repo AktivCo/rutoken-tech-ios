@@ -22,6 +22,7 @@ struct ScrollViewOffset<Content: View>: View {
         }
         .coordinateSpace(name: scrollCoordinateSpace)
         .onPreferenceChange(OffsetPreferenceKey.self, perform: onOffsetChanged)
+        .scrollDismissesKeyboard(.immediately)
     }
 
     private var offsetReader: some View {
