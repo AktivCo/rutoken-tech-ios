@@ -17,10 +17,30 @@ struct BankUserListView: View {
     let maxUserCount = 3
 
     var body: some View {
-        if UIDevice.isPhone {
-            iphoneView
-        } else {
-            ipadView
+        Group {
+            if UIDevice.isPhone {
+                iphoneView
+            } else {
+                ipadView
+            }
+        }
+        .onAppear {
+            store.state.bankSelectUserState.userListModel.onSelectCallback = { user in
+                store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
+                        RtAuthView(defaultPinGetter: {
+                            store.send(.updatePin(RutokenTechApp.defaultPin))
+                        }, onSubmit: { tokenType, pin in
+                            store.send(.authUser(tokenType, pin, user))
+                        }, onCancel: {
+                            store.send(.hideSheet)
+                            store.send(.updatePin(""))
+                        })
+                        .environmentObject(store.state.routingState.pinInputModel)
+                    }()))
+            }
+            store.state.bankSelectUserState.userListModel.onDeleteCallback = { user in
+                store.send(.deleteUser(user))
+            }
         }
     }
 
@@ -59,10 +79,11 @@ struct BankUserListView: View {
     private var mainView: some View {
         VStack(spacing: 0) {
             HeaderTitleView(title: "Пользователи")
-            if store.state.bankSelectUserState.users.isEmpty {
+            if store.state.bankSelectUserState.userListModel.items.isEmpty {
                 noUsersView
             } else {
-                usersListView
+                RtList(listModel: store.state.bankSelectUserState.userListModel)
+                    .padding(.top, 12)
             }
             bottomView
         }
@@ -78,32 +99,9 @@ struct BankUserListView: View {
         }
     }
 
-    private var usersListView: some View {
-        VStack(spacing: 12) {
-            ForEach(store.state.bankSelectUserState.users.prefix(maxUserCount), id: \.id) { user in
-                UserListItem(name: user.fullname, title: user.title, expiryDate: user.expiryDate,
-                             onDeleteUser: { store.send(.deleteUser(user)) },
-                             onSelectUser: {
-                    store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
-                        RtAuthView(defaultPinGetter: {
-                            store.send(.updatePin(RutokenTechApp.defaultPin))
-                        }, onSubmit: { tokenType, pin in
-                            store.send(.authUser(tokenType, pin, user))
-                        }, onCancel: {
-                            store.send(.hideSheet)
-                            store.send(.updatePin(""))
-                        })
-                        .environmentObject(store.state.routingState.pinInputModel)
-                    }()))
-                })
-            }
-        }
-        .padding(.top, 12)
-    }
-
     private var bottomView: some View {
         VStack {
-            if store.state.bankSelectUserState.users.count < maxUserCount {
+            if store.state.bankSelectUserState.userListModel.items.count < maxUserCount {
                 Spacer()
                 Button {
                     store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
@@ -144,7 +142,7 @@ struct BankUserListView: View {
             expiryDate: Date(), fullname: "Иванов Михаил Романович",
             title: "Дизайнер", keyId: "", certHash: "", tokenSerial: "")
 
-        let state = AppState(bankSelectUserState: BankSelectUsersState(users: [user1, user2, user3]))
+        let state = AppState(bankSelectUserState: BankSelectUsersState())
         let store = Store(initialState: state,
                           reducer: AppReducer(),
                           middlewares: [])
@@ -153,6 +151,9 @@ struct BankUserListView: View {
                 .ignoresSafeArea()
             BankUserListView()
                 .environmentObject(store)
+                .onAppear {
+                    store.state.bankSelectUserState.userListModel.items = [user1, user2, user3]
+                }
         }
     }
  }

@@ -66,7 +66,7 @@ public struct CertListView: View {
                         .foregroundStyle(Color.RtColors.rtLabelPrimary)
                         .multilineTextAlignment(.leading)
                         .padding(.top, 5)
-                        .sizeReader(size: $headerSize)
+                        .rtSizeReader(size: $headerSize)
                         .padding(.bottom, 12)
                     certList
                         .padding(.top, 12)

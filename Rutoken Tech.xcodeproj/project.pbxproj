@@ -117,7 +117,6 @@
 		D433144A2B767E2700442809 /* OnHandleOpenLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43314492B767E2600442809 /* OnHandleOpenLink.swift */; };
 		D433144C2B76848900442809 /* LinkType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D433144B2B76848900442809 /* LinkType.swift */; };
 		D43478F42BEB63C300986F79 /* EncryptDocumentByFileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43478F32BEB63C300986F79 /* EncryptDocumentByFileTests.swift */; };
-		D437117D2B67A70A00441FBC /* SizeReaderViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D437117C2B67A70A00441FBC /* SizeReaderViewModifier.swift */; };
 		D44833A22B8C78A800A9B7A2 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44833A12B8C78A800A9B7A2 /* UserManager.swift */; };
 		D44833A42B8C7B8B00A9B7A2 /* UserManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44833A32B8C7B8B00A9B7A2 /* UserManagerMock.swift */; };
 		D4497EF72C2AB8C800FCFBDF /* EncryptDocumentByCertIdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4497EF62C2AB8C800FCFBDF /* EncryptDocumentByCertIdTests.swift */; };
@@ -284,7 +283,6 @@
 		D43314492B767E2600442809 /* OnHandleOpenLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnHandleOpenLink.swift; sourceTree = "<group>"; };
 		D433144B2B76848900442809 /* LinkType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkType.swift; sourceTree = "<group>"; };
 		D43478F32BEB63C300986F79 /* EncryptDocumentByFileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptDocumentByFileTests.swift; sourceTree = "<group>"; };
-		D437117C2B67A70A00441FBC /* SizeReaderViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeReaderViewModifier.swift; sourceTree = "<group>"; };
 		D44833A12B8C78A800A9B7A2 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		D44833A32B8C7B8B00A9B7A2 /* UserManagerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagerMock.swift; sourceTree = "<group>"; };
 		D4497EF62C2AB8C800FCFBDF /* EncryptDocumentByCertIdTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptDocumentByCertIdTests.swift; sourceTree = "<group>"; };
@@ -831,7 +829,6 @@
 				D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */,
 				441658462B5988F000225948 /* WrappedPointer.swift */,
 				D4FEB5C62B62675400D3BAD2 /* ScrollViewOffset.swift */,
-				D437117C2B67A70A00441FBC /* SizeReaderViewModifier.swift */,
 				D499FDBA2BD27D7F0053FB28 /* View+getSaveAreaInsets.swift */,
 			);
 			path = Utils;
@@ -1035,7 +1032,6 @@
 				44A415042B60F67600D78653 /* FileHelper.swift in Sources */,
 				D4FC26C92B270C580029060D /* NfcMessages.swift in Sources */,
 				44F55C952BF21B0D007F441C /* OnEncryptDocument.swift in Sources */,
-				D437117D2B67A70A00441FBC /* SizeReaderViewModifier.swift in Sources */,
 				44416B2F2B555F4500EC5F66 /* CertRequest.swift in Sources */,
 				D4D46A0F2B3038F60005981A /* Atomic+propertywrapper.swift in Sources */,
 				4464FAA82B359ED5005F732F /* Pkcs11Object.swift in Sources */,
@@ -1469,7 +1465,7 @@
 			repositoryURL = "https://github.com/AktivCo/swift-ui-components.git";
 			requirement = {
 				kind = revision;
-				revision = 30901d9a7ce07dc9763893b18668af2a69712b2f;
+				revision = c209732f53d0c85622bc9b04121ecab4f1858b2c;
 			};
 		};
 		5E1F3AA32BA362C5008158EF /* XCRemoteSwiftPackageReference "tiny-redux" */ = {

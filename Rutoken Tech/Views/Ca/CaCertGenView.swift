@@ -40,7 +40,7 @@ struct CaCertGenView: View {
                         .padding(.bottom, 24)
                     certFieldRows
                 }
-                .sizeReader(size: $scrollContentSize)
+                .rtSizeReader(size: $scrollContentSize)
                 .padding(.top, 6)
                 .padding(.bottom, 12)
             } onOffsetChanged: { offset in
@@ -51,7 +51,7 @@ struct CaCertGenView: View {
                     isBottomViewShown = offset > diff
                 }
             }
-            .sizeReader(size: $wholeContentSize)
+            .rtSizeReader(size: $wholeContentSize)
             .gesture(DragGesture()
                 .updating($dragOffset) { value, state, _ in
                     state = value.translation

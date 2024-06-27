@@ -17,6 +17,9 @@ struct RutokenTechApp: App {
     let store: Store<AppState, AppAction>
 
     init() {
+        UIView.appearance().isMultipleTouchEnabled = false
+        UIView.appearance().isExclusiveTouch = true
+
         var middlewares: [any Middleware<AppAction>] = []
 
         if !ProcessInfo.isPreview {

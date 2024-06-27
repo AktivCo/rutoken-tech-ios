@@ -75,7 +75,7 @@ struct AppReducer: Reducer {
         case .selectCert:
             break
         case let .updateUsers(users):
-            newState.bankSelectUserState.users = users
+            newState.bankSelectUserState.userListModel.items = users
         case .deleteUser:
             break
         case .authUser:
