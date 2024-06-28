@@ -106,6 +106,9 @@ struct CaCertGenView: View {
         }
         .background(Color.RtColors.rtSurfaceQuaternary)
         .clipShape(RoundedRectangle(cornerRadius: 12))
+        .onChange(of: nameInput) { text in
+            nameInput = String(text.prefix(65))
+        }
     }
 
     private var certFieldRows: some View {
