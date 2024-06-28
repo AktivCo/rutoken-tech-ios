@@ -25,7 +25,8 @@ struct RutokenTechApp: App {
         if !ProcessInfo.isPreview {
             let userManager = UserManager()
             let fileHelper = FileHelper()
-            guard let documentManager = DocumentManager(helper: fileHelper) else {
+            let fileSource = FileSourceHelper()
+            guard let documentManager = DocumentManager(helper: fileHelper, fileSource: fileSource) else {
                 fatalError("Failed to initialize DocumentManager")
             }
             let engineWrapper = RtEngineWrapper()
@@ -38,7 +39,8 @@ struct RutokenTechApp: App {
             let cryptoManager = CryptoManager(pkcs11Helper: pkcsHelper,
                                               pcscHelper: pcscHelper,
                                               openSslHelper: openSslHelper,
-                                              fileHelper: fileHelper)
+                                              fileHelper: fileHelper,
+                                              fileSource: fileSource)
 
             middlewares = [
                 OnStartMonitoring(cryptoManager: cryptoManager, userManager: userManager, documentManager: documentManager),

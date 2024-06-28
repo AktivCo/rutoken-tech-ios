@@ -10,59 +10,66 @@ import XCTest
 @testable import Rutoken_Tech
 
 
-class ReadDocsFromBundleTests: XCTestCase {
+class DocumentManagerReadDocsFromBundleTests: XCTestCase {
     var manager: DocumentManager!
     var helper: FileHelperMock!
+    var source: FileSourceMock!
 
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
 
         helper = FileHelperMock()
-        manager = DocumentManager(helper: helper)
+        source = FileSourceMock()
+        manager = DocumentManager(helper: helper, fileSource: source)
     }
 
     func testReadDocsFromBundleSuccess() throws {
-        let json = """
-            [{"name": "Инкассовое поручение №00981.pdf",
-            "action": "encrypt",
-            "amount": 45000,
-            "companyName": "ООО «Тренд Хоум»",
-            "paymentTime": "18.02.2023 10:20"},
-            {"name": "Инкассовое поручение №15.pdf",
-            "action": "decrypt",
-            "amount": 700350,
-            "companyName": "АО «Тандер Боут»",
-            "paymentTime": "30.08.2023 12:54"}]
-"""
-        helper.readFileCallback = { _ in
-            return json.data(using: .utf8)!
+        let doc = BankDocument(name: "Инкассовое поручение №00981.pdf",
+                     action: .encrypt,
+                     amount: 45000,
+                     companyName: "ООО «Тренд Хоум»",
+                     paymentTime: Date())
+
+        let docUrl = URL(fileURLWithPath: "documents.json")
+        let getUrlExp = expectation(description: "Get URL expectation")
+        getUrlExp.expectedFulfillmentCount = 2
+        source.getUrlResult = { file, _ in
+            defer { getUrlExp.fulfill() }
+            switch file {
+            case "documents.json": return docUrl
+            default: return URL(fileURLWithPath: "")
+            }
         }
 
+        let readFileExp = expectation(description: "Read file expectation")
+        readFileExp.expectedFulfillmentCount = 2
+        helper.readFileCallback = { url in
+            defer { readFileExp.fulfill() }
+            switch url {
+            case docUrl: return try BankDocument.jsonEncoder.encode([doc])
+            default: return Data(repeating: 0x07, count: 7)
+            }
+        }
         let result = try manager.readDocsFromBundle()
-        let data = try BankDocument.jsonDecoder.decode([BankDocument].self, from: Data(json.utf8))
 
-        data.forEach { data in
-            XCTAssert(result.contains { doc in
-                doc.doc.name == data.name && doc.action == data.action
-            })
+        result.forEach {
+            XCTAssertEqual($0.action, doc.action)
+            XCTAssertEqual($0.doc.name, doc.name)
         }
+
+        wait(for: [getUrlExp, readFileExp], timeout: 0.3)
     }
 
-    func testReadDocsFromBundleNoDocsSuccess() throws {
-        let json = """
-                []
-"""
-        helper.readFileCallback = { _ in
-            return json.data(using: .utf8)!
+    func testReadDocsFromBundleGetUrlForDocError() throws {
+        source.getUrlResult = { _, _ in
+            return nil
         }
 
-        let result = try manager.readDocsFromBundle()
-        XCTAssertEqual(result.count, 0)
+        assertError(try manager.readDocsFromBundle(), throws: DocumentManagerError.general("Something went wrong during reset directory"))
     }
 
-
-    func testReadDocsFromBundleReadFileError() throws {
+    func testReadDocsFromBundleReadFileDocError() throws {
         let error = FileHelperError.generalError(15, "FileHelperError")
         helper.readFileCallback = { _ in
             throw error
@@ -71,38 +78,81 @@ class ReadDocsFromBundleTests: XCTestCase {
         assertError(try manager.readDocsFromBundle(), throws: error)
     }
 
-    func testReadDocsFromBundleBadJson() throws {
-        let badJson = """
-            [[{"name": "Инкассовое поручение №00981.pdf",
-            "action": "encrypt",
-            "amount": 45000,
-            "companyName": "ООО «Тренд Хоум»",
-            "paymentTime": "18.02.2023 10:20"},
-            {"name": "Инкассовое поручение №15.pdf",
-            "action": "decrypt",
-            "amount": 700350,
-            "companyName": "АО «Тандер Боут»",
-            "paymentTime": "30.08.2023 12:54"}]
-"""
+    func testReadDocsFromBundleNoDocsSuccess() throws {
         helper.readFileCallback = { _ in
-            return badJson.data(using: .utf8)!
+            return try BankDocument.jsonEncoder.encode([BankDocument]())
+        }
+
+        let result = try manager.readDocsFromBundle()
+        XCTAssertEqual(result.count, 0)
+    }
+
+    func testReadDocsFromBundleBadJson() throws {
+        helper.readFileCallback = { _ in
+            Data("[[]".utf8)
         }
         XCTAssertThrowsError(try manager.readDocsFromBundle())
     }
 
-    func testReadDocsFromBundleWrongDocumentNameError() throws {
-        let json = """
-            [{"name": "wrongdocname",
-            "action": "encrypt",
-            "amount": 45000,
-            "companyName": "ООО «Тренд Хоум»",
-            "paymentTime": "18.02.2023 10:20"}]
-"""
-        helper.readFileCallback = { _ in
-            return json.data(using: .utf8)!
+    func testReadDocsFromBundleGetUrlForFileError() throws {
+        let doc = BankDocument(name: "Инкассовое поручение №00981.pdf",
+                     action: .encrypt,
+                     amount: 45000,
+                     companyName: "ООО «Тренд Хоум»",
+                     paymentTime: Date())
+
+        let docUrl = URL(fileURLWithPath: "documents.json")
+        let getUrlExp = expectation(description: "Get URL expectation")
+        getUrlExp.expectedFulfillmentCount = 2
+        source.getUrlResult = { file, _ in
+            defer { getUrlExp.fulfill() }
+            switch file {
+            case "documents.json": return docUrl
+            default: return nil
+            }
         }
 
-        let error = DocumentManagerError.general("Something went wrong during reading the file")
-        assertError(try manager.readDocsFromBundle(), throws: error)
+        helper.readFileCallback = { _ in
+            try BankDocument.jsonEncoder.encode([doc])
+        }
+
+        assertError(try manager.readDocsFromBundle(), throws: DocumentManagerError.general("Something went wrong during reading the file"))
+
+        wait(for: [getUrlExp], timeout: 0.3)
+    }
+
+    func testReadDocsFromBundleReadFileError() throws {
+        let doc = BankDocument(name: "Инкассовое поручение №00981.pdf",
+                     action: .encrypt,
+                     amount: 45000,
+                     companyName: "ООО «Тренд Хоум»",
+                     paymentTime: Date())
+
+        let docUrl = URL(fileURLWithPath: "documents.json")
+        let getUrlExp = expectation(description: "Get URL expectation")
+        getUrlExp.expectedFulfillmentCount = 2
+        source.getUrlResult = { file, dir in
+            defer { getUrlExp.fulfill() }
+            XCTAssertEqual(dir, .documents)
+            switch file {
+            case "documents.json": return docUrl
+            default: return URL(fileURLWithPath: "")
+            }
+        }
+
+        let readFileExp = expectation(description: "Get URL expectation")
+        readFileExp.expectedFulfillmentCount = 2
+        let someError = DocumentManagerError.general("some error")
+        helper.readFileCallback = { url in
+            defer { readFileExp.fulfill() }
+            switch url {
+            case docUrl: return try BankDocument.jsonEncoder.encode([doc])
+            default: throw someError
+            }
+        }
+
+        assertError(try manager.readDocsFromBundle(), throws: someError)
+
+        wait(for: [getUrlExp, readFileExp], timeout: 0.3)
     }
 }

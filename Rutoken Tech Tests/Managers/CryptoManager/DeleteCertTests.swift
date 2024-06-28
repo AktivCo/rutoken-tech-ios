@@ -16,6 +16,7 @@ final class CryptoManagerDeleteCertTests: XCTestCase {
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: FileHelperMock!
+    var fileSource: FileSourceMock!
     var token: TokenMock!
 
     let someId = "some id"
@@ -27,8 +28,11 @@ final class CryptoManagerDeleteCertTests: XCTestCase {
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
         fileHelper = FileHelperMock()
+        fileSource = FileSourceMock()
 
-        manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper, openSslHelper: openSslHelper, fileHelper: fileHelper)
+        manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
+                                openSslHelper: openSslHelper, fileHelper: fileHelper,
+                                fileSource: fileSource)
 
         token = TokenMock(serial: "87654321", currentInterface: .usb)
         pkcs11Helper.tokenPublisher.send([token])

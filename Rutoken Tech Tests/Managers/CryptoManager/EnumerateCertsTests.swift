@@ -51,6 +51,7 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: FileHelperMock!
+    var fileSource: FileSourceMock!
 
     var token: TokenMock!
     var keyId: String!
@@ -62,9 +63,11 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
         fileHelper = FileHelperMock()
+        fileSource = FileSourceMock()
 
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
-                                openSslHelper: openSslHelper, fileHelper: fileHelper)
+                                openSslHelper: openSslHelper, fileHelper: fileHelper,
+                                fileSource: fileSource)
 
         token = TokenMock(serial: "87654321", currentInterface: .usb, supportedInterfaces: [.usb])
         pkcs11Helper.tokenPublisher.send([token])

@@ -44,7 +44,7 @@ struct PaymentListView: View {
         commonView
             .navigationDestination(isPresented: Binding(
                 get: { store.state.bankSelectedDocumentState.docContent != nil },
-                set: { ok in if !ok { store.send(.updateCurrentDoc(nil, nil))} })) {
+                set: { ok in if !ok { store.send(.updateCurrentDoc(nil, nil)) } })) {
                     DocumentProcessView()
                         .navigationBarBackButtonHidden(true)
                 }

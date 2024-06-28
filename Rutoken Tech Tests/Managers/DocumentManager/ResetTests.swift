@@ -13,13 +13,15 @@ import XCTest
 class DocumentManagerResetTests: XCTestCase {
     var manager: DocumentManager!
     var helper: FileHelperMock!
+    var source: FileSourceMock!
 
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
 
         helper = FileHelperMock()
-        manager = DocumentManager(helper: helper)
+        source = FileSourceMock()
+        manager = DocumentManager(helper: helper, fileSource: source)
     }
 
     func testResetTempDirectorySuccess() throws {
@@ -35,11 +37,18 @@ class DocumentManagerResetTests: XCTestCase {
                                paymentTime: paymentDay)
 
         let exp1 = XCTestExpectation(description: "Clear temp directory")
-        helper.clearDirCallback = { _ in exp1.fulfill() }
+        let docUrl = URL(fileURLWithPath: "documents.json")
+        source.getUrlResult = { file, dir in
+            XCTAssertEqual(file, "documents.json")
+            XCTAssertEqual(dir, .documents)
+            return docUrl
+        }
         helper.readFileCallback = { url in
-            XCTAssertEqual(Bundle.getUrl(for: "documents.json", in: "BankDocuments"), url)
+            XCTAssertEqual(url, docUrl)
             return try BankDocument.jsonEncoder.encode([doc])
         }
+
+        helper.clearDirCallback = { _ in exp1.fulfill() }
 
         let docs = try awaitPublisherUnwrapped(manager.documents.dropFirst()) {
             XCTAssertNoThrow(try manager.reset())
@@ -62,11 +71,17 @@ class DocumentManagerResetTests: XCTestCase {
                                 companyName: "ОАО \"Нефтегаз\"",
                                 paymentTime: Date())
 
+        let docUrl = URL(fileURLWithPath: "documents.json")
+        source.getUrlResult = { file, dir in
+            XCTAssertEqual(file, "documents.json")
+            XCTAssertEqual(dir, .documents)
+            return docUrl
+        }
         helper.readFileCallback = { url in
-            XCTAssertEqual(Bundle.getUrl(for: "documents.json", in: "BankDocuments"), url)
+            XCTAssertEqual(url, docUrl)
             return try BankDocument.jsonEncoder.encode([document, anotherDocument])
         }
-        let manager = DocumentManager(helper: helper)
+
         try manager!.reset()
         let documents = try awaitPublisherUnwrapped(manager!.documents)
         XCTAssertTrue(documents.contains(document))
@@ -93,6 +108,19 @@ class DocumentManagerResetTests: XCTestCase {
         }
 
         XCTAssertTrue(docs.isEmpty)
+    }
+
+    func testResetTempDirectoryGetUrlError() throws {
+        source.getUrlResult = { _, _ in nil}
+
+        try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
+            XCTAssertThrowsError(try manager.reset()) {
+                guard case .general = $0 as? DocumentManagerError else {
+                    XCTFail("Enexpected error is received")
+                    return
+                }
+            }
+        }
     }
 
     func testResetTempDirectoryReadFileError() throws {

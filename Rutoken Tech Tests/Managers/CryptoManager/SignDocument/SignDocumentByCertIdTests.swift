@@ -16,6 +16,7 @@ class SignDocumentByCertIdTests: XCTestCase {
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: FileHelperMock!
+    var fileSource: FileSourceMock!
 
     var token: TokenMock!
     var keyId: String!
@@ -29,9 +30,11 @@ class SignDocumentByCertIdTests: XCTestCase {
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
         fileHelper = FileHelperMock()
+        fileSource = FileSourceMock()
 
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
-                                openSslHelper: openSslHelper, fileHelper: fileHelper)
+                                openSslHelper: openSslHelper, fileHelper: fileHelper,
+                                fileSource: fileSource)
 
         token = TokenMock(serial: "87654321", currentInterface: .usb, supportedInterfaces: [.usb])
         pkcs11Helper.tokenPublisher.send([token])
@@ -54,7 +57,19 @@ class SignDocumentByCertIdTests: XCTestCase {
             XCTAssertEqual($0, self.keyId)
             return WrappedPointer<OpaquePointer>({
                 OpaquePointer.init(bitPattern: 1)!
-            }, {_ in})!
+            }, { _ in})!
+        }
+
+        let someUrl = URL(fileURLWithPath: "someurl")
+        fileSource.getUrlResult = { file, dir in
+            XCTAssertEqual(file, RtFile.caCert.rawValue)
+            XCTAssertEqual(dir, .credentials)
+            return someUrl
+        }
+
+        fileHelper.readFileCallback = { url in
+            XCTAssertEqual(url, someUrl)
+            return Data()
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
@@ -89,12 +104,25 @@ class SignDocumentByCertIdTests: XCTestCase {
         }
     }
 
-    func testSignDocumentFileHelperError() async throws {
+    func testSignDocumentGetUrlError() async throws {
+        token.enumerateCertsWithIdCallback = {
+            XCTAssertEqual($0, self.keyId)
+            return [Pkcs11ObjectMock()]
+        }
+
+        fileSource.getUrlResult = { _, _ in nil }
+        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
+            assertError(try manager.signDocument(dataToSign, certId: keyId), throws: CryptoManagerError.unknown)
+        }
+    }
+
+    func testSignDocumentReadFileError() async throws {
         let error = FileHelperError.generalError(32, "FileHelper error")
         token.enumerateCertsWithIdCallback = {
             XCTAssertEqual($0, self.keyId)
             return [Pkcs11ObjectMock()]
         }
+
         fileHelper.readFileCallback = { _ in
             throw error
         }
@@ -116,7 +144,7 @@ class SignDocumentByCertIdTests: XCTestCase {
             XCTAssertEqual($0, self.keyId)
             return WrappedPointer<OpaquePointer>({
                 OpaquePointer.init(bitPattern: 1)!
-            }, {_ in})!
+            }, { _ in})!
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {

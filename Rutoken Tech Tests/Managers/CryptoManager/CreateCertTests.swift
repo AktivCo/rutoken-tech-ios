@@ -16,6 +16,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: FileHelperMock!
+    var fileSource: FileSourceMock!
     var token: TokenMock!
 
     override func setUp() {
@@ -25,8 +26,11 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
         fileHelper = FileHelperMock()
+        fileSource = FileSourceMock()
 
-        manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper, openSslHelper: openSslHelper, fileHelper: fileHelper)
+        manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
+                                openSslHelper: openSslHelper, fileHelper: fileHelper,
+                                fileSource: fileSource)
 
         token = TokenMock(serial: "87654321", currentInterface: .usb)
         token.enumerateKeysWithAlgoCallback = { _ in
@@ -37,16 +41,42 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     }
 
     func testCreateCertSuccess() async throws {
+        let getUrlExp = XCTestExpectation(description: "Get URL expectation")
+        getUrlExp.expectedFulfillmentCount = 2
+        fileSource.getUrlResult = { file, dir in
+            defer { getUrlExp.fulfill() }
+            XCTAssertTrue([RtFile.caKey, RtFile.caCert].map { $0.rawValue }.contains(file))
+            XCTAssertEqual(dir, .credentials)
+            return URL(fileURLWithPath: file)
+        }
+        let readFileExp = XCTestExpectation(description: "Read file expectation")
+        readFileExp.expectedFulfillmentCount = 2
+        fileHelper.readFileCallback = { url in
+            defer { readFileExp.fulfill() }
+            XCTAssertTrue([RtFile.caKey, RtFile.caCert].map { URL(fileURLWithPath: $0.rawValue) }.contains(url))
+            return Data()
+        }
+
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertNoThrowAsync(try await manager.createCert(for: "001",
                                                                   with: CsrModel.makeDefaultModel()))
         }
+        await fulfillment(of: [getUrlExp, readFileExp], timeout: 0.3)
     }
 
     func testCreateCertTokenNotFoundError() async {
         await assertErrorAsync(
             try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
             throws: CryptoManagerError.tokenNotFound)
+    }
+
+    func testCreateCertGetUrlError() async throws {
+        fileSource.getUrlResult = { _, _ in nil }
+        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
+            await assertErrorAsync(
+                try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
+                throws: CryptoManagerError.unknown)
+        }
     }
 
     func testCreateCertWrappedKeyError() async throws {

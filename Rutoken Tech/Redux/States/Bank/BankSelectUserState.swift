@@ -13,7 +13,7 @@ struct BankSelectUsersState {
                                                                 contentBuilder: { user, startToClose in
         UserListItem(user: user, startToClose: startToClose)
     },
-                                                                onSelect: {_ in},
-                                                                onDelete: {_ in})
+                                                                onSelect: { _ in},
+                                                                onDelete: { _ in})
     var selectedUser: BankUserInfo?
 }

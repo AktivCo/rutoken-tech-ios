@@ -12,7 +12,10 @@ import XCTest
 
 class DocumentManagerInitBackupTests: XCTestCase {
     var manager: DocumentManager!
+
     var helper: FileHelperMock!
+    var source: FileSourceMock!
+
     var docsUrl: URL!
     var documentData: [DocumentData]!
 
@@ -25,8 +28,11 @@ class DocumentManagerInitBackupTests: XCTestCase {
             DocumentData(name: "document1", content: Data(repeating: 55, count: 19)),
             DocumentData(name: "document2", content: Data(repeating: 19, count: 55))
         ]
+
         helper = FileHelperMock()
-        manager = DocumentManager(helper: helper)
+        source = FileSourceMock()
+
+        manager = DocumentManager(helper: helper, fileSource: source)
     }
 
     func testInitBackupSuccess() throws {

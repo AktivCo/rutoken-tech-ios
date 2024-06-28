@@ -16,10 +16,10 @@ class EncryptDocumentByFileTests: XCTestCase {
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: FileHelperMock!
+    var fileSource: FileSourceMock!
 
     var documentData: Data!
     var certData: Data!
-    var certUrl: URL!
 
     override func setUp() {
         super.setUp()
@@ -29,21 +29,30 @@ class EncryptDocumentByFileTests: XCTestCase {
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
         fileHelper = FileHelperMock()
+        fileSource = FileSourceMock()
+
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
-                                openSslHelper: openSslHelper, fileHelper: fileHelper)
+                                openSslHelper: openSslHelper, fileHelper: fileHelper,
+                                fileSource: fileSource)
 
         certData = Data("bankCertData".utf8)
         documentData = Data("document to encrypt data".utf8)
-        certUrl = Bundle.getUrl(for: RtFile.bankCert.rawValue, in: RtFile.subdir)
     }
 
     func testEncryptDocumentFileSuccess() throws {
         let certData = Data("bankCertData".utf8)
         let encryptedData = Data("encryptedData".utf8)
-        fileHelper.readFileCallback = { [self] in
-            XCTAssertEqual(certUrl, $0)
+        let certUrl = URL(fileURLWithPath: RtFile.bankCert.rawValue)
+        fileSource.getUrlResult = { file, dir in
+            XCTAssertEqual(file, RtFile.bankCert.rawValue)
+            XCTAssertEqual(dir, .credentials)
+            return certUrl
+        }
+        fileHelper.readFileCallback = { url in
+            XCTAssertEqual(url, certUrl)
             return certData
         }
+
         openSslHelper.encryptCmsCallback = {
             XCTAssertEqual($1, certData)
             return encryptedData
@@ -52,10 +61,14 @@ class EncryptDocumentByFileTests: XCTestCase {
         XCTAssertEqual(result, encryptedData)
     }
 
+    func testEncryptDocumentFileGetUrlError() async {
+        fileSource.getUrlResult = { _, _ in nil }
+        assertError(try manager.encryptDocument(documentData, certFile: .bankCert), throws: CryptoManagerError.unknown)
+    }
+
     func testEncryptDocumentFileReadFileError() throws {
         let error = FileHelperError.generalError(23, "reading file error")
-        fileHelper.readFileCallback = { [self] in
-            XCTAssertEqual(certUrl, $0)
+        fileHelper.readFileCallback = { _ in
             throw error
         }
         assertError(try manager.encryptDocument(documentData, certFile: .bankCert), throws: error)
@@ -63,9 +76,8 @@ class EncryptDocumentByFileTests: XCTestCase {
 
     func testEncryptDocumentFileOpenSslError() throws {
         let error = OpenSslError.generalError(32, "openssl error")
-        fileHelper.readFileCallback = { [self] in
-            XCTAssertEqual(certUrl, $0)
-            return certData
+        fileHelper.readFileCallback = { _ in
+            return self.certData
         }
         openSslHelper.encryptCmsCallback = { [self] in
             XCTAssertEqual(documentData, $0)

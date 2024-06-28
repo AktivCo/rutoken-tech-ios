@@ -16,6 +16,7 @@ class CryptoManagerDecryptCmsTests: XCTestCase {
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: FileHelperMock!
+    var fileSource: FileSourceMock!
 
     var token: TokenMock!
     var documentData: Data!
@@ -30,8 +31,11 @@ class CryptoManagerDecryptCmsTests: XCTestCase {
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
         fileHelper = FileHelperMock()
+        fileSource = FileSourceMock()
+
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
-                                openSslHelper: openSslHelper, fileHelper: fileHelper)
+                                openSslHelper: openSslHelper, fileHelper: fileHelper,
+                                fileSource: fileSource)
 
         certId = "certId"
         documentData = Data("data to decrypt".utf8)
@@ -49,7 +53,7 @@ class CryptoManagerDecryptCmsTests: XCTestCase {
             XCTAssertEqual($0, self.certId)
             return WrappedPointer<OpaquePointer>({
                 OpaquePointer.init(bitPattern: 1)!
-            }, {_ in})!
+            }, { _ in})!
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {

@@ -44,13 +44,15 @@ class DocumentManager: DocumentManagerProtocol {
     }
 
     private let fileHelper: FileHelperProtocol
+    private let fileSoruce: FileSourceProtocol
+
     private var documentsPublisher = CurrentValueSubject<[BankDocument], Never>([])
     private let documentListFileName = "documents.json"
-    private let documentsBundleSubdir = "BankDocuments"
     private let documentsUrl: URL
 
-    init?(helper: FileHelperProtocol) {
+    init?(helper: FileHelperProtocol, fileSource: FileSourceProtocol) {
         self.fileHelper = helper
+        self.fileSoruce = fileSource
 
         guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return nil
@@ -99,7 +101,7 @@ class DocumentManager: DocumentManagerProtocol {
     func readDocsFromBundle() throws -> [DocBundleData] {
         let docsInfo = try readDocsMetaData()
         return try docsInfo.map { doc in
-            guard let url = Bundle.getUrl(for: doc.name, in: documentsBundleSubdir) else {
+            guard let url = fileSoruce.getUrl(for: doc.name, in: .documents) else {
                 throw DocumentManagerError.general("Something went wrong during reading the file")
             }
             let content = try fileHelper.readFile(from: url)
@@ -136,7 +138,7 @@ class DocumentManager: DocumentManagerProtocol {
     }
 
     private func readDocsMetaData() throws -> [BankDocument] {
-        guard let jsonUrl = Bundle.getUrl(for: documentListFileName, in: documentsBundleSubdir) else {
+        guard let jsonUrl = fileSoruce.getUrl(for: documentListFileName, in: .documents) else {
             throw DocumentManagerError.general("Something went wrong during reset directory")
         }
 

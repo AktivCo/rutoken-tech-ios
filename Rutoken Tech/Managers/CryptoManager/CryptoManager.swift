@@ -66,6 +66,7 @@ class CryptoManager: CryptoManagerProtocol {
     private let pcscHelper: PcscHelperProtocol
     private let openSslHelper: OpenSslHelperProtocol
     private let fileHelper: FileHelperProtocol
+    private let fileSource: FileSourceProtocol
 
     private var cancellable = [UUID: AnyCancellable]()
     @Atomic var tokens: [Pkcs11TokenProtocol] = []
@@ -76,11 +77,13 @@ class CryptoManager: CryptoManagerProtocol {
     init(pkcs11Helper: Pkcs11HelperProtocol,
          pcscHelper: PcscHelperProtocol,
          openSslHelper: OpenSslHelperProtocol,
-         fileHelper: FileHelperProtocol) {
+         fileHelper: FileHelperProtocol,
+         fileSource: FileSourceProtocol) {
         self.pkcs11Helper = pkcs11Helper
         self.pcscHelper = pcscHelper
         self.openSslHelper = openSslHelper
         self.fileHelper = fileHelper
+        self.fileSource = fileSource
 
         pkcs11Helper.tokens
             .assign(to: \.tokens, on: self)
@@ -159,16 +162,15 @@ class CryptoManager: CryptoManagerProtocol {
             throw CryptoManagerError.tokenNotFound
         }
 
-        let keyPair = try token.enumerateKey(by: id)
-
-        guard let caKeyUrl = Bundle.getUrl(for: RtFile.caKey.rawValue, in: RtFile.subdir),
-              let caCertUrl = Bundle.getUrl(for: RtFile.caCert.rawValue, in: RtFile.subdir) else {
+        guard let caKeyUrl = fileSource.getUrl(for: RtFile.caKey.rawValue, in: .credentials),
+              let caCertUrl = fileSource.getUrl(for: RtFile.caCert.rawValue, in: .credentials) else {
             throw CryptoManagerError.unknown
         }
 
         let caKeyData = try fileHelper.readFile(from: caKeyUrl)
         let caCertData = try fileHelper.readFile(from: caCertUrl)
 
+        let keyPair = try token.enumerateKey(by: id)
         let startDateData = try keyPair.privateKey.getValue(forAttr: .startDate)
         let endDateData = try keyPair.privateKey.getValue(forAttr: .endDate)
         let info = CertInfo(startDate: startDateData.getDate(with: "YYYYMMdd"),
@@ -196,7 +198,8 @@ class CryptoManager: CryptoManagerProtocol {
         guard let userCertData = try token.enumerateCerts(by: certId).first?.getValue(forAttr: .value) else {
             throw CryptoManagerError.noSuitCert
         }
-        guard let caCertUrl = Bundle.getUrl(for: RtFile.caCert.rawValue, in: RtFile.subdir) else {
+
+        guard let caCertUrl = fileSource.getUrl(for: RtFile.caCert.rawValue, in: .credentials) else {
             throw CryptoManagerError.unknown
         }
         let caCertData = try fileHelper.readFile(from: caCertUrl)
@@ -205,9 +208,9 @@ class CryptoManager: CryptoManagerProtocol {
     }
 
     func signDocument(_ document: Data, keyFile: RtFile, certFile: RtFile) throws -> String {
-        guard let keyUrl = Bundle.getUrl(for: keyFile.rawValue, in: RtFile.subdir),
-              let certUrl = Bundle.getUrl(for: certFile.rawValue, in: RtFile.subdir),
-              let caCertUrl = Bundle.getUrl(for: RtFile.caCert.rawValue, in: RtFile.subdir) else {
+        guard let keyUrl = fileSource.getUrl(for: keyFile.rawValue, in: .credentials),
+              let certUrl = fileSource.getUrl(for: certFile.rawValue, in: .credentials),
+              let caCertUrl = fileSource.getUrl(for: RtFile.caCert.rawValue, in: .credentials) else {
             throw CryptoManagerError.unknown
         }
         let keyData = try fileHelper.readFile(from: keyUrl)
@@ -219,7 +222,7 @@ class CryptoManager: CryptoManagerProtocol {
 
     func verifyCms(signedCms: Data, document: Data) async throws {
         guard let cms = String(data: signedCms, encoding: .utf8),
-              let rootCaCertUrl = Bundle.getUrl(for: RtFile.rootCaCert.rawValue, in: RtFile.subdir) else {
+              let rootCaCertUrl = fileSource.getUrl(for: RtFile.rootCaCert.rawValue, in: .credentials) else {
             throw CryptoManagerError.unknown
         }
 
@@ -252,7 +255,7 @@ class CryptoManager: CryptoManagerProtocol {
     }
 
     func encryptDocument(_ document: Data, certFile: RtFile) throws -> Data {
-        guard let certUrl = Bundle.getUrl(for: certFile.rawValue, in: RtFile.subdir) else {
+        guard let certUrl = fileSource.getUrl(for: certFile.rawValue, in: .credentials) else {
             throw CryptoManagerError.unknown
         }
         let certData = try fileHelper.readFile(from: certUrl)

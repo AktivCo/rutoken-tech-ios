@@ -13,7 +13,10 @@ import XCTest
 
 class DocumentManagerMarkAsArchivedTests: XCTestCase {
     var manager: DocumentManager!
+
     var helper: FileHelperMock!
+    var source: FileSourceMock!
+
     var dataToSave: Data!
     var document: BankDocument!
 
@@ -22,7 +25,8 @@ class DocumentManagerMarkAsArchivedTests: XCTestCase {
         continueAfterFailure = false
 
         helper = FileHelperMock()
-        manager = DocumentManager(helper: helper)
+        source = FileSourceMock()
+        manager = DocumentManager(helper: helper, fileSource: source)
     }
 
     func testMarkAsArchivedSuccess() throws {

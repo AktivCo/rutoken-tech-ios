@@ -76,3 +76,15 @@ custom_rules:
     regex: "((?<!\\\\)\\([^\\)]*\\)[\\d\\w])"
     message: "Use one space after closing brace"
     severity: error
+
+  one_space_after_open_brace:
+    included: ".*\\.swift"
+    regex: "(\\{(?=[\\w_]))"
+    message: "Use one space after open brace"
+    severity: error
+
+  one_space_after_closed_brace:
+    included: ".*\\.swift"
+    regex: "((?<=[\\)])\\})"
+    message: "Use one space after closed brace"
+    severity: error

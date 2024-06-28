@@ -12,7 +12,10 @@ import XCTest
 
 class DocumentManagerReadDocumentTests: XCTestCase {
     var manager: DocumentManager!
+
     var helper: FileHelperMock!
+    var source: FileSourceMock!
+
     var document: BankDocument!
 
     override func setUp() {
@@ -20,7 +23,8 @@ class DocumentManagerReadDocumentTests: XCTestCase {
         continueAfterFailure = false
 
         helper = FileHelperMock()
-        manager = DocumentManager(helper: helper)
+        source = FileSourceMock()
+        manager = DocumentManager(helper: helper, fileSource: source)
     }
 
     func testReadDocumentFileToSignSuccess() throws {
@@ -31,7 +35,9 @@ class DocumentManagerReadDocumentTests: XCTestCase {
                                 companyName: "ОАО \"Нефтегаз\"",
                                 paymentTime: Date(),
                                 inArchive: true)
-        helper.readFileCallback = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
+        helper.readFileCallback = { _ in
+            return try BankDocument.jsonEncoder.encode([self.document])
+        }
 
         try manager.reset()
 

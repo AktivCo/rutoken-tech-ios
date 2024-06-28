@@ -16,6 +16,8 @@ final class CryptoManageTokenStateTests: XCTestCase {
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: FileHelperMock!
+    var fileSource: FileSourceMock!
+
     var nfcToken: TokenMock!
     var usbToken: TokenMock!
 
@@ -26,8 +28,11 @@ final class CryptoManageTokenStateTests: XCTestCase {
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
         fileHelper = FileHelperMock()
+        fileSource = FileSourceMock()
 
-        manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper, openSslHelper: openSslHelper, fileHelper: fileHelper)
+        manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
+                                openSslHelper: openSslHelper, fileHelper: fileHelper,
+                                fileSource: fileSource)
 
         usbToken = TokenMock(serial: "12345678", currentInterface: .usb)
         nfcToken = TokenMock(serial: "87654321", currentInterface: .nfc)

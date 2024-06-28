@@ -22,7 +22,7 @@ class OnPerformReadCerts: Middleware {
     private func getReason(for cert: CertMetaData, keys: [KeyModel], users: [BankUserInfo]) -> CertInvalidReason? {
         if Date() > cert.expiryDate { return .expired } else
         if users.contains(where: { $0.certHash == cert.hash }) { return .alreadyExist } else
-        if cert.startDate > Date() { return .notStartedBefore(cert.startDate)} else
+        if cert.startDate > Date() { return .notStartedBefore(cert.startDate) } else
         if !keys.contains(where: { $0.ckaId == cert.keyId }) { return .noKeyPair }
         return nil
     }
