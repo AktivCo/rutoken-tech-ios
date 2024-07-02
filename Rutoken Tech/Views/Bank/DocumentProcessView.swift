@@ -170,14 +170,8 @@ struct DocumentProcessView: View {
         VStack(spacing: 0) {
             navBar(title: String(store.state.bankSelectedDocumentState.metadata?.name.split(separator: ".").first ?? ""),
                    date: store.state.bankSelectedDocumentState.metadata?.paymentTime.getString(as: "d MMMM yyyy 'г. в' HH:mm") ?? "")
-
-            switch store.state.bankSelectedDocumentState.docContent {
-            case .singleFile(let content), .fileWithDetachedCMS(file: let content, cms: _):
-                displayContent(isRtPDFViewShown ? .pdf(content) : .text(content.base64EncodedString()))
-            default:
-                Spacer()
-            }
-
+            displayContent(isRtPDFViewShown ? .pdf(store.state.bankSelectedDocumentState.docContent?.data ?? Data()) :
+                    .text(store.state.bankSelectedDocumentState.docContent?.data.base64EncodedString() ?? ""))
             bottomBar()
         }
         .ignoresSafeArea(.keyboard)
@@ -232,7 +226,7 @@ struct DocumentProcessView_Previews: PreviewProvider {
             companyName: "ОАО “Нефтегаз”", paymentTime: Date(timeIntervalSince1970: 1720000000))
         let url = Bundle.main.url(forResource: metadata.name, withExtension: ".pdf", subdirectory: "BankDocuments")!
         let data = try? Data(contentsOf: url)
-        let content = BankFileContent.singleFile(data!)
+        let content = BankFileContent(data: data!)
 
         let doc = BankSelectedDocumentState(metadata: metadata, docContent: content)
         let state = AppState(bankSelectedDocumentState: doc)
@@ -264,7 +258,7 @@ struct DocumentProcessView_Previews: PreviewProvider {
             companyName: "ОАО “Нефтегаз”", paymentTime: Date(timeIntervalSince1970: 1720000000))
 
         let encryptedDoc = BankSelectedDocumentState(metadata: encryptMetadata,
-                                                     docContent: .singleFile(Data(encrypted.utf8)))
+                                                     docContent: BankFileContent(data: Data(encrypted.utf8)))
         let stateForEncrypted = AppState(bankSelectedDocumentState: encryptedDoc)
         let storeForEncrypted = Store(initialState: stateForEncrypted, reducer: AppReducer(), middlewares: [])
 

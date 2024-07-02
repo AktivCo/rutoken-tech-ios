@@ -8,7 +8,12 @@
 import Foundation
 
 
-enum BankFileContent {
-    case singleFile(Data)
-    case fileWithDetachedCMS(file: Data, cms: Data)
+struct BankFileContent {
+    let data: Data
+    let cmsData: Data?
+
+    init(data: Data, cmsData: Data? = nil) {
+        self.data = data
+        self.cmsData = cmsData
+    }
 }

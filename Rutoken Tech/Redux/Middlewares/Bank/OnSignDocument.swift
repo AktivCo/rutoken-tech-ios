@@ -31,17 +31,13 @@ class OnSignDocument: Middleware {
                     continuation.finish()
                 }
                 do {
-                    let bankContent = try documentManager.readDocument(with: documentName)
-                    guard case let .singleFile(document) = bankContent else {
-                        continuation.yield(.showAlert(.unknownError))
-                        return
-                    }
+                    let document = try documentManager.readDocument(with: documentName)
                     var cmsData: Data = Data()
                     try await cryptoManager.withToken(connectionType: connectionType, serial: serial, pin: pin) {
-                        let cms = try cryptoManager.signDocument(document, certId: certId)
+                        let cms = try cryptoManager.signDocument(document.data, certId: certId)
                         cmsData = Data(cms.utf8)
                     }
-                    let documentUrl = try documentManager.writeDocument(fileName: documentName, data: document)
+                    let documentUrl = try documentManager.writeDocument(fileName: documentName, data: document.data)
                     let signatureUrl = try documentManager.writeDocument(fileName: documentName + ".sig", data: cmsData)
                     try documentManager.markAsArchived(documentName: documentName)
 

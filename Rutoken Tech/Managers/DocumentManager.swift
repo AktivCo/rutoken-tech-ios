@@ -85,14 +85,11 @@ class DocumentManager: DocumentManagerProtocol {
             guard !urls.isEmpty else {
                 throw DocumentManagerError.general("Something went wrong during reading the file")
             }
-            if urls.count == 1 {
-                return .singleFile(try fileHelper.readFile(from: urls[0]))
-            } else if urls.count == 2 {
-                return .fileWithDetachedCMS(file: try fileHelper.readFile(from: urls[0]),
-                                            cms: try fileHelper.readFile(from: urls[1]))
-            } else {
-                throw DocumentManagerError.general("Something went wrong during reading the file")
-            }
+            let data = try fileHelper.readFile(from: urls[0])
+            let cmsData = urls.count == 2 ? try fileHelper.readFile(from: urls[1]) : nil
+
+            let bankFile = BankFileContent(data: data, cmsData: cmsData)
+            return bankFile
         } catch FileHelperError.generalError(let line, let str) {
             throw DocumentManagerError.general("\(line): \(String(describing: str))")
         }

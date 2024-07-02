@@ -28,12 +28,12 @@ class OnCmsVerify: Middleware {
                     continuation.finish()
                 }
                 do {
-                    guard case let .fileWithDetachedCMS(content, cms: cms) =
-                            try documentManager.readDocument(with: fileName) else {
+                    let document = try documentManager.readDocument(with: fileName)
+                    guard let cms = document.cmsData else {
                         continuation.yield(.showAlert(.unknownError))
                         return
                     }
-                    try await cryptoManager.verifyCms(signedCms: cms, document: content)
+                    try await cryptoManager.verifyCms(signedCms: cms, document: document.data)
                     try documentManager.markAsArchived(documentName: fileName)
                     continuation.yield(.showAlert(.verifySuccess))
                 } catch let error as CryptoManagerError {

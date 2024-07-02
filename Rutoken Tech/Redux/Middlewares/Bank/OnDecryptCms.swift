@@ -30,15 +30,11 @@ class OnDecryptCms: Middleware {
                     continuation.finish()
                 }
                 do {
-                    let file = try documentManager.readDocument(with: documentName)
-                    guard case let .singleFile(content) = file else {
-                        continuation.yield(.showAlert(.unknownError))
-                        return
-                    }
+                    let document = try documentManager.readDocument(with: documentName)
                     let connectionType: ConnectionType = tokenType == .nfc ? .nfc : .usb
                     var decryptedData = Data()
                     try await cryptoManager.withToken(connectionType: connectionType, serial: serial, pin: pin) {
-                        decryptedData = try cryptoManager.decryptCms(encryptedData: content, with: certId)
+                        decryptedData = try cryptoManager.decryptCms(encryptedData: document.data, with: certId)
                     }
 
                     let decryptedDocUrl = try documentManager.writeDocument(fileName: documentName, data: decryptedData)
@@ -47,7 +43,7 @@ class OnDecryptCms: Middleware {
                     _ = documentManager.documents.first().sink { docs in
                         let updatedDoc = docs.first { documentName == $0.name }
                         continuation.yield(.updateUrlsForShare([decryptedDocUrl]))
-                        continuation.yield(.updateCurrentDoc(updatedDoc, .singleFile(decryptedData)))
+                        continuation.yield(.updateCurrentDoc(updatedDoc, BankFileContent(data: decryptedData)))
                         continuation.yield(.hideSheet)
                         continuation.yield(.showAlert(.documentDecrypted))
                     }

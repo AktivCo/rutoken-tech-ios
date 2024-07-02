@@ -48,12 +48,8 @@ class DocumentManagerReadDocumentTests: XCTestCase {
             return data
         }
         let result = try manager.readDocument(with: document.name)
-        guard case .singleFile(let documentData) = result else {
-            XCTFail("Something went wrong with receiving of the file")
-            return
-        }
 
-        XCTAssertEqual(documentData, data)
+        XCTAssertEqual(result.data, data)
     }
 
     func testReadDocumentFileToVerifySuccess() throws {
@@ -83,13 +79,9 @@ class DocumentManagerReadDocumentTests: XCTestCase {
             return tmp
         }
         let result = try manager.readDocument(with: document.name)
-        guard case .fileWithDetachedCMS(let documentData, cms: let sig) = result else {
-            XCTFail("Something went wrong with receiving of the file")
-            return
-        }
 
-        XCTAssertEqual(documentData, data)
-        XCTAssertEqual(sig, cms)
+        XCTAssertEqual(result.data, data)
+        XCTAssertEqual(result.cmsData, cms)
         wait(for: [exp], timeout: 0.3)
     }
 
@@ -111,12 +103,8 @@ class DocumentManagerReadDocumentTests: XCTestCase {
             return data
         }
         let result = try manager.readDocument(with: document.name)
-        guard case .singleFile(let documentData) = result else {
-            XCTFail("Something went wrong with receiving of the file")
-            return
-        }
 
-        XCTAssertEqual(documentData, data)
+        XCTAssertEqual(result.data, data)
     }
 
     func testReadDocumentFileToDecryptSuccess() throws {
@@ -137,12 +125,8 @@ class DocumentManagerReadDocumentTests: XCTestCase {
             return encodedFile
         }
         let result = try manager.readDocument(with: document.name)
-        guard case .singleFile(let base64) = result else {
-            XCTFail("Something went wrong with receiving of the file")
-            return
-        }
 
-        XCTAssertEqual(base64, encodedFile)
+        XCTAssertEqual(result.data, encodedFile)
     }
 
     func testReadDocumentNoDocument() throws {
