@@ -70,4 +70,8 @@ enum AppAction {
     case selectDocument(BankDocument)
     case updateCurrentDoc(BankDocument?, BankFileContent?)
     case updateUrlsForShare([URL])
+
+    // MARK: VCR operations
+    case generateQrCode
+    case updateQrCode(Image)
 }

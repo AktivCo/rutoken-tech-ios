@@ -66,6 +66,11 @@ struct RutokenTechApp: App {
                 // About
                 OnHandleOpenLink()
             ]
+
+            if !UIDevice.isPhone {
+                let vcrManager = VcrManager()
+                middlewares.append(OnGenerateQrCode(vcrManager: vcrManager))
+            }
         }
 
         store = Store(initialState: AppState(),

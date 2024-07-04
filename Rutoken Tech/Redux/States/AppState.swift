@@ -9,6 +9,7 @@
 struct AppState {
     // MARK: Common
     var routingState = RoutingState()
+    var vcrState = VcrState()
     // MARK: Ca
     var caConnectedTokenState = CaConnectedTokenState()
     var caGenerateKeyPairState = CaGenerateKeyPairState()
