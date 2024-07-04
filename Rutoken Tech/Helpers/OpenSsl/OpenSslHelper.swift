@@ -32,11 +32,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
     private let requestExtensionsSection = "req_extensions"
     private let requestAttributesSection = "req_attributes"
 
-    let engine: RtEngineWrapperProtocol
-
-    init(engine: RtEngineWrapperProtocol) {
-        self.engine = engine
-
+    init() {
         let r = OPENSSL_init_crypto(UInt64(OPENSSL_INIT_NO_LOAD_CONFIG | OPENSSL_INIT_NO_ATEXIT), nil)
         assert(r == 1)
     }

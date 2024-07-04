@@ -29,7 +29,7 @@ struct RutokenTechApp: App {
                 fatalError("Failed to initialize DocumentManager")
             }
             let engineWrapper = RtEngineWrapper()
-            let openSslHelper = OpenSslHelper(engine: engineWrapper)
+            let openSslHelper = OpenSslHelper()
 
             let pkcsHelper = Pkcs11Helper(with: engineWrapper)
             let pcscHelper = PcscHelper(pcscWrapper: RtPcscWrapper())
