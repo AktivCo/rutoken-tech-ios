@@ -93,6 +93,20 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
                                throws: CryptoManagerError.tokenNotFound)
     }
 
+    func testDecryptCmsConnectionLostError() async throws {
+        token.enumerateCertsCallback = {
+            throw Pkcs11Error.internalError()
+        }
+        pkcs11Helper.isPresentCallback = { _ in
+            return false
+        }
+        await assertErrorAsync(
+            try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
+                _ = try await manager.enumerateCerts()
+            },
+            throws: CryptoManagerError.connectionLost)
+    }
+
     func testEnumerateCertsNoData() async throws {
         token.enumerateCertsCallback = {
             return [Pkcs11ObjectMock()]

@@ -22,4 +22,10 @@ class Pkcs11HelperMock: Pkcs11HelperProtocol {
     }
 
     var tokenPublisher = CurrentValueSubject<[Pkcs11TokenProtocol], Never>([])
+
+    func isPresent(_ slot: CK_SLOT_ID) -> Bool {
+        isPresentCallback(slot)
+    }
+
+    var isPresentCallback: (CK_SLOT_ID) -> Bool = { _ in true }
 }

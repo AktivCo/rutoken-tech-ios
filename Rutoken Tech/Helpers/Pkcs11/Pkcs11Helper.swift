@@ -12,6 +12,7 @@ import Foundation
 protocol Pkcs11HelperProtocol {
     var tokens: AnyPublisher<[Pkcs11TokenProtocol], Never> { get }
     func startMonitoring() throws
+    func isPresent(_ slot: CK_SLOT_ID) -> Bool
 }
 
 class Pkcs11Helper: Pkcs11HelperProtocol {
@@ -91,17 +92,9 @@ class Pkcs11Helper: Pkcs11HelperProtocol {
         }
     }
 
-    private func isPresent(_ slot: CK_SLOT_ID) -> Bool {
+    func isPresent(_ slot: CK_SLOT_ID) -> Bool {
         var slotInfo = CK_SLOT_INFO()
         let rv = C_GetSlotInfo(slot, &slotInfo)
-        guard rv == CKR_OK else {
-            return false
-        }
-
-        if slotInfo.flags & UInt(CKF_TOKEN_PRESENT) == 0 {
-            return false
-        }
-
-        return true
+        return rv == CKR_OK && slotInfo.flags & UInt(CKF_TOKEN_PRESENT) != 0
     }
 }

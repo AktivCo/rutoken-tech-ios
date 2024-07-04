@@ -47,6 +47,9 @@ class OnDecryptCms: Middleware {
                         continuation.yield(.hideSheet)
                         continuation.yield(.showAlert(.documentDecrypted))
                     }
+                } catch CryptoManagerError.nfcStopped {
+                } catch CryptoManagerError.incorrectPin(let attemptsLeft) {
+                    continuation.yield(.showPinInputError("Неверный PIN-код. Осталось попыток: \(attemptsLeft)"))
                 } catch let error as CryptoManagerError {
                     continuation.yield(.showAlert(AppAlert(from: error)))
                 } catch {

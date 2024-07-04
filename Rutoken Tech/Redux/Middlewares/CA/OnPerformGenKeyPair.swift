@@ -37,14 +37,12 @@ class OnPerformGenKeyPair: Middleware {
                     continuation.yield(.showAlert(.keyGenerated))
                     continuation.yield(.hideSheet)
                 } catch CryptoManagerError.nfcStopped {
-                } catch CryptoManagerError.connectionLost {
-                    continuation.yield(.showAlert(.connectionLost))
-                } catch CryptoManagerError.wrongToken {
-                    continuation.yield(.showAlert(.wrongToken))
                 } catch CryptoManagerError.incorrectPin {
                     continuation.yield(.hideSheet)
                     continuation.yield(.logout)
                     continuation.yield(.showAlert(.pinHasChanged))
+                } catch let error as CryptoManagerError {
+                    continuation.yield(.showAlert(AppAlert(from: error)))
                 } catch {
                     continuation.yield(.showAlert(.unknownError))
                 }

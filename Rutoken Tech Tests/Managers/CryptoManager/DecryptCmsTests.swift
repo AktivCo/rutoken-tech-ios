@@ -66,6 +66,20 @@ class CryptoManagerDecryptCmsTests: XCTestCase {
         assertError(try manager.decryptCms(encryptedData: documentData, with: certId), throws: CryptoManagerError.tokenNotFound)
     }
 
+    func testDecryptCmsConnectionLostError() async throws {
+        token.getWrappedKeyCallback = { _ in
+            throw Pkcs11Error.internalError()
+        }
+        pkcs11Helper.isPresentCallback = { _ in
+            return false
+        }
+        await assertErrorAsync(
+            try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
+                _ = try manager.decryptCms(encryptedData: documentData, with: certId)
+            },
+            throws: CryptoManagerError.connectionLost)
+    }
+
     func testDecryptCmsKeyNotFoundError() async throws {
         token.getWrappedKeyCallback = { _ in
             throw Pkcs11Error.internalError()

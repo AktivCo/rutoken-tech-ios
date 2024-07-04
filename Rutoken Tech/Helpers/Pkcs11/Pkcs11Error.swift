@@ -9,5 +9,4 @@
 enum Pkcs11Error: Error, Equatable {
     case incorrectPin
     case internalError(rv: UInt? = nil)
-    case tokenDisconnected
 }

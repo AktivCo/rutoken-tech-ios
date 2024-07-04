@@ -321,10 +321,13 @@ class CryptoManager: CryptoManagerProtocol {
             try await callback()
         } catch NfcError.cancelledByUser, NfcError.timeout {
             throw CryptoManagerError.nfcStopped
-        } catch Pkcs11Error.tokenDisconnected {
-            throw CryptoManagerError.connectionLost
         } catch Pkcs11Error.incorrectPin {
             throw CryptoManagerError.incorrectPin((try? connectedToken?.getPinAttempts()) ?? 0)
+        } catch Pkcs11Error.internalError {
+            guard let slot = connectedToken?.slot else {
+                throw CryptoManagerError.connectionLost
+            }
+            throw pkcs11Helper.isPresent(slot) ? CryptoManagerError.unknown : CryptoManagerError.connectionLost
         } catch let error as CryptoManagerError {
             throw error
         } catch {

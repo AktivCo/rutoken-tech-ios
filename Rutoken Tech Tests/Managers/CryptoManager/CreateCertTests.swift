@@ -151,15 +151,18 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         }
     }
 
-    func testCreateCertTokenDisconnectedError() async throws {
+    func testCreateCertConnectionLostError() async throws {
         token.importCertCallback = { _, _ in
-            throw Pkcs11Error.tokenDisconnected
+            throw Pkcs11Error.internalError(rv: 10)
         }
 
-        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
-            await assertErrorAsync(
-                try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
-                throws: Pkcs11Error.tokenDisconnected)
+        pkcs11Helper.isPresentCallback = { _ in
+            return false
         }
+        await assertErrorAsync(
+            try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
+                try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel())
+            },
+            throws: CryptoManagerError.connectionLost)
     }
 }

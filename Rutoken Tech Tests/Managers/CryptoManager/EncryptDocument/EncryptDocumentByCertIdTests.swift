@@ -66,6 +66,20 @@ class EncryptDocumentByCertIdTests: XCTestCase {
         assertError(try manager.encryptDocument(documentData, certId: certId), throws: CryptoManagerError.tokenNotFound)
     }
 
+    func testEncryptDocumentConnectionLostError() async throws {
+        token.enumerateCertsWithIdCallback = { _ in
+            throw Pkcs11Error.internalError()
+        }
+        pkcs11Helper.isPresentCallback = { _ in
+            return false
+        }
+        await assertErrorAsync(
+            try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
+                _ = try manager.encryptDocument(documentData, certId: certId)
+            },
+            throws: CryptoManagerError.connectionLost)
+    }
+
 
     func testEncryptDocumentTokenNoSuitCertError() async throws {
         token.enumerateCertsWithIdCallback = {

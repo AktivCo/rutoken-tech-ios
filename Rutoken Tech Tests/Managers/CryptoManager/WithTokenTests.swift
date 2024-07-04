@@ -112,7 +112,10 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         pkcs11Helper.tokenPublisher.send([token])
 
         token.loginCallback = { _ in
-            throw Pkcs11Error.tokenDisconnected
+            throw Pkcs11Error.internalError(rv: 10)
+        }
+        pkcs11Helper.isPresentCallback = { _ in
+            return false
         }
 
         await assertErrorAsync(
@@ -189,5 +192,21 @@ final class CryptoManagerWithTokenTests: XCTestCase {
                 throw Pkcs11Error.internalError()
             },
             throws: CryptoManagerError.unknown)
+    }
+
+    func testWithTokenConnectionLostError() async {
+        let token = TokenMock(serial: "12345678", currentInterface: .usb)
+        pkcs11Helper.tokenPublisher.send([token])
+
+        token.loginCallback = { _ in
+            throw Pkcs11Error.internalError(rv: 10)
+        }
+        pkcs11Helper.isPresentCallback = { _ in
+            return false
+        }
+
+        await assertErrorAsync(
+            try await manager.withToken(connectionType: .usb, serial: "12345678", pin: "12345678") { },
+            throws: CryptoManagerError.connectionLost)
     }
 }

@@ -11,17 +11,20 @@ import Foundation
 
 
 class TokenMock: Pkcs11TokenProtocol {
+    let slot: CK_SLOT_ID
     let label: String
     let serial: String
     let model: Pkcs11TokenModel
     let currentInterface: Pkcs11TokenInterface
     let supportedInterfaces: Set<Pkcs11TokenInterface>
 
-    init(label: String = "",
+    init(slot: CK_SLOT_ID = CK_SLOT_ID(),
+         label: String = "",
          serial: String = "",
          model: Pkcs11TokenModel = .rutoken3Nfc_3100,
          currentInterface: Pkcs11TokenInterface = .nfc,
          supportedInterfaces: Set<Pkcs11TokenInterface> = [.nfc]) {
+        self.slot = slot
         self.label = label
         self.serial = serial
         self.model = model

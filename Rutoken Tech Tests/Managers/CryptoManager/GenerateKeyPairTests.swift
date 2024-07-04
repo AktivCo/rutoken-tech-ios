@@ -41,11 +41,14 @@ class CryptoManagerGenerateKeyPairTests: XCTestCase {
         }
     }
 
-    func testGenerateKeyPairTokenDisconnectedError() async {
+    func testGenerateKeyPairConnectionLostErrorError() async {
         let token = TokenMock(serial: "12345678", currentInterface: .usb)
         pkcs11Helper.tokenPublisher.send([token])
         token.generateKeyPairCallback = { _ in
-            throw Pkcs11Error.tokenDisconnected
+            throw Pkcs11Error.internalError(rv: 10)
+        }
+        pkcs11Helper.isPresentCallback = { _ in
+            return false
         }
 
         await assertErrorAsync(

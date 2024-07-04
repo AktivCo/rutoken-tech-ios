@@ -46,7 +46,7 @@ class Pkcs11Session {
         var template = attributes
         var rv = C_FindObjectsInit(handle, &template, CK_ULONG(template.count))
         guard rv == CKR_OK else {
-            throw rv == CKR_DEVICE_REMOVED ? Pkcs11Error.tokenDisconnected: Pkcs11Error.internalError(rv: rv)
+            throw Pkcs11Error.internalError(rv: rv)
         }
         defer {
             C_FindObjectsFinal(handle)
@@ -61,7 +61,7 @@ class Pkcs11Session {
 
             rv = C_FindObjects(handle, &handles, maxCount, &count)
             guard rv == CKR_OK else {
-                throw rv == CKR_DEVICE_REMOVED ? Pkcs11Error.tokenDisconnected: Pkcs11Error.internalError(rv: rv)
+                throw Pkcs11Error.internalError(rv: rv)
             }
 
             objects += handles.prefix(Int(count))

@@ -55,4 +55,20 @@ final class CryptoManagerEnumerateKeysTests: XCTestCase {
         await assertErrorAsync(try await manager.enumerateKeys(),
                                throws: CryptoManagerError.tokenNotFound)
     }
+
+    func testEnumerateKeysConnectionLostError() async throws {
+        let token = TokenMock(serial: "87654321", currentInterface: .usb)
+        pkcs11Helper.tokenPublisher.send([token])
+        token.enumerateKeysWithAlgoCallback = { _ in
+            throw Pkcs11Error.internalError()
+        }
+        pkcs11Helper.isPresentCallback = { _ in
+            return false
+        }
+        await assertErrorAsync(
+            try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
+                _ = try await manager.enumerateKeys()
+            },
+            throws: CryptoManagerError.connectionLost)
+    }
 }

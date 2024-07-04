@@ -46,6 +46,8 @@ class OnAuthUser: Middleware {
                 } catch CryptoManagerError.nfcStopped {
                 } catch let error as CryptoManagerError {
                     continuation.yield(.showAlert(AppAlert(from: error)))
+                } catch {
+                    continuation.yield(.showAlert(.unknownError))
                 }
             }
         }

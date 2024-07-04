@@ -64,4 +64,18 @@ final class CryptoManagerDeleteCertTests: XCTestCase {
                 throws: Pkcs11Error.internalError())
         }
     }
+
+    func testDecryptCmsConnectionLostError() async throws {
+        token.deleteCertCallback = { _ in
+            throw Pkcs11Error.internalError()
+        }
+        pkcs11Helper.isPresentCallback = { _ in
+            return false
+        }
+        await assertErrorAsync(
+            try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
+                try await manager.deleteCert(with: someId)
+            },
+            throws: CryptoManagerError.connectionLost)
+    }
 }

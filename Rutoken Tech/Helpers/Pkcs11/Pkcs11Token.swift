@@ -9,6 +9,7 @@ import Foundation
 
 
 protocol Pkcs11TokenProtocol {
+    var slot: CK_SLOT_ID { get }
     var label: String { get }
     var serial: String { get }
     var model: Pkcs11TokenModel { get }
@@ -37,7 +38,7 @@ protocol Pkcs11TokenProtocol {
 }
 
 class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
-    private let slot: CK_SLOT_ID
+    let slot: CK_SLOT_ID
     private let session: Pkcs11Session
     private let engine: RtEngineWrapperProtocol
     private var tokenInfo: CK_TOKEN_INFO
@@ -87,9 +88,7 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
 
     // MARK: - Public API
     func login(with pin: String) throws {
-        try checkingToken {
-            try session.login(pin: pin)
-        }
+        try session.login(pin: pin)
     }
 
     func logout() {
@@ -211,7 +210,7 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
                                    &privateKeyTemplate, CK_ULONG(privateKeyTemplate.count),
                                    &publicKey, &privateKey)
         guard rv == CKR_OK else {
-            throw rv == CKR_DEVICE_REMOVED ? Pkcs11Error.tokenDisconnected: Pkcs11Error.internalError(rv: rv)
+            throw Pkcs11Error.internalError(rv: rv)
         }
     }
 
@@ -242,7 +241,7 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
         var certHandle = CK_OBJECT_HANDLE()
         let rv = C_CreateObject(session.handle, &certTemplate, CK_ULONG(certTemplate.count), &certHandle)
         guard rv == CKR_OK else {
-            throw rv == CKR_DEVICE_REMOVED ? Pkcs11Error.tokenDisconnected: Pkcs11Error.internalError(rv: rv)
+            throw Pkcs11Error.internalError(rv: rv)
         }
     }
 
@@ -258,19 +257,6 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
     }
 
     // MARK: - Private API
-    private func checkingToken<T>(_ closure: () throws -> T) throws -> T {
-        do {
-            return try closure()
-        } catch let error {
-            var slotInfo = CK_SLOT_INFO()
-            let rv = C_GetSlotInfo(slot, &slotInfo)
-            guard rv == CKR_OK,
-                  slotInfo.flags & UInt(CKF_TOKEN_PRESENT) != 0 else {
-                throw Pkcs11Error.tokenDisconnected
-            }
-            throw error
-        }
-    }
 
     private func getTokenInterfaces() throws -> (Pkcs11TokenInterface, Set<Pkcs11TokenInterface>) {
         let objectAttributes = [
@@ -327,7 +313,7 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
         for obj in objects {
             let rv = C_DestroyObject(session.handle, obj.handle)
             guard rv == CKR_OK else {
-                throw rv == CKR_DEVICE_REMOVED ? Pkcs11Error.tokenDisconnected: Pkcs11Error.internalError(rv: rv)
+                throw Pkcs11Error.internalError(rv: rv)
             }
         }
     }

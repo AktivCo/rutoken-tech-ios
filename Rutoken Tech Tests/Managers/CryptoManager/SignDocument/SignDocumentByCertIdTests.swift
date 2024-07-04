@@ -94,6 +94,20 @@ class SignDocumentByCertIdTests: XCTestCase {
         }
     }
 
+    func testSignDocumentConnectionLostError() async throws {
+        token.enumerateCertsWithIdCallback = { _ in
+            throw Pkcs11Error.internalError()
+        }
+        pkcs11Helper.isPresentCallback = { _ in
+            return false
+        }
+        await assertErrorAsync(
+            try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
+                _ = try manager.signDocument(dataToSign, certId: keyId)
+            },
+            throws: CryptoManagerError.connectionLost)
+    }
+
     func testSignDocumentNoSuitCertError() async throws {
         token.enumerateCertsWithIdCallback = {
             XCTAssertEqual($0, self.keyId)
