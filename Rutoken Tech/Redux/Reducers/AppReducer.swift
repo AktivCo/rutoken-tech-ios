@@ -116,6 +116,10 @@ struct AppReducer: Reducer {
             newState.bankSelectedDocumentState.docContent = content
         case let .updateUrlsForShare(urls):
             newState.bankSelectedDocumentState.urlsForShare = urls
+        case .generateQrCode:
+            break
+        case .updateQrCode(let image):
+            newState.vcrState.qrCode = image
         }
         return newState
     }

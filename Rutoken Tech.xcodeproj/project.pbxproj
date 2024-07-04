@@ -17,6 +17,10 @@
 		441658472B5988F000225948 /* WrappedPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 441658462B5988F000225948 /* WrappedPointer.swift */; };
 		4416A2772B70F9A500645800 /* View+InfoListStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416A2762B70F9A500645800 /* View+InfoListStyle.swift */; };
 		4416A27A2B70F9F600645800 /* View+createLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416A2792B70F9F600645800 /* View+createLabel.swift */; };
+		4418B6C62C36BF6000AF9DE5 /* VcrManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4418B6C52C36BF6000AF9DE5 /* VcrManager.swift */; };
+		4418B6CB2C36C2F700AF9DE5 /* OnGenerateQrCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4418B6CA2C36C2F700AF9DE5 /* OnGenerateQrCode.swift */; };
+		4418B6CF2C36C45F00AF9DE5 /* VcrState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4418B6CE2C36C45F00AF9DE5 /* VcrState.swift */; };
+		4418B6D12C36EF0E00AF9DE5 /* Image+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4418B6D02C36EF0E00AF9DE5 /* Image+Data.swift */; };
 		44207B0B2BFF3A25000F2795 /* TokenInteractionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44207B0A2BFF3A25000F2795 /* TokenInteractionState.swift */; };
 		4422B8222BB1540700A4EDB4 /* BankDocumentListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4422B8212BB1540700A4EDB4 /* BankDocumentListState.swift */; };
 		44251E6E2B8CD52400ADAA0D /* WrappedX509.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44251E6D2B8CD52400ADAA0D /* WrappedX509.swift */; };
@@ -189,6 +193,10 @@
 		441658462B5988F000225948 /* WrappedPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedPointer.swift; sourceTree = "<group>"; };
 		4416A2762B70F9A500645800 /* View+InfoListStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+InfoListStyle.swift"; sourceTree = "<group>"; };
 		4416A2792B70F9F600645800 /* View+createLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+createLabel.swift"; sourceTree = "<group>"; };
+		4418B6C52C36BF6000AF9DE5 /* VcrManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VcrManager.swift; sourceTree = "<group>"; };
+		4418B6CA2C36C2F700AF9DE5 /* OnGenerateQrCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnGenerateQrCode.swift; sourceTree = "<group>"; };
+		4418B6CE2C36C45F00AF9DE5 /* VcrState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VcrState.swift; sourceTree = "<group>"; };
+		4418B6D02C36EF0E00AF9DE5 /* Image+Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image+Data.swift"; sourceTree = "<group>"; };
 		44207B0A2BFF3A25000F2795 /* TokenInteractionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenInteractionState.swift; sourceTree = "<group>"; };
 		4422B8212BB1540700A4EDB4 /* BankDocumentListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankDocumentListState.swift; sourceTree = "<group>"; };
 		44251E6D2B8CD52400ADAA0D /* WrappedX509.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedX509.swift; sourceTree = "<group>"; };
@@ -382,8 +390,17 @@
 				4416A2762B70F9A500645800 /* View+InfoListStyle.swift */,
 				4416A2792B70F9F600645800 /* View+createLabel.swift */,
 				446BB6352BB402C70062EA45 /* View+CustomNavBar.swift */,
+				4418B6D02C36EF0E00AF9DE5 /* Image+Data.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		4418B6C82C36C2DE00AF9DE5 /* VCR */ = {
+			isa = PBXGroup;
+			children = (
+				4418B6CA2C36C2F700AF9DE5 /* OnGenerateQrCode.swift */,
+			);
+			path = VCR;
 			sourceTree = "<group>";
 		};
 		44311EFB2BCE5B8A00D16B0C /* CryptoManager */ = {
@@ -521,6 +538,7 @@
 			isa = PBXGroup;
 			children = (
 				4483F18B2B7A29420039EF3F /* OnStartMonitoring.swift */,
+				4418B6C82C36C2DE00AF9DE5 /* VCR */,
 				44E8C2E22B91EDDC008A77AE /* CA */,
 				44E8C2E12B91EDCD008A77AE /* Bank */,
 				44E8C2E32B91EE02008A77AE /* About */,
@@ -634,6 +652,7 @@
 			children = (
 				7D38D6D92B0E2C190045FBAD /* AppState.swift */,
 				5E1F3AC02BA4BA2E008158EF /* RoutingState.swift */,
+				4418B6CE2C36C45F00AF9DE5 /* VcrState.swift */,
 				44E8C2E62B91EF1D008A77AE /* CA */,
 				44E8C2E72B91EF2D008A77AE /* Bank */,
 			);
@@ -731,6 +750,7 @@
 				5EBA71BB2BCEB86300ECCA47 /* UserManager */,
 				D453F5F62B8CD94D008DD9E1 /* PinCodeManager.swift */,
 				44A1369D2B962184004E07E8 /* DocumentManager.swift */,
+				4418B6C52C36BF6000AF9DE5 /* VcrManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -1002,6 +1022,7 @@
 				7DA3751B2BD16AC600087DC8 /* OnSelectDocument.swift in Sources */,
 				D4B130D62B0E4F2400AD390F /* PcscHelper.swift in Sources */,
 				D42178192B205FD700D08948 /* AppAlert.swift in Sources */,
+				4418B6CF2C36C45F00AF9DE5 /* VcrState.swift in Sources */,
 				5EF75DE12AC707BD001834BE /* RootView.swift in Sources */,
 				4416A27A2B70F9F600645800 /* View+createLabel.swift in Sources */,
 				44E6FCA32BA97AB1001D35A5 /* OpenSslUtils.swift in Sources */,
@@ -1011,6 +1032,7 @@
 				7DF6204A2C1C75CD005B86D9 /* KeychainHelper.swift in Sources */,
 				446F71062B6271C400684E0D /* OnPerformGenCert.swift in Sources */,
 				44BB8F792B9F0DB400BF7438 /* BankDocument.swift in Sources */,
+				4418B6C62C36BF6000AF9DE5 /* VcrManager.swift in Sources */,
 				D4FAF1752B8338E50024EFDA /* UserListItem.swift in Sources */,
 				44E8C2E92B91FDD9008A77AE /* OnSelectCert.swift in Sources */,
 				D4FAF1792B8347960024EFDA /* ManagedBankUser.swift in Sources */,
@@ -1027,11 +1049,13 @@
 				5EB931172C1CFFFE00935DE7 /* Pkcs11Error.swift in Sources */,
 				D433144A2B767E2700442809 /* OnHandleOpenLink.swift in Sources */,
 				7DCC9AF12B3B2C9A002788B5 /* KeyModel.swift in Sources */,
+				4418B6D12C36EF0E00AF9DE5 /* Image+Data.swift in Sources */,
 				7D7D51832BB59DC200428107 /* BankFileContent.swift in Sources */,
 				5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */,
 				5E4C26E72C051606006F0B66 /* Pkcs11KeyPair.swift in Sources */,
 				4469F7882B34512E000DCF8B /* Pkcs11Attribute.swift in Sources */,
 				44A502CA2BB1B8BA006236E7 /* String+withoutPathExtension.swift in Sources */,
+				4418B6CB2C36C2F700AF9DE5 /* OnGenerateQrCode.swift in Sources */,
 				44A415042B60F67600D78653 /* FileHelper.swift in Sources */,
 				D4FC26C92B270C580029060D /* NfcMessages.swift in Sources */,
 				44F55C952BF21B0D007F441C /* OnEncryptDocument.swift in Sources */,
