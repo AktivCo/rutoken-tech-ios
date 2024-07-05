@@ -124,6 +124,8 @@ struct AppReducer: Reducer {
             newState.vcrState.qrCode = image
         case let .updateQrCodeCountdown(state):
             newState.vcrState.qrCodeTimer = state
+        case .updateVcrList(let vcrs):
+            newState.vcrState.vcrList = vcrs
         }
         return newState
     }

@@ -4,6 +4,11 @@
 <dict>
 	<key>LSMinimumSystemVersion</key>
 	<string>13.3</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_ru-rutoken-vcr._udp</string>
+		<string>_ru-rutoken-vcr._tcp</string>
+	</array>
 	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
 	<array>
 		<string>F0000000005275746F6B656E</string>

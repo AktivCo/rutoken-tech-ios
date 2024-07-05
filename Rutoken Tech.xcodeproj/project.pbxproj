@@ -37,6 +37,7 @@
 		4443EA0D2B96F59A0003436D /* KeyAlgorithm+description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4443EA0C2B96F59A0003436D /* KeyAlgorithm+description.swift */; };
 		444D9F5C2B8DECC600C1EB0B /* Date+getString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444D9F5B2B8DECC600C1EB0B /* Date+getString.swift */; };
 		4453EFF32BC9172C00F2CD07 /* CertViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4453EFF22BC9172C00F2CD07 /* CertViewData.swift */; };
+		4456A8CE2C37DD49001525DA /* VcrInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4456A8CD2C37DD49001525DA /* VcrInfo.swift */; };
 		4459B8FE2C0DCB6E004AAEE5 /* DeleteCertTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4459B8FD2C0DCB6E004AAEE5 /* DeleteCertTests.swift */; };
 		4464FAA82B359ED5005F732F /* Pkcs11Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464FAA72B359ED5005F732F /* Pkcs11Object.swift */; };
 		44675E792B14982A00DF87A1 /* RtEngineWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */; };
@@ -220,6 +221,7 @@
 		4443EA0C2B96F59A0003436D /* KeyAlgorithm+description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyAlgorithm+description.swift"; sourceTree = "<group>"; };
 		444D9F5B2B8DECC600C1EB0B /* Date+getString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+getString.swift"; sourceTree = "<group>"; };
 		4453EFF22BC9172C00F2CD07 /* CertViewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertViewData.swift; sourceTree = "<group>"; };
+		4456A8CD2C37DD49001525DA /* VcrInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VcrInfo.swift; sourceTree = "<group>"; };
 		4459B8FD2C0DCB6E004AAEE5 /* DeleteCertTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteCertTests.swift; sourceTree = "<group>"; };
 		4464FAA72B359ED5005F732F /* Pkcs11Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Object.swift; sourceTree = "<group>"; };
 		44675E782B14982A00DF87A1 /* RtEngineWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtEngineWrapper.swift; sourceTree = "<group>"; };
@@ -791,6 +793,7 @@
 				7D7D51822BB59DC200428107 /* BankFileContent.swift */,
 				4453EFF22BC9172C00F2CD07 /* CertViewData.swift */,
 				44E1BDD82C3BFA8800EC0803 /* QrCodeTimerState.swift */,
+				4456A8CD2C37DD49001525DA /* VcrInfo.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1093,6 +1096,7 @@
 				4464FAA82B359ED5005F732F /* Pkcs11Object.swift in Sources */,
 				D40CEFD62C3FEE8400826B15 /* QrCodeView.swift in Sources */,
 				D4D22A302BAC7E3000B93DA9 /* OnDeleteUser.swift in Sources */,
+				4456A8CE2C37DD49001525DA /* VcrInfo.swift in Sources */,
 				D49953BE2B55209E00E62B5B /* CaCertGenView.swift in Sources */,
 				D4B130B52B0DDB2200AD390F /* Pkcs11Helper.swift in Sources */,
 				D4C38F3A2B84CADE00BA50EC /* HeaderTitleView.swift in Sources */,
@@ -1371,6 +1375,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "РуТех";
 				INFOPLIST_KEY_NFCReaderUsageDescription = "NFC будет использован для работы с устройствами Рутокен";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Приложение использует Face ID для более быстрого и удобного процесса аутентификации";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Доступ необходим для работы с виртуальным считывателем Рутокен";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1414,6 +1419,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "РуТех";
 				INFOPLIST_KEY_NFCReaderUsageDescription = "NFC будет использован для работы с устройствами Рутокен";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Приложение использует Face ID для более быстрого и удобного процесса аутентификации";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Доступ необходим для работы с виртуальным считывателем Рутокен";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1517,7 +1523,7 @@
 			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-pcsc-wrapper.git";
 			requirement = {
 				kind = revision;
-				revision = be76d7b26fa99b6026404f12bb2481f5d0d0dd79;
+				revision = 7d82abca20e59893117c2eb278106700468dc4fe;
 			};
 		};
 		44D2616E2C062A8C000F5596 /* XCRemoteSwiftPackageReference "swift-ui-components" */ = {

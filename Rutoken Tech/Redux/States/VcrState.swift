@@ -11,4 +11,5 @@ import SwiftUI
 struct VcrState {
     var qrCode: Image?
     var qrCodeTimer = QrCodeTimerState.expired
+    var vcrList: [VcrInfo] = []
 }

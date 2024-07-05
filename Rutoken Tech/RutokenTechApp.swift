@@ -29,21 +29,25 @@ struct RutokenTechApp: App {
             guard let documentManager = DocumentManager(helper: fileHelper, fileSource: fileSource) else {
                 fatalError("Failed to initialize DocumentManager")
             }
+            let pinCodeManager = PinCodeManager(keychainManager: KeychainHelper())
+
+            let pcscWrapper = RtPcscWrapper()
             let engineWrapper = RtEngineWrapper()
             let openSslHelper = OpenSslHelper()
 
             let pkcsHelper = Pkcs11Helper(with: engineWrapper)
-            let pcscHelper = PcscHelper(pcscWrapper: RtPcscWrapper())
-            let pinCodeManager = PinCodeManager(keychainManager: KeychainHelper())
+            let pcscHelper = PcscHelper(pcscWrapper: pcscWrapper)
 
             let cryptoManager = CryptoManager(pkcs11Helper: pkcsHelper,
                                               pcscHelper: pcscHelper,
                                               openSslHelper: openSslHelper,
                                               fileHelper: fileHelper,
                                               fileSource: fileSource)
+            let vcrManager: VcrManagerProtocol? = !UIDevice.isPhone ? VcrManager(pcscWrapper: pcscWrapper) : nil
 
             middlewares = [
-                OnStartMonitoring(cryptoManager: cryptoManager, userManager: userManager, documentManager: documentManager),
+                OnStartMonitoring(cryptoManager: cryptoManager, userManager: userManager,
+                                  documentManager: documentManager, vcrManager: vcrManager),
                 // CA
                 OnPerformTokenConnection(cryptoManager: cryptoManager),
                 OnPerformGenKeyPair(cryptoManager: cryptoManager),
@@ -67,8 +71,7 @@ struct RutokenTechApp: App {
                 OnHandleOpenLink()
             ]
 
-            if !UIDevice.isPhone {
-                let vcrManager = VcrManager()
+            if !UIDevice.isPhone, let vcrManager {
                 middlewares.append(OnGenerateQrCode(vcrManager: vcrManager))
                 middlewares.append(OnSetQrCodeTimer())
             }

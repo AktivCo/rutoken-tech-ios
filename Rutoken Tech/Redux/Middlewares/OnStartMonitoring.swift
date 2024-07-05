@@ -14,15 +14,18 @@ class OnStartMonitoring: Middleware {
     private let cryptoManager: CryptoManagerProtocol
     private let userManager: UserManagerProtocol
     private let documentManager: DocumentManagerProtocol
+    private let vcrManager: VcrManagerProtocol?
 
     private var cancellable = Set<AnyCancellable>()
 
     init(cryptoManager: CryptoManagerProtocol,
          userManager: UserManagerProtocol,
-         documentManager: DocumentManagerProtocol) {
+         documentManager: DocumentManagerProtocol,
+         vcrManager: VcrManagerProtocol?) {
         self.cryptoManager = cryptoManager
         self.userManager = userManager
         self.documentManager = documentManager
+        self.vcrManager = vcrManager
     }
 
     func handle(action: AppAction) -> AsyncStream<AppAction>? {
@@ -36,12 +39,19 @@ class OnStartMonitoring: Middleware {
             } catch {
                 continuation.yield(.showAlert(.unknownError))
             }
+
             userManager.users.sink { users in
                 continuation.yield(.updateUsers(users))
             }
             .store(in: &cancellable)
+
             documentManager.documents.sink {
                 continuation.yield(.updateDocuments($0))
+            }
+            .store(in: &cancellable)
+
+            vcrManager?.vcrs.sink {
+                continuation.yield(.updateVcrList($0))
             }
             .store(in: &cancellable)
 

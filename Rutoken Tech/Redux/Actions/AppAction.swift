@@ -76,4 +76,5 @@ enum AppAction {
     case invalidateQrCodeTimer
     case updateQrCode(Image?)
     case updateQrCodeCountdown(QrCodeTimerState)
+    case updateVcrList([VcrInfo])
 }
