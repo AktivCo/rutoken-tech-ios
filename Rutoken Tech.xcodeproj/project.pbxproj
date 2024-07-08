@@ -135,6 +135,7 @@
 		D453F5F72B8CD94D008DD9E1 /* PinCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D453F5F62B8CD94D008DD9E1 /* PinCodeManager.swift */; };
 		D453F5FE2B90845A008DD9E1 /* PaymentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D453F5FD2B90845A008DD9E1 /* PaymentListView.swift */; };
 		D455FCAE2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D455FCAD2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift */; };
+		D46A05C52C3BC31200FFBA93 /* InstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46A05C42C3BC31200FFBA93 /* InstructionView.swift */; };
 		D46A55872BFDD5E100B33B3E /* DecryptCmsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46A55862BFDD5E100B33B3E /* DecryptCmsTests.swift */; };
 		D46FF1332C2AC14000C4966B /* SignDocumentByFileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46FF1322C2AC14000C4966B /* SignDocumentByFileTests.swift */; };
 		D47302C32B91E07F0049E8F8 /* PinCodeManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47302C22B91E07F0049E8F8 /* PinCodeManagerTests.swift */; };
@@ -308,6 +309,7 @@
 		D453F5F62B8CD94D008DD9E1 /* PinCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCodeManager.swift; sourceTree = "<group>"; };
 		D453F5FD2B90845A008DD9E1 /* PaymentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentListView.swift; sourceTree = "<group>"; };
 		D455FCAD2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaEmptyKeysCertView.swift; sourceTree = "<group>"; };
+		D46A05C42C3BC31200FFBA93 /* InstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionView.swift; sourceTree = "<group>"; };
 		D46A55862BFDD5E100B33B3E /* DecryptCmsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecryptCmsTests.swift; sourceTree = "<group>"; };
 		D46FF1322C2AC14000C4966B /* SignDocumentByFileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignDocumentByFileTests.swift; sourceTree = "<group>"; };
 		D47302C22B91E07F0049E8F8 /* PinCodeManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCodeManagerTests.swift; sourceTree = "<group>"; };
@@ -723,6 +725,7 @@
 		D44997F12AEA6EB500B0AB64 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D46A05C32C3BC2E200FFBA93 /* VCR */,
 				D4C38F382B84CAD100BA50EC /* Common */,
 				5EF30ED92B1A790E00E48627 /* Root */,
 				7D5390082B0FA17E00FE4738 /* Ca */,
@@ -730,6 +733,14 @@
 				44B4A81D2B6CD16100E59F63 /* AboutApp */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		D46A05C32C3BC2E200FFBA93 /* VCR */ = {
+			isa = PBXGroup;
+			children = (
+				D46A05C42C3BC31200FFBA93 /* InstructionView.swift */,
+			);
+			path = VCR;
 			sourceTree = "<group>";
 		};
 		D46FF1312C2AC0E500C4966B /* SignDocument */ = {
@@ -1131,6 +1142,7 @@
 				446E136C2B85D3AC0060ECEE /* OnPerformReadCerts.swift in Sources */,
 				44A502C62BB1AC1F006236E7 /* OnResetDocuments.swift in Sources */,
 				7D9D3C152B3C1DBF00BF2EE1 /* OnPerformGenKeyPair.swift in Sources */,
+				D46A05C52C3BC31200FFBA93 /* InstructionView.swift in Sources */,
 				44E9C0462B8387A20001E63F /* BankCertListState.swift in Sources */,
 				442E40A22BDAA190004DE6A0 /* CertInfo.swift in Sources */,
 				5EF30EE02B1A840800E48627 /* Pkcs11TokenInterface.swift in Sources */,
