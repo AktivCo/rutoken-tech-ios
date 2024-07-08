@@ -64,6 +64,8 @@
 		44CBDBE82BCD777E00F28E61 /* OnCmsVerify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CBDBE72BCD777E00F28E61 /* OnCmsVerify.swift */; };
 		44D261702C062A8C000F5596 /* RtUiComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 44D2616F2C062A8C000F5596 /* RtUiComponents */; };
 		44DC46CA2BCEC1FC003E88E6 /* String+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44DC46C92BCEC1FC003E88E6 /* String+Error.swift */; };
+		44E1BDD72C3BF85F00EC0803 /* OnSetQrCodeTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E1BDD62C3BF85F00EC0803 /* OnSetQrCodeTimer.swift */; };
+		44E1BDD92C3BFA8800EC0803 /* QrCodeTimerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E1BDD82C3BFA8800EC0803 /* QrCodeTimerState.swift */; };
 		44E6FCA32BA97AB1001D35A5 /* OpenSslUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E6FCA22BA97AB1001D35A5 /* OpenSslUtils.swift */; };
 		44E7F8322BA4760600786A42 /* OnDeletePin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E7F8312BA4760600786A42 /* OnDeletePin.swift */; };
 		44E8C2E92B91FDD9008A77AE /* OnSelectCert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E8C2E82B91FDD9008A77AE /* OnSelectCert.swift */; };
@@ -238,6 +240,8 @@
 		44CB44532BA18BB30056583E /* OnGetPin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnGetPin.swift; sourceTree = "<group>"; };
 		44CBDBE72BCD777E00F28E61 /* OnCmsVerify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnCmsVerify.swift; sourceTree = "<group>"; };
 		44DC46C92BCEC1FC003E88E6 /* String+Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Error.swift"; sourceTree = "<group>"; };
+		44E1BDD62C3BF85F00EC0803 /* OnSetQrCodeTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSetQrCodeTimer.swift; sourceTree = "<group>"; };
+		44E1BDD82C3BFA8800EC0803 /* QrCodeTimerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrCodeTimerState.swift; sourceTree = "<group>"; };
 		44E6FCA22BA97AB1001D35A5 /* OpenSslUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSslUtils.swift; sourceTree = "<group>"; };
 		44E7F8312BA4760600786A42 /* OnDeletePin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnDeletePin.swift; sourceTree = "<group>"; };
 		44E8C2E82B91FDD9008A77AE /* OnSelectCert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSelectCert.swift; sourceTree = "<group>"; };
@@ -395,6 +399,7 @@
 		4418B6C82C36C2DE00AF9DE5 /* VCR */ = {
 			isa = PBXGroup;
 			children = (
+				44E1BDD62C3BF85F00EC0803 /* OnSetQrCodeTimer.swift */,
 				4418B6CA2C36C2F700AF9DE5 /* OnGenerateQrCode.swift */,
 			);
 			path = VCR;
@@ -765,6 +770,7 @@
 				44BB8F782B9F0DB400BF7438 /* BankDocument.swift */,
 				7D7D51822BB59DC200428107 /* BankFileContent.swift */,
 				4453EFF22BC9172C00F2CD07 /* CertViewData.swift */,
+				44E1BDD82C3BFA8800EC0803 /* QrCodeTimerState.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1100,6 +1106,7 @@
 				7D5145412AFBD1DB004B6947 /* CaEntryView.swift in Sources */,
 				44B4A81C2B6CD15D00E59F63 /* AboutAppView.swift in Sources */,
 				7DAEA2AB2BCD856D00A906B2 /* RtPDFView.swift in Sources */,
+				44E1BDD72C3BF85F00EC0803 /* OnSetQrCodeTimer.swift in Sources */,
 				D4246A942B876CD500B5F737 /* AppStorage.xcdatamodeld in Sources */,
 				5EC532012BD0189200AD5854 /* BankUserInfo.swift in Sources */,
 				D4FAF1772B8347530024EFDA /* BankSelectUserState.swift in Sources */,
@@ -1122,6 +1129,7 @@
 				D4F7D8182B7CBC300055A3FD /* BankUserListView.swift in Sources */,
 				D453F5F52B8CD8F1008DD9E1 /* OnSavePin.swift in Sources */,
 				7DAEA2A92BCD6D4F00A906B2 /* BankSelectedDocumentState.swift in Sources */,
+				44E1BDD92C3BFA8800EC0803 /* QrCodeTimerState.swift in Sources */,
 				D455FCAE2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift in Sources */,
 				7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */,
 				44E7F8322BA4760600786A42 /* OnDeletePin.swift in Sources */,

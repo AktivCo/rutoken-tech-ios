@@ -118,8 +118,12 @@ struct AppReducer: Reducer {
             newState.bankSelectedDocumentState.urlsForShare = urls
         case .generateQrCode:
             break
+        case .invalidateQrCodeTimer:
+            break
         case .updateQrCode(let image):
             newState.vcrState.qrCode = image
+        case let .updateQrCodeCountdown(state):
+            newState.vcrState.qrCodeTimer = state
         }
         return newState
     }

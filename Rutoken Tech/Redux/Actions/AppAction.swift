@@ -73,5 +73,7 @@ enum AppAction {
 
     // MARK: VCR operations
     case generateQrCode
+    case invalidateQrCodeTimer
     case updateQrCode(Image)
+    case updateQrCodeCountdown(QrCodeTimerState)
 }
