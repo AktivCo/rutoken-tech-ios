@@ -15,7 +15,7 @@ class SignDocumentByCertIdTests: XCTestCase {
     var pkcs11Helper: Pkcs11HelperMock!
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
-    var fileHelper: FileHelperMock!
+    var fileHelper: RtMockFileHelperProtocol!
     var fileSource: FileSourceMock!
 
     var token: TokenMock!
@@ -29,7 +29,7 @@ class SignDocumentByCertIdTests: XCTestCase {
         pkcs11Helper = Pkcs11HelperMock()
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
-        fileHelper = FileHelperMock()
+        fileHelper = RtMockFileHelperProtocol()
         fileSource = FileSourceMock()
 
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
@@ -67,7 +67,7 @@ class SignDocumentByCertIdTests: XCTestCase {
             return someUrl
         }
 
-        fileHelper.readFileCallback = { url in
+        fileHelper.mocked_readFile = { url in
             XCTAssertEqual(url, someUrl)
             return Data()
         }
@@ -137,7 +137,7 @@ class SignDocumentByCertIdTests: XCTestCase {
             return [Pkcs11ObjectMock()]
         }
 
-        fileHelper.readFileCallback = { _ in
+        fileHelper.mocked_readFile = { _ in
             throw error
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
@@ -160,6 +160,7 @@ class SignDocumentByCertIdTests: XCTestCase {
                 OpaquePointer.init(bitPattern: 1)!
             }, { _ in})!
         }
+        fileHelper.mocked_readFile = { _ in Data() }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
             assertError(try manager.signDocument(dataToSign, certId: self.keyId), throws: error)

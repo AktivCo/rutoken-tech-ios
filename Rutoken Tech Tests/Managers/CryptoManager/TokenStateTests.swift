@@ -15,7 +15,7 @@ final class CryptoManageTokenStateTests: XCTestCase {
     var pkcs11Helper: Pkcs11HelperMock!
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
-    var fileHelper: FileHelperMock!
+    var fileHelper: RtMockFileHelperProtocol!
     var fileSource: FileSourceMock!
 
     var nfcToken: TokenMock!
@@ -27,7 +27,7 @@ final class CryptoManageTokenStateTests: XCTestCase {
         pkcs11Helper = Pkcs11HelperMock()
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
-        fileHelper = FileHelperMock()
+        fileHelper = RtMockFileHelperProtocol()
         fileSource = FileSourceMock()
 
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,

@@ -13,7 +13,7 @@ import XCTest
 class DocumentManagerInitBackupTests: XCTestCase {
     var manager: DocumentManager!
 
-    var helper: FileHelperMock!
+    var helper: RtMockFileHelperProtocol!
     var source: FileSourceMock!
 
     var docsUrl: URL!
@@ -29,7 +29,7 @@ class DocumentManagerInitBackupTests: XCTestCase {
             DocumentData(name: "document2", content: Data(repeating: 19, count: 55))
         ]
 
-        helper = FileHelperMock()
+        helper = RtMockFileHelperProtocol()
         source = FileSourceMock()
 
         manager = DocumentManager(helper: helper, fileSource: source)
@@ -38,7 +38,7 @@ class DocumentManagerInitBackupTests: XCTestCase {
     func testInitBackupSuccess() throws {
         let exp = XCTestExpectation(description: "Clear core directory")
         var tempDocs = documentData!
-        helper.saveFileCallback = { [self] data, url in
+        helper.mocked_saveFile = { [self] data, url in
             XCTAssertFalse(tempDocs.isEmpty)
             XCTAssertTrue(tempDocs.contains { doc in
                 doc.content == data && docsUrl.appendingPathComponent("BankCoreDir").appendingPathComponent(doc.name) == url
@@ -47,7 +47,7 @@ class DocumentManagerInitBackupTests: XCTestCase {
                 doc.content == data && docsUrl.appendingPathComponent("BankCoreDir").appendingPathComponent(doc.name) == url
             }
         }
-        helper.clearDirCallback = { _ in
+        helper.mocked_clearDir = { _ in
             exp.fulfill()
         }
         try manager.initBackup(docs: documentData)
@@ -58,10 +58,10 @@ class DocumentManagerInitBackupTests: XCTestCase {
         let exp1 = XCTestExpectation(description: "Clear core directory")
         let exp2 = XCTestExpectation(description: "Save file")
         exp2.isInverted = true
-        helper.clearDirCallback = { _ in
+        helper.mocked_clearDir = { _ in
             exp1.fulfill()
         }
-        helper.saveFileCallback = { _, _ in
+        helper.mocked_saveFile = { _, _ in
             exp2.fulfill()
         }
         try manager.initBackup(docs: [])
@@ -70,9 +70,10 @@ class DocumentManagerInitBackupTests: XCTestCase {
 
     func testInitBackupFileHelperError() throws {
         let error = FileHelperError.generalError(32, "FileHelper error")
-        helper.saveFileCallback = { _, _ in
+        helper.mocked_saveFile = { _, _ in
             throw error
         }
+        helper.mocked_clearDir = { _ in }
         assertError(try manager.initBackup(docs: documentData), throws: error)
     }
 

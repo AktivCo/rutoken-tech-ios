@@ -7,7 +7,10 @@
 
 import Foundation
 
+import RtMock
 
+
+@RtMock
 protocol FileHelperProtocol {
     func clearDir(dirUrl: URL) throws
     func readFile(from url: URL) throws -> Data

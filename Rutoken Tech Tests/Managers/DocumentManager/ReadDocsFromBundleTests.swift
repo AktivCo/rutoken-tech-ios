@@ -12,14 +12,14 @@ import XCTest
 
 class DocumentManagerReadDocsFromBundleTests: XCTestCase {
     var manager: DocumentManager!
-    var helper: FileHelperMock!
+    var helper: RtMockFileHelperProtocol!
     var source: FileSourceMock!
 
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
 
-        helper = FileHelperMock()
+        helper = RtMockFileHelperProtocol()
         source = FileSourceMock()
         manager = DocumentManager(helper: helper, fileSource: source)
     }
@@ -44,7 +44,7 @@ class DocumentManagerReadDocsFromBundleTests: XCTestCase {
 
         let readFileExp = expectation(description: "Read file expectation")
         readFileExp.expectedFulfillmentCount = 2
-        helper.readFileCallback = { url in
+        helper.mocked_readFile = { url in
             defer { readFileExp.fulfill() }
             switch url {
             case docUrl: return try BankDocument.jsonEncoder.encode([doc])
@@ -71,7 +71,7 @@ class DocumentManagerReadDocsFromBundleTests: XCTestCase {
 
     func testReadDocsFromBundleReadFileDocError() throws {
         let error = FileHelperError.generalError(15, "FileHelperError")
-        helper.readFileCallback = { _ in
+        helper.mocked_readFile = { _ in
             throw error
         }
 
@@ -79,7 +79,7 @@ class DocumentManagerReadDocsFromBundleTests: XCTestCase {
     }
 
     func testReadDocsFromBundleNoDocsSuccess() throws {
-        helper.readFileCallback = { _ in
+        helper.mocked_readFile = { _ in
             return try BankDocument.jsonEncoder.encode([BankDocument]())
         }
 
@@ -88,7 +88,7 @@ class DocumentManagerReadDocsFromBundleTests: XCTestCase {
     }
 
     func testReadDocsFromBundleBadJson() throws {
-        helper.readFileCallback = { _ in
+        helper.mocked_readFile = { _ in
             Data("[[]".utf8)
         }
         XCTAssertThrowsError(try manager.readDocsFromBundle())
@@ -112,7 +112,7 @@ class DocumentManagerReadDocsFromBundleTests: XCTestCase {
             }
         }
 
-        helper.readFileCallback = { _ in
+        helper.mocked_readFile = { _ in
             try BankDocument.jsonEncoder.encode([doc])
         }
 
@@ -143,7 +143,7 @@ class DocumentManagerReadDocsFromBundleTests: XCTestCase {
         let readFileExp = expectation(description: "Get URL expectation")
         readFileExp.expectedFulfillmentCount = 2
         let someError = DocumentManagerError.general("some error")
-        helper.readFileCallback = { url in
+        helper.mocked_readFile = { url in
             defer { readFileExp.fulfill() }
             switch url {
             case docUrl: return try BankDocument.jsonEncoder.encode([doc])

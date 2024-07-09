@@ -15,7 +15,7 @@ class CryptoManagerVerifyCmsTests: XCTestCase {
     var pkcs11Helper: Pkcs11HelperMock!
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
-    var fileHelper: FileHelperMock!
+    var fileHelper: RtMockFileHelperProtocol!
     var fileSource: FileSourceMock!
 
     override func setUp() {
@@ -24,7 +24,7 @@ class CryptoManagerVerifyCmsTests: XCTestCase {
         pkcs11Helper = Pkcs11HelperMock()
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
-        fileHelper = FileHelperMock()
+        fileHelper = RtMockFileHelperProtocol()
         fileSource = FileSourceMock()
 
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
@@ -39,7 +39,7 @@ class CryptoManagerVerifyCmsTests: XCTestCase {
             XCTAssertEqual(dir, .credentials)
             return rootCaUrl
         }
-        fileHelper.readFileCallback = { url in
+        fileHelper.mocked_readFile = { url in
             XCTAssertEqual(url, rootCaUrl)
             return Data()
         }
@@ -54,18 +54,20 @@ class CryptoManagerVerifyCmsTests: XCTestCase {
 
     func testVerifyCmsFailedChain() async {
         openSslHelper.verifyCmsCallback = { .failedChain }
+        fileHelper.mocked_readFile = { _ in Data() }
         await assertErrorAsync(try await manager.verifyCms(signedCms: Data(), document: Data()),
                                throws: CryptoManagerError.failedChain)
     }
 
     func testVerifyCmsError() async {
         openSslHelper.verifyCmsCallback = { .invalidSignature(.generalError(1, nil)) }
+        fileHelper.mocked_readFile = { _ in Data() }
         await assertErrorAsync(try await manager.verifyCms(signedCms: Data(), document: Data()),
                                throws: CryptoManagerError.invalidSignature)
     }
 
     func testVerifyCmsAnyOtherError() async {
-        fileHelper.readFileCallback = { _ in throw "some error" }
+        fileHelper.mocked_readFile = { _ in throw "some error" }
         await assertErrorAsync(try await manager.verifyCms(signedCms: Data(), document: Data()),
                                throws: CryptoManagerError.unknown)
     }

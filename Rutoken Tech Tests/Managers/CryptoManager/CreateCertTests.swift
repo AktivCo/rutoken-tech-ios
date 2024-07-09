@@ -15,7 +15,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     var pkcs11Helper: Pkcs11HelperMock!
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
-    var fileHelper: FileHelperMock!
+    var fileHelper: RtMockFileHelperProtocol!
     var fileSource: FileSourceMock!
     var token: TokenMock!
 
@@ -25,7 +25,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         pkcs11Helper = Pkcs11HelperMock()
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
-        fileHelper = FileHelperMock()
+        fileHelper = RtMockFileHelperProtocol()
         fileSource = FileSourceMock()
 
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
@@ -51,7 +51,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         }
         let readFileExp = XCTestExpectation(description: "Read file expectation")
         readFileExp.expectedFulfillmentCount = 2
-        fileHelper.readFileCallback = { url in
+        fileHelper.mocked_readFile = { url in
             defer { readFileExp.fulfill() }
             XCTAssertTrue([RtFile.caKey, RtFile.caCert].map { URL(fileURLWithPath: $0.rawValue) }.contains(url))
             return Data()
@@ -83,6 +83,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         token.getWrappedKeyCallback = { _ in
             throw Pkcs11Error.internalError()
         }
+        fileHelper.mocked_readFile = { _ in Data() }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
@@ -97,6 +98,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
             object.setValue(forAttr: .startDate, value: .failure(Pkcs11Error.internalError()))
             return Pkcs11KeyPair(publicKey: object, privateKey: object)
         }
+        fileHelper.mocked_readFile = { _ in Data() }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
@@ -106,7 +108,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     }
 
     func testCreateCertReadFileFromBundleError() async throws {
-        fileHelper.readFileCallback = { _ in throw DocumentManagerError.general("") }
+        fileHelper.mocked_readFile = { _ in throw DocumentManagerError.general("") }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
@@ -119,6 +121,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         openSslHelper.createCsrCallback = { _, _ in
             throw CryptoManagerError.unknown
         }
+        fileHelper.mocked_readFile = { _ in Data() }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
@@ -131,6 +134,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         openSslHelper.createCertCallback = {
             throw CryptoManagerError.unknown
         }
+        fileHelper.mocked_readFile = { _ in Data() }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
@@ -143,6 +147,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         token.importCertCallback = { _, _ in
             throw CryptoManagerError.unknown
         }
+        fileHelper.mocked_readFile = { _ in Data() }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
@@ -155,10 +160,13 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         token.importCertCallback = { _, _ in
             throw Pkcs11Error.internalError(rv: 10)
         }
+        fileHelper.mocked_readFile = { _ in Data() }
 
         pkcs11Helper.isPresentCallback = { _ in
             return false
         }
+        fileHelper.mocked_readFile = { _ in Data() }
+
         await assertErrorAsync(
             try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
                 try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel())

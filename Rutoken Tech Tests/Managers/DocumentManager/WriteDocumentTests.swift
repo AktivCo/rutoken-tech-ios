@@ -13,7 +13,7 @@ import XCTest
 class DocumentManagerWriteDocumentTests: XCTestCase {
     var manager: DocumentManager!
 
-    var helper: FileHelperMock!
+    var helper: RtMockFileHelperProtocol!
     var source: FileSourceMock!
 
     var dataToSave: Data!
@@ -23,7 +23,7 @@ class DocumentManagerWriteDocumentTests: XCTestCase {
         super.setUp()
         continueAfterFailure = false
 
-        helper = FileHelperMock()
+        helper = RtMockFileHelperProtocol()
         source = FileSourceMock()
         manager = DocumentManager(helper: helper, fileSource: source)
 
@@ -42,7 +42,7 @@ class DocumentManagerWriteDocumentTests: XCTestCase {
 
     func testWriteDocumentSuccess() throws {
         let documentFileName = document.name + ".sig"
-        helper.saveFileCallback = { _, url in
+        helper.mocked_saveFile = { _, url in
             XCTAssertEqual(url.lastPathComponent, documentFileName)
         }
 
@@ -52,7 +52,7 @@ class DocumentManagerWriteDocumentTests: XCTestCase {
     }
 
     func testWriteDocumentError() throws {
-        helper.saveFileCallback = { _, _ in
+        helper.mocked_saveFile = { _, _ in
             throw FileHelperError.generalError(33, "File helper error")
         }
 

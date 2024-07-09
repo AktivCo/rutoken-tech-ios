@@ -15,7 +15,7 @@ class SignDocumentByFileTests: XCTestCase {
     var pkcs11Helper: Pkcs11HelperMock!
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
-    var fileHelper: FileHelperMock!
+    var fileHelper: RtMockFileHelperProtocol!
     var fileSource: FileSourceMock!
 
     var dataToSign: Data!
@@ -27,7 +27,7 @@ class SignDocumentByFileTests: XCTestCase {
         pkcs11Helper = Pkcs11HelperMock()
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
-        fileHelper = FileHelperMock()
+        fileHelper = RtMockFileHelperProtocol()
         fileSource = FileSourceMock()
 
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
@@ -48,6 +48,7 @@ class SignDocumentByFileTests: XCTestCase {
             XCTAssertTrue([RtFile.rootCaKey, .rootCaCert, .caCert].map { $0.rawValue }.contains(file))
             return URL(fileURLWithPath: "")
         }
+        fileHelper.mocked_readFile = { _ in Data() }
 
         openSslHelper.signDocumentCallback = {
             self.signed
@@ -64,7 +65,7 @@ class SignDocumentByFileTests: XCTestCase {
 
     func testSignDocumentFileHelperError() async throws {
         let error = FileHelperError.generalError(100, "error")
-        fileHelper.readFileCallback = { _ in
+        fileHelper.mocked_readFile = { _ in
             throw error
         }
         assertError(try manager.signDocument(dataToSign, keyFile: .rootCaKey, certFile: .rootCaCert), throws: error)
@@ -75,6 +76,8 @@ class SignDocumentByFileTests: XCTestCase {
         openSslHelper.signDocumentCallback = {
             throw error
         }
+        fileHelper.mocked_readFile = { _ in Data() }
+
         assertError(try manager.signDocument(dataToSign, keyFile: .rootCaKey, certFile: .rootCaCert), throws: error)
     }
 }

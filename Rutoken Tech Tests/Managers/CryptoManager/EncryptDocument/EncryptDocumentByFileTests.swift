@@ -15,7 +15,7 @@ class EncryptDocumentByFileTests: XCTestCase {
     var pkcs11Helper: Pkcs11HelperMock!
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
-    var fileHelper: FileHelperMock!
+    var fileHelper: RtMockFileHelperProtocol!
     var fileSource: FileSourceMock!
 
     var documentData: Data!
@@ -28,7 +28,7 @@ class EncryptDocumentByFileTests: XCTestCase {
         pkcs11Helper = Pkcs11HelperMock()
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
-        fileHelper = FileHelperMock()
+        fileHelper = RtMockFileHelperProtocol()
         fileSource = FileSourceMock()
 
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
@@ -48,7 +48,7 @@ class EncryptDocumentByFileTests: XCTestCase {
             XCTAssertEqual(dir, .credentials)
             return certUrl
         }
-        fileHelper.readFileCallback = { url in
+        fileHelper.mocked_readFile = { url in
             XCTAssertEqual(url, certUrl)
             return certData
         }
@@ -68,7 +68,7 @@ class EncryptDocumentByFileTests: XCTestCase {
 
     func testEncryptDocumentFileReadFileError() throws {
         let error = FileHelperError.generalError(23, "reading file error")
-        fileHelper.readFileCallback = { _ in
+        fileHelper.mocked_readFile = { _ in
             throw error
         }
         assertError(try manager.encryptDocument(documentData, certFile: .bankCert), throws: error)
@@ -76,7 +76,7 @@ class EncryptDocumentByFileTests: XCTestCase {
 
     func testEncryptDocumentFileOpenSslError() throws {
         let error = OpenSslError.generalError(32, "openssl error")
-        fileHelper.readFileCallback = { _ in
+        fileHelper.mocked_readFile = { _ in
             return self.certData
         }
         openSslHelper.encryptCmsCallback = { [self] in

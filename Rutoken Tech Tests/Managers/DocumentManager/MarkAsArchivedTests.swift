@@ -14,7 +14,7 @@ import XCTest
 class DocumentManagerMarkAsArchivedTests: XCTestCase {
     var manager: DocumentManager!
 
-    var helper: FileHelperMock!
+    var helper: RtMockFileHelperProtocol!
     var source: FileSourceMock!
 
     var dataToSave: Data!
@@ -24,7 +24,7 @@ class DocumentManagerMarkAsArchivedTests: XCTestCase {
         super.setUp()
         continueAfterFailure = false
 
-        helper = FileHelperMock()
+        helper = RtMockFileHelperProtocol()
         source = FileSourceMock()
         manager = DocumentManager(helper: helper, fileSource: source)
     }
@@ -35,7 +35,8 @@ class DocumentManagerMarkAsArchivedTests: XCTestCase {
                                 amount: 35600,
                                 companyName: "ОАО \"Нефтегаз\"",
                                 paymentTime: Date())
-        helper.readFileCallback = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
+        helper.mocked_readFile = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
+        helper.mocked_clearDir = { _ in }
         try manager.reset()
 
         let docs = try awaitPublisherUnwrapped(manager.documents.dropFirst()) {
@@ -45,7 +46,8 @@ class DocumentManagerMarkAsArchivedTests: XCTestCase {
     }
 
     func testMarkAsArchivedNoDocument() throws {
-        helper.readFileCallback = { _ in Data("[]".utf8) }
+        helper.mocked_readFile = { _ in Data("[]".utf8) }
+        helper.mocked_clearDir = { _ in }
         try manager.reset()
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true)
         XCTAssertThrowsError(try manager.markAsArchived(documentName: "some name")) {
