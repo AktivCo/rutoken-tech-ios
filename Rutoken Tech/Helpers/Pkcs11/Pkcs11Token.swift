@@ -96,32 +96,33 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
     }
 
     func enumerateCerts() throws -> [Pkcs11ObjectProtocol] {
-        let template = Pkcs11Object.getCertBaseTemplate()
-        return try session.findObjects(template.map { $0.attribute })
+        try Pkcs11Template.makeCertBaseTemplate().withCkTemplate {
+            try session.findObjects($0)
+        }
     }
 
     func enumerateCerts(by id: String) throws -> [Pkcs11ObjectProtocol] {
-        var template = Pkcs11Object.getCertBaseTemplate()
-        template.append(Pkcs11BufferAttribute(type: .id, value: Data(id.utf8)))
-        return try session.findObjects(template.map { $0.attribute })
+        try Pkcs11Template.makeCertBaseTemplate()
+            .add(attr: .id, value: Data(id.utf8))
+            .withCkTemplate {
+            try session.findObjects($0)
+        }
     }
 
     func enumerateKeys(by algo: Pkcs11KeyAlgorithm) throws -> [Pkcs11KeyPair] {
-        // MARK: Prepare key templates
-        var pubKeyTemplate = Pkcs11Object.getPubKeyBaseTemplate()
-        var privateKeyTemplate = Pkcs11Object.getPrivKeyBaseTemplate()
-
-        switch algo {
-        case .gostR3410_2012_256:
-            pubKeyTemplate.append(Pkcs11ULongAttribute(type: .keyType, value: CKK_GOSTR3410))
-            privateKeyTemplate.append(Pkcs11ULongAttribute(type: .keyType, value: CKK_GOSTR3410))
-        }
-
         // MARK: Find public keys
-        let publicKeys = try session.findObjects(pubKeyTemplate.map { $0.attribute })
+        let publicKeys = try Pkcs11Template.makePubKeyBaseTemplate()
+            .add(attr: .keyType, value: algo.rawValue)
+            .withCkTemplate {
+                 try session.findObjects($0)
+            }
 
         // MARK: Find private keys
-        let privateKeys = try session.findObjects(privateKeyTemplate.map { $0.attribute })
+        let privateKeys = try Pkcs11Template.makePrivKeyBaseTemplate()
+            .add(attr: .keyType, value: algo.rawValue)
+            .withCkTemplate {
+                 try session.findObjects($0)
+            }
 
         return try privateKeys.compactMap { privateKey in
             guard let publicKey = try publicKeys.first(where: { try $0.getValue(forAttr: .id) == privateKey.getValue(forAttr: .id) }) else {
@@ -132,18 +133,19 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
     }
 
     func enumerateKey(by id: String) throws -> Pkcs11KeyPair {
-        // MARK: Prepare key templates
-        var pubKeyTemplate = Pkcs11Object.getPubKeyBaseTemplate()
-        var privateKeyTemplate = Pkcs11Object.getPrivKeyBaseTemplate()
-
-        pubKeyTemplate.append(Pkcs11BufferAttribute(type: .id, value: Data(id.utf8)))
-        privateKeyTemplate.append(Pkcs11BufferAttribute(type: .id, value: Data(id.utf8)))
-
         // MARK: Find public keys
-        let publicKeys = try session.findObjects(pubKeyTemplate.map { $0.attribute })
+        let publicKeys = try Pkcs11Template.makePubKeyBaseTemplate()
+            .add(attr: .id, value: Data(id.utf8))
+            .withCkTemplate {
+                 try session.findObjects($0)
+            }
 
         // MARK: Find private keys
-        let privateKeys = try session.findObjects(privateKeyTemplate.map { $0.attribute })
+        let privateKeys = try Pkcs11Template.makePrivKeyBaseTemplate()
+            .add(attr: .id, value: Data(id.utf8))
+            .withCkTemplate {
+                 try session.findObjects($0)
+            }
 
         // MARK: There should be only one key of each type with same id
         guard publicKeys.count == 1,
@@ -176,73 +178,62 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
         var endDateData = Pkcs11Date(date: currentDate.addingTimeInterval(3 * 365 * 24 * 60 * 60))
         let idData = Data(id.utf8)
 
-        let publicKeyAttributes: [any Pkcs11Attribute] = [
-            Pkcs11ULongAttribute(type: .classObject, value: CKO_PUBLIC_KEY),
-            Pkcs11BufferAttribute(type: .id, value: idData),
-            Pkcs11ULongAttribute(type: .keyType, value: CKK_GOSTR3410),
-            Pkcs11BoolAttribute(type: .token, value: true),
-            Pkcs11BoolAttribute(type: .privateness, value: false),
-            Pkcs11BufferAttribute(type: .startDate, value: startDateData.data()),
-            Pkcs11BufferAttribute(type: .endDate, value: endDateData.data()),
-            Pkcs11BufferAttribute(type: .gostR3410Params, value: Data(Pkcs11Constants.gostR3410_2012_256_paramset_B)),
-            Pkcs11BufferAttribute(type: .gostR3411Params, value: Data(Pkcs11Constants.gostR3411_2012_256_params_oid))
-        ]
+        let publicKeyTemplate = Pkcs11Template.makePubKeyBaseTemplate()
+            .add(attr: .id, value: idData)
+            .add(attr: .keyType, value: CKK_GOSTR3410)
+            .add(attr: .startDate, value: startDateData.data())
+            .add(attr: .endDate, value: endDateData.data())
+            .add(attr: .gostR3410Params, value: Data(Pkcs11Constants.gostR3410_2012_256_paramset_B))
+            .add(attr: .gostR3411Params, value: Data(Pkcs11Constants.gostR3411_2012_256_params_oid))
 
-        let privateKeyAttributes: [any Pkcs11Attribute] = [
-            Pkcs11ULongAttribute(type: .classObject, value: CKO_PRIVATE_KEY),
-            Pkcs11BufferAttribute(type: .id, value: idData),
-            Pkcs11ULongAttribute(type: .keyType, value: CKK_GOSTR3410),
-            Pkcs11BoolAttribute(type: .token, value: true),
-            Pkcs11BoolAttribute(type: .privateness, value: true),
-            Pkcs11BoolAttribute(type: .derive, value: true),
-            Pkcs11BufferAttribute(type: .startDate, value: startDateData.data()),
-            Pkcs11BufferAttribute(type: .endDate, value: endDateData.data()),
-            Pkcs11BufferAttribute(type: .gostR3410Params, value: Data(Pkcs11Constants.gostR3410_2012_256_paramset_B)),
-            Pkcs11BufferAttribute(type: .gostR3411Params, value: Data(Pkcs11Constants.gostR3411_2012_256_params_oid))
-        ]
-        var publicKeyTemplate = publicKeyAttributes.map { $0.attribute }
-        var privateKeyTemplate = privateKeyAttributes.map { $0.attribute }
+        let privateKeyTemplate = Pkcs11Template.makePrivKeyBaseTemplate()
+            .add(attr: .id, value: idData)
+            .add(attr: .keyType, value: CKK_GOSTR3410)
+            .add(attr: .derive, value: true)
+            .add(attr: .startDate, value: startDateData.data())
+            .add(attr: .endDate, value: endDateData.data())
+            .add(attr: .gostR3410Params, value: Data(Pkcs11Constants.gostR3410_2012_256_paramset_B))
+            .add(attr: .gostR3411Params, value: Data(Pkcs11Constants.gostR3411_2012_256_params_oid))
 
         var gostR3410_2012_256KeyPairGenMech: CK_MECHANISM = CK_MECHANISM(mechanism: CKM_GOSTR3410_KEY_PAIR_GEN, pParameter: nil, ulParameterLen: 0)
 
-        let rv = C_GenerateKeyPair(session.handle, &gostR3410_2012_256KeyPairGenMech,
-                                   &publicKeyTemplate, CK_ULONG(publicKeyTemplate.count),
-                                   &privateKeyTemplate, CK_ULONG(privateKeyTemplate.count),
-                                   &publicKey, &privateKey)
-        guard rv == CKR_OK else {
-            throw Pkcs11Error.internalError(rv: rv)
+        try publicKeyTemplate.withCkTemplate { pubCkTemplate in
+            try privateKeyTemplate.withCkTemplate { prvCkTemplate in
+                let rv = C_GenerateKeyPair(session.handle, &gostR3410_2012_256KeyPairGenMech,
+                                           &pubCkTemplate, CK_ULONG(pubCkTemplate.count),
+                                           &prvCkTemplate, CK_ULONG(prvCkTemplate.count),
+                                           &publicKey, &privateKey)
+                guard rv == CKR_OK else {
+                    throw Pkcs11Error.internalError(rv: rv)
+                }
+            }
         }
+
     }
 
     func deleteCert(with id: String) throws {
-        let template: [any Pkcs11Attribute] = [
-            Pkcs11ULongAttribute(type: .classObject, value: CKO_CERTIFICATE),
-            Pkcs11BufferAttribute(type: .id, value: Data(id.utf8)),
-            Pkcs11ULongAttribute(type: .certType, value: CKC_X_509)
-        ]
-        try deleteObjects(with: template)
+        try Pkcs11Template.makeCertBaseTemplate()
+            .add(attr: .id, value: Data(id.utf8))
+            .withCkTemplate {
+                try deleteObjects(with: $0)
+            }
     }
 
     func importCert(_ cert: Data, for id: String) throws {
         _ = try enumerateKey(by: id)
 
-        let idData = Data(id.utf8)
-        let certAttributes: [any Pkcs11Attribute] = [
-            Pkcs11BufferAttribute(type: .value, value: cert),
-            Pkcs11ULongAttribute(type: .classObject, value: CKO_CERTIFICATE),
-            Pkcs11BufferAttribute(type: .id, value: idData),
-            Pkcs11BoolAttribute(type: .token, value: true),
-            Pkcs11BoolAttribute(type: .privateness, value: false),
-            Pkcs11ULongAttribute(type: .certType, value: CKC_X_509),
-            Pkcs11ULongAttribute(type: .certCategory, value: Pkcs11Constants.CK_CERTIFICATE_CATEGORY_TOKEN_USER)
-        ]
-        var certTemplate = certAttributes.map { $0.attribute }
-
-        var certHandle = CK_OBJECT_HANDLE()
-        let rv = C_CreateObject(session.handle, &certTemplate, CK_ULONG(certTemplate.count), &certHandle)
-        guard rv == CKR_OK else {
-            throw Pkcs11Error.internalError(rv: rv)
-        }
+        try Pkcs11Template.makeCertBaseTemplate()
+            .add(attr: .id, value: Data(id.utf8))
+            .add(attr: .value, value: cert)
+            .add(attr: .privateness, value: false)
+            .add(attr: .certCategory, value: Pkcs11Constants.CK_CERTIFICATE_CATEGORY_TOKEN_USER)
+            .withCkTemplate {
+                var certHandle = CK_OBJECT_HANDLE()
+                let rv = C_CreateObject(session.handle, &$0, CK_ULONG($0.count), &certHandle)
+                guard rv == CKR_OK else {
+                    throw Pkcs11Error.internalError(rv: rv)
+                }
+            }
     }
 
     func getPinAttempts() throws -> UInt {
@@ -259,12 +250,12 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
     // MARK: - Private API
 
     private func getTokenInterfaces() throws -> (Pkcs11TokenInterface, Set<Pkcs11TokenInterface>) {
-        let objectAttributes = [
-            Pkcs11ULongAttribute(type: .classObject, value: CKO_HW_FEATURE),
-            Pkcs11ULongAttribute(type: .hwFeatureType, value: CKH_VENDOR_TOKEN_INFO)
-        ]
-
-        guard let hwFeature = try? session.findObjects(objectAttributes.map { $0.attribute }).first else {
+        guard let hwFeature = try? Pkcs11Template()
+            .add(attr: .classObject, value: CKO_HW_FEATURE)
+            .add(attr: .hwFeatureType, value: CKH_VENDOR_TOKEN_INFO)
+            .withCkTemplate({
+                try session.findObjects($0).first
+            }) else {
             throw Pkcs11Error.internalError()
         }
 
@@ -307,8 +298,8 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
         }
     }
 
-    private func deleteObjects(with template: [any Pkcs11Attribute]) throws {
-        let objects = try session.findObjects(template.map { $0.attribute })
+    private func deleteObjects(with attrs: [CK_ATTRIBUTE]) throws {
+        let objects = try session.findObjects(attrs)
 
         for obj in objects {
             let rv = C_DestroyObject(session.handle, obj.handle)
@@ -376,12 +367,12 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
     }
 
     private func getTokenModelFromToken() throws -> String {
-        let objectAttributes = [
-            Pkcs11ULongAttribute(type: .classObject, value: CKO_HW_FEATURE),
-            Pkcs11ULongAttribute(type: .hwFeatureType, value: CKH_VENDOR_TOKEN_INFO)
-        ]
-
-        guard let object = try session.findObjects(objectAttributes.map { $0.attribute }).first,
+        guard let object = try? Pkcs11Template()
+            .add(attr: .classObject, value: CKO_HW_FEATURE)
+            .add(attr: .hwFeatureType, value: CKH_VENDOR_TOKEN_INFO)
+            .withCkTemplate({
+                try session.findObjects($0).first
+            }),
               let result = try String(data: object.getValue(forAttr: .vendorModelName), encoding: .utf8) else {
             throw Pkcs11Error.internalError()
         }
