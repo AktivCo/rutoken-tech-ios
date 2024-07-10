@@ -20,6 +20,9 @@ struct RtPDFView: UIViewRepresentable {
         pdfView.autoScales = true
         pdfView.document = PDFDocument(data: data) ?? PDFDocument()
         pdfView.backgroundColor = UIColor(Color.RtColors.rtSurfaceSecondary)
+        pdfView.usePageViewController(true, withViewOptions: [
+            UIPageViewController.OptionsKey.interPageSpacing: 0
+        ])
         return pdfView
     }
 
