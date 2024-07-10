@@ -10,7 +10,6 @@
 		4407C1D82BD68E5E00DBA7D3 /* ReadDocumentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4407C1D72BD68E5E00DBA7D3 /* ReadDocumentTests.swift */; };
 		4407C1DA2BD68E6F00DBA7D3 /* MarkAsArchivedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4407C1D92BD68E6F00DBA7D3 /* MarkAsArchivedTests.swift */; };
 		4413CFAF2B590379000987A8 /* Rutoken_Tech-Bridging-Header.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413CFAE2B590379000987A8 /* Rutoken_Tech-Bridging-Header.m */; };
-		4413CFB22B592EDE000987A8 /* String+hasCyrillic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4413CFB12B592EDE000987A8 /* String+hasCyrillic.swift */; };
 		4413CFB42B592F13000987A8 /* String+isNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4413CFB32B592F13000987A8 /* String+isNumber.swift */; };
 		4413CFB82B597206000987A8 /* OpenSslHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4413CFB72B597206000987A8 /* OpenSslHelperMock.swift */; };
 		44146BCF2C11939F00283586 /* OnDecryptCms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44146BCE2C11939F00283586 /* OnDecryptCms.swift */; };
@@ -186,7 +185,6 @@
 		4407C1D72BD68E5E00DBA7D3 /* ReadDocumentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadDocumentTests.swift; sourceTree = "<group>"; };
 		4407C1D92BD68E6F00DBA7D3 /* MarkAsArchivedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkAsArchivedTests.swift; sourceTree = "<group>"; };
 		4413CFAE2B590379000987A8 /* Rutoken_Tech-Bridging-Header.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Rutoken_Tech-Bridging-Header.m"; sourceTree = "<group>"; };
-		4413CFB12B592EDE000987A8 /* String+hasCyrillic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+hasCyrillic.swift"; sourceTree = "<group>"; };
 		4413CFB32B592F13000987A8 /* String+isNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+isNumber.swift"; sourceTree = "<group>"; };
 		4413CFB72B597206000987A8 /* OpenSslHelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSslHelperMock.swift; sourceTree = "<group>"; };
 		44146BCE2C11939F00283586 /* OnDecryptCms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDecryptCms.swift; sourceTree = "<group>"; };
@@ -375,7 +373,6 @@
 			children = (
 				443076EE2B1F2D5E0073B406 /* String+getFrom.swift */,
 				7D4335882B5567A700A0336A /* String+generateID.swift */,
-				4413CFB12B592EDE000987A8 /* String+hasCyrillic.swift */,
 				4413CFB32B592F13000987A8 /* String+isNumber.swift */,
 				D4DC1FCE2B61669800D53AE6 /* String+createPointer.swift */,
 				D43250352BA1BAA800493ACE /* String+getDate.swift */,
@@ -1127,7 +1124,6 @@
 				D455FCAE2B63CFF000E1EFFD /* CaEmptyKeysCertView.swift in Sources */,
 				7DAF6E762AFA362A003A57D1 /* UIDevice+isPhone.swift in Sources */,
 				44E7F8322BA4760600786A42 /* OnDeletePin.swift in Sources */,
-				4413CFB22B592EDE000987A8 /* String+hasCyrillic.swift in Sources */,
 				D4D22A342BAD804200B93DA9 /* DocumentListItem.swift in Sources */,
 				D4B130AB2B0CFD7300AD390F /* TokenInfo.swift in Sources */,
 				D4871D6D2BC81036008B027C /* OnSignDocument.swift in Sources */,
