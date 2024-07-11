@@ -15,7 +15,8 @@ struct VcrView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
 
     var body: some View {
-        if store.state.vcrState.qrCode != nil {
+        if let qrCode = store.state.vcrState.qrCode {
+            QrCodeView(qrCodeImage: qrCode)
         } else {
             InstructionView()
         }
