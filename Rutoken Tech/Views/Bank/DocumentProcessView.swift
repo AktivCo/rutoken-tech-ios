@@ -16,6 +16,13 @@ struct DocumentProcessView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
     @Environment(\.dismiss) private var dismiss
     @State private var topSafeAreaHeight: CGFloat = UIDevice.isPhone ? 0 : getSafeAreaInsets()?.top ?? 0
+    @State private var navBarSize: CGSize = .zero
+    @State private var bottomBarSize: CGSize = .zero
+    @State private var wholeViewSize: CGSize = .zero
+
+    private var displayContentHeight: Double {
+        wholeViewSize.height - bottomBarSize.height - navBarSize.height
+    }
 
     private var backButtonLabel: some View {
         Image(systemName: "chevron.backward")
@@ -170,10 +177,13 @@ struct DocumentProcessView: View {
         VStack(spacing: 0) {
             navBar(title: String(store.state.bankSelectedDocumentState.metadata?.name.split(separator: ".").first ?? ""),
                    date: store.state.bankSelectedDocumentState.metadata?.paymentTime.getString(as: "d MMMM yyyy 'г. в' HH:mm") ?? "")
+            .rtSizeReader(size: $navBarSize)
             displayContent(isRtPDFViewShown ? .pdf(store.state.bankSelectedDocumentState.docContent?.data ?? Data()) :
                     .text(store.state.bankSelectedDocumentState.docContent?.data.base64EncodedString() ?? ""))
             bottomBar()
+                .rtSizeReader(size: $bottomBarSize)
         }
+        .rtSizeReader(size: $wholeViewSize)
         .ignoresSafeArea(.keyboard)
     }
 
@@ -188,7 +198,7 @@ struct DocumentProcessView: View {
         case .pdf(let data):
             RtPDFView(data: data)
         case .text(let text):
-            VStack {
+            ScrollView {
                 Text(text)
                     .font(.caption)
                     .padding(12)
@@ -201,9 +211,10 @@ struct DocumentProcessView: View {
                         RoundedRectangle(cornerRadius: 8)
                             .stroke(Color("otherSeparator"), lineWidth: 0.5)
                     )
+                    .frame(width: wholeViewSize.width, height: displayContentHeight)
+                    .background(Color.RtColors.rtSurfaceSecondary)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.RtColors.rtSurfaceSecondary)
+            .scrollDisabled(true)
         }
     }
 
