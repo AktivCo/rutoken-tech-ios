@@ -15,7 +15,7 @@ struct AboutAppView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
 
     private let phoneNumber = "+7 (495) 925-77-90"
-    private let privacyPolicyURL = "rutoken.ru"
+    private let privacyPolicyURL = "www.rutoken.ru/company/policy/rutech-ios.html"
     private let appLicenseURL = "www.rutoken.ru/download/license/License_Agreement_Rutoken.pdf"
 
     func createLabel(_ text: String) -> some View {

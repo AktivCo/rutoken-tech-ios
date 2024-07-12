@@ -194,7 +194,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
         for entry in request.subjects {
             guard X509_NAME_add_entry_by_txt(subject,
                                              entry.key.rawValue,
-                                             entry.value.hasCyrillic ? MBSTRING_UTF8 : MBSTRING_ASC,
+                                             entry.value.allSatisfy(\.isASCII) ? MBSTRING_ASC : MBSTRING_UTF8,
                                              NSString(string: entry.value).utf8String, -1, -1, 0) != 0 else {
                 throw OpenSslError.generalError(#line, getLastError())
             }

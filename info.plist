@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>LSMinimumSystemVersion</key>
+	<string>13.3</string>
 	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
 	<array>
 		<string>F0000000005275746F6B656E</string>
