@@ -55,6 +55,17 @@ class OnStartMonitoring: Middleware {
             }
             .store(in: &cancellable)
 
+            vcrManager?.didNewVcrConnected.sink { _ in
+                continuation.yield(.hideVcrView)
+                continuation.yield(.invalidateQrCodeTimer)
+                Task {
+                    // We want to nil QR-code after sheet completely disappears, 500ms seems enough for it
+                    try? await Task.sleep(for: .milliseconds(500))
+                    continuation.yield(.updateQrCode(nil))
+                }
+            }
+            .store(in: &cancellable)
+
             cryptoManager.tokenState.sink {
                 switch $0 {
                 case .ready, .cooldown(0): continuation.yield(.updateActionWithTokenButtonState(.ready))

@@ -14,8 +14,9 @@ enum AppAction {
     // MARK: Errors, Alerts & Sheets
     case showAlert(AppAlert)
     case hideAlert
-    case showSheet(Bool, RtSheetSize, any View)
+    case showSheet(Bool, RtSheetSize, any View, Bool = false)
     case hideSheet
+    case hideVcrView
     case showPinInputError(String)
     case hidePinInputError
     case updateActionWithTokenButtonState(RtContinueButtonState)

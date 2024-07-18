@@ -27,16 +27,16 @@ struct BankUserListView: View {
         .onAppear {
             store.state.bankSelectUserState.userListModel.onSelectCallback = { user in
                 store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
-                        RtAuthView(defaultPinGetter: {
-                            store.send(.updatePin(RutokenTechApp.defaultPin))
-                        }, onSubmit: { tokenType, pin in
-                            store.send(.authUser(tokenType, pin, user))
-                        }, onCancel: {
-                            store.send(.hideSheet)
-                            store.send(.updatePin(""))
-                        })
-                        .environmentObject(store.state.routingState.pinInputModel)
-                    }()))
+                    RtAuthView(defaultPinGetter: {
+                        store.send(.updatePin(RutokenTechApp.defaultPin))
+                    }, onSubmit: { tokenType, pin in
+                        store.send(.authUser(tokenType, pin, user))
+                    }, onCancel: {
+                        store.send(.hideSheet)
+                        store.send(.updatePin(""))
+                    })
+                    .environmentObject(store.state.routingState.pinInputModel)
+                }()))
             }
             store.state.bankSelectUserState.userListModel.onDeleteCallback = { user in
                 store.send(.deleteUser(user))
@@ -128,7 +128,7 @@ struct BankUserListView: View {
     }
 }
 
- struct UserSelectView_Previews: PreviewProvider {
+struct UserSelectView_Previews: PreviewProvider {
     static var previews: some View {
         let user1 = BankUserInfo(
             expiryDate: Date(), fullname: "Иванов Михаил Романович",
@@ -156,4 +156,4 @@ struct BankUserListView: View {
                 }
         }
     }
- }
+}

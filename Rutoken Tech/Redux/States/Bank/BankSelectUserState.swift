@@ -10,8 +10,8 @@ import RtUiComponents
 
 struct BankSelectUsersState {
     let userListModel = RtListModel<BankUserInfo, UserListItem>(items: [],
-                                                                contentBuilder: { user, startToClose in
-        UserListItem(user: user, startToClose: startToClose)
+                                                                contentBuilder: { user, startToClose, isPressed in
+        UserListItem(user: user, startToClose: startToClose, isPressed: isPressed)
     },
                                                                 onSelect: { _ in},
                                                                 onDelete: { _ in})

@@ -13,6 +13,7 @@ import RtUiComponents
 struct UserListItem: View {
     let user: BankUserInfo
     @Binding var startToClose: Bool
+    @Binding var isPressed: Bool
 
     var body: some View {
         HStack {
@@ -29,7 +30,7 @@ struct UserListItem: View {
             Spacer()
         }
         .frame(maxHeight: startToClose ? 0 : 152)
-        .background(Color("surfacePrimary"))
+        .background(isPressed ? Color.RtColors.rtOtherSelected : Color("surfacePrimary"))
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
@@ -45,12 +46,11 @@ struct UserListItem: View {
     }
 }
 
-
 struct UserListItem_Previews: PreviewProvider {
     static var previews: some View {
         let user = BankUserInfo(expiryDate: Date(), fullname: "Иванов Михаил Романович",
                                 title: "Дизайнер", keyId: "", certHash: "", tokenSerial: "")
-        UserListItem(user: user, startToClose: .constant(false))
+        UserListItem(user: user, startToClose: .constant(false), isPressed: .constant(false))
             .padding(15)
             .background(Color.RtColors.rtSurfaceSecondary)
     }

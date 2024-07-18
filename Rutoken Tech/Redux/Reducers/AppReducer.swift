@@ -21,13 +21,15 @@ struct AppReducer: Reducer {
             newState.routingState.alert = appAlert.alertModel
         case .hideAlert:
             newState.routingState.alert = nil
-        case let .showSheet(draggable, size, content):
+        case let .showSheet(draggable, size, content, isVcrView):
             newState.routingState.sheet.isDraggable = draggable
             newState.routingState.sheet.size = size
             newState.routingState.sheet.content = AnyView(content)
+            newState.routingState.isVcrViewShown = isVcrView
             newState.routingState.sheet.isPresented = true
         case .hideSheet:
             newState.routingState.sheet.isPresented = false
+            newState.routingState.isVcrViewShown = false
         case .selectToken:
             break
         case let .tokenSelected(info, pin):
@@ -126,8 +128,13 @@ struct AppReducer: Reducer {
             newState.vcrState.qrCode = image
         case let .updateQrCodeCountdown(state):
             newState.vcrState.qrCodeTimer = state
-        case .updateVcrList(let vcrs):
-            newState.vcrState.vcrList = vcrs
+        case let .updateVcrList(vcrs):
+            newState.vcrState.vcrList.items = vcrs
+        case .hideVcrView:
+            if state.routingState.isVcrViewShown {
+                newState.routingState.sheet.isPresented = false
+                newState.routingState.isVcrViewShown = false
+            }
         }
         return newState
     }

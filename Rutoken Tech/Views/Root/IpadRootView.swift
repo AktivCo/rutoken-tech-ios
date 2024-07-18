@@ -37,6 +37,15 @@ struct IpadRootView: View {
                         }
                     }
                 }
+                .frame(height: 144)
+                VStack(spacing: 0) {
+                    Text("Виртуальные считыватели").font(.title3).fontWeight(.semibold)
+                        .frame(height: 44)
+                    RtList(listModel: store.state.vcrState.vcrList)
+                    addVcrButton
+                    Spacer()
+                }
+                .padding(.trailing, 16)
             }
             .listStyle(.sidebar)
             .scrollContentBackground(.hidden)
@@ -73,14 +82,45 @@ struct IpadRootView: View {
             store.send(.logout)
         }
     }
+
+    private var addVcrButton: some View {
+        Button {
+            store.send(.showSheet(false, .ipad(width: 624, height: 720), {
+                VcrView()
+                    .environmentObject(store)
+            }(), true))
+        } label: {
+            HStack(spacing: 10) {
+                Text(Image(systemName: "plus"))
+                    .fontWeight(.semibold)
+                    .background(
+                        RoundedRectangle(cornerRadius: 3)
+                            .frame(width: 28, height: 28)
+                            .foregroundStyle(Color.RtColors.rtOtherSelected)
+                    )
+                    .frame(width: 28, height: 28)
+                Text("Добавить")
+                    .foregroundStyle(Color.RtColors.rtLabelPrimary)
+                Spacer()
+            }
+            .frame(height: 45)
+        }
+        .padding(.leading, 24)
+    }
 }
 
 struct IpadRootView_Previews: PreviewProvider {
     static var previews: some View {
-        let store = Store(initialState: AppState(),
+        let state = AppState()
+        state.vcrState.vcrList.items = [
+            VcrInfo(id: "321".data(using: .utf8)!, name: "Ivan", isActive: false),
+            VcrInfo(id: "123".data(using: .utf8)!, name: "Andrey", isActive: true)
+        ]
+        let store = Store(initialState: state,
                           reducer: AppReducer(),
                           middlewares: [])
-        IpadRootView()
+
+        return IpadRootView()
             .environmentObject(store)
     }
 }

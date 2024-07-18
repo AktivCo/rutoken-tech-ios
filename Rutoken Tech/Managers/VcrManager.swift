@@ -20,6 +20,7 @@ protocol VcrManagerProtocol {
     func generateQrCode() async throws -> Image
     func unpairVcr(fingerprint: Data) -> Bool
     var vcrs: AnyPublisher<[VcrInfo], Never> { get }
+    var didNewVcrConnected: AnyPublisher<Void, Never> { get }
 }
 
 class VcrManager: VcrManagerProtocol {
@@ -37,12 +38,17 @@ class VcrManager: VcrManagerProtocol {
     }
     private var vcrsPublisher = CurrentValueSubject<[VcrInfo], Never>([])
 
+    var didNewVcrConnected: AnyPublisher<Void, Never> {
+        didNewVcrConnectedPublisher.eraseToAnyPublisher()
+    }
+    private var didNewVcrConnectedPublisher = PassthroughSubject<Void, Never>()
+
     init(pcscWrapper: RtPcscWrapper) {
         self.pcscWrapper = pcscWrapper
 
         pcscWrapper.readers
             .sink { currentReaders in
-                self.vcrsPublisher.send(self.getPairedVcrs().map { vcr in
+                let newVcrs = self.getPairedVcrs().map { vcr in
                     return VcrInfo(id: vcr.id,
                                    name: vcr.name,
                                    isActive: currentReaders.filter({ $0.name.contains("VCR") }).contains(where: {
@@ -51,7 +57,16 @@ class VcrManager: VcrManagerProtocol {
                         }
                         return fingerprint == vcr.id
                     }))
-                })
+                }
+                let oldVcrs = self.vcrsPublisher.value
+                newVcrs.forEach { info in
+                    if oldVcrs.first(where: {
+                        info.id == $0.id
+                    }) == nil {
+                        self.didNewVcrConnectedPublisher.send()
+                    }
+                }
+                self.vcrsPublisher.send(newVcrs)
             }
             .store(in: &cancellable)
     }

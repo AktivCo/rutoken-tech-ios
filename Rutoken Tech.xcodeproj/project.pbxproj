@@ -152,6 +152,7 @@
 		D4A1852E2C1C2CCA006D7F71 /* InitBackupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A1852D2C1C2CCA006D7F71 /* InitBackupTests.swift */; };
 		D4A185302C1C3282006D7F71 /* ReadDocsFromBundleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A1852F2C1C3282006D7F71 /* ReadDocsFromBundleTests.swift */; };
 		D4A571C62C4A662A00969189 /* ScreenBrightnessController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A571C52C4A662A00969189 /* ScreenBrightnessController.swift */; };
+		D4A571C82C4A7D0B00969189 /* VcrInfoListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A571C72C4A7D0B00969189 /* VcrInfoListItem.swift */; };
 		D4B130A82B0CFD2F00AD390F /* CryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */; };
 		D4B130AB2B0CFD7300AD390F /* TokenInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130AA2B0CFD7300AD390F /* TokenInfo.swift */; };
 		D4B130B02B0CFFCD00AD390F /* Pkcs11TokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130AF2B0CFFCD00AD390F /* Pkcs11TokenModel.swift */; };
@@ -330,6 +331,7 @@
 		D4A1852D2C1C2CCA006D7F71 /* InitBackupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitBackupTests.swift; sourceTree = "<group>"; };
 		D4A1852F2C1C3282006D7F71 /* ReadDocsFromBundleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadDocsFromBundleTests.swift; sourceTree = "<group>"; };
 		D4A571C52C4A662A00969189 /* ScreenBrightnessController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenBrightnessController.swift; sourceTree = "<group>"; };
+		D4A571C72C4A7D0B00969189 /* VcrInfoListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VcrInfoListItem.swift; sourceTree = "<group>"; };
 		D4B130A72B0CFD2F00AD390F /* CryptoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoManager.swift; sourceTree = "<group>"; };
 		D4B130AA2B0CFD7300AD390F /* TokenInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenInfo.swift; sourceTree = "<group>"; };
 		D4B130AF2B0CFFCD00AD390F /* Pkcs11TokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11TokenModel.swift; sourceTree = "<group>"; };
@@ -749,6 +751,7 @@
 			children = (
 				D46A05C42C3BC31200FFBA93 /* InstructionView.swift */,
 				D40CEFD52C3FEE8400826B15 /* QrCodeView.swift */,
+				D4A571C72C4A7D0B00969189 /* VcrInfoListItem.swift */,
 			);
 			path = VCR;
 			sourceTree = "<group>";
@@ -1171,6 +1174,7 @@
 				44E7F8322BA4760600786A42 /* OnDeletePin.swift in Sources */,
 				D4D22A342BAD804200B93DA9 /* DocumentListItem.swift in Sources */,
 				D4B130AB2B0CFD7300AD390F /* TokenInfo.swift in Sources */,
+				D4A571C82C4A7D0B00969189 /* VcrInfoListItem.swift in Sources */,
 				D4871D6D2BC81036008B027C /* OnSignDocument.swift in Sources */,
 				444D9F5C2B8DECC600C1EB0B /* Date+getString.swift in Sources */,
 				D4C582342BAC216B001604B4 /* ProcessInfo+isPreview.swift in Sources */,
@@ -1535,7 +1539,7 @@
 			repositoryURL = "https://github.com/AktivCo/swift-ui-components.git";
 			requirement = {
 				kind = revision;
-				revision = c209732f53d0c85622bc9b04121ecab4f1858b2c;
+				revision = 9072f23f653354645b9df51428b8ca2741862803;
 			};
 		};
 		5E1F3AA32BA362C5008158EF /* XCRemoteSwiftPackageReference "tiny-redux" */ = {
