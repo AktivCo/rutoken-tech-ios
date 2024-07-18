@@ -119,4 +119,10 @@ class Pkcs11Template {
             $0.deallocate()
         })
     }
+
+    deinit {
+        pointers.forEach {
+            $0.release()
+        }
+    }
 }

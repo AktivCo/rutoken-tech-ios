@@ -15,6 +15,11 @@ struct Pkcs11Date {
         let day = date.getString(as: "dd").createPointer()
         let month = date.getString(as: "MM").createPointer()
         let year = date.getString(as: "YYYY").createPointer()
+        defer {
+            day.release()
+            month.release()
+            year.release()
+        }
 
         self.date = CK_DATE()
 

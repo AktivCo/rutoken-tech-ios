@@ -8,6 +8,7 @@
 class WrappedPointer<T> {
     let pointer: T
     private let destructor: (T) -> Void
+    private var isDestroyed = false
 
     init?(_ constructor: () -> T?, _ destructor: @escaping (T) -> Void) {
         guard let ptr = constructor() else { return nil }
@@ -20,7 +21,13 @@ class WrappedPointer<T> {
         self.destructor = destructor
     }
 
-    deinit {
+    func release() {
+        assert(!isDestroyed)
         destructor(pointer)
+        isDestroyed = true
+    }
+
+    deinit {
+        assert(isDestroyed)
     }
 }

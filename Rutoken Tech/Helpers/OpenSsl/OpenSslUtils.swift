@@ -14,6 +14,7 @@ func bioToData(_ bio: OpaquePointer) -> Data? {
     let wrappedPointer = WrappedPointer<UnsafeMutableRawBufferPointer>({
         UnsafeMutableRawBufferPointer.allocate(byteCount: Int(len), alignment: 1)
     }, { $0.deallocate() })
+    defer { wrappedPointer.release() }
 
     guard let bytes = wrappedPointer.pointer.baseAddress?.assumingMemoryBound(to: UInt8.self) else {
         return nil
@@ -74,6 +75,8 @@ func stringToBio(_ str: String) -> WrappedPointer<OpaquePointer>? {
 func wrapKey(_ data: Data) -> WrappedPointer<OpaquePointer>? {
     return WrappedPointer<OpaquePointer>({
         guard let bio = dataToBio(data) else { return nil }
+        defer { bio.release() }
+
         return PEM_read_bio_PrivateKey(bio.pointer, nil, nil, nil)
     }, EVP_PKEY_free)
 }
