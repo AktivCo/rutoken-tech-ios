@@ -51,8 +51,10 @@ class WrappedX509 {
 
     private init?(with data: Data) {
         guard let x509 = WrappedPointer<OpaquePointer>({
-            guard let wrappedBio = dataToBio(data),
-                  let ptr = d2i_X509_bio(wrappedBio.pointer, nil) else {
+            guard let wrappedBio = dataToBio(data) else { return nil }
+            defer { wrappedBio.release() }
+
+            guard let ptr = d2i_X509_bio(wrappedBio.pointer, nil) else {
                 return nil
             }
             return ptr
@@ -64,15 +66,19 @@ class WrappedX509 {
 
     init?(from cert: String) {
         guard let x509 = WrappedPointer<OpaquePointer>({
-            guard let wrappedBio = stringToBio(cert),
-                  let ptr = PEM_read_bio_X509(wrappedBio.pointer, nil, nil, nil) else {
-                return nil
-            }
+            guard let wrappedBio = stringToBio(cert) else { return nil }
+            defer { wrappedBio.release() }
+
+            guard let ptr = PEM_read_bio_X509(wrappedBio.pointer, nil, nil, nil) else { return nil }
             return ptr
         }, X509_free) else {
             return nil
         }
         self.wrappedPointer = x509
+    }
+
+    deinit {
+        wrappedPointer.release()
     }
 
     public var subjectNameHash: String? {
@@ -90,6 +96,7 @@ class WrappedX509 {
         }, EVP_PKEY_free) else {
             return nil
         }
+        defer { publicKey.release() }
 
         guard EVP_PKEY_get_id(publicKey.pointer) == NID_id_GostR3410_2012_256 else {
             return nil
@@ -157,6 +164,7 @@ private extension UnsafePointer where Pointee == ASN1_TIME {
         guard let wrappedBio = WrappedPointer<OpaquePointer>({ BIO_new(BIO_s_mem()) }, { BIO_free($0) }) else {
             return nil
         }
+        defer { wrappedBio.release() }
 
         guard ASN1_TIME_print(wrappedBio.pointer, self) == 1 else {
             return nil

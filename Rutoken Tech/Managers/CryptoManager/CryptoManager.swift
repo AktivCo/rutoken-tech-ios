@@ -177,6 +177,8 @@ class CryptoManager: CryptoManagerProtocol {
                             endDate: endDateData.getDate(with: "YYYYMMdd"))
 
         let wrappedKey = try token.getWrappedKey(with: id)
+        defer { wrappedKey.release() }
+
         let csr = try openSslHelper.createCsr(with: wrappedKey, for: model, with: info)
         let cert = try openSslHelper.createCert(for: csr, with: caKeyData, cert: caCertData)
         try token.importCert(cert, for: id)
@@ -195,6 +197,8 @@ class CryptoManager: CryptoManagerProtocol {
             throw CryptoManagerError.tokenNotFound
         }
         let key = try token.getWrappedKey(with: certId)
+        defer { key.release() }
+
         guard let userCertData = try token.enumerateCerts(by: certId).first?.getValue(forAttr: .value) else {
             throw CryptoManagerError.noSuitCert
         }
@@ -271,6 +275,8 @@ class CryptoManager: CryptoManagerProtocol {
             throw CryptoManagerError.tokenNotFound
         }
         let key = try token.getWrappedKey(with: id)
+        defer { key.release() }
+
         return try openSslHelper.decryptCms(content: encryptedData, wrappedKey: key)
     }
 
