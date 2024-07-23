@@ -18,4 +18,5 @@ struct VcrState {
         listPadding: 0) { data, startToClose, isPressed in
             VcrInfoListItem(vcrInfo: data, startToClose: startToClose, isPressed: isPressed)
     } onSelect: { _ in } onDelete: { _ in }
+    var vcrNameInProgress: String?
 }

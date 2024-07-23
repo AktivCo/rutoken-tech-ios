@@ -26,6 +26,7 @@ struct RootView: View {
         .rtSheet(sheetModel: store.state.routingState.sheet)
         .rtAlert(alertModel: Binding(get: { store.state.routingState.alert },
                                      set: { if $0 == nil { store.send(.hideAlert) } }))
+        .rtVcrIndicator(Binding(get: { store.state.vcrState.vcrNameInProgress }, set: { _ in }))
     }
 }
 

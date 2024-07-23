@@ -135,6 +135,10 @@ struct AppReducer: Reducer {
                 newState.routingState.sheet.isPresented = false
                 newState.routingState.isVcrViewShown = false
             }
+        case .showVcrIndicator:
+            newState.vcrState.vcrNameInProgress = state.vcrState.vcrList.items.first(where: { $0.isActive })?.name
+        case .hideVcrIndicator:
+            newState.vcrState.vcrNameInProgress = nil
         }
         return newState
     }

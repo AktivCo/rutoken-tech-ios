@@ -7,6 +7,6 @@
 
 enum TokenInteractionState: Equatable {
     case ready
-    case inProgress
+    case inProgress(isVcr: Bool)
     case cooldown(UInt)
 }

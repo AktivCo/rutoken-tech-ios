@@ -68,9 +68,17 @@ class OnStartMonitoring: Middleware {
 
             cryptoManager.tokenState.sink {
                 switch $0 {
-                case .ready, .cooldown(0): continuation.yield(.updateActionWithTokenButtonState(.ready))
-                case .inProgress: continuation.yield(.updateActionWithTokenButtonState(.inProgress))
-                case .cooldown(let left): continuation.yield(.updateActionWithTokenButtonState(.cooldown(left)))
+                case .ready, .cooldown(0):
+                    continuation.yield(.updateActionWithTokenButtonState(.ready))
+                    continuation.yield(.hideVcrIndicator)
+                case .inProgress(let isVcr):
+                    continuation.yield(.updateActionWithTokenButtonState(.inProgress))
+                    if isVcr {
+                        continuation.yield(.showVcrIndicator)
+                    }
+                case .cooldown(let left):
+                    continuation.yield(.updateActionWithTokenButtonState(.cooldown(left)))
+                    continuation.yield(.hideVcrIndicator)
                 }
             }
             .store(in: &cancellable)

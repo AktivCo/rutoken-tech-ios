@@ -21,6 +21,7 @@ class OnPerformTokenConnection: Middleware {
         }
 
         let connectionType: ConnectionType = tokenType == .nfc ? .nfc : .usb
+
         return AsyncStream<AppAction> { continuation in
             Task {
                 defer {

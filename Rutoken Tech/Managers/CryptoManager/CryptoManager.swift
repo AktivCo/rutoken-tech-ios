@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import UIKit
 
 
 protocol CryptoManagerProtocol {
@@ -67,6 +68,7 @@ class CryptoManager: CryptoManagerProtocol {
     private let openSslHelper: OpenSslHelperProtocol
     private let fileHelper: FileHelperProtocol
     private let fileSource: FileSourceProtocol
+    private let deviceInfo: DeviceInfoHelperProtocol
 
     private var cancellable = [UUID: AnyCancellable]()
     @Atomic var tokens: [Pkcs11TokenProtocol] = []
@@ -78,12 +80,14 @@ class CryptoManager: CryptoManagerProtocol {
          pcscHelper: PcscHelperProtocol,
          openSslHelper: OpenSslHelperProtocol,
          fileHelper: FileHelperProtocol,
-         fileSource: FileSourceProtocol) {
+         fileSource: FileSourceProtocol,
+         deviceInfo: DeviceInfoHelperProtocol = DeviceInfoHelper()) {
         self.pkcs11Helper = pkcs11Helper
         self.pcscHelper = pcscHelper
         self.openSslHelper = openSslHelper
         self.fileHelper = fileHelper
         self.fileSource = fileSource
+        self.deviceInfo = deviceInfo
 
         pkcs11Helper.tokens
             .assign(to: \.tokens, on: self)
@@ -284,7 +288,7 @@ class CryptoManager: CryptoManagerProtocol {
                    serial: String?,
                    pin: String?,
                    callback: () async throws -> Void) async throws {
-        tokenStatePublisher.send(.inProgress)
+        tokenStatePublisher.send(.inProgress(isVcr: connectionType == .nfc && !deviceInfo.isPhone))
 
         defer {
             if connectionType == .nfc {
