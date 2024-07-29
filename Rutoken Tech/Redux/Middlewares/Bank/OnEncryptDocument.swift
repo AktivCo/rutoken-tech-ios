@@ -41,10 +41,8 @@ class OnEncryptDocument: Middleware {
                         continuation.yield(.hideSheet)
                         continuation.yield(.showAlert(.documentEncrypted))
                     }
-                } catch let error as CryptoManagerError {
-                    continuation.yield(.showAlert(AppAlert(from: error)))
                 } catch {
-                    continuation.yield(.showAlert(.unknownError))
+                    continuation.yield(.handleError(error))
                 }
             }
         }

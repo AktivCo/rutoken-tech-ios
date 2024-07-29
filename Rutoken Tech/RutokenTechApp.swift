@@ -48,6 +48,7 @@ struct RutokenTechApp: App {
             middlewares = [
                 OnStartMonitoring(cryptoManager: cryptoManager, userManager: userManager,
                                   documentManager: documentManager, vcrManager: vcrManager),
+                OnHandleErrors(),
                 // CA
                 OnPerformTokenConnection(cryptoManager: cryptoManager),
                 OnPerformGenKeyPair(cryptoManager: cryptoManager),

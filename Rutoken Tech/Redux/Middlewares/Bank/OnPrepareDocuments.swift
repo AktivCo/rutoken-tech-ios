@@ -56,9 +56,8 @@ class OnPrepareDocuments: Middleware {
                 try documentManager.initBackup(docs: processedDocs)
                 try documentManager.reset()
             } catch {
-                continuation.yield(.showAlert(.unknownError))
+                continuation.yield(.handleError(error))
             }
-
         }
     }
 }

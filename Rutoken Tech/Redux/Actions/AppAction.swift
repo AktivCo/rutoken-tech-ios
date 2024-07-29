@@ -19,6 +19,7 @@ enum AppAction {
     case showPinInputError(String)
     case hidePinInputError
     case updateActionWithTokenButtonState(RtContinueButtonState)
+    case handleError(Error?, [AppAction] = [])
 
     // MARK: Initialization
     case appLoaded

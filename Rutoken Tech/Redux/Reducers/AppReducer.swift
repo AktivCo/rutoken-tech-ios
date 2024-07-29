@@ -40,6 +40,8 @@ struct AppReducer: Reducer {
         case .updateActionWithTokenButtonState(let state):
             newState.routingState.actionWithTokenButtonState = state
             newState.routingState.pinInputModel.buttonState = state
+        case .handleError:
+            break
         case .generateKeyId:
             newState.caGenerateKeyPairState.key = KeyModel(ckaId: String.generateID(),
                                                            type: .gostR3410_2012_256)

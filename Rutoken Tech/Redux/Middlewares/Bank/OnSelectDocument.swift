@@ -29,7 +29,7 @@ class OnSelectDocument: Middleware {
                 continuation.yield(.updateCurrentDoc(doc, result))
                 continuation.yield(.updateUrlsForShare(doc.urls))
             } catch {
-                continuation.yield(.showAlert(.unknownError))
+                continuation.yield(.handleError(error))
             }
         }
     }

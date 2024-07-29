@@ -28,7 +28,7 @@ class OnGenerateQrCode: Middleware {
                 do {
                     continuation.yield(.updateQrCode(try await vcrManager.generateQrCode()))
                 } catch {
-                    continuation.yield(.showAlert(.unknownError))
+                    continuation.yield(.handleError(error))
                 }
             }
         }

@@ -36,10 +36,8 @@ class OnCmsVerify: Middleware {
                     try await cryptoManager.verifyCms(signedCms: cms, document: document.data)
                     try documentManager.markAsArchived(documentName: fileName)
                     continuation.yield(.showAlert(.verifySuccess))
-                } catch let error as CryptoManagerError {
-                    continuation.yield(.showAlert(AppAlert(from: error)))
                 } catch {
-                    continuation.yield(.showAlert(.unknownError))
+                    continuation.yield(.handleError(error))
                 }
             }
         }

@@ -40,14 +40,12 @@ class OnAuthUser: Middleware {
                     continuation.yield(.hideSheet)
                     continuation.yield(.updatePin(""))
                     continuation.yield(.prepareDocuments(cert.body))
-                } catch CryptoManagerError.incorrectPin(let attemptsLeft) {
-                    continuation.yield(.showPinInputError("Неверный PIN-код. Осталось попыток: \(attemptsLeft)"))
-                    continuation.yield(.deletePin(user.tokenSerial))
-                } catch CryptoManagerError.nfcStopped {
-                } catch let error as CryptoManagerError {
-                    continuation.yield(.showAlert(AppAlert(from: error)))
                 } catch {
-                    continuation.yield(.showAlert(.unknownError))
+                    var actions = [AppAction]()
+                    if case CryptoManagerError.incorrectPin = error {
+                        actions.append(.deletePin(user.tokenSerial))
+                    }
+                    continuation.yield(.handleError(error, actions))
                 }
             }
         }

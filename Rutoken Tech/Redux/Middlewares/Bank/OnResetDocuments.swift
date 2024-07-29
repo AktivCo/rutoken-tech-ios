@@ -32,7 +32,7 @@ class OnResetDocuments: Middleware {
                 do {
                     try manager.reset()
                 } catch {
-                    continuation.yield(.showAlert(.unknownError))
+                    continuation.yield(.handleError(error))
                 }
             }
         }

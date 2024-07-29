@@ -37,7 +37,7 @@ class OnStartMonitoring: Middleware {
             do {
                 try cryptoManager.startMonitoring()
             } catch {
-                continuation.yield(.showAlert(.unknownError))
+                continuation.yield(.handleError(error))
             }
 
             userManager.users.sink { users in

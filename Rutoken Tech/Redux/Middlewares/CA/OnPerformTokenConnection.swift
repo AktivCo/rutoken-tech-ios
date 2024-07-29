@@ -26,6 +26,7 @@ class OnPerformTokenConnection: Middleware {
                 defer {
                     continuation.finish()
                 }
+
                 do {
                     try await self.cryptoManager.withToken(connectionType: connectionType,
                                                            serial: nil, pin: pin) {
@@ -37,13 +38,8 @@ class OnPerformTokenConnection: Middleware {
                         continuation.yield(.cacheCaCerts(certs))
                     }
                     continuation.yield(.hideSheet)
-                } catch CryptoManagerError.incorrectPin(let attemptsLeft) {
-                    continuation.yield(.showPinInputError("Неверный PIN-код. Осталось попыток: \(attemptsLeft)"))
-                } catch CryptoManagerError.nfcStopped {
-                } catch let error as CryptoManagerError {
-                    continuation.yield(.showAlert(AppAlert(from: error)))
                 } catch {
-                    continuation.yield(.showAlert(.unknownError))
+                    continuation.yield(.handleError(error))
                 }
             }
         }
