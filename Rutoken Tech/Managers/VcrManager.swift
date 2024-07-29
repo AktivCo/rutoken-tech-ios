@@ -18,6 +18,7 @@ enum VcrError: Error {
 
 protocol VcrManagerProtocol {
     func generateQrCode() async throws -> Image
+    func unpairVcr(fingerprint: Data) -> Bool
     var vcrs: AnyPublisher<[VcrInfo], Never> { get }
 }
 
@@ -62,6 +63,10 @@ class VcrManager: VcrManagerProtocol {
             throw VcrError.general
         }
         return image
+    }
+
+    func unpairVcr(fingerprint: Data) -> Bool {
+        unpairVCR(fingerprint)
     }
 
     private func getPairedVcrs() -> [VcrPaired] {
