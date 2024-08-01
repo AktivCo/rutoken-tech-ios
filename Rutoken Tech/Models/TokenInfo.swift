@@ -9,7 +9,7 @@ import Foundation
 
 
 struct TokenInfo: Equatable {
-    let label: String
+    let label: String?
     let serial: String
     let model: Pkcs11TokenModel
     let connectionType: ConnectionType

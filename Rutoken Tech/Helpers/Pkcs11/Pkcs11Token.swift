@@ -10,7 +10,7 @@ import Foundation
 
 protocol Pkcs11TokenProtocol {
     var slot: CK_SLOT_ID { get }
-    var label: String { get }
+    var label: String? { get }
     var serial: String { get }
     var model: Pkcs11TokenModel { get }
 
@@ -44,7 +44,7 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
     private var tokenInfo: CK_TOKEN_INFO
     private var extendedTokenInfo: CK_TOKEN_INFO_EXTENDED
 
-    var label: String = ""
+    var label: String?
     var serial: String = ""
     var model: Pkcs11TokenModel = .rutoken2_2000
     var currentInterface: Pkcs11TokenInterface = .usb
@@ -284,7 +284,9 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
         guard let label = String.getFrom(tokenInfo.label)?.trimmingCharacters(in: .whitespacesAndNewlines) else {
             throw Pkcs11Error.internalError()
         }
-        self.label = label
+        if !label.hasSuffix(("<no label>")), !label.hasSuffix(("<corrupted label!>")) {
+            self.label = label
+        }
 
         // MARK: Get token model
         if tokenInfo.firmwareVersion.major >= 32 {
