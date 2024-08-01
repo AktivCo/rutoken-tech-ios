@@ -81,6 +81,11 @@ struct IpadRootView: View {
         .onChange(of: selectedTab) { _ in
             store.send(.logout)
         }
+        .onAppear {
+            store.state.vcrState.vcrList.onDeleteCallback = {
+                store.send(.unpairVcr($0.id))
+            }
+        }
     }
 
     private var addVcrButton: some View {

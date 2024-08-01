@@ -81,4 +81,5 @@ enum AppAction {
     case updateVcrList([VcrInfo])
     case showVcrIndicator
     case hideVcrIndicator
+    case unpairVcr(Data)
 }

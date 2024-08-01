@@ -139,6 +139,8 @@ struct AppReducer: Reducer {
             newState.vcrState.vcrNameInProgress = state.vcrState.vcrList.items.first(where: { $0.isActive })?.name
         case .hideVcrIndicator:
             newState.vcrState.vcrNameInProgress = nil
+        case .unpairVcr:
+            break
         }
         return newState
     }

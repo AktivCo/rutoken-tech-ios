@@ -120,6 +120,7 @@
 		7DEBBDD62B3B1FCE00C35BA5 /* WithTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DEBBDD52B3B1FCE00C35BA5 /* WithTokenTests.swift */; };
 		7DF6204A2C1C75CD005B86D9 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF620492C1C75CD005B86D9 /* KeychainHelper.swift */; };
 		D40CEFD62C3FEE8400826B15 /* QrCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40CEFD52C3FEE8400826B15 /* QrCodeView.swift */; };
+		D411618B2C5B99F400795CE2 /* OnUnpairVcr.swift in Sources */ = {isa = PBXBuildFile; fileRef = D411618A2C5B99ED00795CE2 /* OnUnpairVcr.swift */; };
 		D42178192B205FD700D08948 /* AppAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42178182B205FD700D08948 /* AppAlert.swift */; };
 		D423F8BF2B3574BB0058ECDE /* GetTokenInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D423F8BE2B3574BB0058ECDE /* GetTokenInfoTests.swift */; };
 		D423F8C12B3574EC0058ECDE /* GenerateKeyPairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D423F8C02B3574EC0058ECDE /* GenerateKeyPairTests.swift */; };
@@ -299,6 +300,7 @@
 		7DEBBDD52B3B1FCE00C35BA5 /* WithTokenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithTokenTests.swift; sourceTree = "<group>"; };
 		7DF620492C1C75CD005B86D9 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		D40CEFD52C3FEE8400826B15 /* QrCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrCodeView.swift; sourceTree = "<group>"; };
+		D411618A2C5B99ED00795CE2 /* OnUnpairVcr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnUnpairVcr.swift; sourceTree = "<group>"; };
 		D42178182B205FD700D08948 /* AppAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlert.swift; sourceTree = "<group>"; };
 		D423F8BE2B3574BB0058ECDE /* GetTokenInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTokenInfoTests.swift; sourceTree = "<group>"; };
 		D423F8C02B3574EC0058ECDE /* GenerateKeyPairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateKeyPairTests.swift; sourceTree = "<group>"; };
@@ -415,6 +417,7 @@
 		4418B6C82C36C2DE00AF9DE5 /* VCR */ = {
 			isa = PBXGroup;
 			children = (
+				D411618A2C5B99ED00795CE2 /* OnUnpairVcr.swift */,
 				44E1BDD62C3BF85F00EC0803 /* OnSetQrCodeTimer.swift */,
 				4418B6CA2C36C2F700AF9DE5 /* OnGenerateQrCode.swift */,
 			);
@@ -1124,6 +1127,7 @@
 				D43250362BA1BAA800493ACE /* String+getDate.swift in Sources */,
 				D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */,
 				4443EA0B2B96F5160003436D /* Pkcs11KeyAlgorithm.swift in Sources */,
+				D411618B2C5B99F400795CE2 /* OnUnpairVcr.swift in Sources */,
 				7D38D6DC2B0E2D3F0045FBAD /* AppAction.swift in Sources */,
 				7D28BD822B3082990079AE1C /* CaGenerateKeyPairState.swift in Sources */,
 				D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */,

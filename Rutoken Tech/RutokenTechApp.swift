@@ -75,6 +75,7 @@ struct RutokenTechApp: App {
             if !UIDevice.isPhone, let vcrManager {
                 middlewares.append(OnGenerateQrCode(vcrManager: vcrManager))
                 middlewares.append(OnSetQrCodeTimer())
+                middlewares.append(OnUnpairVcr(vcrManager: vcrManager))
             }
         }
 
