@@ -16,7 +16,7 @@ class EncryptDocumentByDataTests: XCTestCase {
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
-    var fileSource: FileSourceMock!
+    var fileSource: RtMockFileSourceProtocol!
 
     var documentData: Data!
     var certData: Data!
@@ -29,7 +29,7 @@ class EncryptDocumentByDataTests: XCTestCase {
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
         fileHelper = RtMockFileHelperProtocol()
-        fileSource = FileSourceMock()
+        fileSource = RtMockFileSourceProtocol()
 
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
                                 openSslHelper: openSslHelper, fileHelper: fileHelper,

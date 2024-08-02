@@ -16,7 +16,7 @@ class SignDocumentByCertIdTests: XCTestCase {
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
-    var fileSource: FileSourceMock!
+    var fileSource: RtMockFileSourceProtocol!
 
     var token: TokenMock!
     var keyId: String!
@@ -30,7 +30,7 @@ class SignDocumentByCertIdTests: XCTestCase {
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
         fileHelper = RtMockFileHelperProtocol()
-        fileSource = FileSourceMock()
+        fileSource = RtMockFileSourceProtocol()
 
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
                                 openSslHelper: openSslHelper, fileHelper: fileHelper,
@@ -61,13 +61,13 @@ class SignDocumentByCertIdTests: XCTestCase {
         }
 
         let someUrl = URL(fileURLWithPath: "someurl")
-        fileSource.getUrlResult = { file, dir in
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { file, dir in
             XCTAssertEqual(file, RtFile.caCert.rawValue)
             XCTAssertEqual(dir, .credentials)
             return someUrl
         }
 
-        fileHelper.mocked_readFile = { url in
+        fileHelper.mocked_readFile_fromUrlURL_Data = { url in
             XCTAssertEqual(url, someUrl)
             return Data()
         }
@@ -124,7 +124,7 @@ class SignDocumentByCertIdTests: XCTestCase {
             return [Pkcs11ObjectMock()]
         }
 
-        fileSource.getUrlResult = { _, _ in nil }
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in nil }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
             assertError(try manager.signDocument(dataToSign, certId: keyId), throws: CryptoManagerError.unknown)
         }
@@ -137,7 +137,8 @@ class SignDocumentByCertIdTests: XCTestCase {
             return [Pkcs11ObjectMock()]
         }
 
-        fileHelper.mocked_readFile = { _ in
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        fileHelper.mocked_readFile_fromUrlURL_Data = { _ in
             throw error
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
@@ -160,7 +161,8 @@ class SignDocumentByCertIdTests: XCTestCase {
                 OpaquePointer.init(bitPattern: 1)!
             }, { _ in})!
         }
-        fileHelper.mocked_readFile = { _ in Data() }
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
             assertError(try manager.signDocument(dataToSign, certId: self.keyId), throws: error)

@@ -14,7 +14,7 @@ class DocumentManagerWriteDocumentTests: XCTestCase {
     var manager: DocumentManager!
 
     var helper: RtMockFileHelperProtocol!
-    var source: FileSourceMock!
+    var source: RtMockFileSourceProtocol!
 
     var dataToSave: Data!
     var document: BankDocument!
@@ -24,7 +24,7 @@ class DocumentManagerWriteDocumentTests: XCTestCase {
         continueAfterFailure = false
 
         helper = RtMockFileHelperProtocol()
-        source = FileSourceMock()
+        source = RtMockFileSourceProtocol()
         manager = DocumentManager(helper: helper, fileSource: source)
 
         dataToSave = Data("Data to save".utf8)
@@ -42,7 +42,8 @@ class DocumentManagerWriteDocumentTests: XCTestCase {
 
     func testWriteDocumentSuccess() throws {
         let documentFileName = document.name + ".sig"
-        helper.mocked_saveFile = { _, url in
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        helper.mocked_saveFile_contentData_urlURL_Void = { _, url in
             XCTAssertEqual(url.lastPathComponent, documentFileName)
         }
 
@@ -52,7 +53,8 @@ class DocumentManagerWriteDocumentTests: XCTestCase {
     }
 
     func testWriteDocumentError() throws {
-        helper.mocked_saveFile = { _, _ in
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        helper.mocked_saveFile_contentData_urlURL_Void = { _, _ in
             throw FileHelperError.generalError(33, "File helper error")
         }
 

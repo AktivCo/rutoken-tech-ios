@@ -16,7 +16,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
-    var fileSource: FileSourceMock!
+    var fileSource: RtMockFileSourceProtocol!
     var token: TokenMock!
 
     override func setUp() {
@@ -26,7 +26,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
         fileHelper = RtMockFileHelperProtocol()
-        fileSource = FileSourceMock()
+        fileSource = RtMockFileSourceProtocol()
 
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
                                 openSslHelper: openSslHelper, fileHelper: fileHelper,
@@ -43,7 +43,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     func testCreateCertSuccess() async throws {
         let getUrlExp = XCTestExpectation(description: "Get URL expectation")
         getUrlExp.expectedFulfillmentCount = 2
-        fileSource.getUrlResult = { file, dir in
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { file, dir in
             defer { getUrlExp.fulfill() }
             XCTAssertTrue([RtFile.caKey, RtFile.caCert].map { $0.rawValue }.contains(file))
             XCTAssertEqual(dir, .credentials)
@@ -51,7 +51,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         }
         let readFileExp = XCTestExpectation(description: "Read file expectation")
         readFileExp.expectedFulfillmentCount = 2
-        fileHelper.mocked_readFile = { url in
+        fileHelper.mocked_readFile_fromUrlURL_Data = { url in
             defer { readFileExp.fulfill() }
             XCTAssertTrue([RtFile.caKey, RtFile.caCert].map { URL(fileURLWithPath: $0.rawValue) }.contains(url))
             return Data()
@@ -71,7 +71,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     }
 
     func testCreateCertGetUrlError() async throws {
-        fileSource.getUrlResult = { _, _ in nil }
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in nil }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
                 try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
@@ -83,7 +83,8 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         token.getWrappedKeyCallback = { _ in
             throw Pkcs11Error.internalError()
         }
-        fileHelper.mocked_readFile = { _ in Data() }
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
@@ -98,7 +99,8 @@ final class CryptoManagerCreateCertTests: XCTestCase {
             object.setValue(forAttr: .startDate, value: .failure(Pkcs11Error.internalError()))
             return Pkcs11KeyPair(publicKey: object, privateKey: object)
         }
-        fileHelper.mocked_readFile = { _ in Data() }
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
@@ -108,7 +110,8 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     }
 
     func testCreateCertReadFileFromBundleError() async throws {
-        fileHelper.mocked_readFile = { _ in throw DocumentManagerError.general("") }
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        fileHelper.mocked_readFile_fromUrlURL_Data = { _ in throw DocumentManagerError.general("") }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
@@ -118,10 +121,11 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     }
 
     func testCreateCertCreateCsrError() async throws {
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in nil }
+        fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
         openSslHelper.createCsrCallback = { _, _ in
             throw CryptoManagerError.unknown
         }
-        fileHelper.mocked_readFile = { _ in Data() }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
@@ -134,7 +138,8 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         openSslHelper.createCertCallback = {
             throw CryptoManagerError.unknown
         }
-        fileHelper.mocked_readFile = { _ in Data() }
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
@@ -147,7 +152,8 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         token.importCertCallback = { _, _ in
             throw CryptoManagerError.unknown
         }
-        fileHelper.mocked_readFile = { _ in Data() }
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
@@ -160,12 +166,13 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         token.importCertCallback = { _, _ in
             throw Pkcs11Error.internalError(rv: 10)
         }
-        fileHelper.mocked_readFile = { _ in Data() }
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
 
         pkcs11Helper.isPresentCallback = { _ in
             return false
         }
-        fileHelper.mocked_readFile = { _ in Data() }
+        fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
 
         await assertErrorAsync(
             try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {

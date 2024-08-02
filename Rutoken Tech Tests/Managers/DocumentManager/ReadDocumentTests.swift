@@ -14,7 +14,7 @@ class DocumentManagerReadDocumentTests: XCTestCase {
     var manager: DocumentManager!
 
     var helper: RtMockFileHelperProtocol!
-    var source: FileSourceMock!
+    var source: RtMockFileSourceProtocol!
 
     var document: BankDocument!
 
@@ -23,7 +23,7 @@ class DocumentManagerReadDocumentTests: XCTestCase {
         continueAfterFailure = false
 
         helper = RtMockFileHelperProtocol()
-        source = FileSourceMock()
+        source = RtMockFileSourceProtocol()
         manager = DocumentManager(helper: helper, fileSource: source)
     }
 
@@ -35,15 +35,16 @@ class DocumentManagerReadDocumentTests: XCTestCase {
                                 companyName: "ОАО \"Нефтегаз\"",
                                 paymentTime: Date(),
                                 inArchive: true)
-        helper.mocked_readFile = { _ in
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        helper.mocked_readFile_fromUrlURL_Data = { _ in
             return try BankDocument.jsonEncoder.encode([self.document])
         }
-        helper.mocked_clearDir = { _ in }
+        helper.mocked_clearDir_dirUrlURL_Void = { _ in }
 
         try manager.reset()
 
         let data = Data(repeating: 0x07, count: 777)
-        helper.mocked_readFile = { url in
+        helper.mocked_readFile_fromUrlURL_Data = { url in
             exp.fulfill()
             XCTAssertEqual(url.lastPathComponent, self.document.name)
             return data
@@ -62,8 +63,9 @@ class DocumentManagerReadDocumentTests: XCTestCase {
                                 companyName: "ОАО \"Нефтегаз\"",
                                 paymentTime: Date(),
                                 inArchive: true)
-        helper.mocked_readFile = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
-        helper.mocked_clearDir = { _ in }
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        helper.mocked_readFile_fromUrlURL_Data = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
+        helper.mocked_clearDir_dirUrlURL_Void = { _ in }
 
         try manager.reset()
 
@@ -71,7 +73,7 @@ class DocumentManagerReadDocumentTests: XCTestCase {
         let cms = Data(repeating: 0x07, count: 77)
         var readFileData = data
         var fileName = document.name
-        helper.mocked_readFile = { url in
+        helper.mocked_readFile_fromUrlURL_Data = { url in
             exp.fulfill()
 
             XCTAssertEqual(url.lastPathComponent, fileName)
@@ -95,13 +97,14 @@ class DocumentManagerReadDocumentTests: XCTestCase {
                                 paymentTime: Date(),
                                 inArchive: true
         )
-        helper.mocked_readFile = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
-        helper.mocked_clearDir = { _ in }
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        helper.mocked_readFile_fromUrlURL_Data = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
+        helper.mocked_clearDir_dirUrlURL_Void = { _ in }
 
         try manager.reset()
 
         let data = Data(repeating: 0x07, count: 777)
-        helper.mocked_readFile = { url in
+        helper.mocked_readFile_fromUrlURL_Data = { url in
             XCTAssertEqual(self.document.name, url.lastPathComponent)
             return data
         }
@@ -118,13 +121,14 @@ class DocumentManagerReadDocumentTests: XCTestCase {
                                 paymentTime: Date(),
                                 inArchive: true
         )
-        helper.mocked_readFile = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
-        helper.mocked_clearDir = { _ in }
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        helper.mocked_readFile_fromUrlURL_Data = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
+        helper.mocked_clearDir_dirUrlURL_Void = { _ in }
 
         try manager.reset()
 
         let encodedFile = "some text".data(using: .utf8)!.base64EncodedString().data(using: .utf8)!
-        helper.mocked_readFile = { url in
+        helper.mocked_readFile_fromUrlURL_Data = { url in
             XCTAssertEqual(self.document.name + ".enc", url.lastPathComponent)
             return encodedFile
         }
@@ -134,8 +138,9 @@ class DocumentManagerReadDocumentTests: XCTestCase {
     }
 
     func testReadDocumentNoDocument() throws {
-        helper.mocked_readFile = { _ in Data("[]".utf8) }
-        helper.mocked_clearDir = { _ in }
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        helper.mocked_readFile_fromUrlURL_Data = { _ in Data("[]".utf8) }
+        helper.mocked_clearDir_dirUrlURL_Void = { _ in }
 
         try manager.reset()
         XCTAssertThrowsError(try manager.readDocument(with: "some name")) {

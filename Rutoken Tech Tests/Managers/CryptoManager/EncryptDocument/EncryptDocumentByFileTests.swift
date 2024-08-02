@@ -16,7 +16,7 @@ class EncryptDocumentByFileTests: XCTestCase {
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
-    var fileSource: FileSourceMock!
+    var fileSource: RtMockFileSourceProtocol!
 
     var documentData: Data!
     var certData: Data!
@@ -29,7 +29,7 @@ class EncryptDocumentByFileTests: XCTestCase {
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
         fileHelper = RtMockFileHelperProtocol()
-        fileSource = FileSourceMock()
+        fileSource = RtMockFileSourceProtocol()
 
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
                                 openSslHelper: openSslHelper, fileHelper: fileHelper,
@@ -43,12 +43,12 @@ class EncryptDocumentByFileTests: XCTestCase {
         let certData = Data("bankCertData".utf8)
         let encryptedData = Data("encryptedData".utf8)
         let certUrl = URL(fileURLWithPath: RtFile.bankCert.rawValue)
-        fileSource.getUrlResult = { file, dir in
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { file, dir in
             XCTAssertEqual(file, RtFile.bankCert.rawValue)
             XCTAssertEqual(dir, .credentials)
             return certUrl
         }
-        fileHelper.mocked_readFile = { url in
+        fileHelper.mocked_readFile_fromUrlURL_Data = { url in
             XCTAssertEqual(url, certUrl)
             return certData
         }
@@ -62,13 +62,14 @@ class EncryptDocumentByFileTests: XCTestCase {
     }
 
     func testEncryptDocumentFileGetUrlError() async {
-        fileSource.getUrlResult = { _, _ in nil }
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in nil }
         assertError(try manager.encryptDocument(documentData, certFile: .bankCert), throws: CryptoManagerError.unknown)
     }
 
     func testEncryptDocumentFileReadFileError() throws {
         let error = FileHelperError.generalError(23, "reading file error")
-        fileHelper.mocked_readFile = { _ in
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        fileHelper.mocked_readFile_fromUrlURL_Data = { _ in
             throw error
         }
         assertError(try manager.encryptDocument(documentData, certFile: .bankCert), throws: error)
@@ -76,7 +77,8 @@ class EncryptDocumentByFileTests: XCTestCase {
 
     func testEncryptDocumentFileOpenSslError() throws {
         let error = OpenSslError.generalError(32, "openssl error")
-        fileHelper.mocked_readFile = { _ in
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        fileHelper.mocked_readFile_fromUrlURL_Data = { _ in
             return self.certData
         }
         openSslHelper.encryptCmsCallback = { [self] in

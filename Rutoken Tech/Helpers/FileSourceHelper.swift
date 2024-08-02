@@ -7,6 +7,8 @@
 
 import Foundation
 
+import RtMock
+
 
 fileprivate extension Bundle {
     static func getUrl(for file: String, in subdir: String? = nil) -> URL? {
@@ -28,6 +30,7 @@ enum SourceDir: String {
     }
 }
 
+@RtMock
 protocol FileSourceProtocol {
     func getUrl(for fileName: String, in sourceDir: SourceDir) -> URL?
 }

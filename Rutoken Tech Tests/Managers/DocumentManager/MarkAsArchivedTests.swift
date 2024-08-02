@@ -15,7 +15,7 @@ class DocumentManagerMarkAsArchivedTests: XCTestCase {
     var manager: DocumentManager!
 
     var helper: RtMockFileHelperProtocol!
-    var source: FileSourceMock!
+    var source: RtMockFileSourceProtocol!
 
     var dataToSave: Data!
     var document: BankDocument!
@@ -25,7 +25,7 @@ class DocumentManagerMarkAsArchivedTests: XCTestCase {
         continueAfterFailure = false
 
         helper = RtMockFileHelperProtocol()
-        source = FileSourceMock()
+        source = RtMockFileSourceProtocol()
         manager = DocumentManager(helper: helper, fileSource: source)
     }
 
@@ -35,8 +35,9 @@ class DocumentManagerMarkAsArchivedTests: XCTestCase {
                                 amount: 35600,
                                 companyName: "ОАО \"Нефтегаз\"",
                                 paymentTime: Date())
-        helper.mocked_readFile = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
-        helper.mocked_clearDir = { _ in }
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        helper.mocked_readFile_fromUrlURL_Data = { _ in return try BankDocument.jsonEncoder.encode([self.document]) }
+        helper.mocked_clearDir_dirUrlURL_Void = { _ in }
         try manager.reset()
 
         let docs = try awaitPublisherUnwrapped(manager.documents.dropFirst()) {
@@ -46,8 +47,9 @@ class DocumentManagerMarkAsArchivedTests: XCTestCase {
     }
 
     func testMarkAsArchivedNoDocument() throws {
-        helper.mocked_readFile = { _ in Data("[]".utf8) }
-        helper.mocked_clearDir = { _ in }
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        helper.mocked_readFile_fromUrlURL_Data = { _ in Data("[]".utf8) }
+        helper.mocked_clearDir_dirUrlURL_Void = { _ in }
         try manager.reset()
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true)
         XCTAssertThrowsError(try manager.markAsArchived(documentName: "some name")) {

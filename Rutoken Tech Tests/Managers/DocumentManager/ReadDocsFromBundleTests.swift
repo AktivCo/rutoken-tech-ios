@@ -13,14 +13,14 @@ import XCTest
 class DocumentManagerReadDocsFromBundleTests: XCTestCase {
     var manager: DocumentManager!
     var helper: RtMockFileHelperProtocol!
-    var source: FileSourceMock!
+    var source: RtMockFileSourceProtocol!
 
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
 
         helper = RtMockFileHelperProtocol()
-        source = FileSourceMock()
+        source = RtMockFileSourceProtocol()
         manager = DocumentManager(helper: helper, fileSource: source)
     }
 
@@ -34,7 +34,7 @@ class DocumentManagerReadDocsFromBundleTests: XCTestCase {
         let docUrl = URL(fileURLWithPath: "documents.json")
         let getUrlExp = expectation(description: "Get URL expectation")
         getUrlExp.expectedFulfillmentCount = 2
-        source.getUrlResult = { file, _ in
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { file, _ in
             defer { getUrlExp.fulfill() }
             switch file {
             case "documents.json": return docUrl
@@ -44,7 +44,7 @@ class DocumentManagerReadDocsFromBundleTests: XCTestCase {
 
         let readFileExp = expectation(description: "Read file expectation")
         readFileExp.expectedFulfillmentCount = 2
-        helper.mocked_readFile = { url in
+        helper.mocked_readFile_fromUrlURL_Data = { url in
             defer { readFileExp.fulfill() }
             switch url {
             case docUrl: return try BankDocument.jsonEncoder.encode([doc])
@@ -62,7 +62,7 @@ class DocumentManagerReadDocsFromBundleTests: XCTestCase {
     }
 
     func testReadDocsFromBundleGetUrlForDocError() throws {
-        source.getUrlResult = { _, _ in
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in
             return nil
         }
 
@@ -71,7 +71,8 @@ class DocumentManagerReadDocsFromBundleTests: XCTestCase {
 
     func testReadDocsFromBundleReadFileDocError() throws {
         let error = FileHelperError.generalError(15, "FileHelperError")
-        helper.mocked_readFile = { _ in
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        helper.mocked_readFile_fromUrlURL_Data = { _ in
             throw error
         }
 
@@ -79,7 +80,8 @@ class DocumentManagerReadDocsFromBundleTests: XCTestCase {
     }
 
     func testReadDocsFromBundleNoDocsSuccess() throws {
-        helper.mocked_readFile = { _ in
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        helper.mocked_readFile_fromUrlURL_Data = { _ in
             return try BankDocument.jsonEncoder.encode([BankDocument]())
         }
 
@@ -88,7 +90,8 @@ class DocumentManagerReadDocsFromBundleTests: XCTestCase {
     }
 
     func testReadDocsFromBundleBadJson() throws {
-        helper.mocked_readFile = { _ in
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        helper.mocked_readFile_fromUrlURL_Data = { _ in
             Data("[[]".utf8)
         }
         XCTAssertThrowsError(try manager.readDocsFromBundle())
@@ -104,7 +107,7 @@ class DocumentManagerReadDocsFromBundleTests: XCTestCase {
         let docUrl = URL(fileURLWithPath: "documents.json")
         let getUrlExp = expectation(description: "Get URL expectation")
         getUrlExp.expectedFulfillmentCount = 2
-        source.getUrlResult = { file, _ in
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { file, _ in
             defer { getUrlExp.fulfill() }
             switch file {
             case "documents.json": return docUrl
@@ -112,7 +115,7 @@ class DocumentManagerReadDocsFromBundleTests: XCTestCase {
             }
         }
 
-        helper.mocked_readFile = { _ in
+        helper.mocked_readFile_fromUrlURL_Data = { _ in
             try BankDocument.jsonEncoder.encode([doc])
         }
 
@@ -131,7 +134,7 @@ class DocumentManagerReadDocsFromBundleTests: XCTestCase {
         let docUrl = URL(fileURLWithPath: "documents.json")
         let getUrlExp = expectation(description: "Get URL expectation")
         getUrlExp.expectedFulfillmentCount = 2
-        source.getUrlResult = { file, dir in
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { file, dir in
             defer { getUrlExp.fulfill() }
             XCTAssertEqual(dir, .documents)
             switch file {
@@ -143,7 +146,7 @@ class DocumentManagerReadDocsFromBundleTests: XCTestCase {
         let readFileExp = expectation(description: "Get URL expectation")
         readFileExp.expectedFulfillmentCount = 2
         let someError = DocumentManagerError.general("some error")
-        helper.mocked_readFile = { url in
+        helper.mocked_readFile_fromUrlURL_Data = { url in
             defer { readFileExp.fulfill() }
             switch url {
             case docUrl: return try BankDocument.jsonEncoder.encode([doc])

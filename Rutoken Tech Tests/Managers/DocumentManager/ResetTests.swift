@@ -13,14 +13,14 @@ import XCTest
 class DocumentManagerResetTests: XCTestCase {
     var manager: DocumentManager!
     var helper: RtMockFileHelperProtocol!
-    var source: FileSourceMock!
+    var source: RtMockFileSourceProtocol!
 
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
 
         helper = RtMockFileHelperProtocol()
-        source = FileSourceMock()
+        source = RtMockFileSourceProtocol()
         manager = DocumentManager(helper: helper, fileSource: source)
     }
 
@@ -38,17 +38,17 @@ class DocumentManagerResetTests: XCTestCase {
 
         let exp1 = XCTestExpectation(description: "Clear temp directory")
         let docUrl = URL(fileURLWithPath: "documents.json")
-        source.getUrlResult = { file, dir in
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { file, dir in
             XCTAssertEqual(file, "documents.json")
             XCTAssertEqual(dir, .documents)
             return docUrl
         }
-        helper.mocked_readFile = { url in
+        helper.mocked_readFile_fromUrlURL_Data = { url in
             XCTAssertEqual(url, docUrl)
             return try BankDocument.jsonEncoder.encode([doc])
         }
 
-        helper.mocked_clearDir = { _ in exp1.fulfill() }
+        helper.mocked_clearDir_dirUrlURL_Void = { _ in exp1.fulfill() }
 
         let docs = try awaitPublisherUnwrapped(manager.documents.dropFirst()) {
             XCTAssertNoThrow(try manager.reset())
@@ -72,16 +72,16 @@ class DocumentManagerResetTests: XCTestCase {
                                 paymentTime: Date())
 
         let docUrl = URL(fileURLWithPath: "documents.json")
-        source.getUrlResult = { file, dir in
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { file, dir in
             XCTAssertEqual(file, "documents.json")
             XCTAssertEqual(dir, .documents)
             return docUrl
         }
-        helper.mocked_readFile = { url in
+        helper.mocked_readFile_fromUrlURL_Data = { url in
             XCTAssertEqual(url, docUrl)
             return try BankDocument.jsonEncoder.encode([document, anotherDocument])
         }
-        helper.mocked_clearDir = { _ in }
+        helper.mocked_clearDir_dirUrlURL_Void = { _ in }
 
         try manager!.reset()
         let documents = try awaitPublisherUnwrapped(manager!.documents)
@@ -92,7 +92,7 @@ class DocumentManagerResetTests: XCTestCase {
 
     func testResetTempDirectoryClearTempDirError() throws {
         let error = DocumentManagerError.general("")
-        helper.mocked_clearDir = { _ in throw error }
+        helper.mocked_clearDir_dirUrlURL_Void = { _ in throw error }
 
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
             XCTAssertThrowsError(try manager.reset()) {
@@ -102,8 +102,9 @@ class DocumentManagerResetTests: XCTestCase {
     }
 
     func testResetTempDirectoryEmptyList() throws {
-        helper.mocked_readFile = { _ in Data("[]".utf8) }
-        helper.mocked_clearDir = { _ in }
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        helper.mocked_readFile_fromUrlURL_Data = { _ in Data("[]".utf8) }
+        helper.mocked_clearDir_dirUrlURL_Void = { _ in }
 
         let docs = try awaitPublisherUnwrapped(manager.documents.dropFirst()) {
             XCTAssertNoThrow(try manager.reset())
@@ -113,8 +114,8 @@ class DocumentManagerResetTests: XCTestCase {
     }
 
     func testResetTempDirectoryGetUrlError() throws {
-        source.getUrlResult = { _, _ in nil}
-        helper.mocked_clearDir = { _ in }
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in nil }
+        helper.mocked_clearDir_dirUrlURL_Void = { _ in }
 
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
             XCTAssertThrowsError(try manager.reset()) {
@@ -128,8 +129,9 @@ class DocumentManagerResetTests: XCTestCase {
 
     func testResetTempDirectoryReadFileError() throws {
         let error = DocumentManagerError.general("")
-        helper.mocked_readFile = { _ in throw error }
-        helper.mocked_clearDir = { _ in }
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        helper.mocked_readFile_fromUrlURL_Data = { _ in throw error }
+        helper.mocked_clearDir_dirUrlURL_Void = { _ in }
 
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
             XCTAssertThrowsError(try manager.reset()) {
@@ -139,8 +141,9 @@ class DocumentManagerResetTests: XCTestCase {
     }
 
     func testResetTmpDirectoryBadJson() throws {
-        helper.mocked_readFile = { _ in Data("{}".utf8) }
-        helper.mocked_clearDir = { _ in }
+        source.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        helper.mocked_readFile_fromUrlURL_Data = { _ in Data("{}".utf8) }
+        helper.mocked_clearDir_dirUrlURL_Void = { _ in }
 
         try awaitPublisher(manager.documents.dropFirst(), isInverted: true) {
             XCTAssertThrowsError(try manager.reset())
