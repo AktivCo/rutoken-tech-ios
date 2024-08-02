@@ -5,6 +5,7 @@
 //  Created by Ivan Poderegin on 16.01.2024.
 //
 
+import Combine
 import XCTest
 
 @testable import Rutoken_Tech
@@ -12,32 +13,34 @@ import XCTest
 
 final class CryptoManagerCreateCertTests: XCTestCase {
     var manager: CryptoManager!
-    var pkcs11Helper: Pkcs11HelperMock!
+    var pkcs11Helper: RtMockPkcs11HelperProtocol!
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
     var token: TokenMock!
+    var tokensPublisher: CurrentValueSubject<[Pkcs11TokenProtocol], Never>!
 
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
-        pkcs11Helper = Pkcs11HelperMock()
+        pkcs11Helper = RtMockPkcs11HelperProtocol()
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
-
-        manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
-                                openSslHelper: openSslHelper, fileHelper: fileHelper,
-                                fileSource: fileSource)
 
         token = TokenMock(serial: "87654321", currentInterface: .usb)
         token.enumerateKeysWithAlgoCallback = { _ in
             return [Pkcs11KeyPair(publicKey: Pkcs11ObjectMock(),
                                   privateKey: Pkcs11ObjectMock())]
         }
-        pkcs11Helper.tokenPublisher.send([token])
+
+        tokensPublisher = CurrentValueSubject<[Pkcs11TokenProtocol], Never>([token])
+        pkcs11Helper.mocked_tokens = tokensPublisher.eraseToAnyPublisher()
+        manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
+                                openSslHelper: openSslHelper, fileHelper: fileHelper,
+                                fileSource: fileSource)
     }
 
     func testCreateCertSuccess() async throws {
@@ -169,7 +172,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
         fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
 
-        pkcs11Helper.isPresentCallback = { _ in
+        pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in
             return false
         }
         fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }

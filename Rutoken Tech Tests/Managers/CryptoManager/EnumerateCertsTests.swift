@@ -5,6 +5,7 @@
 //  Created by Vova Badyaev on 22.02.2024.
 //
 
+import Combine
 import XCTest
 
 @testable import Rutoken_Tech
@@ -47,31 +48,32 @@ S4UdEY8f
 
 class CryptoManagerEnumerateCertsTests: XCTestCase {
     var manager: CryptoManager!
-    var pkcs11Helper: Pkcs11HelperMock!
+    var pkcs11Helper: RtMockPkcs11HelperProtocol!
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
 
     var token: TokenMock!
+    var tokensPublisher: CurrentValueSubject<[Pkcs11TokenProtocol], Never>!
     var keyId: String!
 
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
-        pkcs11Helper = Pkcs11HelperMock()
+        pkcs11Helper = RtMockPkcs11HelperProtocol()
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
 
+        token = TokenMock(serial: "87654321", currentInterface: .usb, supportedInterfaces: [.usb])
+        tokensPublisher = CurrentValueSubject<[Pkcs11TokenProtocol], Never>([token])
+        pkcs11Helper.mocked_tokens = tokensPublisher.eraseToAnyPublisher()
+
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
                                 openSslHelper: openSslHelper, fileHelper: fileHelper,
                                 fileSource: fileSource)
-
-        token = TokenMock(serial: "87654321", currentInterface: .usb, supportedInterfaces: [.usb])
-        pkcs11Helper.tokenPublisher.send([token])
-
         keyId = "123"
     }
 
@@ -97,7 +99,7 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
         token.enumerateCertsCallback = {
             throw Pkcs11Error.internalError()
         }
-        pkcs11Helper.isPresentCallback = { _ in
+        pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in
             return false
         }
         await assertErrorAsync(

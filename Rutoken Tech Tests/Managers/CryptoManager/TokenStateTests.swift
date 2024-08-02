@@ -5,6 +5,7 @@
 //  Created by Vova Badyaev on 28.05.2024.
 //
 
+import Combine
 import XCTest
 
 @testable import Rutoken_Tech
@@ -12,7 +13,7 @@ import XCTest
 
 final class CryptoManageTokenStateTests: XCTestCase {
     var manager: CryptoManager!
-    var pkcs11Helper: Pkcs11HelperMock!
+    var pkcs11Helper: RtMockPkcs11HelperProtocol!
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
@@ -25,20 +26,23 @@ final class CryptoManageTokenStateTests: XCTestCase {
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
-        pkcs11Helper = Pkcs11HelperMock()
+        pkcs11Helper = RtMockPkcs11HelperProtocol()
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
         deviceInfo = RtMockDeviceInfoHelperProtocol()
 
+        usbToken = TokenMock(serial: "12345678", currentInterface: .usb)
+        nfcToken = TokenMock(serial: "87654321", currentInterface: .nfc)
+
+        pkcs11Helper.mocked_tokens = Just([usbToken, nfcToken]).eraseToAnyPublisher()
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
                                 openSslHelper: openSslHelper, fileHelper: fileHelper,
                                 fileSource: fileSource, deviceInfo: deviceInfo)
 
         usbToken = TokenMock(serial: "12345678", currentInterface: .usb)
         nfcToken = TokenMock(serial: "87654321", currentInterface: .nfc)
-        pkcs11Helper.tokenPublisher.send([usbToken, nfcToken])
     }
 
     func testUsbStates() async throws {

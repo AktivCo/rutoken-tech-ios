@@ -5,6 +5,7 @@
 //  Created by Никита Девятых on 07.05.2024.
 //
 
+import Combine
 import XCTest
 
 @testable import Rutoken_Tech
@@ -12,7 +13,7 @@ import XCTest
 
 class EncryptDocumentByFileTests: XCTestCase {
     var manager: CryptoManager!
-    var pkcs11Helper: Pkcs11HelperMock!
+    var pkcs11Helper: RtMockPkcs11HelperProtocol!
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
@@ -25,12 +26,13 @@ class EncryptDocumentByFileTests: XCTestCase {
         super.setUp()
         continueAfterFailure = false
 
-        pkcs11Helper = Pkcs11HelperMock()
+        pkcs11Helper = RtMockPkcs11HelperProtocol()
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
 
+        pkcs11Helper.mocked_tokens = Just([]).eraseToAnyPublisher()
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
                                 openSslHelper: openSslHelper, fileHelper: fileHelper,
                                 fileSource: fileSource)

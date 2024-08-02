@@ -5,6 +5,7 @@
 //  Created by Ivan Poderegin on 27.12.2023.
 //
 
+import Combine
 import XCTest
 
 @testable import Rutoken_Tech
@@ -12,21 +13,25 @@ import XCTest
 
 final class CryptoManagerEnumerateKeysTests: XCTestCase {
     var manager: CryptoManager!
-    var pkcs11Helper: Pkcs11HelperMock!
+    var pkcs11Helper: RtMockPkcs11HelperProtocol!
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
 
+    var tokensPublisher: CurrentValueSubject<[Pkcs11TokenProtocol], Never>!
+
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
-        pkcs11Helper = Pkcs11HelperMock()
+        pkcs11Helper = RtMockPkcs11HelperProtocol()
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
 
+        tokensPublisher = CurrentValueSubject<[Pkcs11TokenProtocol], Never>([])
+        pkcs11Helper.mocked_tokens = tokensPublisher.eraseToAnyPublisher()
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
                                 openSslHelper: openSslHelper, fileHelper: fileHelper,
                                 fileSource: fileSource)
@@ -36,8 +41,7 @@ final class CryptoManagerEnumerateKeysTests: XCTestCase {
         let token = TokenMock(serial: "87654321", currentInterface: .usb)
         let testId = "some id"
 
-        pkcs11Helper.tokenPublisher.send([token])
-
+        tokensPublisher.send([token])
         token.enumerateKeysWithAlgoCallback = { _ in
             var object = Pkcs11ObjectMock()
             object.setValue(forAttr: .id, value: .success(Data(testId.utf8)))
@@ -58,11 +62,11 @@ final class CryptoManagerEnumerateKeysTests: XCTestCase {
 
     func testEnumerateKeysConnectionLostError() async throws {
         let token = TokenMock(serial: "87654321", currentInterface: .usb)
-        pkcs11Helper.tokenPublisher.send([token])
+        tokensPublisher.send([token])
         token.enumerateKeysWithAlgoCallback = { _ in
             throw Pkcs11Error.internalError()
         }
-        pkcs11Helper.isPresentCallback = { _ in
+        pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in
             return false
         }
         await assertErrorAsync(

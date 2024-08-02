@@ -5,6 +5,7 @@
 //  Created by Никита Девятых on 22.12.2023.
 //
 
+import Combine
 import XCTest
 
 @testable import Rutoken_Tech
@@ -12,21 +13,25 @@ import XCTest
 
 class CryptoManagerGetTokenInfoTests: XCTestCase {
     var manager: CryptoManager!
-    var pkcs11Helper: Pkcs11HelperMock!
+    var pkcs11Helper: RtMockPkcs11HelperProtocol!
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
 
+    var tokensPublisher: CurrentValueSubject<[Pkcs11TokenProtocol], Never>!
+
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
-        pkcs11Helper = Pkcs11HelperMock()
+        pkcs11Helper = RtMockPkcs11HelperProtocol()
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
 
+        tokensPublisher = CurrentValueSubject<[Pkcs11TokenProtocol], Never>([])
+        pkcs11Helper.mocked_tokens = tokensPublisher.eraseToAnyPublisher()
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
                                 openSslHelper: openSslHelper, fileHelper: fileHelper,
                                 fileSource: fileSource)
@@ -34,7 +39,7 @@ class CryptoManagerGetTokenInfoTests: XCTestCase {
 
     func testGetTokenInfoUsbSuccess() async throws {
         let token = TokenMock(serial: "87654321", currentInterface: .usb, supportedInterfaces: [.usb])
-        pkcs11Helper.tokenPublisher.send([token])
+        tokensPublisher.send([token])
 
         var result: TokenInfo?
         try await manager.withToken(connectionType: .usb, serial: "87654321", pin: nil) {
@@ -49,7 +54,7 @@ class CryptoManagerGetTokenInfoTests: XCTestCase {
 
     func testGetTokenInfoNfcSuccess() async throws {
         let token = TokenMock(serial: "87654321", currentInterface: .nfc, supportedInterfaces: [.nfc])
-        pkcs11Helper.tokenPublisher.send([token])
+        tokensPublisher.send([token])
 
         var result: TokenInfo?
         try await manager.withToken(connectionType: .nfc, serial: "87654321", pin: nil) {
@@ -64,7 +69,7 @@ class CryptoManagerGetTokenInfoTests: XCTestCase {
 
     func testGetTokenInfoDualSuccess() async throws {
         let token = TokenMock(serial: "87654321", currentInterface: .usb, supportedInterfaces: [.nfc, .usb])
-        pkcs11Helper.tokenPublisher.send([token])
+        tokensPublisher.send([token])
 
         var result: TokenInfo?
         try await manager.withToken(connectionType: .usb, serial: "87654321", pin: nil) {

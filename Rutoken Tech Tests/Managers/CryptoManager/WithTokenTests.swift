@@ -5,30 +5,33 @@
 //  Created by Ivan Poderegin on 26.12.2023.
 //
 
-import XCTest
-
 import Combine
+import XCTest
 
 @testable import Rutoken_Tech
 
 
 final class CryptoManagerWithTokenTests: XCTestCase {
     var manager: CryptoManager!
-    var pkcs11Helper: Pkcs11HelperMock!
+    var pkcs11Helper: RtMockPkcs11HelperProtocol!
     var pcscHelper: PcscHelperMock!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
 
+    var tokensPublisher: CurrentValueSubject<[Pkcs11TokenProtocol], Never>!
+
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
-        pkcs11Helper = Pkcs11HelperMock()
+        pkcs11Helper = RtMockPkcs11HelperProtocol()
         pcscHelper = PcscHelperMock()
         openSslHelper = OpenSslHelperMock()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
 
+        tokensPublisher = CurrentValueSubject<[Pkcs11TokenProtocol], Never>([])
+        pkcs11Helper.mocked_tokens = tokensPublisher.eraseToAnyPublisher()
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
                                 openSslHelper: openSslHelper, fileHelper: fileHelper,
                                 fileSource: fileSource)
@@ -56,7 +59,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         token.logoutCallback = {
             exp4.fulfill()
         }
-        pkcs11Helper.tokenPublisher.send([token])
+        tokensPublisher.send([token])
 
         await assertNoThrowAsync(try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "123456") { exp5.fulfill() })
         await fulfillment(of: [exp1, exp2, exp3, exp4, exp5], timeout: 0.3)
@@ -82,7 +85,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         token.logoutCallback = {
             exp4.fulfill()
         }
-        pkcs11Helper.tokenPublisher.send([token])
+        tokensPublisher.send([token])
 
         await assertNoThrowAsync(try await manager.withToken(connectionType: .nfc, serial: token.serial, pin: "123456") { exp5.fulfill() })
         await fulfillment(of: [exp1, exp2, exp3, exp4, exp5], timeout: 0.3)
@@ -101,7 +104,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         token.logoutCallback = {
             exp3.fulfill()
         }
-        pkcs11Helper.tokenPublisher.send([token])
+        tokensPublisher.send([token])
 
         await assertNoThrowAsync(try await manager.withToken(connectionType: .nfc, serial: token.serial, pin: nil) { exp1.fulfill() })
         await fulfillment(of: [exp1, exp2, exp3], timeout: 0.3)
@@ -109,12 +112,12 @@ final class CryptoManagerWithTokenTests: XCTestCase {
 
     func testWithTokenConnectionLostNfcError() async {
         let token = TokenMock(serial: "12345678", currentInterface: .nfc)
-        pkcs11Helper.tokenPublisher.send([token])
+        tokensPublisher.send([token])
 
         token.loginCallback = { _ in
             throw Pkcs11Error.internalError(rv: 10)
         }
-        pkcs11Helper.isPresentCallback = { _ in
+        pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in
             return false
         }
 
@@ -153,7 +156,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         exp.isInverted = true
 
         let token = TokenMock(serial: "12345678", currentInterface: .usb)
-        pkcs11Helper.tokenPublisher.send([token])
+        tokensPublisher.send([token])
 
         token.loginCallback = { _ in
             throw Pkcs11Error.incorrectPin
@@ -173,7 +176,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
 
     func testWithTokenWrongTokenError() async {
         let token = TokenMock(serial: "12345678", currentInterface: .usb)
-        pkcs11Helper.tokenPublisher.send([token])
+        tokensPublisher.send([token])
 
         await assertErrorAsync(
             try await manager.withToken(connectionType: .usb, serial: "WrongSerial", pin: "123456") {},
@@ -185,7 +188,8 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         token.loginCallback = { pin in
             XCTAssertEqual(pin, "123456")
         }
-        pkcs11Helper.tokenPublisher.send([token])
+        pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in true }
+        tokensPublisher.send([token])
 
         await assertErrorAsync(
             try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "123456") {
@@ -196,14 +200,12 @@ final class CryptoManagerWithTokenTests: XCTestCase {
 
     func testWithTokenConnectionLostError() async {
         let token = TokenMock(serial: "12345678", currentInterface: .usb)
-        pkcs11Helper.tokenPublisher.send([token])
+        tokensPublisher.send([token])
 
         token.loginCallback = { _ in
             throw Pkcs11Error.internalError(rv: 10)
         }
-        pkcs11Helper.isPresentCallback = { _ in
-            return false
-        }
+        pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in return false }
 
         await assertErrorAsync(
             try await manager.withToken(connectionType: .usb, serial: "12345678", pin: "12345678") { },

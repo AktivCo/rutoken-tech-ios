@@ -8,7 +8,10 @@
 import Combine
 import Foundation
 
+import RtMock
 
+
+@RtMock
 protocol Pkcs11HelperProtocol {
     var tokens: AnyPublisher<[Pkcs11TokenProtocol], Never> { get }
     func startMonitoring() throws

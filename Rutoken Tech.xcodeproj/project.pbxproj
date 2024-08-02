@@ -158,7 +158,6 @@
 		D4B130B02B0CFFCD00AD390F /* Pkcs11TokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130AF2B0CFFCD00AD390F /* Pkcs11TokenModel.swift */; };
 		D4B130B32B0DD52A00AD390F /* Pkcs11Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130B22B0DD52A00AD390F /* Pkcs11Token.swift */; };
 		D4B130B52B0DDB2200AD390F /* Pkcs11Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130B42B0DDB2200AD390F /* Pkcs11Helper.swift */; };
-		D4B130C72B0E37F200AD390F /* Pkcs11HelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130C62B0E37F200AD390F /* Pkcs11HelperMock.swift */; };
 		D4B130D32B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D22B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift */; };
 		D4B130D62B0E4F2400AD390F /* PcscHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D52B0E4F2400AD390F /* PcscHelper.swift */; };
 		D4B130DA2B0E51FE00AD390F /* PcscHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */; };
@@ -338,7 +337,6 @@
 		D4B130B22B0DD52A00AD390F /* Pkcs11Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Token.swift; sourceTree = "<group>"; };
 		D4B130B42B0DDB2200AD390F /* Pkcs11Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Helper.swift; sourceTree = "<group>"; };
 		D4B130BA2B0E379900AD390F /* Rutoken Tech Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Rutoken Tech Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D4B130C62B0E37F200AD390F /* Pkcs11HelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11HelperMock.swift; sourceTree = "<group>"; };
 		D4B130D22B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+AssertSpecificError.swift"; sourceTree = "<group>"; };
 		D4B130D52B0E4F2400AD390F /* PcscHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcscHelper.swift; sourceTree = "<group>"; };
 		D4B130D72B0E4F8200AD390F /* Pkcs11TokenInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pkcs11TokenInterface.swift; sourceTree = "<group>"; };
@@ -839,7 +837,6 @@
 		D4B130C32B0E37BB00AD390F /* Mocks */ = {
 			isa = PBXGroup;
 			children = (
-				D4B130C62B0E37F200AD390F /* Pkcs11HelperMock.swift */,
 				D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */,
 				44EED1B52B1F115B0036F8DA /* TokenMock.swift */,
 				44F032392B5125BC00466080 /* Pkcs11ObjectMock.swift */,
@@ -1198,7 +1195,6 @@
 				D4497EF72C2AB8C800FCFBDF /* EncryptDocumentByCertIdTests.swift in Sources */,
 				D4A185302C1C3282006D7F71 /* ReadDocsFromBundleTests.swift in Sources */,
 				D4B130DA2B0E51FE00AD390F /* PcscHelperMock.swift in Sources */,
-				D4B130C72B0E37F200AD390F /* Pkcs11HelperMock.swift in Sources */,
 				44EED1B62B1F115B0036F8DA /* TokenMock.swift in Sources */,
 				D4F4FDEC2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift in Sources */,
 				D4A1852E2C1C2CCA006D7F71 /* InitBackupTests.swift in Sources */,
