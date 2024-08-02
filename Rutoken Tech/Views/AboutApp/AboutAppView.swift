@@ -98,12 +98,15 @@ struct AboutAppView: View {
                     Spacer()
                     Text(phoneNumber)
                         .font(.body)
-                        .foregroundStyle(Color.RtColors.rtColorsSecondary)
+                        .foregroundStyle(UIDevice.isPhone
+                                         ? Color.RtColors.rtColorsSecondary
+                                         : Color.RtColors.rtLabelSecondary)
                 }
                 .padding(.horizontal, 12)
                 .frame(height: 44)
             }
             .buttonStyle(RtBackgroundAnimatedButtonStyle(pressedColor: .RtColors.rtOtherSelected))
+            .disabled(!UIDevice.isPhone)
             .infoListStyle()
         }
         .frame(height: 85)
