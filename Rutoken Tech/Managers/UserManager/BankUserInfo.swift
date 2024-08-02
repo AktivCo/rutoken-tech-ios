@@ -12,7 +12,7 @@ struct BankUserInfo: Identifiable {
     let id = UUID().uuidString
     let expiryDate: Date
     let fullname: String
-    let title: String
+    let title: String?
     let keyId: String
     let certHash: String
     let tokenSerial: String

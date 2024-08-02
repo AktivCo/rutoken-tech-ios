@@ -19,7 +19,7 @@ public class ManagedBankUser: NSManagedObject {
 
     @NSManaged public var expiryDate: Date
     @NSManaged public var fullname: String
-    @NSManaged public var title: String
+    @NSManaged public var title: String?
     @NSManaged public var keyId: String
     @NSManaged public var certHash: String
     @NSManaged public var tokenSerial: String

@@ -11,15 +11,15 @@ import SwiftUI
 struct CertView: View {
     let cert: CertViewData
 
-    func infoField(for title: String, with value: String) -> some View {
+    func infoField(for title: String, with value: String?) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
                 .font(.subheadline)
                 .foregroundStyle(Color.RtColors.rtLabelSecondary)
                 .frame(height: 20, alignment: .top)
-            Text(value)
+            Text(value ?? "Не задано")
                 .font(.subheadline)
-                .foregroundStyle(Color.RtColors.rtLabelPrimary)
+                .foregroundStyle(value != nil ? Color.RtColors.rtLabelPrimary : Color.labelTertiary)
                 .frame(height: 20, alignment: .bottom)
         }
     }

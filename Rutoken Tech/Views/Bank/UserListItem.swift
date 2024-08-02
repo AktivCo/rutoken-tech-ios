@@ -33,14 +33,14 @@ struct UserListItem: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
-    private func infoField(for title: String, with value: String) -> some View {
+    private func infoField(for title: String, with value: String?) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
                 .font(.subheadline)
                 .foregroundStyle(Color.RtColors.rtLabelSecondary)
-            Text(value)
+            Text(value ?? "Не задано")
                 .font(.subheadline)
-                .foregroundStyle(Color.RtColors.rtLabelPrimary)
+                .foregroundStyle(value != nil ? Color.RtColors.rtLabelPrimary : Color.labelTertiary)
         }
     }
 }

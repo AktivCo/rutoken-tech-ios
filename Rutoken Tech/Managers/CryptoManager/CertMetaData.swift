@@ -15,8 +15,8 @@ struct CertMetaData: Equatable {
     let body: Data
     let hash: String
     let name: String
-    let jobTitle: String
-    let companyName: String
+    let jobTitle: String?
+    let companyName: String?
     let keyAlgo: Pkcs11KeyAlgorithm
     let startDate: Date
     let expiryDate: Date
@@ -25,8 +25,6 @@ struct CertMetaData: Equatable {
         guard let x509 = WrappedX509(from: cert),
               let subjectNameHash = x509.subjectNameHash,
               let commonName = x509.commonName,
-              let title = x509.title,
-              let organizationName = x509.organizationName,
               let notBefore = x509.notBefore,
               let notAfter = x509.notAfter,
               let algorithm = x509.publicKeyAlgorithm
@@ -37,8 +35,8 @@ struct CertMetaData: Equatable {
         self.body = cert
         self.hash = subjectNameHash
         self.name = commonName
-        self.jobTitle = title
-        self.companyName = organizationName
+        self.jobTitle = x509.title
+        self.companyName = x509.organizationName
         self.keyAlgo = algorithm
         self.startDate = notBefore
         self.expiryDate = notAfter
