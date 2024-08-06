@@ -991,7 +991,7 @@
 				5E1F3AA92BA36474008158EF /* XCRemoteSwiftPackageReference "swift-rtpkcs11ecp-binary" */,
 				5E1F3AAC2BA364D5008158EF /* XCRemoteSwiftPackageReference "swift-rtopenssl-binary" */,
 				441323912BFB31A2005FADF9 /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */,
-				44D2616E2C062A8C000F5596 /* XCRemoteSwiftPackageReference "swift-ui-components" */,
+				44D2616E2C062A8C000F5596 /* XCRemoteSwiftPackageReference "rt-ui-components" */,
 				5EB636E12C29CFF900DDCA0F /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
 				5EDA31E72C3D710D00859917 /* XCRemoteSwiftPackageReference "rt-mock" */,
 			);
@@ -1534,12 +1534,12 @@
 				revision = 7d82abca20e59893117c2eb278106700468dc4fe;
 			};
 		};
-		44D2616E2C062A8C000F5596 /* XCRemoteSwiftPackageReference "swift-ui-components" */ = {
+		44D2616E2C062A8C000F5596 /* XCRemoteSwiftPackageReference "rt-ui-components" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/AktivCo/swift-ui-components.git";
+			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-ui-components.git";
 			requirement = {
 				kind = revision;
-				revision = 9072f23f653354645b9df51428b8ca2741862803;
+				revision = 890f410dd6de7ddd84b9847568bd8ae414186db7;
 			};
 		};
 		5E1F3AA32BA362C5008158EF /* XCRemoteSwiftPackageReference "tiny-redux" */ = {
@@ -1599,7 +1599,7 @@
 		};
 		44D2616F2C062A8C000F5596 /* RtUiComponents */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 44D2616E2C062A8C000F5596 /* XCRemoteSwiftPackageReference "swift-ui-components" */;
+			package = 44D2616E2C062A8C000F5596 /* XCRemoteSwiftPackageReference "rt-ui-components" */;
 			productName = RtUiComponents;
 		};
 		5E1F3AA42BA362C5008158EF /* TinyAsyncRedux */ = {

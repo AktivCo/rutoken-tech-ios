@@ -91,6 +91,7 @@ struct CaCertGenView: View {
                 .frame(height: 44)
                 .textFieldStyle(PlainTextFieldStyle())
                 .textContentType(.name)
+                .tint(.RtColors.rtColorsSecondary)
                 .padding(.horizontal, 12)
             if !nameInput.isEmpty {
                 Button {
