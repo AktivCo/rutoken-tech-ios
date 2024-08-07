@@ -9,11 +9,14 @@ import Combine
 import CoreData
 import Foundation
 
+import RtMock
+
 
 enum UserManagerError: Error {
     case general
 }
 
+@RtMock
 protocol UserManagerProtocol {
     var users: AnyPublisher<[BankUserInfo], Never> { get }
     func listUsers() -> [BankUserInfo]
