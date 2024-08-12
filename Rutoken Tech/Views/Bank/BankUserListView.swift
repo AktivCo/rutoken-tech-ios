@@ -117,7 +117,7 @@ struct BankUserListView: View {
                 .frame(maxWidth: UIDevice.isPhone ? .infinity : 350)
                 .padding(.bottom, 20)
             } else {
-                Text("Вы добавили максимальное количество пользователей. Чтобы добавить нового, удалите одного из существующих")
+                Text("Вы добавили максимальное количество пользователей. Чтобы добавить нового, удалите одного из существующих")
                 .multilineTextAlignment(.center)
                 .foregroundStyle(Color.RtColors.rtLabelSecondary)
                 .font(.system(size: 13))
