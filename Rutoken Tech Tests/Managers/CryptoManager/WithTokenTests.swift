@@ -91,6 +91,34 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         await fulfillment(of: [exp1, exp2, exp3, exp4, exp5], timeout: 0.3)
     }
 
+    func testWithTokenNfcViaUsbSuccess() async {
+        let exp1 = XCTestExpectation(description: "Start Nfc")
+        let exp2 = XCTestExpectation(description: "Stop Nfc")
+        let exp3 = XCTestExpectation(description: "Token Login")
+        let exp4 = XCTestExpectation(description: "Token Logout")
+        let exp5 = XCTestExpectation(description: "CallBack")
+        exp1.isInverted = true
+        exp2.isInverted = true
+        pcscHelper.startNfcCallback = {
+            exp1.fulfill()
+        }
+        pcscHelper.stopNfcCallback = {
+            exp2.fulfill()
+        }
+        let token = TokenMock(serial: "12345678", currentInterface: .nfc)
+        token.loginCallback = { pin in
+            XCTAssertEqual(pin, "123456")
+            exp3.fulfill()
+        }
+        token.logoutCallback = {
+            exp4.fulfill()
+        }
+        tokensPublisher.send([token])
+
+        await assertNoThrowAsync(try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "123456") { exp5.fulfill() })
+        await fulfillment(of: [exp1, exp2, exp3, exp4, exp5], timeout: 0.3)
+    }
+
     func testWithTokenNoPinNoLoginLogoutSuccess() async {
         let exp1 = XCTestExpectation(description: "CallBack")
         let exp2 = XCTestExpectation(description: "Token Login")

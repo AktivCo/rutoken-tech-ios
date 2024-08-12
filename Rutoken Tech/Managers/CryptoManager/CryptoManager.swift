@@ -368,7 +368,7 @@ class CryptoManager: CryptoManagerProtocol {
                     }
                     .store(in: &cancellable, for: uuid)
             case .usb:
-                guard let usbToken = tokens.first(where: { $0.currentInterface == .usb }) else {
+                guard let usbToken = tokens.first else {
                     continuation.resume(throwing: CryptoManagerError.tokenNotFound)
                     return
                 }
