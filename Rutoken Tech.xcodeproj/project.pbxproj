@@ -1567,7 +1567,7 @@
 			repositoryURL = "https://github.com/SimplyDanny/SwiftLintPlugins";
 			requirement = {
 				kind = exactVersion;
-				version = 0.55.1;
+				version = 0.56.1;
 			};
 		};
 		5EDA31E72C3D710D00859917 /* XCRemoteSwiftPackageReference "rt-mock" */ = {
