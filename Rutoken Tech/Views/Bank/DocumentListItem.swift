@@ -17,6 +17,7 @@ struct DocumentListItem: View {
     var body: some View {
         Button {
             store.send(.selectDocument(document))
+            if UIDevice.isPhone { store.send(.showFullCoverView) }
         } label: {
             HStack(alignment: .top, spacing: 12) {
                 docImage()

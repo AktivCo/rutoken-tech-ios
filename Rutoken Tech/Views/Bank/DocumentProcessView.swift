@@ -14,14 +14,16 @@ import TinyAsyncRedux
 
 struct DocumentProcessView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
-    @Environment(\.dismiss) private var dismiss
-    @State private var topSafeAreaHeight: CGFloat = UIDevice.isPhone ? 0 : getSafeAreaInsets()?.top ?? 0
+
+    @State private var topSafeAreaHeight: CGFloat = getSafeAreaInsets()?.top ?? 0
+    @State private var bottomSafeAreaHeight: CGFloat = UIDevice.isPhone ? (getSafeAreaInsets()?.bottom ?? 0) : 0
     @State private var navBarSize: CGSize = .zero
     @State private var bottomBarSize: CGSize = .zero
     @State private var wholeViewSize: CGSize = .zero
 
     private var displayContentHeight: Double {
-        wholeViewSize.height - bottomBarSize.height - navBarSize.height
+        let height = wholeViewSize.height - bottomBarSize.height - navBarSize.height - topSafeAreaHeight - bottomSafeAreaHeight
+        return height > 0 ? height : 0
     }
 
     private var backButtonLabel: some View {
@@ -66,7 +68,7 @@ struct DocumentProcessView: View {
             CustomNavBar {
                 Button {
                     if UIDevice.isPhone {
-                        dismiss()
+                        store.send(.hideFullCoverView)
                     } else {
                         store.send(.updateCurrentDoc(nil, nil))
                     }
@@ -168,10 +170,13 @@ struct DocumentProcessView: View {
                     } else {
                         actionButton(for: doc.action)
                     }
+                } else {
+                    Spacer()
                 }
             }
             .frame(height: 49)
             .frame(maxWidth: .infinity)
+            .padding(.bottom, bottomSafeAreaHeight)
             .background(Color("IOSElementsTitleBarSurface"))
         }
     }
@@ -233,7 +238,9 @@ struct DocumentProcessView_Previews: PreviewProvider {
         let emptyState = AppState()
         let emptyStore = Store(initialState: emptyState,
                                 reducer: AppReducer(), middlewares: [])
-        DocumentProcessView().environmentObject(emptyStore)
+        DocumentProcessView()
+            .environmentObject(emptyStore)
+            .ignoresSafeArea()
 
         let metadata = BankDocument(
             name: "Платежное поручение №00121", action: .encrypt, amount: 14500,
@@ -246,7 +253,9 @@ struct DocumentProcessView_Previews: PreviewProvider {
         let state = AppState(bankSelectedDocumentState: doc)
         let store = Store(initialState: state, reducer: AppReducer(), middlewares: [])
 
-        DocumentProcessView().environmentObject(store)
+        DocumentProcessView()
+            .environmentObject(store)
+            .ignoresSafeArea()
 
         let encrypted = """
         MIIDrTCCA1ygAwIBAgIKc522PB4SUNntVzAIBgYqhQMCAgMwgbMxCzAJBgNVBAYTAlJVMSAwHgYDVQQK
@@ -276,6 +285,8 @@ struct DocumentProcessView_Previews: PreviewProvider {
         let stateForEncrypted = AppState(bankSelectedDocumentState: encryptedDoc)
         let storeForEncrypted = Store(initialState: stateForEncrypted, reducer: AppReducer(), middlewares: [])
 
-        DocumentProcessView().environmentObject(storeForEncrypted)
+        DocumentProcessView()
+            .environmentObject(storeForEncrypted)
+            .ignoresSafeArea()
     }
 }

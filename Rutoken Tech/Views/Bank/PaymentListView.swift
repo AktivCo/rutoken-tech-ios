@@ -42,12 +42,6 @@ struct PaymentListView: View {
 
     private var iphoneView: some View {
         commonView
-            .navigationDestination(isPresented: Binding(
-                get: { store.state.bankSelectedDocumentState.docContent != nil },
-                set: { ok in if !ok { store.send(.updateCurrentDoc(nil, nil)) } })) {
-                    DocumentProcessView()
-                        .navigationBarBackButtonHidden(true)
-                }
     }
 
     // due to incorrect interaction between NavigationStack inside of NavigationSplitView

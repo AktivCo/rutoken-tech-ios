@@ -19,6 +19,14 @@ struct RootView: View {
         VStack {
             if UIDevice.isPhone {
                 IphoneRootView()
+                    .rtFullScreenCover(isPresented: Binding(get: { store.state.bankSelectedDocumentState.docContent != nil &&
+                                                                   store.state.routingState.isFullScreenCoverShown},
+                                                            set: { _ in })
+                    , onDismiss: {
+                        store.send(.updateCurrentDoc(nil, nil))
+                    }, content: {
+                        store.state.bankSelectedDocumentState.docContent != nil ? AnyView(DocumentProcessView()) : AnyView(EmptyView())
+                    })
             } else {
                 IpadRootView()
             }

@@ -44,6 +44,10 @@ struct AppReducer: Reducer {
             newState.routingState.pinInputModel.buttonState = state
         case .handleError:
             break
+        case .showFullCoverView:
+            newState.routingState.isFullScreenCoverShown = true
+        case .hideFullCoverView:
+            newState.routingState.isFullScreenCoverShown = false
         case .generateKeyId:
             newState.caGenerateKeyPairState.key = KeyModel(ckaId: String.generateID(),
                                                            type: .gostR3410_2012_256)

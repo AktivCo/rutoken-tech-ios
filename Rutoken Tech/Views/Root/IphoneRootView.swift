@@ -41,8 +41,6 @@ struct IphoneRootView: View {
                         .ignoresSafeArea()
                 }
             }
-            .toolbar(store.state.bankSelectedDocumentState.metadata == nil ? .visible : .hidden,
-                     for: .tabBar)
         }
         .tint(Color.RtColors.rtColorsSecondary)
         .onChange(of: selectedTab) { _ in

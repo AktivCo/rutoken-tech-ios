@@ -16,4 +16,5 @@ struct RoutingState {
     var isVcrViewShown = false
     let pinInputModel = RtPinInputModel(pin: "")
     var actionWithTokenButtonState: RtContinueButtonState = .ready
+    var isFullScreenCoverShown = false
 }
