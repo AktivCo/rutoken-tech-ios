@@ -14,7 +14,7 @@ import XCTest
 class CryptoManagerGetTokenInfoTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: RtMockPkcs11HelperProtocol!
-    var pcscHelper: PcscHelperMock!
+    var pcscHelper: RtMockPcscHelperProtocol!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
@@ -25,7 +25,7 @@ class CryptoManagerGetTokenInfoTests: XCTestCase {
         super.setUp()
         continueAfterFailure = false
         pkcs11Helper = RtMockPkcs11HelperProtocol()
-        pcscHelper = PcscHelperMock()
+        pcscHelper = RtMockPcscHelperProtocol()
         openSslHelper = OpenSslHelperMock()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
@@ -53,6 +53,17 @@ class CryptoManagerGetTokenInfoTests: XCTestCase {
     }
 
     func testGetTokenInfoNfcSuccess() async throws {
+        pcscHelper.mocked_startNfc_Void = {}
+        pcscHelper.mocked_stopNfc_Void = {}
+        pcscHelper.mocked_nfcExchangeIsStopped_AnyPublisherOf_VoidNever = {
+            Just(Void()).eraseToAnyPublisher()
+        }
+        pcscHelper.mocked_getNfcCooldown_AsyncThrowingStreamOf_UIntError = {
+            AsyncThrowingStream { con in
+                con.yield(0)
+                con.finish()
+            }
+        }
         let token = TokenMock(serial: "87654321", currentInterface: .nfc, supportedInterfaces: [.nfc])
         tokensPublisher.send([token])
 

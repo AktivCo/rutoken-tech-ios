@@ -14,7 +14,7 @@ import XCTest
 final class CryptoManagerDeleteCertTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: RtMockPkcs11HelperProtocol!
-    var pcscHelper: PcscHelperMock!
+    var pcscHelper: RtMockPcscHelperProtocol!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
@@ -27,7 +27,7 @@ final class CryptoManagerDeleteCertTests: XCTestCase {
         super.setUp()
         continueAfterFailure = false
         pkcs11Helper = RtMockPkcs11HelperProtocol()
-        pcscHelper = PcscHelperMock()
+        pcscHelper = RtMockPcscHelperProtocol()
         openSslHelper = OpenSslHelperMock()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()

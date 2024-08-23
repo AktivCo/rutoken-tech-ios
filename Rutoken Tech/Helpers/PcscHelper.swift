@@ -8,6 +8,7 @@
 import Combine
 import Foundation
 
+import RtMock
 import RtPcscWrapper
 
 
@@ -22,6 +23,7 @@ enum NfcError: Error {
     case cancelledByUser
 }
 
+@RtMock
 protocol PcscHelperProtocol {
     func startNfc() throws
     func stopNfc() throws

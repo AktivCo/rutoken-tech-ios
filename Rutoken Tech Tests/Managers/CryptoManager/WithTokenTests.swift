@@ -14,7 +14,7 @@ import XCTest
 final class CryptoManagerWithTokenTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: RtMockPkcs11HelperProtocol!
-    var pcscHelper: PcscHelperMock!
+    var pcscHelper: RtMockPcscHelperProtocol!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
@@ -25,7 +25,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         super.setUp()
         continueAfterFailure = false
         pkcs11Helper = RtMockPkcs11HelperProtocol()
-        pcscHelper = PcscHelperMock()
+        pcscHelper = RtMockPcscHelperProtocol()
         openSslHelper = OpenSslHelperMock()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
@@ -45,10 +45,10 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         let exp5 = XCTestExpectation(description: "CallBack")
         exp1.isInverted = true
         exp2.isInverted = true
-        pcscHelper.startNfcCallback = {
+        pcscHelper.mocked_startNfc_Void = {
             exp1.fulfill()
         }
-        pcscHelper.stopNfcCallback = {
+        pcscHelper.mocked_stopNfc_Void = {
             exp2.fulfill()
         }
         let token = TokenMock(serial: "12345678", currentInterface: .usb)
@@ -71,11 +71,19 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         let exp3 = XCTestExpectation(description: "Token Login")
         let exp4 = XCTestExpectation(description: "Token Logout")
         let exp5 = XCTestExpectation(description: "CallBack")
-        pcscHelper.startNfcCallback = {
+        pcscHelper.mocked_startNfc_Void = {
             exp1.fulfill()
         }
-        pcscHelper.stopNfcCallback = {
+        pcscHelper.mocked_stopNfc_Void = {
             exp2.fulfill()
+        }
+        pcscHelper.mocked_nfcExchangeIsStopped_AnyPublisherOf_VoidNever = {
+            Just(Void()).eraseToAnyPublisher()
+        }
+        pcscHelper.mocked_getNfcCooldown_AsyncThrowingStreamOf_UIntError = {
+            AsyncThrowingStream { con in
+                con.finish()
+            }
         }
         let token = TokenMock(serial: "12345678", currentInterface: .nfc)
         token.loginCallback = { pin in
@@ -99,10 +107,10 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         let exp5 = XCTestExpectation(description: "CallBack")
         exp1.isInverted = true
         exp2.isInverted = true
-        pcscHelper.startNfcCallback = {
+        pcscHelper.mocked_startNfc_Void = {
             exp1.fulfill()
         }
-        pcscHelper.stopNfcCallback = {
+        pcscHelper.mocked_stopNfc_Void = {
             exp2.fulfill()
         }
         let token = TokenMock(serial: "12345678", currentInterface: .nfc)
@@ -125,7 +133,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         let exp3 = XCTestExpectation(description: "Token Logout")
         exp2.isInverted = true
         exp3.isInverted = true
-        let token = TokenMock(serial: "12345678", currentInterface: .nfc)
+        let token = TokenMock(serial: "12345678", currentInterface: .usb)
         token.loginCallback = { _ in
             exp2.fulfill()
         }
@@ -134,11 +142,22 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         }
         tokensPublisher.send([token])
 
-        await assertNoThrowAsync(try await manager.withToken(connectionType: .nfc, serial: token.serial, pin: nil) { exp1.fulfill() })
+        await assertNoThrowAsync(try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) { exp1.fulfill() })
         await fulfillment(of: [exp1, exp2, exp3], timeout: 0.3)
     }
 
     func testWithTokenConnectionLostNfcError() async {
+        pcscHelper.mocked_startNfc_Void = {}
+        pcscHelper.mocked_stopNfc_Void = {}
+        pcscHelper.mocked_nfcExchangeIsStopped_AnyPublisherOf_VoidNever = {
+            Just(Void()).eraseToAnyPublisher()
+        }
+        pcscHelper.mocked_getNfcCooldown_AsyncThrowingStreamOf_UIntError = {
+            AsyncThrowingStream { con in
+                con.finish()
+            }
+        }
+
         let token = TokenMock(serial: "12345678", currentInterface: .nfc)
         tokensPublisher.send([token])
 
@@ -155,7 +174,14 @@ final class CryptoManagerWithTokenTests: XCTestCase {
     }
 
     func testWithTokenExchangeIsOverNfc() async {
-        pcscHelper.nfcExchangeIsStoppedCallback = {
+        pcscHelper.mocked_startNfc_Void = {}
+        pcscHelper.mocked_stopNfc_Void = {}
+        pcscHelper.mocked_getNfcCooldown_AsyncThrowingStreamOf_UIntError = {
+            AsyncThrowingStream { con in
+                con.finish()
+            }
+        }
+        pcscHelper.mocked_nfcExchangeIsStopped_AnyPublisherOf_VoidNever = {
             Future<Void, Never>({ promise in
                 Task {
                     try? await Task.sleep(for: .milliseconds(100))
@@ -170,8 +196,17 @@ final class CryptoManagerWithTokenTests: XCTestCase {
     }
 
     func testWithTokenCancelledByUserErrorNfc() async {
-        pcscHelper.startNfcCallback = {
+        pcscHelper.mocked_startNfc_Void = {
             throw NfcError.cancelledByUser
+        }
+        pcscHelper.mocked_stopNfc_Void = {}
+        pcscHelper.mocked_nfcExchangeIsStopped_AnyPublisherOf_VoidNever = {
+            Just(Void()).eraseToAnyPublisher()
+        }
+        pcscHelper.mocked_getNfcCooldown_AsyncThrowingStreamOf_UIntError = {
+            AsyncThrowingStream { con in
+                con.finish()
+            }
         }
 
         await assertErrorAsync(

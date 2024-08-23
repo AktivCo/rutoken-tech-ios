@@ -160,7 +160,6 @@
 		D4B130B52B0DDB2200AD390F /* Pkcs11Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130B42B0DDB2200AD390F /* Pkcs11Helper.swift */; };
 		D4B130D32B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D22B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift */; };
 		D4B130D62B0E4F2400AD390F /* PcscHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D52B0E4F2400AD390F /* PcscHelper.swift */; };
-		D4B130DA2B0E51FE00AD390F /* PcscHelperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */; };
 		D4C38F3A2B84CADE00BA50EC /* HeaderTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C38F392B84CADE00BA50EC /* HeaderTitleView.swift */; };
 		D4C582342BAC216B001604B4 /* ProcessInfo+isPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C582332BAC216B001604B4 /* ProcessInfo+isPreview.swift */; };
 		D4D22A302BAC7E3000B93DA9 /* OnDeleteUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D22A2F2BAC7E3000B93DA9 /* OnDeleteUser.swift */; };
@@ -340,7 +339,6 @@
 		D4B130D22B0E3EDE00AD390F /* XCTestCase+AssertSpecificError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+AssertSpecificError.swift"; sourceTree = "<group>"; };
 		D4B130D52B0E4F2400AD390F /* PcscHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcscHelper.swift; sourceTree = "<group>"; };
 		D4B130D72B0E4F8200AD390F /* Pkcs11TokenInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pkcs11TokenInterface.swift; sourceTree = "<group>"; };
-		D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PcscHelperMock.swift; sourceTree = "<group>"; };
 		D4C38F392B84CADE00BA50EC /* HeaderTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderTitleView.swift; sourceTree = "<group>"; };
 		D4C582332BAC216B001604B4 /* ProcessInfo+isPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProcessInfo+isPreview.swift"; sourceTree = "<group>"; };
 		D4D22A2F2BAC7E3000B93DA9 /* OnDeleteUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDeleteUser.swift; sourceTree = "<group>"; };
@@ -837,7 +835,6 @@
 		D4B130C32B0E37BB00AD390F /* Mocks */ = {
 			isa = PBXGroup;
 			children = (
-				D4B130D92B0E51FE00AD390F /* PcscHelperMock.swift */,
 				44EED1B52B1F115B0036F8DA /* TokenMock.swift */,
 				44F032392B5125BC00466080 /* Pkcs11ObjectMock.swift */,
 				4413CFB72B597206000987A8 /* OpenSslHelperMock.swift */,
@@ -1194,7 +1191,6 @@
 				7DACCE262B569CCF00FB3F2C /* CreateCertTests.swift in Sources */,
 				D4497EF72C2AB8C800FCFBDF /* EncryptDocumentByCertIdTests.swift in Sources */,
 				D4A185302C1C3282006D7F71 /* ReadDocsFromBundleTests.swift in Sources */,
-				D4B130DA2B0E51FE00AD390F /* PcscHelperMock.swift in Sources */,
 				44EED1B62B1F115B0036F8DA /* TokenMock.swift in Sources */,
 				D4F4FDEC2B32F04B0087A1BB /* XCTestCase+LinuxFulfillment.swift in Sources */,
 				D4A1852E2C1C2CCA006D7F71 /* InitBackupTests.swift in Sources */,
@@ -1583,7 +1579,7 @@
 			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-mock.git";
 			requirement = {
 				kind = revision;
-				revision = 515d539cc65e77d204751cd3c5af2bbedc20233a;
+				revision = 5010abe9a0354dc8fcdccdb86b15edb19c81aa84;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

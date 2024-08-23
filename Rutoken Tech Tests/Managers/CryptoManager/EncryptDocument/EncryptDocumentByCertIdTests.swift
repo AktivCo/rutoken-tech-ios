@@ -14,7 +14,7 @@ import XCTest
 class EncryptDocumentByCertIdTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: RtMockPkcs11HelperProtocol!
-    var pcscHelper: PcscHelperMock!
+    var pcscHelper: RtMockPcscHelperProtocol!
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
@@ -29,7 +29,7 @@ class EncryptDocumentByCertIdTests: XCTestCase {
         continueAfterFailure = false
 
         pkcs11Helper = RtMockPkcs11HelperProtocol()
-        pcscHelper = PcscHelperMock()
+        pcscHelper = RtMockPcscHelperProtocol()
         openSslHelper = OpenSslHelperMock()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
