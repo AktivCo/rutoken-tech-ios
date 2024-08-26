@@ -16,6 +16,12 @@ struct BankDocument: Codable, Identifiable {
         case verify
     }
 
+    enum SignStatus {
+        case ok
+        case brokenChain
+        case invalid
+    }
+
     let id = UUID()
     let name: String
     let action: ActionType
@@ -23,6 +29,7 @@ struct BankDocument: Codable, Identifiable {
     let companyName: String
     let paymentTime: Date
     var inArchive: Bool = false
+    var signStatus: SignStatus = .ok
     var dateOfChange: Date?
 
     static var dateFormatter: DateFormatter {
@@ -114,6 +121,7 @@ extension BankDocument: Equatable {
         lhs.amount == rhs.amount &&
         lhs.companyName == rhs.companyName &&
         lhs.inArchive == rhs.inArchive &&
+        lhs.signStatus == rhs.signStatus &&
         lhs.paymentTime.getString(as: dateFormatter.dateFormat) == rhs.paymentTime.getString(as: dateFormatter.dateFormat)
     }
 }
@@ -121,19 +129,4 @@ extension BankDocument: Equatable {
 enum DocType: String, RawRepresentable, CaseIterable {
     case income = "Входящие"
     case outcome = "Исходящие"
-}
-
-extension BankDocument.ActionType {
-    var getImageName: String {
-        switch self {
-        case .verify:
-            return "doc.text.fill"
-        case .encrypt:
-            return "lock.fill"
-        case .sign:
-            return "pencil"
-        case .decrypt:
-            return "doc.plaintext.fill"
-        }
-    }
 }
