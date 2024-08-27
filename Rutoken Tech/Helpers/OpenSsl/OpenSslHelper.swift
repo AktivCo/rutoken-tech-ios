@@ -50,16 +50,18 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
         defer { contentBio.release() }
 
-        guard let x509 = WrappedX509(from: cert),
-              let certsStack = createX509Stack(with: certChain)
-        else {
+        guard let x509 = WrappedX509(from: cert) else {
+            throw OpenSslError.generalError(#line, getLastError())
+        }
+        let certsStack = createX509Stack(with: certChain)
+        guard certChain.isEmpty || certsStack != nil else {
             throw OpenSslError.generalError(#line, getLastError())
         }
         defer { withExtendedLifetime(x509) {} }
-        defer { certsStack.release() }
+        defer { certsStack?.release() }
 
         guard let cms = WrappedPointer<OpaquePointer>({
-            CMS_sign(x509.wrappedPointer.pointer, wrappedKey.pointer, certsStack.pointer,
+            CMS_sign(x509.wrappedPointer.pointer, wrappedKey.pointer, certsStack?.pointer,
                      contentBio.pointer, UInt32(CMS_BINARY | CMS_NOSMIMECAP | CMS_DETACHED))
         }, CMS_ContentInfo_free) else {
             throw OpenSslError.generalError(#line, getLastError())

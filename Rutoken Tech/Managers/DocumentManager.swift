@@ -27,6 +27,7 @@ struct DocumentData {
 struct DocBundleData {
     let doc: DocumentData
     let action: BankDocument.ActionType
+    let signStatus: BankDocument.SignStatus
 }
 
 enum DocumentDir: String {
@@ -103,7 +104,7 @@ class DocumentManager: DocumentManagerProtocol {
             }
             let content = try fileHelper.readFile(from: url)
             return DocBundleData(doc: DocumentData(name: doc.name, content: content),
-                                 action: doc.action)
+                                 action: doc.action, signStatus: doc.signStatus)
         }
     }
 
@@ -140,6 +141,16 @@ class DocumentManager: DocumentManagerProtocol {
         }
 
         let json = try fileHelper.readFile(from: jsonUrl)
-        return try BankDocument.jsonDecoder.decode([BankDocument].self, from: json)
+        var documents = try BankDocument.jsonDecoder.decode([BankDocument].self, from: json)
+
+        var docsForVerify = documents.filter { $0.action == .verify }
+        documents.removeAll(where: { $0.action == .verify })
+
+        if docsForVerify.count > 2 {
+            docsForVerify[0].signStatus = .invalid
+            docsForVerify[1].signStatus = .invalid
+            docsForVerify[2].signStatus = .brokenChain
+        }
+        return documents + docsForVerify
     }
 }

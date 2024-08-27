@@ -40,7 +40,7 @@ class SignDocumentByFileTests: XCTestCase {
         signed = "12345678qwerty"
     }
 
-    func testSignDocumentFileSuccess() async throws {
+    func testSignDocumentFileWithChainSuccess() async throws {
         let keyData = "key".data(using: .utf8)!
         let certData = "cert".data(using: .utf8)!
         let caCertData = "ca cert".data(using: .utf8)!
@@ -67,14 +67,42 @@ class SignDocumentByFileTests: XCTestCase {
             XCTAssertEqual(chain, [caCertData])
             return self.signed
         }
-        let result = try manager.signDocument(dataToSign, keyFile: .rootCaKey, certFile: .rootCaCert)
+        let result = try manager.signDocument(dataToSign, keyFile: .rootCaKey, certFile: .rootCaCert, certChain: [.caCert])
+        XCTAssertEqual(signed, result)
+        await fulfillment(of: [getUrlExp], timeout: 0.3)
+    }
+
+    func testSignDocumentFileNoChainSuccess() async throws {
+        let getUrlExp = XCTestExpectation(description: "Get URL expectation")
+        getUrlExp.expectedFulfillmentCount = 2
+        let certData = "user cert".data(using: .utf8)!
+        let keyData = "key".data(using: .utf8)!
+        var datas = [certData, keyData]
+
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { file, dir in
+            defer { getUrlExp.fulfill() }
+            XCTAssertEqual(dir, .credentials)
+            XCTAssertTrue([RtFile.rootCaKey, .rootCaCert].map { $0.rawValue }.contains(file))
+            return URL(fileURLWithPath: "")
+        }
+        fileHelper.mocked_readFile_fromUrlURL_Data = { _ in datas.popLast()! }
+
+        openSslHelper.mocked_signDocument__DocumentData_keyData_certData_certChainArrayOf_Data_String = { content, key, cert, chain in
+            XCTAssertEqual(content, self.dataToSign)
+            XCTAssertEqual(key, keyData)
+            XCTAssertEqual(cert, certData)
+            XCTAssert(chain.isEmpty)
+            return self.signed
+        }
+        let result = try manager.signDocument(dataToSign, keyFile: .rootCaKey, certFile: .rootCaCert, certChain: [])
         XCTAssertEqual(signed, result)
         await fulfillment(of: [getUrlExp], timeout: 0.3)
     }
 
     func testSignDocumentGetUrlError() async throws {
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in nil }
-        assertError(try manager.signDocument(dataToSign, keyFile: .rootCaKey, certFile: .rootCaCert), throws: CryptoManagerError.unknown)
+        assertError(try manager.signDocument(dataToSign, keyFile: .rootCaKey, certFile: .rootCaCert, certChain: []),
+                    throws: CryptoManagerError.unknown)
     }
 
     func testSignDocumentFileHelperError() async throws {
@@ -83,7 +111,8 @@ class SignDocumentByFileTests: XCTestCase {
         fileHelper.mocked_readFile_fromUrlURL_Data = { _ in
             throw error
         }
-        assertError(try manager.signDocument(dataToSign, keyFile: .rootCaKey, certFile: .rootCaCert), throws: error)
+        assertError(try manager.signDocument(dataToSign, keyFile: .rootCaKey, certFile: .rootCaCert, certChain: []),
+                    throws: error)
     }
 
     func testSignDocumentFileOpenSslError() async throws {
@@ -94,6 +123,7 @@ class SignDocumentByFileTests: XCTestCase {
             throw error
         }
 
-        assertError(try manager.signDocument(dataToSign, keyFile: .rootCaKey, certFile: .rootCaCert), throws: error)
+        assertError(try manager.signDocument(dataToSign, keyFile: .rootCaKey, certFile: .rootCaCert, certChain: []),
+                    throws: error)
     }
 }

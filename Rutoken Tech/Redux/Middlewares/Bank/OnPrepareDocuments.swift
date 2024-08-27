@@ -40,7 +40,30 @@ class OnPrepareDocuments: Middleware {
                     let docName = doc.doc.name
                     switch doc.action {
                     case .verify:
-                        let signature = try cryptoManager.signDocument(docContent, keyFile: .bankKey, certFile: .bankCert)
+                        let signature: String
+                        switch doc.signStatus {
+                        case .ok:
+                            signature = try cryptoManager.signDocument(docContent, keyFile: .bankKey, certFile: .bankCert, certChain: [.caCert])
+                        case .brokenChain:
+                            signature = try cryptoManager.signDocument(docContent, keyFile: .bankKey, certFile: .bankCert, certChain: [])
+                        case .invalid:
+                            let tempSignature = try cryptoManager.signDocument(docContent, keyFile: .bankKey,
+                                                                               certFile: .bankCert, certChain: [.caCert])
+                            var rawBase64Cms = tempSignature
+                                .replacingOccurrences(of: "-----BEGIN CMS-----", with: "")
+                                .replacingOccurrences(of: "-----END CMS-----", with: "")
+                            rawBase64Cms.removeAll { $0 == "\n" }
+
+                            guard var corruptedCms = Data(base64Encoded: rawBase64Cms) else {
+                                continuation.yield(.showAlert(.unknownError))
+                                return
+                            }
+                            corruptedCms[corruptedCms.count - 1] ^= 0x01
+                            let rawCorruptedSignature = corruptedCms.base64EncodedString().enumerated().map { (idx, el) -> [Character] in
+                                idx > 0 && idx % 64 == 0 ? ["\n", el] : [el]
+                            }.joined()
+                            signature = "-----BEGIN CMS-----\n" + rawCorruptedSignature + "\n-----END CMS-----"
+                        }
                         guard let signatureData = signature.data(using: .utf8) else {
                             throw CryptoManagerError.unknown
                         }

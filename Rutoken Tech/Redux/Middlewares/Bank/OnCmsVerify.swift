@@ -36,6 +36,12 @@ class OnCmsVerify: Middleware {
                     try await cryptoManager.verifyCms(signedCms: cms, document: document.data)
                     try documentManager.markAsArchived(documentName: fileName)
                     continuation.yield(.showAlert(.verifySuccess))
+                } catch CryptoManagerError.failedChain {
+                    try documentManager.markAsArchived(documentName: fileName)
+                    continuation.yield(.handleError(CryptoManagerError.failedChain))
+                } catch CryptoManagerError.invalidSignature {
+                    try documentManager.markAsArchived(documentName: fileName)
+                    continuation.yield(.handleError(CryptoManagerError.invalidSignature))
                 } catch {
                     continuation.yield(.handleError(error))
                 }

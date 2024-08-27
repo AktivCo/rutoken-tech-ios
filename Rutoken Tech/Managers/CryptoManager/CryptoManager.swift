@@ -20,8 +20,8 @@ protocol CryptoManagerProtocol {
     func enumerateCerts() async throws -> [CertMetaData]
     func generateKeyPair(with id: String) async throws
     func createCert(for id: String, with info: CsrModel) async throws
-    func signDocument(_ document: Data, certId: String) throws -> String
-    func signDocument(_ document: Data, keyFile: RtFile, certFile: RtFile) throws -> String
+    func signDocument(_ document: Data, certId: String, certChain: [RtFile]) throws -> String
+    func signDocument(_ document: Data, keyFile: RtFile, certFile: RtFile, certChain: [RtFile]) throws -> String
     func deleteCert(with id: String) async throws
     func verifyCms(signedCms: Data, document: Data) async throws
     func encryptDocument(_ document: Data, certId: String) throws -> Data
@@ -196,7 +196,7 @@ class CryptoManager: CryptoManagerProtocol {
         try token.deleteCert(with: id)
     }
 
-    func signDocument(_ document: Data, certId: String) throws -> String {
+    func signDocument(_ document: Data, certId: String, certChain: [RtFile]) throws -> String {
         guard let token = connectedToken else {
             throw CryptoManagerError.tokenNotFound
         }
@@ -206,26 +206,21 @@ class CryptoManager: CryptoManagerProtocol {
         guard let userCertData = try token.enumerateCerts(by: certId).first?.getValue(forAttr: .value) else {
             throw CryptoManagerError.noSuitCert
         }
+        let certChainDatas = try readCertChain(certFiles: certChain)
 
-        guard let caCertUrl = fileSource.getUrl(for: RtFile.caCert.rawValue, in: .credentials) else {
-            throw CryptoManagerError.unknown
-        }
-        let caCertData = try fileHelper.readFile(from: caCertUrl)
-
-        return try openSslHelper.signDocument(document, wrappedKey: key, cert: userCertData, certChain: [caCertData])
+        return try openSslHelper.signDocument(document, wrappedKey: key, cert: userCertData, certChain: certChainDatas)
     }
 
-    func signDocument(_ document: Data, keyFile: RtFile, certFile: RtFile) throws -> String {
+    func signDocument(_ document: Data, keyFile: RtFile, certFile: RtFile, certChain: [RtFile]) throws -> String {
         guard let keyUrl = fileSource.getUrl(for: keyFile.rawValue, in: .credentials),
-              let certUrl = fileSource.getUrl(for: certFile.rawValue, in: .credentials),
-              let caCertUrl = fileSource.getUrl(for: RtFile.caCert.rawValue, in: .credentials) else {
+              let certUrl = fileSource.getUrl(for: certFile.rawValue, in: .credentials) else {
             throw CryptoManagerError.unknown
         }
         let keyData = try fileHelper.readFile(from: keyUrl)
         let certData = try fileHelper.readFile(from: certUrl)
-        let caCertData = try fileHelper.readFile(from: caCertUrl)
+        let certChainDatas = try readCertChain(certFiles: certChain)
 
-        return try openSslHelper.signDocument(document, key: keyData, cert: certData, certChain: [caCertData])
+        return try openSslHelper.signDocument(document, key: keyData, cert: certData, certChain: certChainDatas)
     }
 
     func verifyCms(signedCms: Data, document: Data) async throws {
@@ -374,6 +369,15 @@ class CryptoManager: CryptoManagerProtocol {
                 }
                 continuation.resume(returning: usbToken)
             }
+        }
+    }
+
+    private func readCertChain(certFiles: [RtFile]) throws -> [Data] {
+        try certFiles.map { file in
+            guard let url = fileSource.getUrl(for: file.rawValue, in: .credentials) else {
+                throw CryptoManagerError.unknown
+            }
+            return try fileHelper.readFile(from: url)
         }
     }
 }

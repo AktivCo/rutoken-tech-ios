@@ -50,7 +50,36 @@ class SignDocumentByCertIdTests: XCTestCase {
         signed = "12345678qwerty"
     }
 
-    func testSignDocumentTokenSuccess() async throws {
+    func testSignDocumentTokenNoChainSuccess() async throws {
+        let userCert = "user cert".data(using: .utf8)!
+        let caCert = "ca cert".data(using: .utf8)!
+        // swiftlint:disable:next line_length
+        openSslHelper.mocked_signDocument__DocumentData_wrappedKeyWrappedPointerOf_OpaquePointer_certData_certChainArrayOf_Data_String = { content, _, cert, chain in
+            XCTAssertEqual(content, self.dataToSign)
+            XCTAssertEqual(cert, userCert)
+            XCTAssert(chain.isEmpty)
+            return self.signed
+        }
+        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = {
+            var pkcs11ObjectCertMock = Pkcs11ObjectMock()
+            pkcs11ObjectCertMock.setValue(forAttr: .value, value: .success(userCert))
+            XCTAssertEqual($0, self.keyId)
+            return [pkcs11ObjectCertMock]
+        }
+        token.mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = {
+            XCTAssertEqual($0, self.keyId)
+            return WrappedPointer<OpaquePointer>({
+                OpaquePointer.init(bitPattern: 1)!
+            }, { _ in })!
+        }
+
+        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
+            let result = try manager.signDocument(dataToSign, certId: keyId, certChain: [])
+            XCTAssertEqual(signed, result)
+        }
+    }
+
+    func testSignDocumentTokenWithChainSuccess() async throws {
         let userCert = "user cert".data(using: .utf8)!
         let caCert = "ca cert".data(using: .utf8)!
         // swiftlint:disable:next line_length
@@ -70,7 +99,7 @@ class SignDocumentByCertIdTests: XCTestCase {
             XCTAssertEqual($0, self.keyId)
             return WrappedPointer<OpaquePointer>({
                 OpaquePointer.init(bitPattern: 1)!
-            }, { _ in})!
+            }, { _ in })!
         }
 
         let someUrl = URL(fileURLWithPath: "someurl")
@@ -86,13 +115,14 @@ class SignDocumentByCertIdTests: XCTestCase {
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
-            let result = try manager.signDocument(dataToSign, certId: keyId)
+            let result = try manager.signDocument(dataToSign, certId: keyId, certChain: [.caCert])
             XCTAssertEqual(signed, result)
         }
     }
 
     func testSignDocumentTokenNotFoundError() throws {
-        assertError(try manager.signDocument(dataToSign, certId: keyId), throws: CryptoManagerError.tokenNotFound)
+        assertError(try manager.signDocument(dataToSign, certId: keyId, certChain: []),
+                    throws: CryptoManagerError.tokenNotFound)
     }
 
     func testSignDocumentTokenError() async throws {
@@ -103,7 +133,8 @@ class SignDocumentByCertIdTests: XCTestCase {
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
-            assertError(try manager.signDocument(dataToSign, certId: keyId), throws: error)
+            assertError(try manager.signDocument(dataToSign, certId: keyId, certChain: []),
+                        throws: error)
         }
     }
 
@@ -116,7 +147,7 @@ class SignDocumentByCertIdTests: XCTestCase {
         }
         await assertErrorAsync(
             try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
-                _ = try manager.signDocument(dataToSign, certId: keyId)
+                _ = try manager.signDocument(dataToSign, certId: keyId, certChain: [.caCert])
             },
             throws: CryptoManagerError.connectionLost)
     }
@@ -127,7 +158,8 @@ class SignDocumentByCertIdTests: XCTestCase {
             return []
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
-            assertError(try manager.signDocument(dataToSign, certId: keyId), throws: CryptoManagerError.noSuitCert)
+            assertError(try manager.signDocument(dataToSign, certId: keyId, certChain: [.caCert]),
+                        throws: CryptoManagerError.noSuitCert)
         }
     }
 
@@ -139,7 +171,8 @@ class SignDocumentByCertIdTests: XCTestCase {
 
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in nil }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
-            assertError(try manager.signDocument(dataToSign, certId: keyId), throws: CryptoManagerError.unknown)
+            assertError(try manager.signDocument(dataToSign, certId: keyId, certChain: [.caCert]),
+                        throws: CryptoManagerError.unknown)
         }
     }
 
@@ -155,7 +188,8 @@ class SignDocumentByCertIdTests: XCTestCase {
             throw error
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
-            assertError(try manager.signDocument(dataToSign, certId: keyId), throws: error)
+            assertError(try manager.signDocument(dataToSign, certId: keyId, certChain: [.caCert]),
+                        throws: error)
         }
     }
 
@@ -179,7 +213,8 @@ class SignDocumentByCertIdTests: XCTestCase {
         fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
-            assertError(try manager.signDocument(dataToSign, certId: self.keyId), throws: error)
+            assertError(try manager.signDocument(dataToSign, certId: self.keyId, certChain: [.caCert]),
+                        throws: error)
         }
     }
 }

@@ -34,7 +34,7 @@ class OnSignDocument: Middleware {
                     let document = try documentManager.readDocument(with: documentName)
                     var cmsData: Data = Data()
                     try await cryptoManager.withToken(connectionType: connectionType, serial: serial, pin: pin) {
-                        let cms = try cryptoManager.signDocument(document.data, certId: certId)
+                        let cms = try cryptoManager.signDocument(document.data, certId: certId, certChain: [.caCert])
                         cmsData = Data(cms.utf8)
                     }
                     let documentUrl = try documentManager.writeDocument(fileName: documentName, data: document.data)
