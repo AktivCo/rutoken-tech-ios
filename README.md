@@ -24,7 +24,7 @@ If your device doesn't contain a key pair and a certificate, you can create them
 3.  Open [Rutoken registration center](https://ra.rutoken.ru/) website via browser.
 4.  Connect your Rutoken ECP device to the computer.
 5.  Make sure that the website has detected your device.
-6.  Follow the instructions on the website and create a key pair and a certificate.
+6.  Follow the instructions on the website and create a GOST R 34.10-2012 256 bits key pair and a certificate.
 7.  Make sure that the website has detected the created key pair and the certificate on your device.
 8.  Disconnect your Rutoken ECP device from the computer and use it with iPhone or iPad.
 
