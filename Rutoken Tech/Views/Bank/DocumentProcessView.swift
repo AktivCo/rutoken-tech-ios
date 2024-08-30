@@ -102,7 +102,10 @@ struct DocumentProcessView: View {
         store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
             RtAuthView(defaultPinGetter: { store.send(.getPin(tokenSerial)) },
                        onSubmit: { tokenType, pin in callback(tokenType, tokenSerial, pin, fileName, certId) },
-                       onCancel: { store.send(.hideSheet) })
+                       onCancel: {
+                store.send(.hideSheet)
+                store.send(.updatePin(""))
+            })
             .environmentObject(store.state.routingState.pinInputModel)
         }()))
     }
