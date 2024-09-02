@@ -18,7 +18,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
-    var token: TokenMock!
+    var token: RtMockPkcs11TokenProtocol!
     var tokensPublisher: CurrentValueSubject<[Pkcs11TokenProtocol], Never>!
 
     override func setUp() {
@@ -30,11 +30,8 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
 
-        token = TokenMock(serial: "87654321", currentInterface: .usb)
-        token.enumerateKeysWithAlgoCallback = { _ in
-            return [Pkcs11KeyPair(publicKey: Pkcs11ObjectMock(),
-                                  privateKey: Pkcs11ObjectMock())]
-        }
+        token = RtMockPkcs11TokenProtocol()
+        token.setup()
 
         tokensPublisher = CurrentValueSubject<[Pkcs11TokenProtocol], Never>([token])
         pkcs11Helper.mocked_tokens = tokensPublisher.eraseToAnyPublisher()
@@ -83,7 +80,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     }
 
     func testCreateCertWrappedKeyError() async throws {
-        token.getWrappedKeyCallback = { _ in
+        token.mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = { _ in
             throw Pkcs11Error.internalError()
         }
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
@@ -97,7 +94,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     }
 
     func testCreateCertPrivateKeyUsagePeriodGetValueError() async throws {
-        token.enumerateKeyWithIdCallback = { _ in
+        token.mocked_enumerateKey_byIdString_Pkcs11KeyPair = { _ in
             var object = Pkcs11ObjectMock()
             object.setValue(forAttr: .startDate, value: .failure(Pkcs11Error.internalError()))
             return Pkcs11KeyPair(publicKey: object, privateKey: object)
@@ -152,7 +149,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     }
 
     func testCreateCertImportCertError() async throws {
-        token.importCertCallback = { _, _ in
+        token.mocked_importCert__CertData_forIdString_Void = { _, _ in
             throw CryptoManagerError.unknown
         }
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
@@ -166,7 +163,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     }
 
     func testCreateCertConnectionLostError() async throws {
-        token.importCertCallback = { _, _ in
+        token.mocked_importCert__CertData_forIdString_Void = { _, _ in
             throw Pkcs11Error.internalError(rv: 10)
         }
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }

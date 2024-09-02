@@ -18,7 +18,7 @@ final class CryptoManagerDeleteCertTests: XCTestCase {
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
-    var token: TokenMock!
+    var token: RtMockPkcs11TokenProtocol!
     var tokensPublisher: CurrentValueSubject<[Pkcs11TokenProtocol], Never>!
 
     let someId = "some id"
@@ -32,7 +32,8 @@ final class CryptoManagerDeleteCertTests: XCTestCase {
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
 
-        token = TokenMock(serial: "87654321", currentInterface: .usb)
+        token = RtMockPkcs11TokenProtocol()
+        token.setup()
         tokensPublisher = CurrentValueSubject<[Pkcs11TokenProtocol], Never>([token])
         pkcs11Helper.mocked_tokens = tokensPublisher.eraseToAnyPublisher()
 
@@ -42,7 +43,7 @@ final class CryptoManagerDeleteCertTests: XCTestCase {
     }
 
     func testDeleteCertSuccess() async throws {
-        token.deleteCertCallback = { id in
+        token.mocked_deleteCert_withIdString_Void = { id in
             XCTAssertEqual(id, self.someId)
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
@@ -57,7 +58,7 @@ final class CryptoManagerDeleteCertTests: XCTestCase {
     }
 
     func testDeleteCertError() async throws {
-        token.deleteCertCallback = { _ in
+        token.mocked_deleteCert_withIdString_Void = { _ in
             throw Pkcs11Error.internalError()
         }
 
@@ -69,7 +70,7 @@ final class CryptoManagerDeleteCertTests: XCTestCase {
     }
 
     func testDecryptCmsConnectionLostError() async throws {
-        token.deleteCertCallback = { _ in
+        token.mocked_deleteCert_withIdString_Void = { _ in
             throw Pkcs11Error.internalError()
         }
         pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in

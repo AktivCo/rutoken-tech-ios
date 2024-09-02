@@ -19,7 +19,7 @@ class CryptoManagerDecryptCmsTests: XCTestCase {
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
 
-    var token: TokenMock!
+    var token: RtMockPkcs11TokenProtocol!
     var tokensPublisher: CurrentValueSubject<[Pkcs11TokenProtocol], Never>!
     var documentData: Data!
     var decryptedData: Data!
@@ -35,7 +35,8 @@ class CryptoManagerDecryptCmsTests: XCTestCase {
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
 
-        token = TokenMock(serial: "87654321", currentInterface: .usb, supportedInterfaces: [.usb])
+        token = RtMockPkcs11TokenProtocol()
+        token.setup()
         tokensPublisher = CurrentValueSubject<[Pkcs11TokenProtocol], Never>([token])
         pkcs11Helper.mocked_tokens = tokensPublisher.eraseToAnyPublisher()
 
@@ -53,7 +54,7 @@ class CryptoManagerDecryptCmsTests: XCTestCase {
             XCTAssertEqual(data, self.documentData)
             return self.decryptedData
         }
-        token.getWrappedKeyCallback = {
+        token.mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = {
             XCTAssertEqual($0, self.certId)
             return WrappedPointer<OpaquePointer>({
                 OpaquePointer.init(bitPattern: 1)!
@@ -71,7 +72,7 @@ class CryptoManagerDecryptCmsTests: XCTestCase {
     }
 
     func testDecryptCmsConnectionLostError() async throws {
-        token.getWrappedKeyCallback = { _ in
+        token.mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = { _ in
             throw Pkcs11Error.internalError()
         }
         pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in
@@ -85,7 +86,7 @@ class CryptoManagerDecryptCmsTests: XCTestCase {
     }
 
     func testDecryptCmsKeyNotFoundError() async throws {
-        token.getWrappedKeyCallback = { _ in
+        token.mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = { _ in
             throw Pkcs11Error.internalError()
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {

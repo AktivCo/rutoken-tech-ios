@@ -9,6 +9,7 @@ import UIKit
 
 import RtMock
 
+
 @RtMock
 protocol DeviceInfoHelperProtocol {
     var isPhone: Bool { get }

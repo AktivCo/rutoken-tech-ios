@@ -18,6 +18,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
+    var token: RtMockPkcs11TokenProtocol!
 
     var tokensPublisher: CurrentValueSubject<[Pkcs11TokenProtocol], Never>!
 
@@ -29,6 +30,8 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         openSslHelper = OpenSslHelperMock()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
+        token = RtMockPkcs11TokenProtocol()
+        token.setup()
 
         tokensPublisher = CurrentValueSubject<[Pkcs11TokenProtocol], Never>([])
         pkcs11Helper.mocked_tokens = tokensPublisher.eraseToAnyPublisher()
@@ -51,12 +54,11 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         pcscHelper.mocked_stopNfc_Void = {
             exp2.fulfill()
         }
-        let token = TokenMock(serial: "12345678", currentInterface: .usb)
-        token.loginCallback = { pin in
+        token.mocked_login_withPinString_Void = { pin in
             XCTAssertEqual(pin, "123456")
             exp3.fulfill()
         }
-        token.logoutCallback = {
+        token.mocked_logout_Void = {
             exp4.fulfill()
         }
         tokensPublisher.send([token])
@@ -85,12 +87,12 @@ final class CryptoManagerWithTokenTests: XCTestCase {
                 con.finish()
             }
         }
-        let token = TokenMock(serial: "12345678", currentInterface: .nfc)
-        token.loginCallback = { pin in
+        token.mocked_currentInterface = .nfc
+        token.mocked_login_withPinString_Void = { pin in
             XCTAssertEqual(pin, "123456")
             exp3.fulfill()
         }
-        token.logoutCallback = {
+        token.mocked_logout_Void = {
             exp4.fulfill()
         }
         tokensPublisher.send([token])
@@ -113,14 +115,14 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         pcscHelper.mocked_stopNfc_Void = {
             exp2.fulfill()
         }
-        let token = TokenMock(serial: "12345678", currentInterface: .nfc)
-        token.loginCallback = { pin in
+        token.mocked_login_withPinString_Void = { pin in
             XCTAssertEqual(pin, "123456")
             exp3.fulfill()
         }
-        token.logoutCallback = {
+        token.mocked_logout_Void = {
             exp4.fulfill()
         }
+        token.mocked_currentInterface = .nfc
         tokensPublisher.send([token])
 
         await assertNoThrowAsync(try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "123456") { exp5.fulfill() })
@@ -133,11 +135,10 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         let exp3 = XCTestExpectation(description: "Token Logout")
         exp2.isInverted = true
         exp3.isInverted = true
-        let token = TokenMock(serial: "12345678", currentInterface: .usb)
-        token.loginCallback = { _ in
+        token.mocked_login_withPinString_Void = { _ in
             exp2.fulfill()
         }
-        token.logoutCallback = {
+        token.mocked_logout_Void = {
             exp3.fulfill()
         }
         tokensPublisher.send([token])
@@ -157,11 +158,10 @@ final class CryptoManagerWithTokenTests: XCTestCase {
                 con.finish()
             }
         }
-
-        let token = TokenMock(serial: "12345678", currentInterface: .nfc)
+        token.mocked_currentInterface = .nfc
         tokensPublisher.send([token])
 
-        token.loginCallback = { _ in
+        token.mocked_login_withPinString_Void = { _ in
             throw Pkcs11Error.internalError(rv: 10)
         }
         pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in
@@ -169,7 +169,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         }
 
         await assertErrorAsync(
-            try await manager.withToken(connectionType: .nfc, serial: "12345678", pin: "12345678") { },
+            try await manager.withToken(connectionType: .nfc, serial: token.serial, pin: "12345678") { },
             throws: CryptoManagerError.connectionLost)
     }
 
@@ -218,27 +218,25 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         let exp = XCTestExpectation(description: "Token Logout")
         exp.isInverted = true
 
-        let token = TokenMock(serial: "12345678", currentInterface: .usb)
         tokensPublisher.send([token])
 
-        token.loginCallback = { _ in
+        token.mocked_login_withPinString_Void = { _ in
             throw Pkcs11Error.incorrectPin
         }
-        token.logoutCallback = {
+        token.mocked_logout_Void = {
             exp.fulfill()
         }
 
         let attempts: UInt = 2
-        token.getPinAttemptsCallback = { attempts }
+        token.mocked_getPinAttempts_UInt = { attempts }
 
         await assertErrorAsync(
-            try await manager.withToken(connectionType: .usb, serial: "12345678", pin: "incorrectPin") {},
+            try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "incorrectPin") {},
             throws: CryptoManagerError.incorrectPin(attempts))
         await fulfillment(of: [exp], timeout: 0.3)
     }
 
     func testWithTokenWrongTokenError() async {
-        let token = TokenMock(serial: "12345678", currentInterface: .usb)
         tokensPublisher.send([token])
 
         await assertErrorAsync(
@@ -247,8 +245,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
     }
 
     func testWithTokenKeyNotFoundError() async {
-        let token = TokenMock(serial: "12345678", currentInterface: .usb)
-        token.loginCallback = { pin in
+        token.mocked_login_withPinString_Void = { pin in
             XCTAssertEqual(pin, "123456")
         }
         pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in true }
@@ -262,16 +259,15 @@ final class CryptoManagerWithTokenTests: XCTestCase {
     }
 
     func testWithTokenConnectionLostError() async {
-        let token = TokenMock(serial: "12345678", currentInterface: .usb)
         tokensPublisher.send([token])
 
-        token.loginCallback = { _ in
+        token.mocked_login_withPinString_Void = { _ in
             throw Pkcs11Error.internalError(rv: 10)
         }
         pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in return false }
 
         await assertErrorAsync(
-            try await manager.withToken(connectionType: .usb, serial: "12345678", pin: "12345678") { },
+            try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") { },
             throws: CryptoManagerError.connectionLost)
     }
 }

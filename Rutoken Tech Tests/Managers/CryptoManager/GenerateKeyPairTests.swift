@@ -18,6 +18,7 @@ class CryptoManagerGenerateKeyPairTests: XCTestCase {
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
+    var token: RtMockPkcs11TokenProtocol!
 
     var tokensPublisher: CurrentValueSubject<[Pkcs11TokenProtocol], Never>!
 
@@ -29,6 +30,8 @@ class CryptoManagerGenerateKeyPairTests: XCTestCase {
         openSslHelper = OpenSslHelperMock()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
+        token = RtMockPkcs11TokenProtocol()
+        token.setup()
 
         tokensPublisher = CurrentValueSubject<[Pkcs11TokenProtocol], Never>([])
         pkcs11Helper.mocked_tokens = tokensPublisher.eraseToAnyPublisher()
@@ -38,19 +41,21 @@ class CryptoManagerGenerateKeyPairTests: XCTestCase {
     }
 
     func testGenerateKeyPairSuccess() async throws {
-        let token = TokenMock(serial: "12345678", currentInterface: .usb)
         tokensPublisher.send([token])
+        let keyId = "qwerty"
+        token.mocked_generateKeyPair_withIdString_Void = { id in
+            XCTAssertEqual(id, keyId)
+        }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "123456") {
-            await assertNoThrowAsync(try await manager.generateKeyPair(with: "qwerty"))
+            await assertNoThrowAsync(try await manager.generateKeyPair(with: keyId))
         }
     }
 
     func testGenerateKeyPairConnectionLostErrorError() async {
-        let token = TokenMock(serial: "12345678", currentInterface: .usb)
         tokensPublisher.send([token])
 
-        token.generateKeyPairCallback = { _ in
+        token.mocked_generateKeyPair_withIdString_Void = { _ in
             throw Pkcs11Error.internalError(rv: 10)
         }
         pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in
@@ -58,7 +63,7 @@ class CryptoManagerGenerateKeyPairTests: XCTestCase {
         }
 
         await assertErrorAsync(
-            try await manager.withToken(connectionType: .usb, serial: "12345678", pin: "123456") {
+            try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "123456") {
                 try await manager.generateKeyPair(with: "123456")
             }, throws: CryptoManagerError.connectionLost)
     }

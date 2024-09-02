@@ -7,7 +7,10 @@
 
 import Foundation
 
+import RtMock
 
+
+@RtMock
 protocol Pkcs11TokenProtocol {
     var slot: CK_SLOT_ID { get }
     var label: String? { get }

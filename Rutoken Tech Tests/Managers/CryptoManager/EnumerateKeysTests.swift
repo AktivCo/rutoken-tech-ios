@@ -18,6 +18,7 @@ final class CryptoManagerEnumerateKeysTests: XCTestCase {
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
+    var token: RtMockPkcs11TokenProtocol!
 
     var tokensPublisher: CurrentValueSubject<[Pkcs11TokenProtocol], Never>!
 
@@ -29,6 +30,8 @@ final class CryptoManagerEnumerateKeysTests: XCTestCase {
         openSslHelper = OpenSslHelperMock()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
+        token = RtMockPkcs11TokenProtocol()
+        token.setup()
 
         tokensPublisher = CurrentValueSubject<[Pkcs11TokenProtocol], Never>([])
         pkcs11Helper.mocked_tokens = tokensPublisher.eraseToAnyPublisher()
@@ -38,18 +41,17 @@ final class CryptoManagerEnumerateKeysTests: XCTestCase {
     }
 
     func testEnumerateKeysConnectionSuccess() async throws {
-        let token = TokenMock(serial: "87654321", currentInterface: .usb)
         let testId = "some id"
 
         tokensPublisher.send([token])
-        token.enumerateKeysWithAlgoCallback = { _ in
+        token.mocked_enumerateKeys_byAlgoPkcs11KeyAlgorithm_ArrayOf_Pkcs11KeyPair = { _ in
             var object = Pkcs11ObjectMock()
             object.setValue(forAttr: .id, value: .success(Data(testId.utf8)))
             return [Pkcs11KeyPair(publicKey: object, privateKey: object)]
         }
 
         var result: [KeyModel]?
-        try await manager.withToken(connectionType: .usb, serial: "87654321", pin: nil) {
+        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
             result = try await manager.enumerateKeys()
         }
         XCTAssertEqual(result, [.init(ckaId: testId, type: .gostR3410_2012_256)])
@@ -61,9 +63,8 @@ final class CryptoManagerEnumerateKeysTests: XCTestCase {
     }
 
     func testEnumerateKeysConnectionLostError() async throws {
-        let token = TokenMock(serial: "87654321", currentInterface: .usb)
         tokensPublisher.send([token])
-        token.enumerateKeysWithAlgoCallback = { _ in
+        token.mocked_enumerateKeys_byAlgoPkcs11KeyAlgorithm_ArrayOf_Pkcs11KeyPair = { _ in
             throw Pkcs11Error.internalError()
         }
         pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in

@@ -31,7 +31,7 @@ custom_rules:
   # Separate import block with two \n from other code
   two_lines_after_import:
     included: ".*\\.swift"
-    regex: "(?<=import\\s)\\w+(\n){1,2}(?!import)\\w+"
+    regex: "(?<=import\\s)\\w+(\n){1,2}(?!^.*import.*$)[\\w@]+"
     message: "Use two blank lines to separate import from code."
     severity: error
 

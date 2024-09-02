@@ -18,6 +18,7 @@ class CryptoManagerGetTokenInfoTests: XCTestCase {
     var openSslHelper: OpenSslHelperMock!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
+    var token: RtMockPkcs11TokenProtocol!
 
     var tokensPublisher: CurrentValueSubject<[Pkcs11TokenProtocol], Never>!
 
@@ -29,6 +30,8 @@ class CryptoManagerGetTokenInfoTests: XCTestCase {
         openSslHelper = OpenSslHelperMock()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
+        token = RtMockPkcs11TokenProtocol()
+        token.setup()
 
         tokensPublisher = CurrentValueSubject<[Pkcs11TokenProtocol], Never>([])
         pkcs11Helper.mocked_tokens = tokensPublisher.eraseToAnyPublisher()
@@ -38,11 +41,10 @@ class CryptoManagerGetTokenInfoTests: XCTestCase {
     }
 
     func testGetTokenInfoUsbSuccess() async throws {
-        let token = TokenMock(serial: "87654321", currentInterface: .usb, supportedInterfaces: [.usb])
         tokensPublisher.send([token])
 
         var result: TokenInfo?
-        try await manager.withToken(connectionType: .usb, serial: "87654321", pin: nil) {
+        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
             result = try await manager.getTokenInfo()
         }
         XCTAssertEqual(result?.serial, token.serial)
@@ -64,11 +66,12 @@ class CryptoManagerGetTokenInfoTests: XCTestCase {
                 con.finish()
             }
         }
-        let token = TokenMock(serial: "87654321", currentInterface: .nfc, supportedInterfaces: [.nfc])
+        token.mocked_currentInterface = .nfc
+        token.mocked_supportedInterfaces = [.nfc]
         tokensPublisher.send([token])
 
         var result: TokenInfo?
-        try await manager.withToken(connectionType: .nfc, serial: "87654321", pin: nil) {
+        try await manager.withToken(connectionType: .nfc, serial: token.serial, pin: nil) {
             result = try await manager.getTokenInfo()
         }
         XCTAssertEqual(result?.serial, token.serial)
@@ -79,11 +82,11 @@ class CryptoManagerGetTokenInfoTests: XCTestCase {
     }
 
     func testGetTokenInfoDualSuccess() async throws {
-        let token = TokenMock(serial: "87654321", currentInterface: .usb, supportedInterfaces: [.nfc, .usb])
+        token.mocked_supportedInterfaces = [.nfc, .usb]
         tokensPublisher.send([token])
 
         var result: TokenInfo?
-        try await manager.withToken(connectionType: .usb, serial: "87654321", pin: nil) {
+        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
             result = try await manager.getTokenInfo()
         }
         XCTAssertEqual(result?.serial, token.serial)

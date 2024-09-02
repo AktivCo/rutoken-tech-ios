@@ -20,8 +20,8 @@ final class CryptoManageTokenStateTests: XCTestCase {
     var fileSource: RtMockFileSourceProtocol!
     var deviceInfo: RtMockDeviceInfoHelperProtocol!
 
-    var nfcToken: TokenMock!
-    var usbToken: TokenMock!
+    var nfcToken: RtMockPkcs11TokenProtocol!
+    var usbToken: RtMockPkcs11TokenProtocol!
 
     override func setUp() {
         super.setUp()
@@ -33,16 +33,17 @@ final class CryptoManageTokenStateTests: XCTestCase {
         fileSource = RtMockFileSourceProtocol()
         deviceInfo = RtMockDeviceInfoHelperProtocol()
 
-        usbToken = TokenMock(serial: "12345678", currentInterface: .usb)
-        nfcToken = TokenMock(serial: "87654321", currentInterface: .nfc)
+        usbToken = RtMockPkcs11TokenProtocol()
+        nfcToken = RtMockPkcs11TokenProtocol()
+        usbToken.setup()
+        nfcToken.setup()
+        nfcToken.mocked_currentInterface = .nfc
+        nfcToken.mocked_supportedInterfaces = [.nfc]
 
         pkcs11Helper.mocked_tokens = Just([usbToken, nfcToken]).eraseToAnyPublisher()
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
                                 openSslHelper: openSslHelper, fileHelper: fileHelper,
                                 fileSource: fileSource, deviceInfo: deviceInfo)
-
-        usbToken = TokenMock(serial: "12345678", currentInterface: .usb)
-        nfcToken = TokenMock(serial: "87654321", currentInterface: .nfc)
     }
 
     func testUsbStates() async throws {

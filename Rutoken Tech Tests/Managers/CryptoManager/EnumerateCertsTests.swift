@@ -54,7 +54,7 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
 
-    var token: TokenMock!
+    var token: RtMockPkcs11TokenProtocol!
     var tokensPublisher: CurrentValueSubject<[Pkcs11TokenProtocol], Never>!
     var keyId: String!
 
@@ -67,7 +67,8 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
 
-        token = TokenMock(serial: "87654321", currentInterface: .usb, supportedInterfaces: [.usb])
+        token = RtMockPkcs11TokenProtocol()
+        token.setup()
         tokensPublisher = CurrentValueSubject<[Pkcs11TokenProtocol], Never>([token])
         pkcs11Helper.mocked_tokens = tokensPublisher.eraseToAnyPublisher()
 
@@ -78,7 +79,7 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
     }
 
     func testEnumerateCertsSuccess() async throws {
-        token.enumerateCertsCallback = {
+        token.mocked_enumerateCerts_ArrayOf_Pkcs11ObjectProtocol = {
             var object = Pkcs11ObjectMock()
             object.setValue(forAttr: .id, value: .success(Data(self.keyId.utf8)))
             object.setValue(forAttr: .value, value: .success(Data(unitTestCert.utf8)))
@@ -96,7 +97,7 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
     }
 
     func testDecryptCmsConnectionLostError() async throws {
-        token.enumerateCertsCallback = {
+        token.mocked_enumerateCerts_ArrayOf_Pkcs11ObjectProtocol = {
             throw Pkcs11Error.internalError()
         }
         pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in
@@ -110,29 +111,7 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
     }
 
     func testEnumerateCertsNoData() async throws {
-        token.enumerateCertsCallback = {
-            return [Pkcs11ObjectMock()]
-        }
-
-        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
-            let result = try await manager.enumerateCerts()
-            XCTAssertEqual([], result)
-        }
-    }
-
-    func testEnumerateCertsBadData() async throws {
-        token.enumerateCertsCallback = {
-            return [Pkcs11ObjectMock()]
-        }
-
-        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
-            let result = try await manager.enumerateCerts()
-            XCTAssertEqual([], result)
-        }
-    }
-
-    func testEnumerateCertsNoId() async throws {
-        token.enumerateCertsCallback = {
+        token.mocked_enumerateCerts_ArrayOf_Pkcs11ObjectProtocol = {
             return [Pkcs11ObjectMock()]
         }
 
