@@ -19,11 +19,11 @@ extension RtMockPkcs11TokenProtocol {
         mocked_login_withPinString_Void = { _ in }
         mocked_logout_Void = {}
         mocked_enumerateKey_byIdString_Pkcs11KeyPair = { _ in
-            Pkcs11KeyPair(publicKey: Pkcs11ObjectMock(), privateKey: Pkcs11ObjectMock())
+            Pkcs11KeyPair(publicKey: RtMockPkcs11ObjectProtocol(), privateKey: RtMockPkcs11ObjectProtocol())
         }
         mocked_enumerateKeys_byAlgoPkcs11KeyAlgorithm_ArrayOf_Pkcs11KeyPair = { _ in
-            return [Pkcs11KeyPair(publicKey: Pkcs11ObjectMock(),
-                                  privateKey: Pkcs11ObjectMock())]
+            return [Pkcs11KeyPair(publicKey: RtMockPkcs11ObjectProtocol(),
+                                  privateKey: RtMockPkcs11ObjectProtocol())]
         }
         mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = { _ in
             return WrappedPointer<OpaquePointer>({

@@ -80,14 +80,27 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
 
     func testEnumerateCertsSuccess() async throws {
         token.mocked_enumerateCerts_ArrayOf_Pkcs11ObjectProtocol = {
-            var object = Pkcs11ObjectMock()
-            object.setValue(forAttr: .id, value: .success(Data(self.keyId.utf8)))
-            object.setValue(forAttr: .value, value: .success(Data(unitTestCert.utf8)))
+            let object = RtMockPkcs11ObjectProtocol()
+            object.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { attr in
+                switch attr {
+                case .id: return Data(self.keyId.utf8)
+                case .value: return Data(unitTestCert.utf8)
+                default: throw Pkcs11Error.internalError(rv: 1)
+                }
+            }
             return [object]
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
             let result = try await manager.enumerateCerts()
             XCTAssertEqual(result, [.init(keyId: keyId, tokenSerial: token.serial, from: Data(unitTestCert.utf8))!])
+        }
+    }
+
+    func testEnumerateCertsSuccessZeroCerts() async throws {
+        token.mocked_enumerateCerts_ArrayOf_Pkcs11ObjectProtocol = { [] }
+        try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
+            let result = try await manager.enumerateCerts()
+            XCTAssertEqual(result, [])
         }
     }
 
@@ -110,14 +123,18 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
             throws: CryptoManagerError.connectionLost)
     }
 
-    func testEnumerateCertsNoData() async throws {
+    func testEnumerateCertsGetValueThrowsError() async throws {
+        let error = Pkcs11Error.internalError(rv: 1)
         token.mocked_enumerateCerts_ArrayOf_Pkcs11ObjectProtocol = {
-            return [Pkcs11ObjectMock()]
+            let object = RtMockPkcs11ObjectProtocol()
+            object.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { _ in
+                throw error
+            }
+            return [object]
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
-            let result = try await manager.enumerateCerts()
-            XCTAssertEqual([], result)
+            await assertErrorAsync(try await manager.enumerateCerts(), throws: error)
         }
     }
 }

@@ -127,7 +127,7 @@ class DocumentManagerReadDocumentTests: XCTestCase {
 
         try manager.reset()
 
-        let encodedFile = "some text".data(using: .utf8)!.base64EncodedString().data(using: .utf8)!
+        let encodedFile = Data(Data("some text".utf8).base64EncodedString().utf8)
         helper.mocked_readFile_fromUrlURL_Data = { url in
             XCTAssertEqual(self.document.name + ".enc", url.lastPathComponent)
             return encodedFile

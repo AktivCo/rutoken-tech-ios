@@ -7,7 +7,10 @@
 
 import Foundation
 
+import RtMock
 
+
+@RtMock
 protocol Pkcs11ObjectProtocol {
     var handle: CK_OBJECT_HANDLE { get }
 

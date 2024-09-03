@@ -118,8 +118,8 @@ struct IpadRootView_Previews: PreviewProvider {
     static var previews: some View {
         let state = AppState()
         state.vcrState.vcrList.items = [
-            VcrInfo(id: "321".data(using: .utf8)!, name: "Ivan", isActive: false),
-            VcrInfo(id: "123".data(using: .utf8)!, name: "Andrey", isActive: true)
+            VcrInfo(id: Data("321".utf8), name: "Ivan", isActive: false),
+            VcrInfo(id: Data("123".utf8), name: "Andrey", isActive: true)
         ]
         let store = Store(initialState: state,
                           reducer: AppReducer(),

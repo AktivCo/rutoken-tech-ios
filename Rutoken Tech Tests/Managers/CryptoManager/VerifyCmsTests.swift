@@ -37,8 +37,8 @@ class CryptoManagerVerifyCmsTests: XCTestCase {
     func testVerifyCmsSuccess() async {
         let rootCaUrl = URL(fileURLWithPath: "some url")
         let signedCms = "signed cms"
-        let content = "content".data(using: .utf8)!
-        let root = "some cert".data(using: .utf8)!
+        let content = Data("content".utf8)
+        let root = Data("some cert".utf8)
 
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { file, dir in
             XCTAssertEqual(file, RtFile.rootCaCert.rawValue)
@@ -55,7 +55,7 @@ class CryptoManagerVerifyCmsTests: XCTestCase {
             XCTAssertEqual(certs, [root])
             return .success
         }
-        await assertNoThrowAsync(try await manager.verifyCms(signedCms: signedCms.data(using: .utf8)!, document: content))
+        await assertNoThrowAsync(try await manager.verifyCms(signedCms: Data(signedCms.utf8), document: content))
     }
 
     func testVerifyCmsGetUrlError() async {

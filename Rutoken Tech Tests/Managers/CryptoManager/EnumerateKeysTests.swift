@@ -45,8 +45,11 @@ final class CryptoManagerEnumerateKeysTests: XCTestCase {
 
         tokensPublisher.send([token])
         token.mocked_enumerateKeys_byAlgoPkcs11KeyAlgorithm_ArrayOf_Pkcs11KeyPair = { _ in
-            var object = Pkcs11ObjectMock()
-            object.setValue(forAttr: .id, value: .success(Data(testId.utf8)))
+            let object = RtMockPkcs11ObjectProtocol()
+            object.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { attr in
+                XCTAssertEqual(attr, .id)
+                return Data(testId.utf8)
+            }
             return [Pkcs11KeyPair(publicKey: object, privateKey: object)]
         }
 

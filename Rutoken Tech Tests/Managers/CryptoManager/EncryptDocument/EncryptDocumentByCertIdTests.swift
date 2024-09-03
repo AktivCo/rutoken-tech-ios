@@ -50,12 +50,16 @@ class EncryptDocumentByCertIdTests: XCTestCase {
         let encryptedData = Data("encryptedData".utf8)
         let certBodyData = Data("certBodyData".utf8)
 
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = {
-            XCTAssertEqual($0, self.certId)
-            var object = Pkcs11ObjectMock()
-            object.setValue(forAttr: .value, value: .success(certBodyData))
+        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { id in
+            XCTAssertEqual(id, self.certId)
+            let object = RtMockPkcs11ObjectProtocol()
+            object.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { attr in
+                XCTAssertEqual(attr, .value)
+                return certBodyData
+            }
             return [object]
         }
+
         openSslHelper.mocked_encryptDocument_forContentData_withCertData_Data = { content, cert in
             XCTAssertEqual(content, self.documentData)
             XCTAssertEqual(cert, certBodyData)
@@ -86,8 +90,7 @@ class EncryptDocumentByCertIdTests: XCTestCase {
     }
 
     func testEncryptDocumentTokenNoSuitCertError() async throws {
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = {
-            XCTAssertEqual($0, self.certId)
+        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { _ in
             return []
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
@@ -97,9 +100,10 @@ class EncryptDocumentByCertIdTests: XCTestCase {
 
     func testEncryptDocumentTokenOpenSslError() async throws {
         let error = OpenSslError.generalError(23, "qwerty")
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = {
-            XCTAssertEqual($0, self.certId)
-            return [Pkcs11ObjectMock()]
+        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { _ in
+            let object = RtMockPkcs11ObjectProtocol()
+            object.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { _ in Data() }
+            return [object]
         }
         openSslHelper.mocked_encryptDocument_forContentData_withCertData_Data = { _, _ in throw error }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {

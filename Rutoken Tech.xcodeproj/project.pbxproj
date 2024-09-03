@@ -73,7 +73,6 @@
 		44E9C0422B837FA90001E63F /* CertMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E9C0412B837FA90001E63F /* CertMetaData.swift */; };
 		44E9C0442B83866A0001E63F /* CertListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E9C0432B83866A0001E63F /* CertListView.swift */; };
 		44E9C0462B8387A20001E63F /* BankCertListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E9C0452B8387A20001E63F /* BankCertListState.swift */; };
-		44F0323A2B5125BC00466080 /* Pkcs11ObjectMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F032392B5125BC00466080 /* Pkcs11ObjectMock.swift */; };
 		44F55C952BF21B0D007F441C /* OnEncryptDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F55C942BF21B0D007F441C /* OnEncryptDocument.swift */; };
 		5E168C012C3EF68C0011DCFA /* Pkcs11Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E168C002C3EF68C0011DCFA /* Pkcs11Template.swift */; };
 		5E168C032C3EF6A80011DCFA /* Pkcs11Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E168C022C3EF6A80011DCFA /* Pkcs11Constants.swift */; };
@@ -255,7 +254,6 @@
 		44E9C0412B837FA90001E63F /* CertMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertMetaData.swift; sourceTree = "<group>"; };
 		44E9C0432B83866A0001E63F /* CertListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertListView.swift; sourceTree = "<group>"; };
 		44E9C0452B8387A20001E63F /* BankCertListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankCertListState.swift; sourceTree = "<group>"; };
-		44F032392B5125BC00466080 /* Pkcs11ObjectMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11ObjectMock.swift; sourceTree = "<group>"; };
 		44F55C942BF21B0D007F441C /* OnEncryptDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnEncryptDocument.swift; sourceTree = "<group>"; };
 		5E168C002C3EF68C0011DCFA /* Pkcs11Template.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Template.swift; sourceTree = "<group>"; };
 		5E168C022C3EF6A80011DCFA /* Pkcs11Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pkcs11Constants.swift; sourceTree = "<group>"; };
@@ -833,7 +831,6 @@
 		D4B130C32B0E37BB00AD390F /* Mocks */ = {
 			isa = PBXGroup;
 			children = (
-				44F032392B5125BC00466080 /* Pkcs11ObjectMock.swift */,
 				D47302C42B91E2000049E8F8 /* KeychainHelperMock.swift */,
 			);
 			path = Mocks;
@@ -1209,7 +1206,6 @@
 				4407C1D82BD68E5E00DBA7D3 /* ReadDocumentTests.swift in Sources */,
 				7D9D3C1B2B3C76F000BF2EE1 /* EnumerateKeysTests.swift in Sources */,
 				D4871D6B2BC693A2008B027C /* SignDocumentByCertIdTests.swift in Sources */,
-				44F0323A2B5125BC00466080 /* Pkcs11ObjectMock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

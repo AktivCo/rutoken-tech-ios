@@ -41,9 +41,9 @@ class SignDocumentByFileTests: XCTestCase {
     }
 
     func testSignDocumentFileWithChainSuccess() async throws {
-        let keyData = "key".data(using: .utf8)!
-        let certData = "cert".data(using: .utf8)!
-        let caCertData = "ca cert".data(using: .utf8)!
+        let keyData = Data("key".utf8)
+        let certData = Data("cert".utf8)
+        let caCertData = Data("ca cert".utf8)
         var datas = [caCertData, certData, keyData]
         let getUrlExp = XCTestExpectation(description: "Get URL expectation")
         getUrlExp.expectedFulfillmentCount = 3
@@ -75,8 +75,8 @@ class SignDocumentByFileTests: XCTestCase {
     func testSignDocumentFileNoChainSuccess() async throws {
         let getUrlExp = XCTestExpectation(description: "Get URL expectation")
         getUrlExp.expectedFulfillmentCount = 2
-        let certData = "user cert".data(using: .utf8)!
-        let keyData = "key".data(using: .utf8)!
+        let keyData = Data("key".utf8)
+        let certData = Data("cert".utf8)
         var datas = [certData, keyData]
 
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { file, dir in

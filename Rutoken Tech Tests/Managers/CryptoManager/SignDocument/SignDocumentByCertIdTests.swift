@@ -51,8 +51,7 @@ class SignDocumentByCertIdTests: XCTestCase {
     }
 
     func testSignDocumentTokenNoChainSuccess() async throws {
-        let userCert = "user cert".data(using: .utf8)!
-        let caCert = "ca cert".data(using: .utf8)!
+        let userCert = Data("user cert".utf8)
         // swiftlint:disable:next line_length
         openSslHelper.mocked_signDocument__DocumentData_wrappedKeyWrappedPointerOf_OpaquePointer_certData_certChainArrayOf_Data_String = { content, _, cert, chain in
             XCTAssertEqual(content, self.dataToSign)
@@ -60,11 +59,14 @@ class SignDocumentByCertIdTests: XCTestCase {
             XCTAssert(chain.isEmpty)
             return self.signed
         }
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = {
-            var pkcs11ObjectCertMock = Pkcs11ObjectMock()
-            pkcs11ObjectCertMock.setValue(forAttr: .value, value: .success(userCert))
-            XCTAssertEqual($0, self.keyId)
-            return [pkcs11ObjectCertMock]
+        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { id in
+            let certObj = RtMockPkcs11ObjectProtocol()
+            certObj.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { attr in
+                XCTAssertEqual(attr, .value)
+                return userCert
+            }
+            XCTAssertEqual(id, self.keyId)
+            return [certObj]
         }
         token.mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = {
             XCTAssertEqual($0, self.keyId)
@@ -80,8 +82,8 @@ class SignDocumentByCertIdTests: XCTestCase {
     }
 
     func testSignDocumentTokenWithChainSuccess() async throws {
-        let userCert = "user cert".data(using: .utf8)!
-        let caCert = "ca cert".data(using: .utf8)!
+        let userCert = Data("user cert".utf8)
+        let caCert = Data("ca cert".utf8)
         // swiftlint:disable:next line_length
         openSslHelper.mocked_signDocument__DocumentData_wrappedKeyWrappedPointerOf_OpaquePointer_certData_certChainArrayOf_Data_String = { content, _, cert, chain in
             XCTAssertEqual(content, self.dataToSign)
@@ -89,11 +91,14 @@ class SignDocumentByCertIdTests: XCTestCase {
             XCTAssertEqual(chain, [caCert])
             return self.signed
         }
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = {
-            XCTAssertEqual($0, self.keyId)
-            var object = Pkcs11ObjectMock()
-            object.setValue(forAttr: .value, value: .success(userCert))
-            return [object]
+        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { id in
+            XCTAssertEqual(id, self.keyId)
+            let certObj = RtMockPkcs11ObjectProtocol()
+            certObj.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { attr in
+                XCTAssertEqual(attr, .value)
+                return userCert
+            }
+            return [certObj]
         }
         token.mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = {
             XCTAssertEqual($0, self.keyId)
@@ -125,7 +130,7 @@ class SignDocumentByCertIdTests: XCTestCase {
                     throws: CryptoManagerError.tokenNotFound)
     }
 
-    func testSignDocumentTokenError() async throws {
+    func testSignDocumentGetKeyError() async throws {
         let error = Pkcs11Error.internalError()
         token.mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = {
             XCTAssertEqual($0, self.keyId)
@@ -138,7 +143,7 @@ class SignDocumentByCertIdTests: XCTestCase {
         }
     }
 
-    func testSignDocumentConnectionLostError() async throws {
+    func testSignDocumentEnumerateCertsError() async throws {
         token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { _ in
             throw Pkcs11Error.internalError()
         }
@@ -153,8 +158,7 @@ class SignDocumentByCertIdTests: XCTestCase {
     }
 
     func testSignDocumentNoSuitCertError() async throws {
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = {
-            XCTAssertEqual($0, self.keyId)
+        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { _ in
             return []
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
@@ -164,9 +168,12 @@ class SignDocumentByCertIdTests: XCTestCase {
     }
 
     func testSignDocumentGetUrlError() async throws {
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = {
-            XCTAssertEqual($0, self.keyId)
-            return [Pkcs11ObjectMock()]
+        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { _ in
+            let object = RtMockPkcs11ObjectProtocol()
+            object.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { _ in
+                return Data()
+            }
+            return [object]
         }
 
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in nil }
@@ -178,9 +185,12 @@ class SignDocumentByCertIdTests: XCTestCase {
 
     func testSignDocumentReadFileError() async throws {
         let error = FileHelperError.generalError(32, "FileHelper error")
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = {
-            XCTAssertEqual($0, self.keyId)
-            return [Pkcs11ObjectMock()]
+        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { _ in
+            let object = RtMockPkcs11ObjectProtocol()
+            object.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { _ in
+                return Data()
+            }
+            return [object]
         }
 
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
@@ -199,9 +209,13 @@ class SignDocumentByCertIdTests: XCTestCase {
         openSslHelper.mocked_signDocument__DocumentData_wrappedKeyWrappedPointerOf_OpaquePointer_certData_certChainArrayOf_Data_String = { _, _, _, _ in
             throw error
         }
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = {
-            XCTAssertEqual($0, self.keyId)
-            return [Pkcs11ObjectMock()]
+
+        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { _ in
+            let object = RtMockPkcs11ObjectProtocol()
+            object.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { _ in
+                return Data()
+            }
+            return [object]
         }
         token.mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = {
             XCTAssertEqual($0, self.keyId)
