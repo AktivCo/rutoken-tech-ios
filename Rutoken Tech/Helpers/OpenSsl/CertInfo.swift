@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct CertInfo {
+struct CertInfo: Equatable {
     let startDate: Date?
     let endDate: Date?
 }

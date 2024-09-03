@@ -83,7 +83,7 @@ extension SubjectEntryTitle {
     }
 }
 
-struct CsrModel {
+struct CsrModel: Equatable {
     var subjects: [SubjectEntryTitle: String]
 }
 

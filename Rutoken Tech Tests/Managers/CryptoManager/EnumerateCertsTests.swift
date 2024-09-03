@@ -50,7 +50,7 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: RtMockPkcs11HelperProtocol!
     var pcscHelper: RtMockPcscHelperProtocol!
-    var openSslHelper: OpenSslHelperMock!
+    var openSslHelper: RtMockOpenSslHelperProtocol!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
 
@@ -63,7 +63,7 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
         continueAfterFailure = false
         pkcs11Helper = RtMockPkcs11HelperProtocol()
         pcscHelper = RtMockPcscHelperProtocol()
-        openSslHelper = OpenSslHelperMock()
+        openSslHelper = RtMockOpenSslHelperProtocol()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
 

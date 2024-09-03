@@ -15,7 +15,7 @@ class SignDocumentByFileTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: RtMockPkcs11HelperProtocol!
     var pcscHelper: RtMockPcscHelperProtocol!
-    var openSslHelper: OpenSslHelperMock!
+    var openSslHelper: RtMockOpenSslHelperProtocol!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
 
@@ -27,7 +27,7 @@ class SignDocumentByFileTests: XCTestCase {
         continueAfterFailure = false
         pkcs11Helper = RtMockPkcs11HelperProtocol()
         pcscHelper = RtMockPcscHelperProtocol()
-        openSslHelper = OpenSslHelperMock()
+        openSslHelper = RtMockOpenSslHelperProtocol()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
 
@@ -41,19 +41,31 @@ class SignDocumentByFileTests: XCTestCase {
     }
 
     func testSignDocumentFileSuccess() async throws {
+        let keyData = "key".data(using: .utf8)!
+        let certData = "cert".data(using: .utf8)!
+        let caCertData = "ca cert".data(using: .utf8)!
+        var datas = [caCertData, certData, keyData]
         let getUrlExp = XCTestExpectation(description: "Get URL expectation")
         getUrlExp.expectedFulfillmentCount = 3
 
+        let someUrl = URL(fileURLWithPath: "someUrl")
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { file, dir in
             defer { getUrlExp.fulfill() }
             XCTAssertEqual(dir, .credentials)
             XCTAssertTrue([RtFile.rootCaKey, .rootCaCert, .caCert].map { $0.rawValue }.contains(file))
-            return URL(fileURLWithPath: "")
+            return someUrl
         }
-        fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
+        fileHelper.mocked_readFile_fromUrlURL_Data = { url in
+            XCTAssertEqual(someUrl, url)
+            return datas.popLast()!
+        }
 
-        openSslHelper.signDocumentCallback = {
-            self.signed
+        openSslHelper.mocked_signDocument__DocumentData_keyData_certData_certChainArrayOf_Data_String = { content, key, cert, chain in
+            XCTAssertEqual(content, self.dataToSign)
+            XCTAssertEqual(key, keyData)
+            XCTAssertEqual(cert, certData)
+            XCTAssertEqual(chain, [caCertData])
+            return self.signed
         }
         let result = try manager.signDocument(dataToSign, keyFile: .rootCaKey, certFile: .rootCaCert)
         XCTAssertEqual(signed, result)
@@ -78,7 +90,7 @@ class SignDocumentByFileTests: XCTestCase {
         let error = OpenSslError.generalError(100, "error")
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
         fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
-        openSslHelper.signDocumentCallback = {
+        openSslHelper.mocked_signDocument__DocumentData_keyData_certData_certChainArrayOf_Data_String = { _, _, _, _ in
             throw error
         }
 

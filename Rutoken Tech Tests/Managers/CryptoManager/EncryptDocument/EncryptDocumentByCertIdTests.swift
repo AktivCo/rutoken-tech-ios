@@ -15,7 +15,7 @@ class EncryptDocumentByCertIdTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: RtMockPkcs11HelperProtocol!
     var pcscHelper: RtMockPcscHelperProtocol!
-    var openSslHelper: OpenSslHelperMock!
+    var openSslHelper: RtMockOpenSslHelperProtocol!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
 
@@ -30,7 +30,7 @@ class EncryptDocumentByCertIdTests: XCTestCase {
 
         pkcs11Helper = RtMockPkcs11HelperProtocol()
         pcscHelper = RtMockPcscHelperProtocol()
-        openSslHelper = OpenSslHelperMock()
+        openSslHelper = RtMockOpenSslHelperProtocol()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
 
@@ -56,8 +56,9 @@ class EncryptDocumentByCertIdTests: XCTestCase {
             object.setValue(forAttr: .value, value: .success(certBodyData))
             return [object]
         }
-        openSslHelper.encryptCmsCallback = {
-            XCTAssertEqual($1, certBodyData)
+        openSslHelper.mocked_encryptDocument_forContentData_withCertData_Data = { content, cert in
+            XCTAssertEqual(content, self.documentData)
+            XCTAssertEqual(cert, certBodyData)
             return encryptedData
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
@@ -84,7 +85,6 @@ class EncryptDocumentByCertIdTests: XCTestCase {
             throws: CryptoManagerError.connectionLost)
     }
 
-
     func testEncryptDocumentTokenNoSuitCertError() async throws {
         token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = {
             XCTAssertEqual($0, self.certId)
@@ -101,7 +101,7 @@ class EncryptDocumentByCertIdTests: XCTestCase {
             XCTAssertEqual($0, self.certId)
             return [Pkcs11ObjectMock()]
         }
-        openSslHelper.encryptCmsCallback = { _, _ in throw error }
+        openSslHelper.mocked_encryptDocument_forContentData_withCertData_Data = { _, _ in throw error }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             assertError(try manager.encryptDocument(documentData, certId: certId), throws: error)
         }

@@ -15,7 +15,7 @@ class CryptoManagerDecryptCmsTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: RtMockPkcs11HelperProtocol!
     var pcscHelper: RtMockPcscHelperProtocol!
-    var openSslHelper: OpenSslHelperMock!
+    var openSslHelper: RtMockOpenSslHelperProtocol!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
 
@@ -31,7 +31,7 @@ class CryptoManagerDecryptCmsTests: XCTestCase {
 
         pkcs11Helper = RtMockPkcs11HelperProtocol()
         pcscHelper = RtMockPcscHelperProtocol()
-        openSslHelper = OpenSslHelperMock()
+        openSslHelper = RtMockOpenSslHelperProtocol()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
 
@@ -50,7 +50,7 @@ class CryptoManagerDecryptCmsTests: XCTestCase {
     }
 
     func testDecryptCmsSuccess() async throws {
-        openSslHelper.decryptCmsCallback = { data, _ in
+        openSslHelper.mocked_decryptCms_contentData_wrappedKeyWrappedPointerOf_OpaquePointer_Data = { data, _ in
             XCTAssertEqual(data, self.documentData)
             return self.decryptedData
         }
@@ -96,7 +96,7 @@ class CryptoManagerDecryptCmsTests: XCTestCase {
 
     func testDecryptCmsOpenSslError() async throws {
         let error = OpenSslError.generalError(32, nil)
-        openSslHelper.decryptCmsCallback = { _, _ in
+        openSslHelper.mocked_decryptCms_contentData_wrappedKeyWrappedPointerOf_OpaquePointer_Data = { _, _ in
             throw error
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {

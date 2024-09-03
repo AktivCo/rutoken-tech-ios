@@ -15,7 +15,7 @@ final class CryptoManagerDeleteCertTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: RtMockPkcs11HelperProtocol!
     var pcscHelper: RtMockPcscHelperProtocol!
-    var openSslHelper: OpenSslHelperMock!
+    var openSslHelper: RtMockOpenSslHelperProtocol!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
     var token: RtMockPkcs11TokenProtocol!
@@ -28,7 +28,7 @@ final class CryptoManagerDeleteCertTests: XCTestCase {
         continueAfterFailure = false
         pkcs11Helper = RtMockPkcs11HelperProtocol()
         pcscHelper = RtMockPcscHelperProtocol()
-        openSslHelper = OpenSslHelperMock()
+        openSslHelper = RtMockOpenSslHelperProtocol()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
 

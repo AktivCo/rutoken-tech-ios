@@ -7,11 +7,14 @@
 
 import Foundation
 
+import RtMock
+
 
 enum OpenSslError: Error, Equatable {
     case generalError(UInt32, String?)
 }
 
+@RtMock
 protocol OpenSslHelperProtocol {
     func createCsr(with wrappedKey: WrappedPointer<OpaquePointer>, for request: CsrModel, with info: CertInfo) throws -> String
     func createCert(for csr: String, with caKey: Data, cert caCert: Data) throws -> Data
@@ -410,8 +413,7 @@ class OpenSslHelper: OpenSslHelperProtocol {
         }
 
         // MARK: Generate and set a serial number
-        guard let serialNumber = WrappedPointer<UnsafeMutablePointer<ASN1_OCTET_STRING>>(ASN1_INTEGER_new,
-                                                                                         { ASN1_INTEGER_free($0) }) else {
+        guard let serialNumber = WrappedPointer<UnsafeMutablePointer<ASN1_OCTET_STRING>>(ASN1_INTEGER_new, { ASN1_INTEGER_free($0) }) else {
             throw OpenSslError.generalError(#line, getLastError())
         }
         defer { serialNumber.release() }

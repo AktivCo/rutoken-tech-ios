@@ -15,7 +15,7 @@ class EncryptDocumentByDataTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: RtMockPkcs11HelperProtocol!
     var pcscHelper: RtMockPcscHelperProtocol!
-    var openSslHelper: OpenSslHelperMock!
+    var openSslHelper: RtMockOpenSslHelperProtocol!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
 
@@ -28,7 +28,7 @@ class EncryptDocumentByDataTests: XCTestCase {
 
         pkcs11Helper = RtMockPkcs11HelperProtocol()
         pcscHelper = RtMockPcscHelperProtocol()
-        openSslHelper = OpenSslHelperMock()
+        openSslHelper = RtMockOpenSslHelperProtocol()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
 
@@ -44,8 +44,9 @@ class EncryptDocumentByDataTests: XCTestCase {
     func testEncryptCmsDataSuccess() throws {
         let certData = Data("bankCertData".utf8)
         let encryptedData = Data("encryptedData".utf8)
-        openSslHelper.encryptCmsCallback = {
-            XCTAssertEqual($1, certData)
+        openSslHelper.mocked_encryptDocument_forContentData_withCertData_Data = { content, cert in
+            XCTAssertEqual(content, self.documentData)
+            XCTAssertEqual(cert, certData)
             return encryptedData
         }
         let result = try manager.encryptDocument(documentData, certData: certData)
@@ -54,11 +55,7 @@ class EncryptDocumentByDataTests: XCTestCase {
 
     func testEncryptCmsDataOpenSslError() throws {
         let error = OpenSslError.generalError(32, "openssl error")
-        openSslHelper.encryptCmsCallback = { [self] in
-            XCTAssertEqual(documentData, $0)
-            XCTAssertEqual(certData, $1)
-            throw error
-        }
+        openSslHelper.mocked_encryptDocument_forContentData_withCertData_Data = { _, _ in throw error }
         assertError(try manager.encryptDocument(documentData, certData: certData), throws: error)
     }
 }

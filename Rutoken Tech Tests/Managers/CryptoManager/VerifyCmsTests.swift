@@ -15,7 +15,7 @@ class CryptoManagerVerifyCmsTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: RtMockPkcs11HelperProtocol!
     var pcscHelper: RtMockPcscHelperProtocol!
-    var openSslHelper: OpenSslHelperMock!
+    var openSslHelper: RtMockOpenSslHelperProtocol!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
 
@@ -24,7 +24,7 @@ class CryptoManagerVerifyCmsTests: XCTestCase {
         continueAfterFailure = false
         pkcs11Helper = RtMockPkcs11HelperProtocol()
         pcscHelper = RtMockPcscHelperProtocol()
-        openSslHelper = OpenSslHelperMock()
+        openSslHelper = RtMockOpenSslHelperProtocol()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
 
@@ -36,6 +36,10 @@ class CryptoManagerVerifyCmsTests: XCTestCase {
 
     func testVerifyCmsSuccess() async {
         let rootCaUrl = URL(fileURLWithPath: "some url")
+        let signedCms = "signed cms"
+        let content = "content".data(using: .utf8)!
+        let root = "some cert".data(using: .utf8)!
+
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { file, dir in
             XCTAssertEqual(file, RtFile.rootCaCert.rawValue)
             XCTAssertEqual(dir, .credentials)
@@ -43,9 +47,15 @@ class CryptoManagerVerifyCmsTests: XCTestCase {
         }
         fileHelper.mocked_readFile_fromUrlURL_Data = { url in
             XCTAssertEqual(url, rootCaUrl)
-            return Data()
+            return root
         }
-        await assertNoThrowAsync(try await manager.verifyCms(signedCms: Data(), document: Data()))
+        openSslHelper.mocked_verifyCms_signedCmsString_forContentData_trustedRootsArrayOf_Data_VerifyCmsResult = { cms, data, certs in
+            XCTAssertEqual(cms, signedCms)
+            XCTAssertEqual(data, content)
+            XCTAssertEqual(certs, [root])
+            return .success
+        }
+        await assertNoThrowAsync(try await manager.verifyCms(signedCms: signedCms.data(using: .utf8)!, document: content))
     }
 
     func testVerifyCmsGetUrlError() async {
@@ -54,10 +64,19 @@ class CryptoManagerVerifyCmsTests: XCTestCase {
                                throws: CryptoManagerError.unknown)
     }
 
+    func testVerifyCmsReadFileError() async {
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
+        fileHelper.mocked_readFile_fromUrlURL_Data = { _ in throw "some error" }
+        await assertErrorAsync(try await manager.verifyCms(signedCms: Data(), document: Data()),
+                               throws: CryptoManagerError.unknown)
+    }
+
     func testVerifyCmsFailedChain() async {
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
         fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
-        openSslHelper.verifyCmsCallback = { .failedChain }
+        openSslHelper.mocked_verifyCms_signedCmsString_forContentData_trustedRootsArrayOf_Data_VerifyCmsResult = { _, _, _ in
+            .failedChain
+        }
         await assertErrorAsync(try await manager.verifyCms(signedCms: Data(), document: Data()),
                                throws: CryptoManagerError.failedChain)
     }
@@ -65,15 +84,10 @@ class CryptoManagerVerifyCmsTests: XCTestCase {
     func testVerifyCmsError() async {
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
         fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
-        openSslHelper.verifyCmsCallback = { .invalidSignature(.generalError(1, nil)) }
+        openSslHelper.mocked_verifyCms_signedCmsString_forContentData_trustedRootsArrayOf_Data_VerifyCmsResult = { _, _, _ in
+            .invalidSignature(.generalError(1, nil))
+        }
         await assertErrorAsync(try await manager.verifyCms(signedCms: Data(), document: Data()),
                                throws: CryptoManagerError.invalidSignature)
-    }
-
-    func testVerifyCmsAnyOtherError() async {
-        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
-        fileHelper.mocked_readFile_fromUrlURL_Data = { _ in throw "some error" }
-        await assertErrorAsync(try await manager.verifyCms(signedCms: Data(), document: Data()),
-                               throws: CryptoManagerError.unknown)
     }
 }

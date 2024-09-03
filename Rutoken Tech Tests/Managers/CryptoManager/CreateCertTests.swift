@@ -15,7 +15,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: RtMockPkcs11HelperProtocol!
     var pcscHelper: RtMockPcscHelperProtocol!
-    var openSslHelper: OpenSslHelperMock!
+    var openSslHelper: RtMockOpenSslHelperProtocol!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
     var token: RtMockPkcs11TokenProtocol!
@@ -26,7 +26,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         continueAfterFailure = false
         pkcs11Helper = RtMockPkcs11HelperProtocol()
         pcscHelper = RtMockPcscHelperProtocol()
-        openSslHelper = OpenSslHelperMock()
+        openSslHelper = RtMockOpenSslHelperProtocol()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
 
@@ -41,6 +41,12 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     }
 
     func testCreateCertSuccess() async throws {
+        let csr = "some csr"
+        let caKeyData = "key data".data(using: .utf8)!
+        let caCertData = "cert data".data(using: .utf8)!
+        var datas = [caCertData, caKeyData]
+        let certRequest = CsrModel.makeDefaultModel()
+
         let getUrlExp = XCTestExpectation(description: "Get URL expectation")
         getUrlExp.expectedFulfillmentCount = 2
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { file, dir in
@@ -54,12 +60,35 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         fileHelper.mocked_readFile_fromUrlURL_Data = { url in
             defer { readFileExp.fulfill() }
             XCTAssertTrue([RtFile.caKey, RtFile.caCert].map { URL(fileURLWithPath: $0.rawValue) }.contains(url))
+            return datas.popLast()!
+        }
+
+        var privateKey = Pkcs11ObjectMock()
+        let startData = "20230101".data(using: .utf8)!
+        let endData = "20240101".data(using: .utf8)!
+        privateKey.setValue(forAttr: .startDate, value: .success(startData))
+        privateKey.setValue(forAttr: .endDate, value: .success(endData))
+        let certInfo = CertInfo(startDate: startData.getDate(with: "YYYYMMdd"),
+                                endDate: endData.getDate(with: "YYYYMMdd"))
+        token.mocked_enumerateKey_byIdString_Pkcs11KeyPair = { _ in
+            return Pkcs11KeyPair(publicKey: Pkcs11ObjectMock(),
+                                 privateKey: privateKey)
+        }
+        openSslHelper.mocked_createCsr_withWrappedkeyWrappedPointerOf_OpaquePointer_forRequestCsrModel_withInfoCertInfo_String = { _, req, info in
+            XCTAssertEqual(req, certRequest)
+            XCTAssertEqual(info, certInfo)
+            return csr
+        }
+        openSslHelper.mocked_createCert_forCsrString_withCakeyData_certCacertData_Data = { csrString, caKey, caCert in
+            XCTAssertEqual(csr, csrString)
+            XCTAssertEqual(caKey, caKeyData)
+            XCTAssertEqual(caCert, caCertData)
             return Data()
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertNoThrowAsync(try await manager.createCert(for: "001",
-                                                                  with: CsrModel.makeDefaultModel()))
+                                                                  with: certRequest))
         }
         await fulfillment(of: [getUrlExp, readFileExp], timeout: 0.3)
     }
@@ -121,44 +150,52 @@ final class CryptoManagerCreateCertTests: XCTestCase {
     }
 
     func testCreateCertCreateCsrError() async throws {
-        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in nil }
+        let error = OpenSslError.generalError(1, "error")
+        fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
         fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
-        openSslHelper.createCsrCallback = { _, _ in
-            throw CryptoManagerError.unknown
+        openSslHelper.mocked_createCsr_withWrappedkeyWrappedPointerOf_OpaquePointer_forRequestCsrModel_withInfoCertInfo_String = { _, _, _ in
+            throw error
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
                 try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
-                throws: CryptoManagerError.unknown)
+                throws: error)
         }
     }
 
     func testCreateCertCreateCertError() async throws {
-        openSslHelper.createCertCallback = {
-            throw CryptoManagerError.unknown
-        }
+        let error = OpenSslError.generalError(1, "error")
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
         fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
+        openSslHelper.mocked_createCsr_withWrappedkeyWrappedPointerOf_OpaquePointer_forRequestCsrModel_withInfoCertInfo_String = { _, _, _ in
+            return ""
+        }
+        openSslHelper.mocked_createCert_forCsrString_withCakeyData_certCacertData_Data = { _, _, _ in throw error }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
                 try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
-                throws: CryptoManagerError.unknown)
+                throws: error)
         }
     }
 
     func testCreateCertImportCertError() async throws {
+        let error = Pkcs11Error.internalError()
         token.mocked_importCert__CertData_forIdString_Void = { _, _ in
-            throw CryptoManagerError.unknown
+            throw error
         }
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
         fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
+        openSslHelper.mocked_createCsr_withWrappedkeyWrappedPointerOf_OpaquePointer_forRequestCsrModel_withInfoCertInfo_String = { _, _, _ in
+            return ""
+        }
+        openSslHelper.mocked_createCert_forCsrString_withCakeyData_certCacertData_Data = { _, _, _ in return Data() }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
                 try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
-                throws: CryptoManagerError.unknown)
+                throws: error)
         }
     }
 
@@ -169,10 +206,12 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
         fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
 
-        pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in
-            return false
-        }
+        pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in return false }
         fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
+        openSslHelper.mocked_createCsr_withWrappedkeyWrappedPointerOf_OpaquePointer_forRequestCsrModel_withInfoCertInfo_String = { _, _, _ in
+            return ""
+        }
+        openSslHelper.mocked_createCert_forCsrString_withCakeyData_certCacertData_Data = { _, _, _ in return Data() }
 
         await assertErrorAsync(
             try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {

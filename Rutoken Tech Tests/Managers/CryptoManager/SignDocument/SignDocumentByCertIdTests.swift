@@ -15,7 +15,7 @@ class SignDocumentByCertIdTests: XCTestCase {
     var manager: CryptoManager!
     var pkcs11Helper: RtMockPkcs11HelperProtocol!
     var pcscHelper: RtMockPcscHelperProtocol!
-    var openSslHelper: OpenSslHelperMock!
+    var openSslHelper: RtMockOpenSslHelperProtocol!
     var fileHelper: RtMockFileHelperProtocol!
     var fileSource: RtMockFileSourceProtocol!
 
@@ -31,7 +31,7 @@ class SignDocumentByCertIdTests: XCTestCase {
         continueAfterFailure = false
         pkcs11Helper = RtMockPkcs11HelperProtocol()
         pcscHelper = RtMockPcscHelperProtocol()
-        openSslHelper = OpenSslHelperMock()
+        openSslHelper = RtMockOpenSslHelperProtocol()
         fileHelper = RtMockFileHelperProtocol()
         fileSource = RtMockFileSourceProtocol()
 
@@ -51,12 +51,20 @@ class SignDocumentByCertIdTests: XCTestCase {
     }
 
     func testSignDocumentTokenSuccess() async throws {
-        openSslHelper.signDocumentCallback = {
-            self.signed
+        let userCert = "user cert".data(using: .utf8)!
+        let caCert = "ca cert".data(using: .utf8)!
+        // swiftlint:disable:next line_length
+        openSslHelper.mocked_signDocument__DocumentData_wrappedKeyWrappedPointerOf_OpaquePointer_certData_certChainArrayOf_Data_String = { content, _, cert, chain in
+            XCTAssertEqual(content, self.dataToSign)
+            XCTAssertEqual(cert, userCert)
+            XCTAssertEqual(chain, [caCert])
+            return self.signed
         }
         token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = {
             XCTAssertEqual($0, self.keyId)
-            return [Pkcs11ObjectMock()]
+            var object = Pkcs11ObjectMock()
+            object.setValue(forAttr: .value, value: .success(userCert))
+            return [object]
         }
         token.mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = {
             XCTAssertEqual($0, self.keyId)
@@ -74,7 +82,7 @@ class SignDocumentByCertIdTests: XCTestCase {
 
         fileHelper.mocked_readFile_fromUrlURL_Data = { url in
             XCTAssertEqual(url, someUrl)
-            return Data()
+            return caCert
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
@@ -153,7 +161,8 @@ class SignDocumentByCertIdTests: XCTestCase {
 
     func testSignDocumentTokenOpenSslError() async throws {
         let error = OpenSslError.generalError(100, "error")
-        openSslHelper.signDocumentCallback = {
+        // swiftlint:disable:next line_length
+        openSslHelper.mocked_signDocument__DocumentData_wrappedKeyWrappedPointerOf_OpaquePointer_certData_certChainArrayOf_Data_String = { _, _, _, _ in
             throw error
         }
         token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = {
