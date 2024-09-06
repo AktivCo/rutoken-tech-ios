@@ -7,8 +7,10 @@
 
 import Foundation
 
+import RtUiComponents
 
-struct BankUserInfo: Identifiable {
+
+struct BankUserInfo: RtListItem {
     let id = UUID().uuidString
     let expiryDate: Date
     let fullname: String
@@ -16,4 +18,8 @@ struct BankUserInfo: Identifiable {
     let keyId: String
     let certHash: String
     let tokenSerial: String
+
+    var isDisabled: Bool {
+        expiryDate < Date()
+    }
 }

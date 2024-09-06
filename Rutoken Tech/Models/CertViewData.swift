@@ -17,7 +17,7 @@ enum CertInvalidReason {
     var rawValue: String {
         switch self {
         case .alreadyExist: return "Пользователь с таким сертификатом уже добавлен"
-        case .expired: return "Сертификат истек"
+        case .expired: return "Срок действия сертификата истек"
         case .noKeyPair: return "Работа с сертификатом без ключевой пары в приложении невозможна"
         case .notStartedBefore(let date): return "Сертификат начнет действовать \(date.getString(as: "dd.MM.YYYY"))"
         }

@@ -7,9 +7,15 @@
 
 import Foundation
 
+import RtUiComponents
 
-struct VcrInfo: Identifiable {
+
+struct VcrInfo: RtListItem {
     let id: Data
     let name: String
     let isActive: Bool
+
+    var isDisabled: Bool {
+        false
+    }
 }
