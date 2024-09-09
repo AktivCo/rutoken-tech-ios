@@ -22,8 +22,7 @@ struct DocumentProcessView: View {
     @State private var wholeViewSize: CGSize = .zero
 
     private var displayContentHeight: Double {
-        let height = wholeViewSize.height - bottomBarSize.height - navBarSize.height - topSafeAreaHeight - bottomSafeAreaHeight
-        return height > 0 ? height : 0
+        max(wholeViewSize.height - bottomBarSize.height - navBarSize.height, 0)
     }
 
     private var backButtonLabel: some View {
@@ -64,7 +63,7 @@ struct DocumentProcessView: View {
     }
 
     private func navBar(title: String, date: String) -> some View {
-        Group {
+        VStack(spacing: 0) {
             CustomNavBar {
                 Button {
                     if UIDevice.isPhone {
@@ -150,7 +149,7 @@ struct DocumentProcessView: View {
     }
 
     private func bottomBar() -> some View {
-        Group {
+        VStack(spacing: 0) {
             Divider()
                 .overlay(Color("IOSElementsTitleBarSeparator"))
             Group {
