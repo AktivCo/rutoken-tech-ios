@@ -136,15 +136,15 @@ struct UserSelectView_Previews: PreviewProvider {
     static var previews: some View {
         let user1 = BankUserInfo(
             expiryDate: Date().addingTimeInterval(5), fullname: "Иванов Михаил Романович",
-            title: "Дизайнер", keyId: "", certHash: "", tokenSerial: "")
+            title: "Дизайнер", keyId: Data.random(), certHash: "", tokenSerial: "")
 
         let user2 = BankUserInfo(
             expiryDate: Date().addingTimeInterval(300), fullname: "Иванов Валерий Романович",
-            title: "Дизайнер", keyId: "", certHash: "", tokenSerial: "")
+            title: "Дизайнер", keyId: Data.random(), certHash: "", tokenSerial: "")
 
         let user3 = BankUserInfo(
             expiryDate: Date().addingTimeInterval(-20), fullname: "Иванов Никита Романович",
-            title: "Дизайнер", keyId: "", certHash: "", tokenSerial: "")
+            title: "Дизайнер", keyId: Data.random(), certHash: "", tokenSerial: "")
 
         let state = AppState(bankSelectUserState: BankSelectUsersState())
         let store = Store(initialState: state,

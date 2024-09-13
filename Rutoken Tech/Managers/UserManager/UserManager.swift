@@ -63,7 +63,7 @@ class UserManager: UserManagerProtocol {
     func createUser(fullname: String,
                     title: String,
                     expiryDate: Date,
-                    keyId: String,
+                    keyId: Data,
                     certHash: String,
                     tokenSerial: String) throws -> ManagedBankUser {
         guard let entity = NSEntityDescription.entity(forEntityName: ManagedBankUser.entityName, in: context) else {

@@ -42,8 +42,9 @@ class CryptoManagerGenerateKeyPairTests: XCTestCase {
 
     func testGenerateKeyPairSuccess() async throws {
         tokensPublisher.send([token])
-        let keyId = "qwerty"
-        token.mocked_generateKeyPair_withIdString_Void = { id in
+        let keyId = Data.random()
+
+        token.mocked_generateKeyPair_withIdData_Void = { id in
             XCTAssertEqual(id, keyId)
         }
 
@@ -55,7 +56,7 @@ class CryptoManagerGenerateKeyPairTests: XCTestCase {
     func testGenerateKeyPairConnectionLostErrorError() async {
         tokensPublisher.send([token])
 
-        token.mocked_generateKeyPair_withIdString_Void = { _ in
+        token.mocked_generateKeyPair_withIdData_Void = { _ in
             throw Pkcs11Error.internalError(rv: 10)
         }
         pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in
@@ -64,13 +65,13 @@ class CryptoManagerGenerateKeyPairTests: XCTestCase {
 
         await assertErrorAsync(
             try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "123456") {
-                try await manager.generateKeyPair(with: "123456")
+                try await manager.generateKeyPair(with: Data.random())
             }, throws: CryptoManagerError.connectionLost)
     }
 
     func testGenerateKeyPairTokenNotFoundError() async {
         await assertErrorAsync(
-            try await manager.generateKeyPair(with: "123456"),
+            try await manager.generateKeyPair(with: Data.random()),
             throws: CryptoManagerError.tokenNotFound)
     }
 }

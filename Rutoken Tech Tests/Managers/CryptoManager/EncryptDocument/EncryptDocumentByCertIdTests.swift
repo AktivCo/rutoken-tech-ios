@@ -22,7 +22,7 @@ class EncryptDocumentByCertIdTests: XCTestCase {
     var token: RtMockPkcs11TokenProtocol!
     var tokensPublisher: CurrentValueSubject<[Pkcs11TokenProtocol], Never>!
     var documentData: Data!
-    var certId: String!
+    var certId: Data!
 
     override func setUp() {
         super.setUp()
@@ -42,7 +42,7 @@ class EncryptDocumentByCertIdTests: XCTestCase {
                                 openSslHelper: openSslHelper, fileHelper: fileHelper,
                                 fileSource: fileSource)
 
-        certId = "certId"
+        certId = Data.random()
         documentData = Data("document to encrypt data".utf8)
     }
 
@@ -50,7 +50,7 @@ class EncryptDocumentByCertIdTests: XCTestCase {
         let encryptedData = Data("encryptedData".utf8)
         let certBodyData = Data("certBodyData".utf8)
 
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { id in
+        token.mocked_enumerateCerts_byIdData_ArrayOf_Pkcs11ObjectProtocol = { id in
             XCTAssertEqual(id, self.certId)
             let object = RtMockPkcs11ObjectProtocol()
             object.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { attr in
@@ -76,7 +76,7 @@ class EncryptDocumentByCertIdTests: XCTestCase {
     }
 
     func testEncryptDocumentConnectionLostError() async throws {
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { _ in
+        token.mocked_enumerateCerts_byIdData_ArrayOf_Pkcs11ObjectProtocol = { _ in
             throw Pkcs11Error.internalError()
         }
         pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in
@@ -90,7 +90,7 @@ class EncryptDocumentByCertIdTests: XCTestCase {
     }
 
     func testEncryptDocumentTokenNoSuitCertError() async throws {
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { _ in
+        token.mocked_enumerateCerts_byIdData_ArrayOf_Pkcs11ObjectProtocol = { _ in
             return []
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
@@ -100,7 +100,7 @@ class EncryptDocumentByCertIdTests: XCTestCase {
 
     func testEncryptDocumentTokenOpenSslError() async throws {
         let error = OpenSslError.generalError(23, "qwerty")
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { _ in
+        token.mocked_enumerateCerts_byIdData_ArrayOf_Pkcs11ObjectProtocol = { _ in
             let object = RtMockPkcs11ObjectProtocol()
             object.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { _ in Data() }
             return [object]

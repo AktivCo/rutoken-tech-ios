@@ -91,7 +91,7 @@ struct DocumentProcessView: View {
         }
     }
 
-    private func showAuthSheet(_ callback: @escaping (RtTokenType, String, String, String, String) -> Void) {
+    private func showAuthSheet(_ callback: @escaping (RtTokenType, String, String, String, Data) -> Void) {
         guard store.state.bankSelectedDocumentState.metadata?.inArchive == false,
               let tokenSerial = store.state.bankSelectUserState.selectedUser?.tokenSerial,
               let certId = store.state.bankSelectUserState.selectedUser?.keyId,

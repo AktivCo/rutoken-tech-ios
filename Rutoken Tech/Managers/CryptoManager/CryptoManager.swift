@@ -18,16 +18,16 @@ protocol CryptoManagerProtocol {
     func getTokenInfo() async throws -> TokenInfo
     func enumerateKeys() async throws -> [KeyModel]
     func enumerateCerts() async throws -> [CertMetaData]
-    func generateKeyPair(with id: String) async throws
-    func createCert(for id: String, with info: CsrModel) async throws
-    func signDocument(_ document: Data, certId: String, certChain: [RtFile]) throws -> String
+    func generateKeyPair(with id: Data) async throws
+    func createCert(for id: Data, with info: CsrModel) async throws
+    func signDocument(_ document: Data, certId: Data, certChain: [RtFile]) throws -> String
     func signDocument(_ document: Data, keyFile: RtFile, certFile: RtFile, certChain: [RtFile]) throws -> String
-    func deleteCert(with id: String) async throws
+    func deleteCert(with id: Data) async throws
     func verifyCms(signedCms: Data, document: Data) async throws
-    func encryptDocument(_ document: Data, certId: String) throws -> Data
+    func encryptDocument(_ document: Data, certId: Data) throws -> Data
     func encryptDocument(_ document: Data, certFile: RtFile) throws -> Data
     func encryptDocument(_ document: Data, certData: Data) throws -> Data
-    func decryptCms(encryptedData: Data, with id: String) throws -> Data
+    func decryptCms(encryptedData: Data, with id: Data) throws -> Data
     func startMonitoring() throws
     var tokenState: AnyPublisher<TokenInteractionState, Never> { get }
 }
@@ -132,10 +132,7 @@ class CryptoManager: CryptoManagerProtocol {
         }
 
         return try token.enumerateKeys(by: .gostR3410_2012_256).compactMap {
-            guard let ckaId = try String(data: $0.privateKey.getValue(forAttr: .id), encoding: .utf8) else {
-                return nil
-            }
-            return KeyModel(ckaId: ckaId, type: $0.algorithm)
+            return KeyModel(ckaId: try $0.privateKey.getValue(forAttr: .id), type: $0.algorithm)
         }
     }
 
@@ -145,23 +142,20 @@ class CryptoManager: CryptoManagerProtocol {
         }
 
         return try token.enumerateCerts().compactMap { (cert: Pkcs11ObjectProtocol) -> CertMetaData? in
-            let certData = try cert.getValue(forAttr: .value)
-            guard let keyId = try String(data: cert.getValue(forAttr: .id), encoding: .utf8) else {
-                return nil
-            }
-
-            return CertMetaData(keyId: keyId, tokenSerial: token.serial, from: certData)
+            return CertMetaData(keyId: try cert.getValue(forAttr: .id),
+                                tokenSerial: token.serial,
+                                from: try cert.getValue(forAttr: .value))
         }
     }
 
-    func generateKeyPair(with id: String) async throws {
+    func generateKeyPair(with id: Data) async throws {
         guard let token = connectedToken else {
             throw CryptoManagerError.tokenNotFound
         }
         return try token.generateKeyPair(with: id)
     }
 
-    func createCert(for id: String, with model: CsrModel) async throws {
+    func createCert(for id: Data, with model: CsrModel) async throws {
         guard let token = connectedToken else {
             throw CryptoManagerError.tokenNotFound
         }
@@ -188,7 +182,7 @@ class CryptoManager: CryptoManagerProtocol {
         try token.importCert(cert, for: id)
     }
 
-    func deleteCert(with id: String) async throws {
+    func deleteCert(with id: Data) async throws {
         guard let token = connectedToken else {
             throw CryptoManagerError.tokenNotFound
         }
@@ -196,7 +190,7 @@ class CryptoManager: CryptoManagerProtocol {
         try token.deleteCert(with: id)
     }
 
-    func signDocument(_ document: Data, certId: String, certChain: [RtFile]) throws -> String {
+    func signDocument(_ document: Data, certId: Data, certChain: [RtFile]) throws -> String {
         guard let token = connectedToken else {
             throw CryptoManagerError.tokenNotFound
         }
@@ -247,7 +241,7 @@ class CryptoManager: CryptoManagerProtocol {
         }
     }
 
-    func encryptDocument(_ document: Data, certId: String) throws -> Data {
+    func encryptDocument(_ document: Data, certId: Data) throws -> Data {
         guard let token = connectedToken else {
             throw CryptoManagerError.tokenNotFound
         }
@@ -269,7 +263,7 @@ class CryptoManager: CryptoManagerProtocol {
         return try openSslHelper.encryptDocument(for: document, with: certData)
     }
 
-    func decryptCms(encryptedData: Data, with id: String) throws -> Data {
+    func decryptCms(encryptedData: Data, with id: Data) throws -> Data {
         guard let token = connectedToken else {
             throw CryptoManagerError.tokenNotFound
         }

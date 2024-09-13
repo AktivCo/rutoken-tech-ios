@@ -23,7 +23,7 @@ class CryptoManagerDecryptCmsTests: XCTestCase {
     var tokensPublisher: CurrentValueSubject<[Pkcs11TokenProtocol], Never>!
     var documentData: Data!
     var decryptedData: Data!
-    var certId: String!
+    var certId: Data!
 
     override func setUp() {
         super.setUp()
@@ -44,7 +44,7 @@ class CryptoManagerDecryptCmsTests: XCTestCase {
                                 openSslHelper: openSslHelper, fileHelper: fileHelper,
                                 fileSource: fileSource)
 
-        certId = "certId"
+        certId = Data.random()
         documentData = Data("data to decrypt".utf8)
         decryptedData = Data("decrypted data".utf8)
     }
@@ -54,7 +54,7 @@ class CryptoManagerDecryptCmsTests: XCTestCase {
             XCTAssertEqual(data, self.documentData)
             return self.decryptedData
         }
-        token.mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = {
+        token.mocked_getWrappedKey_withIdData_WrappedPointerOf_OpaquePointer = {
             XCTAssertEqual($0, self.certId)
             return WrappedPointer<OpaquePointer>({
                 OpaquePointer.init(bitPattern: 1)!
@@ -72,7 +72,7 @@ class CryptoManagerDecryptCmsTests: XCTestCase {
     }
 
     func testDecryptCmsConnectionLostError() async throws {
-        token.mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = { _ in
+        token.mocked_getWrappedKey_withIdData_WrappedPointerOf_OpaquePointer = { _ in
             throw Pkcs11Error.internalError()
         }
         pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in
@@ -86,7 +86,7 @@ class CryptoManagerDecryptCmsTests: XCTestCase {
     }
 
     func testDecryptCmsKeyNotFoundError() async throws {
-        token.mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = { _ in
+        token.mocked_getWrappedKey_withIdData_WrappedPointerOf_OpaquePointer = { _ in
             throw Pkcs11Error.internalError()
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {

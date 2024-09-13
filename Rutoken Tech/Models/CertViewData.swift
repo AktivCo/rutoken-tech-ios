@@ -42,7 +42,7 @@ struct CertViewData: Identifiable {
          expiryDate: Date = Date(),
          reason: CertInvalidReason? = nil,
          body: Data = Data()) {
-        self.certInfo = CertMetaData(keyId: "", tokenSerial: "12345678", hash: "qwerty123",
+        self.certInfo = CertMetaData(keyId: Data.random(), tokenSerial: "12345678", hash: "qwerty123",
                                              name: name, jobTitle: jobTitle, companyName: companyName,
                                              startDate: Date(), expiryDate: Date())
         self.causeOfInvalid = reason

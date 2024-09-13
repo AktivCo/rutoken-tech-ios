@@ -15,7 +15,7 @@ struct BankUserInfo: RtListItem {
     let expiryDate: Date
     let fullname: String
     let title: String?
-    let keyId: String
+    let keyId: Data
     let certHash: String
     let tokenSerial: String
 

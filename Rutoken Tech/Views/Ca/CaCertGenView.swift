@@ -76,7 +76,7 @@ struct CaCertGenView: View {
     private var picker: some View {
         Picker("", selection: $selectedKey) {
             ForEach(0..<store.state.caGenerateCertState.keys.count, id: \.self) {
-                Text(store.state.caGenerateCertState.keys[$0].ckaId)
+                Text(store.state.caGenerateCertState.keys[$0].ckaId.hexView())
             }
         }
         .frame(height: 44)
@@ -228,8 +228,8 @@ struct CaCertGenView: View {
 struct CertGenView_Previews: PreviewProvider {
     static var previews: some View {
         let state = AppState(caGenerateCertState: CaGenerateCertState(
-            keys: [KeyModel(ckaId: "12345678", type: .gostR3410_2012_256),
-                   KeyModel(ckaId: "87654321", type: .gostR3410_2012_256)]))
+            keys: [KeyModel(ckaId: Data.random(), type: .gostR3410_2012_256),
+                   KeyModel(ckaId: Data.random(), type: .gostR3410_2012_256)]))
         let store = Store(initialState: state,
                           reducer: AppReducer(),
                           middlewares: [])

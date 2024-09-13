@@ -9,7 +9,7 @@ import Foundation
 
 
 struct CertMetaData: Equatable {
-    let keyId: String
+    let keyId: Data
     let tokenSerial: String
 
     let body: Data
@@ -21,7 +21,7 @@ struct CertMetaData: Equatable {
     let startDate: Date
     let expiryDate: Date
 
-    init?(keyId: String, tokenSerial: String, from cert: Data) {
+    init?(keyId: Data, tokenSerial: String, from cert: Data) {
         guard let x509 = WrappedX509(from: cert),
               let subjectNameHash = x509.subjectNameHash,
               let commonName = x509.commonName,
@@ -43,7 +43,7 @@ struct CertMetaData: Equatable {
     }
 
 #if DEBUG
-    init(keyId: String, tokenSerial: String, hash: String, name: String,
+    init(keyId: Data, tokenSerial: String, hash: String, name: String,
          jobTitle: String, companyName: String, keyAlgo: Pkcs11KeyAlgorithm = .gostR3410_2012_256,
          startDate: Date, expiryDate: Date) {
         self.keyId = keyId

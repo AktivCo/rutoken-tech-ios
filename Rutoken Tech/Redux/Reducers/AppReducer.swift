@@ -49,7 +49,7 @@ struct AppReducer: Reducer {
         case .hideFullCoverView:
             newState.routingState.isFullScreenCoverShown = false
         case .generateKeyId:
-            newState.caGenerateKeyPairState.key = KeyModel(ckaId: String.generateID(),
+            newState.caGenerateKeyPairState.key = KeyModel(ckaId: Data.random(5),
                                                            type: .gostR3410_2012_256)
         case .generateKeyPair:
             break

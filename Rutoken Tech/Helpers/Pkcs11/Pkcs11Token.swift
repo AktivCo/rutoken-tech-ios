@@ -23,19 +23,19 @@ protocol Pkcs11TokenProtocol {
     func login(with pin: String) throws
     func logout()
 
-    func generateKeyPair(with id: String) throws
+    func generateKeyPair(with id: Data) throws
 
     func enumerateCerts() throws -> [Pkcs11ObjectProtocol]
-    func enumerateCerts(by id: String) throws -> [Pkcs11ObjectProtocol]
+    func enumerateCerts(by id: Data) throws -> [Pkcs11ObjectProtocol]
 
     func enumerateKeys(by algo: Pkcs11KeyAlgorithm) throws -> [Pkcs11KeyPair]
-    func enumerateKey(by id: String) throws -> Pkcs11KeyPair
+    func enumerateKey(by id: Data) throws -> Pkcs11KeyPair
 
-    func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer>
+    func getWrappedKey(with id: Data) throws -> WrappedPointer<OpaquePointer>
 
-    func importCert(_ cert: Data, for id: String) throws
+    func importCert(_ cert: Data, for id: Data) throws
 
-    func deleteCert(with id: String) throws
+    func deleteCert(with id: Data) throws
 
     func getPinAttempts() throws -> UInt
 }
@@ -104,9 +104,9 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
         }
     }
 
-    func enumerateCerts(by id: String) throws -> [Pkcs11ObjectProtocol] {
+    func enumerateCerts(by id: Data) throws -> [Pkcs11ObjectProtocol] {
         try Pkcs11Template.makeCertBaseTemplate()
-            .add(attr: .id, value: Data(id.utf8))
+            .add(attr: .id, value: id)
             .withCkTemplate {
             try session.findObjects($0)
         }
@@ -135,17 +135,17 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
         }
     }
 
-    func enumerateKey(by id: String) throws -> Pkcs11KeyPair {
+    func enumerateKey(by id: Data) throws -> Pkcs11KeyPair {
         // MARK: Find public keys
         let publicKeys = try Pkcs11Template.makePubKeyBaseTemplate()
-            .add(attr: .id, value: Data(id.utf8))
+            .add(attr: .id, value: id)
             .withCkTemplate {
                  try session.findObjects($0)
             }
 
         // MARK: Find private keys
         let privateKeys = try Pkcs11Template.makePrivKeyBaseTemplate()
-            .add(attr: .id, value: Data(id.utf8))
+            .add(attr: .id, value: id)
             .withCkTemplate {
                  try session.findObjects($0)
             }
@@ -159,7 +159,7 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
         return Pkcs11KeyPair(publicKey: publicKeys[0], privateKey: privateKeys[0])
     }
 
-    func getWrappedKey(with id: String) throws -> WrappedPointer<OpaquePointer> {
+    func getWrappedKey(with id: Data) throws -> WrappedPointer<OpaquePointer> {
         let keyPair = try enumerateKey(by: id)
 
         guard let wrappedKey = WrappedPointer<OpaquePointer>({
@@ -172,17 +172,16 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
         return wrappedKey
     }
 
-    func generateKeyPair(with id: String) throws {
+    func generateKeyPair(with id: Data) throws {
         var publicKey = CK_OBJECT_HANDLE()
         var privateKey = CK_OBJECT_HANDLE()
 
         let currentDate = Date()
         var startDateData = Pkcs11Date(date: currentDate)
         var endDateData = Pkcs11Date(date: currentDate.addingTimeInterval(3 * 365 * 24 * 60 * 60))
-        let idData = Data(id.utf8)
 
         let publicKeyTemplate = Pkcs11Template.makePubKeyBaseTemplate()
-            .add(attr: .id, value: idData)
+            .add(attr: .id, value: id)
             .add(attr: .keyType, value: CKK_GOSTR3410)
             .add(attr: .startDate, value: startDateData.data())
             .add(attr: .endDate, value: endDateData.data())
@@ -190,7 +189,7 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
             .add(attr: .gostR3411Params, value: Data(Pkcs11Constants.gostR3411_2012_256_params_oid))
 
         let privateKeyTemplate = Pkcs11Template.makePrivKeyBaseTemplate()
-            .add(attr: .id, value: idData)
+            .add(attr: .id, value: id)
             .add(attr: .keyType, value: CKK_GOSTR3410)
             .add(attr: .derive, value: true)
             .add(attr: .startDate, value: startDateData.data())
@@ -214,19 +213,19 @@ class Pkcs11Token: Pkcs11TokenProtocol, Identifiable {
 
     }
 
-    func deleteCert(with id: String) throws {
+    func deleteCert(with id: Data) throws {
         try Pkcs11Template.makeCertBaseTemplate()
-            .add(attr: .id, value: Data(id.utf8))
+            .add(attr: .id, value: id)
             .withCkTemplate {
                 try deleteObjects(with: $0)
             }
     }
 
-    func importCert(_ cert: Data, for id: String) throws {
+    func importCert(_ cert: Data, for id: Data) throws {
         _ = try enumerateKey(by: id)
 
         try Pkcs11Template.makeCertBaseTemplate()
-            .add(attr: .id, value: Data(id.utf8))
+            .add(attr: .id, value: id)
             .add(attr: .value, value: cert)
             .add(attr: .privateness, value: false)
             .add(attr: .certCategory, value: Pkcs11Constants.CK_CERTIFICATE_CATEGORY_TOKEN_USER)

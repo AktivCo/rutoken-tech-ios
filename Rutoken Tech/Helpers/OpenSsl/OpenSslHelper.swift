@@ -475,8 +475,9 @@ class OpenSslHelper: OpenSslHelperProtocol {
         defer { publicCaKey.release() }
 
         // MARK: Copy extensions
-        guard let extensionStack = WrappedPointer<OpaquePointer>({ X509_REQ_get_extensions(wrappedCsr.pointer) },
-                                                                 { exposed_sk_X509_EXTENSION_pop_free($0, X509_EXTENSION_free) }) else {
+        guard let extensionStack = WrappedPointer<OpaquePointer>({
+            X509_REQ_get_extensions(wrappedCsr.pointer)
+        }, { exposed_sk_X509_EXTENSION_pop_free($0, X509_EXTENSION_free) }) else {
             throw OpenSslError.generalError(#line, getLastError())
         }
         defer { extensionStack.release() }

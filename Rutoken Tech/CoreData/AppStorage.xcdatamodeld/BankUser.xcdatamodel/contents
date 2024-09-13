@@ -4,7 +4,7 @@
         <attribute name="certHash" attributeType="String"/>
         <attribute name="expiryDate" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="fullname" attributeType="String"/>
-        <attribute name="keyId" optional="YES" attributeType="String"/>
+        <attribute name="keyId" optional="YES" attributeType="Binary"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <attribute name="tokenSerial" attributeType="String"/>
     </entity>

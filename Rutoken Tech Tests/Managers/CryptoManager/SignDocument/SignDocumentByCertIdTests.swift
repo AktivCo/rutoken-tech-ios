@@ -22,7 +22,7 @@ class SignDocumentByCertIdTests: XCTestCase {
     var token: RtMockPkcs11TokenProtocol!
     var tokensPublisher: CurrentValueSubject<[Pkcs11TokenProtocol], Never>!
 
-    var keyId: String!
+    var keyId: Data!
     var dataToSign: Data!
     var signed: String!
 
@@ -45,7 +45,7 @@ class SignDocumentByCertIdTests: XCTestCase {
                                 openSslHelper: openSslHelper, fileHelper: fileHelper,
                                 fileSource: fileSource)
 
-        keyId = "123"
+        keyId = Data.random()
         dataToSign = Data("Data to sign".utf8)
         signed = "12345678qwerty"
     }
@@ -59,7 +59,7 @@ class SignDocumentByCertIdTests: XCTestCase {
             XCTAssert(chain.isEmpty)
             return self.signed
         }
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { id in
+        token.mocked_enumerateCerts_byIdData_ArrayOf_Pkcs11ObjectProtocol = { id in
             let certObj = RtMockPkcs11ObjectProtocol()
             certObj.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { attr in
                 XCTAssertEqual(attr, .value)
@@ -68,7 +68,7 @@ class SignDocumentByCertIdTests: XCTestCase {
             XCTAssertEqual(id, self.keyId)
             return [certObj]
         }
-        token.mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = {
+        token.mocked_getWrappedKey_withIdData_WrappedPointerOf_OpaquePointer = {
             XCTAssertEqual($0, self.keyId)
             return WrappedPointer<OpaquePointer>({
                 OpaquePointer.init(bitPattern: 1)!
@@ -91,7 +91,7 @@ class SignDocumentByCertIdTests: XCTestCase {
             XCTAssertEqual(chain, [caCert])
             return self.signed
         }
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { id in
+        token.mocked_enumerateCerts_byIdData_ArrayOf_Pkcs11ObjectProtocol = { id in
             XCTAssertEqual(id, self.keyId)
             let certObj = RtMockPkcs11ObjectProtocol()
             certObj.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { attr in
@@ -100,7 +100,7 @@ class SignDocumentByCertIdTests: XCTestCase {
             }
             return [certObj]
         }
-        token.mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = {
+        token.mocked_getWrappedKey_withIdData_WrappedPointerOf_OpaquePointer = {
             XCTAssertEqual($0, self.keyId)
             return WrappedPointer<OpaquePointer>({
                 OpaquePointer.init(bitPattern: 1)!
@@ -132,7 +132,7 @@ class SignDocumentByCertIdTests: XCTestCase {
 
     func testSignDocumentGetKeyError() async throws {
         let error = Pkcs11Error.internalError()
-        token.mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = {
+        token.mocked_getWrappedKey_withIdData_WrappedPointerOf_OpaquePointer = {
             XCTAssertEqual($0, self.keyId)
             throw error
         }
@@ -144,7 +144,7 @@ class SignDocumentByCertIdTests: XCTestCase {
     }
 
     func testSignDocumentEnumerateCertsError() async throws {
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { _ in
+        token.mocked_enumerateCerts_byIdData_ArrayOf_Pkcs11ObjectProtocol = { _ in
             throw Pkcs11Error.internalError()
         }
         pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in
@@ -158,7 +158,7 @@ class SignDocumentByCertIdTests: XCTestCase {
     }
 
     func testSignDocumentNoSuitCertError() async throws {
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { _ in
+        token.mocked_enumerateCerts_byIdData_ArrayOf_Pkcs11ObjectProtocol = { _ in
             return []
         }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: nil) {
@@ -168,7 +168,7 @@ class SignDocumentByCertIdTests: XCTestCase {
     }
 
     func testSignDocumentGetUrlError() async throws {
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { _ in
+        token.mocked_enumerateCerts_byIdData_ArrayOf_Pkcs11ObjectProtocol = { _ in
             let object = RtMockPkcs11ObjectProtocol()
             object.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { _ in
                 return Data()
@@ -185,7 +185,7 @@ class SignDocumentByCertIdTests: XCTestCase {
 
     func testSignDocumentReadFileError() async throws {
         let error = FileHelperError.generalError(32, "FileHelper error")
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { _ in
+        token.mocked_enumerateCerts_byIdData_ArrayOf_Pkcs11ObjectProtocol = { _ in
             let object = RtMockPkcs11ObjectProtocol()
             object.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { _ in
                 return Data()
@@ -210,14 +210,14 @@ class SignDocumentByCertIdTests: XCTestCase {
             throw error
         }
 
-        token.mocked_enumerateCerts_byIdString_ArrayOf_Pkcs11ObjectProtocol = { _ in
+        token.mocked_enumerateCerts_byIdData_ArrayOf_Pkcs11ObjectProtocol = { _ in
             let object = RtMockPkcs11ObjectProtocol()
             object.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { _ in
                 return Data()
             }
             return [object]
         }
-        token.mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = {
+        token.mocked_getWrappedKey_withIdData_WrappedPointerOf_OpaquePointer = {
             XCTAssertEqual($0, self.keyId)
             return WrappedPointer<OpaquePointer>({
                 OpaquePointer.init(bitPattern: 1)!

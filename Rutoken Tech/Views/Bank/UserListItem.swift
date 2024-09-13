@@ -72,12 +72,12 @@ struct UserListItem_Previews: PreviewProvider {
     static var previews: some View {
         let user = BankUserInfo(expiryDate: Date().addingTimeInterval(-5 * 60),
                                 fullname: "Иванов Михаил Романович",
-                                title: "Дизайнер", keyId: "",
+                                title: "Дизайнер", keyId: Data.random(),
                                 certHash: "", tokenSerial: "")
         let expiredUser = BankUserInfo(expiryDate: Date().addingTimeInterval(3),
-                                fullname: "Иванов Михаил Романович",
-                                title: "Дизайнер", keyId: "",
-                                certHash: "", tokenSerial: "")
+                                       fullname: "Иванов Михаил Романович",
+                                       title: "Дизайнер", keyId: Data.random(),
+                                       certHash: "", tokenSerial: "")
         List {
             UserListItem(user: user, startToClose: .constant(false), isPressed: .constant(false))
                 .padding(15)

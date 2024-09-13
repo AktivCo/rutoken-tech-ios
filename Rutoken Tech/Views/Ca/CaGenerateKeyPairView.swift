@@ -54,7 +54,7 @@ struct CaGenerateKeyPairView: View {
 
             VStack(spacing: 0) {
                 infoRow(label: "ID",
-                        value: store.state.caGenerateKeyPairState.key?.ckaId ?? "")
+                        value: store.state.caGenerateKeyPairState.key?.ckaId.hexView() ?? "")
                 .padding(12)
                 // Cant use Divider() here, because it changes below infoRow background color
                 // when scrolling down sheet with this view
@@ -95,7 +95,7 @@ struct CaGenKeyPairView_Previews: PreviewProvider {
     static var previews: some View {
 
         let state = AppState(caGenerateKeyPairState: CaGenerateKeyPairState(
-            key: KeyModel(ckaId: "12345678-90abcdef",
+            key: KeyModel(ckaId: Data.random(),
                           type: .gostR3410_2012_256)))
 
         let testStore = Store(initialState: state,

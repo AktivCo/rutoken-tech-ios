@@ -56,7 +56,7 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
 
     var token: RtMockPkcs11TokenProtocol!
     var tokensPublisher: CurrentValueSubject<[Pkcs11TokenProtocol], Never>!
-    var keyId: String!
+    var keyId: Data!
 
     override func setUp() {
         super.setUp()
@@ -75,7 +75,7 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
                                 openSslHelper: openSslHelper, fileHelper: fileHelper,
                                 fileSource: fileSource)
-        keyId = "123"
+        keyId = Data.random()
     }
 
     func testEnumerateCertsSuccess() async throws {
@@ -83,7 +83,7 @@ class CryptoManagerEnumerateCertsTests: XCTestCase {
             let object = RtMockPkcs11ObjectProtocol()
             object.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { attr in
                 switch attr {
-                case .id: return Data(self.keyId.utf8)
+                case .id: return self.keyId
                 case .value: return Data(unitTestCert.utf8)
                 default: throw Pkcs11Error.internalError(rv: 1)
                 }

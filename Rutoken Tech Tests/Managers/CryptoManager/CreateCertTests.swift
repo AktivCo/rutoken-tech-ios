@@ -75,7 +75,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         }
         let certInfo = CertInfo(startDate: startData.getDate(with: "YYYYMMdd"),
                                 endDate: endData.getDate(with: "YYYYMMdd"))
-        token.mocked_enumerateKey_byIdString_Pkcs11KeyPair = { _ in
+        token.mocked_enumerateKey_byIdData_Pkcs11KeyPair = { _ in
             return Pkcs11KeyPair(publicKey: RtMockPkcs11ObjectProtocol(),
                                  privateKey: privateKey)
         }
@@ -92,7 +92,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
-            await assertNoThrowAsync(try await manager.createCert(for: "001",
+            await assertNoThrowAsync(try await manager.createCert(for: Data.random(),
                                                                   with: certRequest))
         }
         await fulfillment(of: [getUrlExp, readFileExp], timeout: 0.3)
@@ -100,7 +100,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
 
     func testCreateCertTokenNotFoundError() async {
         await assertErrorAsync(
-            try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
+            try await manager.createCert(for: Data.random(), with: CsrModel.makeDefaultModel()),
             throws: CryptoManagerError.tokenNotFound)
     }
 
@@ -108,7 +108,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in nil }
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
-                try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
+                try await manager.createCert(for: Data.random(), with: CsrModel.makeDefaultModel()),
                 throws: CryptoManagerError.unknown)
         }
     }
@@ -120,27 +120,27 @@ final class CryptoManagerCreateCertTests: XCTestCase {
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
-                try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
+                try await manager.createCert(for: Data.random(), with: CsrModel.makeDefaultModel()),
                 throws: error)
         }
     }
 
     func testCreateCertEnumerateKeyError() async throws {
         let error = Pkcs11Error.internalError(rv: 1)
-        token.mocked_enumerateKey_byIdString_Pkcs11KeyPair = { _ in throw error }
+        token.mocked_enumerateKey_byIdData_Pkcs11KeyPair = { _ in throw error }
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
         fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
-                try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
+                try await manager.createCert(for: Data.random(), with: CsrModel.makeDefaultModel()),
                 throws: error)
         }
     }
 
     func testCreateCertPrivateKeyUsagePeriodGetValueError() async throws {
         let error = Pkcs11Error.internalError(rv: 1)
-        token.mocked_enumerateKey_byIdString_Pkcs11KeyPair = { _ in
+        token.mocked_enumerateKey_byIdData_Pkcs11KeyPair = { _ in
             let object = RtMockPkcs11ObjectProtocol()
             object.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { _ in throw error }
             return Pkcs11KeyPair(publicKey: object, privateKey: object)
@@ -150,17 +150,17 @@ final class CryptoManagerCreateCertTests: XCTestCase {
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
-                try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
+                try await manager.createCert(for: Data.random(), with: CsrModel.makeDefaultModel()),
                 throws: error)
         }
     }
 
     func testCreateCertWrappedKeyError() async throws {
         let error = Pkcs11Error.internalError(rv: 1)
-        token.mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = { _ in
+        token.mocked_getWrappedKey_withIdData_WrappedPointerOf_OpaquePointer = { _ in
             throw error
         }
-        token.mocked_enumerateKey_byIdString_Pkcs11KeyPair = { _ in
+        token.mocked_enumerateKey_byIdData_Pkcs11KeyPair = { _ in
             let pKey = RtMockPkcs11ObjectProtocol()
             pKey.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { _ in Data() }
             return Pkcs11KeyPair(publicKey: RtMockPkcs11ObjectProtocol(),
@@ -171,7 +171,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
-                try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
+                try await manager.createCert(for: Data.random(), with: CsrModel.makeDefaultModel()),
                 throws: error)
         }
     }
@@ -180,7 +180,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
         let error = OpenSslError.generalError(1, "error")
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
         fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
-        token.mocked_enumerateKey_byIdString_Pkcs11KeyPair = { _ in
+        token.mocked_enumerateKey_byIdData_Pkcs11KeyPair = { _ in
             let pKey = RtMockPkcs11ObjectProtocol()
             pKey.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { _ in Data() }
             return Pkcs11KeyPair(publicKey: RtMockPkcs11ObjectProtocol(),
@@ -192,7 +192,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
-                try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
+                try await manager.createCert(for: Data.random(), with: CsrModel.makeDefaultModel()),
                 throws: error)
         }
     }
@@ -208,7 +208,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
 
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
         fileHelper.mocked_readFile_fromUrlURL_Data = { _ in Data() }
-        token.mocked_enumerateKey_byIdString_Pkcs11KeyPair = { _ in
+        token.mocked_enumerateKey_byIdData_Pkcs11KeyPair = { _ in
             let pKey = RtMockPkcs11ObjectProtocol()
             pKey.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { _ in Data() }
             return Pkcs11KeyPair(publicKey: RtMockPkcs11ObjectProtocol(),
@@ -217,14 +217,14 @@ final class CryptoManagerCreateCertTests: XCTestCase {
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
-                try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
+                try await manager.createCert(for: Data.random(), with: CsrModel.makeDefaultModel()),
                 throws: error)
         }
     }
 
     func testCreateCertImportCertError() async throws {
         let error = Pkcs11Error.internalError()
-        token.mocked_importCert__CertData_forIdString_Void = { _, _ in
+        token.mocked_importCert__CertData_forIdData_Void = { _, _ in
             throw error
         }
         fileSource.mocked_getUrl_forFilenameString_inSourcedirSourceDir_URLOptional = { _, _ in URL(filePath: "") }
@@ -233,7 +233,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
             return ""
         }
         openSslHelper.mocked_createCert_forCsrString_withCakeyData_certCacertData_Data = { _, _, _ in return Data() }
-        token.mocked_enumerateKey_byIdString_Pkcs11KeyPair = { _ in
+        token.mocked_enumerateKey_byIdData_Pkcs11KeyPair = { _ in
             let pKey = RtMockPkcs11ObjectProtocol()
             pKey.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { _ in Data() }
             return Pkcs11KeyPair(publicKey: RtMockPkcs11ObjectProtocol(),
@@ -242,16 +242,16 @@ final class CryptoManagerCreateCertTests: XCTestCase {
 
         try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
             await assertErrorAsync(
-                try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel()),
+                try await manager.createCert(for: Data.random(), with: CsrModel.makeDefaultModel()),
                 throws: error)
         }
     }
 
     func testCreateCertConnectionLostError() async throws {
-        token.mocked_importCert__CertData_forIdString_Void = { _, _ in
+        token.mocked_importCert__CertData_forIdData_Void = { _, _ in
             throw Pkcs11Error.internalError(rv: 10)
         }
-        token.mocked_enumerateKey_byIdString_Pkcs11KeyPair = { _ in
+        token.mocked_enumerateKey_byIdData_Pkcs11KeyPair = { _ in
             let pKey = RtMockPkcs11ObjectProtocol()
             pKey.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { _ in Data() }
             return Pkcs11KeyPair(publicKey: RtMockPkcs11ObjectProtocol(),
@@ -269,7 +269,7 @@ final class CryptoManagerCreateCertTests: XCTestCase {
 
         await assertErrorAsync(
             try await manager.withToken(connectionType: .usb, serial: token.serial, pin: "12345678") {
-                try await manager.createCert(for: "001", with: CsrModel.makeDefaultModel())
+                try await manager.createCert(for: Data.random(), with: CsrModel.makeDefaultModel())
             },
             throws: CryptoManagerError.connectionLost)
     }

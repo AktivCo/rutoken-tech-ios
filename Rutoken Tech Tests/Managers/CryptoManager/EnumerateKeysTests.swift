@@ -41,14 +41,14 @@ final class CryptoManagerEnumerateKeysTests: XCTestCase {
     }
 
     func testEnumerateKeysConnectionSuccess() async throws {
-        let testId = "some id"
+        let testId = Data.random()
 
         tokensPublisher.send([token])
         token.mocked_enumerateKeys_byAlgoPkcs11KeyAlgorithm_ArrayOf_Pkcs11KeyPair = { _ in
             let object = RtMockPkcs11ObjectProtocol()
             object.mocked_getValue_forAttrAttrtypePkcs11DataAttribute_Data = { attr in
                 XCTAssertEqual(attr, .id)
-                return Data(testId.utf8)
+                return testId
             }
             return [Pkcs11KeyPair(publicKey: object, privateKey: object)]
         }

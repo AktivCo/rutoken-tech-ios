@@ -18,18 +18,18 @@ extension RtMockPkcs11TokenProtocol {
         mocked_model = .rutoken3_3200
         mocked_login_withPinString_Void = { _ in }
         mocked_logout_Void = {}
-        mocked_enumerateKey_byIdString_Pkcs11KeyPair = { _ in
+        mocked_enumerateKey_byIdData_Pkcs11KeyPair = { _ in
             Pkcs11KeyPair(publicKey: RtMockPkcs11ObjectProtocol(), privateKey: RtMockPkcs11ObjectProtocol())
         }
         mocked_enumerateKeys_byAlgoPkcs11KeyAlgorithm_ArrayOf_Pkcs11KeyPair = { _ in
             return [Pkcs11KeyPair(publicKey: RtMockPkcs11ObjectProtocol(),
                                   privateKey: RtMockPkcs11ObjectProtocol())]
         }
-        mocked_getWrappedKey_withIdString_WrappedPointerOf_OpaquePointer = { _ in
+        mocked_getWrappedKey_withIdData_WrappedPointerOf_OpaquePointer = { _ in
             return WrappedPointer<OpaquePointer>({
                 OpaquePointer.init(bitPattern: 1)!
             }, { _ in})!
         }
-        mocked_importCert__CertData_forIdString_Void = { _, _ in }
+        mocked_importCert__CertData_forIdData_Void = { _, _ in }
     }
 }
