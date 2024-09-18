@@ -84,6 +84,7 @@
 		5E1F3AC22BA4BA2E008158EF /* RoutingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1F3AC02BA4BA2E008158EF /* RoutingState.swift */; };
 		5E4C26E72C051606006F0B66 /* Pkcs11KeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4C26E62C051606006F0B66 /* Pkcs11KeyPair.swift */; };
 		5E4C26E92C051721006F0B66 /* Pkcs11Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4C26E82C051721006F0B66 /* Pkcs11Date.swift */; };
+		5E6FC9612C9B5D9C004EFFEE /* RtPcscWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 5E6FC9602C9B5D9C004EFFEE /* RtPcscWrapper */; };
 		5E7331A72B6D71D400E96C06 /* Pkcs11Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E7331A62B6D71D400E96C06 /* Pkcs11Session.swift */; };
 		5EB931172C1CFFFE00935DE7 /* Pkcs11Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EB931162C1CFFFE00935DE7 /* Pkcs11Error.swift */; };
 		5EC532012BD0189200AD5854 /* BankUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC532002BD0189200AD5854 /* BankUserInfo.swift */; };
@@ -357,6 +358,7 @@
 				5E1F3AA82BA3636C008158EF /* rtengine in Frameworks */,
 				5E1F3AAE2BA364D5008158EF /* openssl in Frameworks */,
 				5E1F3AAB2BA36474008158EF /* rtpkcs11ecp in Frameworks */,
+				5E6FC9612C9B5D9C004EFFEE /* RtPcscWrapper in Frameworks */,
 				4496DABA2BF387160032FC29 /* RtPcscWrapper in Frameworks */,
 				5E1F3AA52BA362C5008158EF /* TinyAsyncRedux in Frameworks */,
 			);
@@ -901,6 +903,7 @@
 				5E1F3AAD2BA364D5008158EF /* openssl */,
 				4496DAB92BF387160032FC29 /* RtPcscWrapper */,
 				44D2616F2C062A8C000F5596 /* RtUiComponents */,
+				5E6FC9602C9B5D9C004EFFEE /* RtPcscWrapper */,
 			);
 			productName = "Rutoken Tech";
 			productReference = 5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */;
@@ -958,9 +961,9 @@
 				5E1F3AA62BA3636C008158EF /* XCRemoteSwiftPackageReference "swift-rtengine-binary" */,
 				5E1F3AA92BA36474008158EF /* XCRemoteSwiftPackageReference "swift-rtpkcs11ecp-binary" */,
 				5E1F3AAC2BA364D5008158EF /* XCRemoteSwiftPackageReference "swift-rtopenssl-binary" */,
-				441323912BFB31A2005FADF9 /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */,
 				44D2616E2C062A8C000F5596 /* XCRemoteSwiftPackageReference "swift-ui-components" */,
 				5EB636E12C29CFF900DDCA0F /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
+				5E6FC95F2C9B5D9C004EFFEE /* XCRemoteSwiftPackageReference "swift-rtpcsc-wrapper" */,
 			);
 			productRefGroup = 5EF75DDC2AC707BD001834BE /* Products */;
 			projectDirPath = "";
@@ -1484,20 +1487,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		441323912BFB31A2005FADF9 /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-pcsc-wrapper.git";
-			requirement = {
-				kind = revision;
-				revision = be76d7b26fa99b6026404f12bb2481f5d0d0dd79;
-			};
-		};
 		44D2616E2C062A8C000F5596 /* XCRemoteSwiftPackageReference "swift-ui-components" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AktivCo/swift-ui-components.git";
 			requirement = {
-				kind = revision;
-				revision = c209732f53d0c85622bc9b04121ecab4f1858b2c;
+				kind = exactVersion;
+				version = 1.1.0;
 			};
 		};
 		5E1F3AA32BA362C5008158EF /* XCRemoteSwiftPackageReference "tiny-redux" */ = {
@@ -1530,6 +1525,14 @@
 			requirement = {
 				kind = exactVersion;
 				version = 3.0.8;
+			};
+		};
+		5E6FC95F2C9B5D9C004EFFEE /* XCRemoteSwiftPackageReference "swift-rtpcsc-wrapper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AktivCo/swift-rtpcsc-wrapper.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.2.0;
 			};
 		};
 		5EB636E12C29CFF900DDCA0F /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
@@ -1571,6 +1574,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5E1F3AAC2BA364D5008158EF /* XCRemoteSwiftPackageReference "swift-rtopenssl-binary" */;
 			productName = openssl;
+		};
+		5E6FC9602C9B5D9C004EFFEE /* RtPcscWrapper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5E6FC95F2C9B5D9C004EFFEE /* XCRemoteSwiftPackageReference "swift-rtpcsc-wrapper" */;
+			productName = RtPcscWrapper;
 		};
 		5EB636E22C29D04000DDCA0F /* SwiftLintBuildToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
