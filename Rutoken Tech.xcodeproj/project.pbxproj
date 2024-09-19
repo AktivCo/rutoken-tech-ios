@@ -32,6 +32,7 @@
 		44311EFD2BCE9B7500D16B0C /* VerifyCmsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44311EFC2BCE9B7500D16B0C /* VerifyCmsTests.swift */; };
 		44319A852C05D2D900763E99 /* TokenStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44319A842C05D2D900763E99 /* TokenStateTests.swift */; };
 		44319A872C05D9AC00763E99 /* XCTestCase+AsyncExpectationWaiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44319A862C05D9AC00763E99 /* XCTestCase+AsyncExpectationWaiter.swift */; };
+		443D2FEF2C9C398100AFA263 /* RtMock in Frameworks */ = {isa = PBXBuildFile; productRef = 443D2FEE2C9C398100AFA263 /* RtMock */; };
 		44416B2C2B552CCE00EC5F66 /* OpenSslHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44416B2B2B552CCE00EC5F66 /* OpenSslHelper.swift */; };
 		44416B2F2B555F4500EC5F66 /* CertRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44416B2E2B555F4500EC5F66 /* CertRequest.swift */; };
 		4443EA0B2B96F5160003436D /* Pkcs11KeyAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4443EA0A2B96F5160003436D /* Pkcs11KeyAlgorithm.swift */; };
@@ -89,7 +90,6 @@
 		5E7331A72B6D71D400E96C06 /* Pkcs11Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E7331A62B6D71D400E96C06 /* Pkcs11Session.swift */; };
 		5EB931172C1CFFFE00935DE7 /* Pkcs11Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EB931162C1CFFFE00935DE7 /* Pkcs11Error.swift */; };
 		5EC532012BD0189200AD5854 /* BankUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC532002BD0189200AD5854 /* BankUserInfo.swift */; };
-		5EDA31E92C3D710D00859917 /* RtMock in Frameworks */ = {isa = PBXBuildFile; productRef = 5EDA31E82C3D710D00859917 /* RtMock */; };
 		5EF30EDE2B1A823700E48627 /* OnPerformTokenConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF30EDD2B1A823700E48627 /* OnPerformTokenConnection.swift */; };
 		5EF30EE02B1A840800E48627 /* Pkcs11TokenInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B130D72B0E4F8200AD390F /* Pkcs11TokenInterface.swift */; };
 		5EF75DDF2AC707BD001834BE /* RutokenTechApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF75DDE2AC707BD001834BE /* RutokenTechApp.swift */; };
@@ -367,7 +367,7 @@
 				5E1F3AAE2BA364D5008158EF /* openssl in Frameworks */,
 				5E1F3AAB2BA36474008158EF /* rtpkcs11ecp in Frameworks */,
 				4496DABA2BF387160032FC29 /* RtPcscWrapper in Frameworks */,
-				5EDA31E92C3D710D00859917 /* RtMock in Frameworks */,
+				443D2FEF2C9C398100AFA263 /* RtMock in Frameworks */,
 				5E1F3AA52BA362C5008158EF /* TinyAsyncRedux in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -930,8 +930,8 @@
 				5E1F3AAA2BA36474008158EF /* rtpkcs11ecp */,
 				5E1F3AAD2BA364D5008158EF /* openssl */,
 				4496DAB92BF387160032FC29 /* RtPcscWrapper */,
-				5EDA31E82C3D710D00859917 /* RtMock */,
 				44A8CFF82C930F1C009B3D06 /* RtUiComponents */,
+				443D2FEE2C9C398100AFA263 /* RtMock */,
 			);
 			productName = "Rutoken Tech";
 			productReference = 5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */;
@@ -991,8 +991,8 @@
 				5E1F3AAC2BA364D5008158EF /* XCRemoteSwiftPackageReference "swift-rtopenssl-binary" */,
 				441323912BFB31A2005FADF9 /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */,
 				5EB636E12C29CFF900DDCA0F /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
-				5EDA31E72C3D710D00859917 /* XCRemoteSwiftPackageReference "rt-mock" */,
 				44A8CFF42C930F07009B3D06 /* XCRemoteSwiftPackageReference "swift-ui-components" */,
+				443D2FEC2C9C38CB00AFA263 /* XCRemoteSwiftPackageReference "swift-mock" */,
 			);
 			productRefGroup = 5EF75DDC2AC707BD001834BE /* Products */;
 			projectDirPath = "";
@@ -1530,6 +1530,14 @@
 				revision = 95fed71c196f2346521ff9c5b5b63efcc2cf8e39;
 			};
 		};
+		443D2FEC2C9C38CB00AFA263 /* XCRemoteSwiftPackageReference "swift-mock" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AktivCo/swift-mock.git";
+			requirement = {
+				kind = revision;
+				revision = 96d12a6a20d2b15098f266bb16e38dbfe5666815;
+			};
+		};
 		44A8CFF42C930F07009B3D06 /* XCRemoteSwiftPackageReference "swift-ui-components" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AktivCo/swift-ui-components.git";
@@ -1578,17 +1586,14 @@
 				version = 0.56.1;
 			};
 		};
-		5EDA31E72C3D710D00859917 /* XCRemoteSwiftPackageReference "rt-mock" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-mock.git";
-			requirement = {
-				kind = revision;
-				revision = 5010abe9a0354dc8fcdccdb86b15edb19c81aa84;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		443D2FEE2C9C398100AFA263 /* RtMock */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 443D2FEC2C9C38CB00AFA263 /* XCRemoteSwiftPackageReference "swift-mock" */;
+			productName = RtMock;
+		};
 		4496DAB92BF387160032FC29 /* RtPcscWrapper */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RtPcscWrapper;
@@ -1627,11 +1632,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5EB636E12C29CFF900DDCA0F /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
 			productName = "plugin:SwiftLintBuildToolPlugin";
-		};
-		5EDA31E82C3D710D00859917 /* RtMock */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5EDA31E72C3D710D00859917 /* XCRemoteSwiftPackageReference "rt-mock" */;
-			productName = RtMock;
 		};
 /* End XCSwiftPackageProductDependency section */
 
