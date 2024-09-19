@@ -15,6 +15,9 @@ archive:
     - job: build
   variables:
     GIT_STRATEGY: none
+  id_tokens:
+    VAULT_JWT_TOKEN:
+      aud: https://vault.aktivco.ru
   before_script:
     - !reference [.vault, archive_secrets]
 

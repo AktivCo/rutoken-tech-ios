@@ -15,6 +15,9 @@ export:
   variables:
     RT_CI_VAGRANT_BOX_CPUS: 2
     RT_CI_VAGRANT_BOX_MEMORY: 4096
+  id_tokens:
+    VAULT_JWT_TOKEN:
+      aud: https://vault.aktivco.ru
   before_script:
     - !reference [.vault, export_secrets]
 
