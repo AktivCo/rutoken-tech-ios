@@ -14,7 +14,9 @@ import TinyAsyncRedux
 struct BankUserListView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
 
-    let maxUserCount = 3
+    @State private var wholeMainViewSize: CGSize = .zero
+
+    private let maxUserCount = 3
 
     var body: some View {
         Group {
@@ -81,18 +83,25 @@ struct BankUserListView: View {
     }
 
     private var mainView: some View {
-        VStack(spacing: 0) {
-            HeaderTitleView(title: "Пользователи")
-            if store.state.bankSelectUserState.userListModel.items.isEmpty {
-                noUsersView
-            } else {
-                RtList(listModel: store.state.bankSelectUserState.userListModel)
-                    .padding(.top, 12)
+        // ScrollView is needed for keyboard avoidance
+        ScrollView {
+            VStack(spacing: 0) {
+                HeaderTitleView(title: "Пользователи")
+                if store.state.bankSelectUserState.userListModel.items.isEmpty {
+                    noUsersView
+                } else {
+                    RtList(listModel: store.state.bankSelectUserState.userListModel)
+                        .padding(.top, 12)
+                }
+                bottomView
             }
-            bottomView
+            .padding(.top, 44)
+            .padding(.horizontal, 20)
+            .frame(height: wholeMainViewSize.height)
         }
-        .padding(.top, 44)
-        .padding(.horizontal, 20)
+        .rtSizeReader(size: $wholeMainViewSize)
+        .scrollDisabled(true)
+        .ignoresSafeArea(.keyboard)
     }
 
     private var noUsersView: some View {

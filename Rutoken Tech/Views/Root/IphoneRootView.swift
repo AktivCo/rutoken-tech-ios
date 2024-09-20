@@ -33,7 +33,6 @@ struct IphoneRootView: View {
                         BankUserListView()
                             .tabItem { Label(tab.rawValue, systemImage: tab.imageName) }
                             .tag(tab)
-                            .ignoresSafeArea(.keyboard)
                     }
                 }
                 .background {
