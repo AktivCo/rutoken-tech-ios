@@ -34,6 +34,14 @@ class UserManager: UserManagerProtocol {
 
     init() {
         let container = NSPersistentContainer(name: "AppStorage")
+        guard let description = container.persistentStoreDescriptions.first else {
+            fatalError("Failed to get persistentStore description")
+        }
+
+        description.shouldInferMappingModelAutomatically = false
+        description.shouldMigrateStoreAutomatically = true
+
+        container.persistentStoreDescriptions = [description]
         container.loadPersistentStores(completionHandler: { (_, error) in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
