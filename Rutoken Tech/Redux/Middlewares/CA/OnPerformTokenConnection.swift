@@ -32,9 +32,9 @@ class OnPerformTokenConnection: Middleware {
                     try await self.cryptoManager.withToken(connectionType: connectionType,
                                                            serial: nil, pin: pin) {
                         let info = try await self.cryptoManager.getTokenInfo()
-                        continuation.yield(.tokenSelected(info, pin))
                         let keys = try await self.cryptoManager.enumerateKeys()
                         let certs = try await self.cryptoManager.enumerateCerts()
+                        continuation.yield(.tokenSelected(info, pin))
                         continuation.yield(.updateKeys(keys))
                         continuation.yield(.cacheCaCerts(certs))
                     }
