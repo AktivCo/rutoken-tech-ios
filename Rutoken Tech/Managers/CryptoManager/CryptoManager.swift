@@ -70,7 +70,7 @@ class CryptoManager: CryptoManagerProtocol {
     private let fileSource: FileSourceProtocol
     private let deviceInfo: DeviceInfoHelperProtocol
 
-    private var cancellable = [UUID: AnyCancellable]()
+    private var cancellable = ThreadSafeDictionary<UUID, AnyCancellable>(label: "Rutoken_Tech.CryptoManager.cancellable.barrier queue")
     @Atomic var tokens: [Pkcs11TokenProtocol] = []
     private var connectedToken: Pkcs11TokenProtocol?
 

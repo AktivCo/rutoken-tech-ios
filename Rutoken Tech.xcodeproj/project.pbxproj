@@ -119,6 +119,7 @@
 		7DF6204A2C1C75CD005B86D9 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF620492C1C75CD005B86D9 /* KeychainHelper.swift */; };
 		D40CEFD62C3FEE8400826B15 /* QrCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40CEFD52C3FEE8400826B15 /* QrCodeView.swift */; };
 		D411618B2C5B99F400795CE2 /* OnUnpairVcr.swift in Sources */ = {isa = PBXBuildFile; fileRef = D411618A2C5B99ED00795CE2 /* OnUnpairVcr.swift */; };
+		D41DD5E92CA59AC70004E76D /* ThreadSafeDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41DD5E82CA59AC70004E76D /* ThreadSafeDictionary.swift */; };
 		D42178192B205FD700D08948 /* AppAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42178182B205FD700D08948 /* AppAlert.swift */; };
 		D423F8BF2B3574BB0058ECDE /* GetTokenInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D423F8BE2B3574BB0058ECDE /* GetTokenInfoTests.swift */; };
 		D423F8C12B3574EC0058ECDE /* GenerateKeyPairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D423F8C02B3574EC0058ECDE /* GenerateKeyPairTests.swift */; };
@@ -297,6 +298,7 @@
 		7DF620492C1C75CD005B86D9 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		D40CEFD52C3FEE8400826B15 /* QrCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrCodeView.swift; sourceTree = "<group>"; };
 		D411618A2C5B99ED00795CE2 /* OnUnpairVcr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnUnpairVcr.swift; sourceTree = "<group>"; };
+		D41DD5E82CA59AC70004E76D /* ThreadSafeDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadSafeDictionary.swift; sourceTree = "<group>"; };
 		D42178182B205FD700D08948 /* AppAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlert.swift; sourceTree = "<group>"; };
 		D423F8BE2B3574BB0058ECDE /* GetTokenInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTokenInfoTests.swift; sourceTree = "<group>"; };
 		D423F8C02B3574EC0058ECDE /* GenerateKeyPairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateKeyPairTests.swift; sourceTree = "<group>"; };
@@ -888,6 +890,7 @@
 		D4F4FDED2B331D800087A1BB /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				D41DD5E82CA59AC70004E76D /* ThreadSafeDictionary.swift */,
 				D4D46A0E2B3038F60005981A /* Atomic+propertywrapper.swift */,
 				441658462B5988F000225948 /* WrappedPointer.swift */,
 				D4FEB5C62B62675400D3BAD2 /* ScrollViewOffset.swift */,
@@ -1093,6 +1096,7 @@
 				D4B130B02B0CFFCD00AD390F /* Pkcs11TokenModel.swift in Sources */,
 				7D38D6DA2B0E2C190045FBAD /* AppState.swift in Sources */,
 				44251E6E2B8CD52400ADAA0D /* WrappedX509.swift in Sources */,
+				D41DD5E92CA59AC70004E76D /* ThreadSafeDictionary.swift in Sources */,
 				5EB931172C1CFFFE00935DE7 /* Pkcs11Error.swift in Sources */,
 				D433144A2B767E2700442809 /* OnHandleOpenLink.swift in Sources */,
 				7DCC9AF12B3B2C9A002788B5 /* KeyModel.swift in Sources */,

@@ -9,7 +9,7 @@ import Combine
 
 
 extension AnyCancellable {
-    func store<T: Hashable>(in dictionary: inout [T: AnyCancellable],
+    func store<T: Hashable>(in dictionary: inout ThreadSafeDictionary<T, AnyCancellable>,
                             for key: T) {
         dictionary[key] = self
     }
