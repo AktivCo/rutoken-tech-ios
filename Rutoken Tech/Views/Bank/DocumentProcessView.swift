@@ -205,6 +205,7 @@ struct DocumentProcessView: View {
         case .pdf(let data):
             RtPDFView(data: data)
         case .text(let text):
+            // ScrollView is needed for keyboard avoidance
             ScrollView {
                 Text(text)
                     .font(.caption)

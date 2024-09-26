@@ -14,8 +14,6 @@ import TinyAsyncRedux
 struct BankUserListView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
 
-    @State private var wholeMainViewSize: CGSize = .zero
-
     private let maxUserCount = 3
 
     var body: some View {
@@ -83,12 +81,14 @@ struct BankUserListView: View {
     }
 
     private var mainView: some View {
-        // ScrollView is needed for keyboard avoidance
-        ScrollView {
+        // GeometryReader is needed for keyboard avoidance
+        GeometryReader { _ in
             VStack(spacing: 0) {
                 HeaderTitleView(title: "Пользователи")
                 if store.state.bankSelectUserState.userListModel.items.isEmpty {
-                    noUsersView
+                    Spacer()
+                    Text("Нет добавленных пользователей")
+                        .foregroundStyle(Color.RtColors.rtLabelSecondary)
                 } else {
                     RtList(listModel: store.state.bankSelectUserState.userListModel)
                         .padding(.top, 12)
@@ -97,23 +97,12 @@ struct BankUserListView: View {
             }
             .padding(.top, 44)
             .padding(.horizontal, 20)
-            .frame(height: wholeMainViewSize.height)
         }
-        .rtSizeReader(size: $wholeMainViewSize)
-        .scrollDisabled(true)
         .ignoresSafeArea(.keyboard)
     }
 
-    private var noUsersView: some View {
-        VStack {
-            Spacer()
-            Text("Нет добавленных пользователей")
-                .foregroundStyle(Color.RtColors.rtLabelSecondary)
-        }
-    }
-
     private var bottomView: some View {
-        VStack {
+        Group {
             if store.state.bankSelectUserState.userListModel.items.count < maxUserCount {
                 Spacer()
                 Button {

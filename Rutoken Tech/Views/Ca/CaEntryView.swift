@@ -77,6 +77,7 @@ struct CaEntryView: View {
     }
 
     func connectedTokenView(_ connectedToken: TokenInfo) -> some View {
+        // ScrollView is needed for keyboard avoidance
         ScrollView {
             VStack(alignment: .center) {
                 switch connectedToken.type {
