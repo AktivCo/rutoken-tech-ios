@@ -71,7 +71,7 @@ class CryptoManager: CryptoManagerProtocol {
     private let deviceInfo: DeviceInfoHelperProtocol
 
     private var cancellable = ThreadSafeDictionary<UUID, AnyCancellable>(label: "Rutoken_Tech.CryptoManager.cancellable.barrier queue")
-    @Atomic var tokens: [Pkcs11TokenProtocol] = []
+    @Atomic private var tokens: [Pkcs11TokenProtocol] = []
     private var connectedToken: Pkcs11TokenProtocol?
 
     private var tokenStatePublisher = PassthroughSubject<TokenInteractionState, Never>()

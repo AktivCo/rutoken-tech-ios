@@ -8,7 +8,7 @@
 import Foundation
 
 
-@propertyWrapper struct Atomic<Value> {
+@propertyWrapper class Atomic<Value> {
     private let lock = NSLock()
     private var value: Value
 
@@ -27,5 +27,11 @@ import Foundation
             defer { lock.unlock() }
             value = newValue
         }
+    }
+
+    func withMutex<T>(_ callback: (inout Value) -> T) -> T {
+        lock.lock()
+        defer { lock.unlock() }
+        return callback(&value)
     }
 }
