@@ -25,7 +25,9 @@ class OnUnpairVcr: Middleware {
                 defer {
                     continuation.finish()
                 }
-                if !vcrManager.unpairVcr(fingerprint: fingerprint) {
+                do {
+                    try vcrManager.unpairVcr(fingerprint: fingerprint)
+                } catch {
                     continuation.yield(.handleError(nil, [.showAlert(.unknownError)]))
                 }
             }

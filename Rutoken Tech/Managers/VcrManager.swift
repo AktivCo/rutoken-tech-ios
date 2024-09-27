@@ -18,7 +18,7 @@ enum VcrError: Error {
 
 protocol VcrManagerProtocol {
     func generateQrCode() async throws -> Image
-    func unpairVcr(fingerprint: Data) -> Bool
+    func unpairVcr(fingerprint: Data) throws
     var vcrs: AnyPublisher<[VcrInfo], Never> { get }
     var didNewVcrConnected: AnyPublisher<Void, Never> { get }
 }
@@ -60,9 +60,7 @@ class VcrManager: VcrManagerProtocol {
                 }
                 let oldVcrs = self.vcrsPublisher.value
                 newVcrs.forEach { info in
-                    if oldVcrs.first(where: {
-                        info.id == $0.id
-                    }) == nil {
+                    if oldVcrs.first(where: { info.id == $0.id }) == nil {
                         self.didNewVcrConnectedPublisher.send()
                     }
                 }
@@ -80,8 +78,13 @@ class VcrManager: VcrManagerProtocol {
         return image
     }
 
-    func unpairVcr(fingerprint: Data) -> Bool {
-        unpairVCR(fingerprint)
+    func unpairVcr(fingerprint: Data) throws {
+        guard unpairVCR(fingerprint) else {
+            throw VcrError.general
+        }
+        var value = self.vcrsPublisher.value
+        value.removeAll { $0.id == fingerprint }
+        self.vcrsPublisher.send(value)
     }
 
     private func getPairedVcrs() -> [VcrPaired] {
