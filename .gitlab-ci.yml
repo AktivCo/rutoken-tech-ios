@@ -24,7 +24,7 @@ variables:
   VAULT_ADDR: "https://vault.aktivco.ru"
   FOLDER_ARTIFACTS: "artifacts"
 
-  TART_IMAGE: tart-hosted.aktivco.ru/rutoken/macos:2.2.0
+  TART_IMAGE: tart-hosted.aktivco.ru/rutoken/macos:15.0_xcode-16.0
 
   MATCH_PASSWORD: ""
   KEYCHAIN_PASSWORD: "admin"
