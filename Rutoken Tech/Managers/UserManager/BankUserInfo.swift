@@ -19,7 +19,7 @@ struct BankUserInfo: RtListItem {
     let certHash: String
     let tokenSerial: String
 
-    var isDisabled: Bool {
-        expiryDate < Date()
+    var state: RtListItemState {
+        expiryDate < Date() ? .disableTap : .normal
     }
 }

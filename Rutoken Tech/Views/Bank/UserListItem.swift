@@ -21,7 +21,7 @@ struct UserListItem: View {
 
     init(user: BankUserInfo, startToClose: Binding<Bool>, isPressed: Binding<Bool>) {
         self.user = user
-        self._isDisabled = State(initialValue: user.isDisabled)
+        self._isDisabled = State(initialValue: user.state == .disableTap)
         self._startToClose = startToClose
         self._isPressed = isPressed
     }
@@ -49,7 +49,7 @@ struct UserListItem: View {
         .background(isPressed ? Color.RtColors.rtOtherSelected : Color("surfacePrimary"))
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .onReceive(timer) { _ in
-            isDisabled = user.isDisabled
+            isDisabled = user.state == .disableTap
             if isDisabled {
                 self.timer.upstream.connect().cancel()
             }

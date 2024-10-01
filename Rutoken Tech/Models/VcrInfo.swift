@@ -15,7 +15,7 @@ struct VcrInfo: RtListItem {
     let name: String
     let isActive: Bool
 
-    var isDisabled: Bool {
-        false
+    var state: RtListItemState {
+        isActive ? .disableSwipe : .normal
     }
 }
