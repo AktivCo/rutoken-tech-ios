@@ -13,7 +13,9 @@ import TinyAsyncRedux
 
 struct BankUserListView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
-
+    @State private var isTopViewShown = false
+    @State private var isTitleShown = false
+    @State private var topSafeAreaHeight: CGFloat = getSafeAreaInsets()?.top ?? 0
     private let maxUserCount = 3
 
     var body: some View {
@@ -53,15 +55,34 @@ struct BankUserListView: View {
             ZStack {
                 Color.RtColors.rtSurfaceSecondary
                     .ignoresSafeArea()
-                mainView
-                    .navigationDestination(isPresented: Binding(
-                        get: { store.state.bankSelectUserState.selectedUser != nil },
-                        set: { ok in if !ok { store.send(.selectUser(nil)) } })) {
-                            PaymentListView()
-                                .navigationBarBackButtonHidden(true)
-                                .ignoresSafeArea(.container, edges: [.top])
-                        }
+                VStack(spacing: 0) {
+                    HStack {
+                        Spacer()
+                        Text("Пользователи")
+                            .font(.system(size: 22))
+                            .fontWeight(.bold)
+                            .foregroundStyle(Color.RtColors.rtLabelPrimary)
+                            .opacity(isTitleShown ? 1 : 0)
+                        Spacer()
+                    }
+                    .frame(height: 44)
+                    .padding(.top, topSafeAreaHeight)
+                    .background {
+                        Color("IOSElementsTitleBarSurface")
+                            .background(.ultraThinMaterial)
+                            .opacity(isTopViewShown ? 1 : 0)
+                    }
+                    mainView
+                }
             }
+            .ignoresSafeArea(.container, edges: .top)
+            .navigationDestination(isPresented: Binding(
+                get: { store.state.bankSelectUserState.selectedUser != nil },
+                set: { ok in if !ok { store.send(.selectUser(nil)) } })) {
+                    PaymentListView()
+                        .navigationBarBackButtonHidden(true)
+                        .ignoresSafeArea(.container, edges: [.top])
+                }
         }
     }
 
@@ -76,57 +97,63 @@ struct BankUserListView: View {
                     .ignoresSafeArea(.container, edges: [.top])
             } else {
                 mainView
+                    .padding(.top, 44)
             }
         }
     }
 
     private var mainView: some View {
-        // GeometryReader is needed for keyboard avoidance
-        GeometryReader { _ in
-            VStack(spacing: 0) {
+        VStack(spacing: 0) {
+            if store.state.bankSelectUserState.userListModel.items.isEmpty {
                 HeaderTitleView(title: "Пользователи")
-                if store.state.bankSelectUserState.userListModel.items.isEmpty {
-                    Spacer()
-                    Text("Нет добавленных пользователей")
-                        .foregroundStyle(Color.RtColors.rtLabelSecondary)
-                } else {
-                    RtList(listModel: store.state.bankSelectUserState.userListModel)
-                        .padding(.top, 12)
+                Spacer()
+                Text("Нет добавленных пользователей")
+                    .foregroundStyle(Color.RtColors.rtLabelSecondary)
+                Spacer()
+            } else {
+                ScrollViewOffset {
+                    VStack(spacing: 0) {
+                        HeaderTitleView(title: "Пользователи")
+                        RtList(listModel: store.state.bankSelectUserState.userListModel)
+                            .padding(.top, 6)
+                        if store.state.bankSelectUserState.userListModel.items.count >= maxUserCount {
+                            Text("Вы добавили максимальное количество пользователей. Чтобы добавить нового, удалите одного из существующих")
+                                .multilineTextAlignment(.center)
+                                .foregroundStyle(Color.RtColors.rtLabelSecondary)
+                                .font(.system(size: 13))
+                                .padding(.top, 12)
+                        }
+                    }
+                } onOffsetChanged: { offset in
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isTitleShown = offset < -40
+                        isTopViewShown = offset < -10
+                    }
                 }
-                bottomView
+                .scrollDisabled(!UIDevice.isPhone)
             }
-            .padding(.top, 44)
-            .padding(.horizontal, 20)
+            if store.state.bankSelectUserState.userListModel.items.count < maxUserCount {
+                addUserButton
+            }
         }
+        .padding(.horizontal, 20)
         .ignoresSafeArea(.keyboard)
     }
 
-    private var bottomView: some View {
-        Group {
-            if store.state.bankSelectUserState.userListModel.items.count < maxUserCount {
-                Spacer()
-                Button {
-                    store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
-                        RtAuthView(defaultPinGetter: { store.send(.updatePin(RutokenTechApp.defaultPin)) },
-                                   onSubmit: { tokenType, pin in store.send(.readCerts(tokenType, pin)) },
-                                   onCancel: { store.send(.hideSheet) })
-                        .environmentObject(store.state.routingState.pinInputModel)
-                    }()))
-                } label: {
-                    Text("Добавить пользователя")
-                }
-                .buttonStyle(RtRoundedFilledButtonStyle(isPressable: true))
-                .frame(maxWidth: UIDevice.isPhone ? .infinity : 350)
-                .padding(.bottom, 20)
-            } else {
-                Text("Вы добавили максимальное количество пользователей. Чтобы добавить нового, удалите одного из существующих")
-                .multilineTextAlignment(.center)
-                .foregroundStyle(Color.RtColors.rtLabelSecondary)
-                .font(.system(size: 13))
-                .padding(.top, 12)
-                Spacer()
-            }
+    private var addUserButton: some View {
+        Button {
+            store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
+                RtAuthView(defaultPinGetter: { store.send(.updatePin(RutokenTechApp.defaultPin)) },
+                           onSubmit: { tokenType, pin in store.send(.readCerts(tokenType, pin)) },
+                           onCancel: { store.send(.hideSheet) })
+                .environmentObject(store.state.routingState.pinInputModel)
+            }()))
+        } label: {
+            Text("Добавить пользователя")
         }
+        .buttonStyle(RtRoundedFilledButtonStyle(isPressable: true))
+        .frame(maxWidth: UIDevice.isPhone ? .infinity : 350)
+        .padding(.bottom, 20)
     }
 }
 
