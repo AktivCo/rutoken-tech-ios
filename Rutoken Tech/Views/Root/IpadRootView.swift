@@ -34,10 +34,16 @@ struct IpadRootView: View {
                                                  Color.RtColors.rtLabelPrimary)
                         } icon: {
                             Image(systemName: tab.imageName)
+                                .foregroundColor(selectedTab == tab ?
+                                                 Color.RtColors.rtColorsOnPrimary :
+                                                 Color.RtColors.rtColorsSecondary)
                         }
                     }
+                    .listRowBackground(selectedTab == tab ?
+                                       Color.RtColors.rtColorsSecondary.cornerRadius(12) : nil)
                 }
                 .frame(height: 144)
+
                 VStack(spacing: 0) {
                     Text("Виртуальные считыватели").font(.title3).fontWeight(.semibold)
                         .frame(height: 44)
@@ -51,7 +57,7 @@ struct IpadRootView: View {
             .scrollContentBackground(.hidden)
             .toolbar(.hidden, for: .navigationBar)
             .background {
-                Color("IOSElementsTitleBarSurface")
+                Color("surfacePrimary")
             }
             .ignoresSafeArea(.container, edges: [.top, .bottom])
         } detail: {
@@ -77,7 +83,6 @@ struct IpadRootView: View {
             }
         }
         .navigationSplitViewStyle(.balanced)
-        .tint(Color.RtColors.rtColorsSecondary)
         .onChange(of: selectedTab) { _ in
             store.send(.logout)
         }
@@ -98,6 +103,7 @@ struct IpadRootView: View {
             HStack(spacing: 10) {
                 Text(Image(systemName: "plus"))
                     .fontWeight(.semibold)
+                    .foregroundColor(Color.RtColors.rtColorsSecondary)
                     .background(
                         RoundedRectangle(cornerRadius: 3)
                             .frame(width: 28, height: 28)
