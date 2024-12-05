@@ -181,14 +181,9 @@ class OpenSslHelper: OpenSslHelperProtocol {
         return conf
     }
 
-    private func addV3Extensions(request: WrappedPointer<OpaquePointer>, exts: [String: String]) throws {
-        guard let stackOfExts = WrappedPointer<OpaquePointer>(exposed_sk_X509_EXTENSION_new_null, {
-            exposed_sk_X509_EXTENSION_pop_free($0, X509_EXTENSION_free)
-        }) else {
-            throw OpenSslError.generalError(#line, getLastError())
-        }
-        defer { stackOfExts.release() }
-
+    private func addV3Extensions(to stackOfExts: WrappedPointer<OpaquePointer>,
+                                 for request: WrappedPointer<OpaquePointer>,
+                                 exts: [String: String]) throws {
         for ext in exts {
             let extNid = OBJ_txt2nid(ext.key.cString(using: .utf8))
             let extensionName = extNid == NID_undef ? ext.key : String(cString: OBJ_nid2sn(extNid))
@@ -205,9 +200,6 @@ class OpenSslHelper: OpenSslHelperProtocol {
             guard X509V3_EXT_add_nconf_sk(conf.pointer, &extCtx, requestExtensionsSection, &stackPtr) != 0 else {
                 throw OpenSslError.generalError(#line, getLastError())
             }
-        }
-        guard X509_REQ_add_extensions(request.pointer, stackOfExts.pointer) != 0 else {
-            throw OpenSslError.generalError(#line, getLastError())
         }
     }
 
@@ -325,23 +317,25 @@ class OpenSslHelper: OpenSslHelperProtocol {
         defer { identificationKindByObj.release() }
 
         // MARK: Add 'Subject sign tool' & 'Key usage' & 'ext key usage' & 'certificate policies' & 'IdentificationKind' extensions into container
-        var extensions: OpaquePointer?
-        guard X509v3_add_ext(&extensions, subjectSignTool.pointer, -1) != nil,
-              X509v3_add_ext(&extensions, keyUsageExt.pointer, -1) != nil,
-              X509v3_add_ext(&extensions, exExtKeyUsage.pointer, -1) != nil,
-              X509v3_add_ext(&extensions, identificationKindByObj.pointer, -1) != nil,
-              X509v3_add_ext(&extensions, policiesExtension.pointer, -1) != nil else {
+        guard let stackOfExts = WrappedPointer<OpaquePointer>(exposed_sk_X509_EXTENSION_new_null, {
+            exposed_sk_X509_EXTENSION_pop_free($0, X509_EXTENSION_free)
+        }) else {
             throw OpenSslError.generalError(#line, getLastError())
         }
         defer {
-            exposed_sk_X509_EXTENSION_pop_free(extensions, X509_EXTENSION_free)
+            stackOfExts.release()
         }
 
-        // MARK: Setting of the extensions for the request
-        guard X509_REQ_add_extensions(csr.pointer, extensions) == 1 else {
+        var stackPtr: OpaquePointer? = stackOfExts.pointer
+        guard X509v3_add_ext(&stackPtr, subjectSignTool.pointer, -1) != nil,
+              X509v3_add_ext(&stackPtr, keyUsageExt.pointer, -1) != nil,
+              X509v3_add_ext(&stackPtr, exExtKeyUsage.pointer, -1) != nil,
+              X509v3_add_ext(&stackPtr, identificationKindByObj.pointer, -1) != nil,
+              X509v3_add_ext(&stackPtr, policiesExtension.pointer, -1) != nil else {
             throw OpenSslError.generalError(#line, getLastError())
         }
 
+        // MARK: Add 'Private key usage period' extension into container
         if let start = info.startDate?.getString(as: "YYYYMMdd"),
            let end = info.endDate?.getString(as: "YYYYMMdd") {
             var valueStr = "ASN1:SEQUENCE:privateKeyUsagePeriod\n"
@@ -349,7 +343,12 @@ class OpenSslHelper: OpenSslHelperProtocol {
             valueStr += "notBefore=IMP:0,GENERALIZEDTIME:\(start)000000Z\n"
             valueStr += "notAfter=IMP:1,GENERALIZEDTIME:\(end)000000Z"
 
-            try addV3Extensions(request: csr, exts: ["2.5.29.16": valueStr])
+            try addV3Extensions(to: stackOfExts, for: csr, exts: ["2.5.29.16": valueStr])
+        }
+
+        // MARK: Setting of the extensions for the request
+        guard X509_REQ_add_extensions(csr.pointer, stackOfExts.pointer) == 1 else {
+            throw OpenSslError.generalError(#line, getLastError())
         }
 
         // MARK: Setting of the public key
