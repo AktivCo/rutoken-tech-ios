@@ -34,7 +34,7 @@ struct BankUserListView: View {
 
                 store.send(.showSheet(false, UIDevice.isPhone ? .largePhone : .ipad(width: 540, height: 640), {
                     RtAuthView(defaultPinGetter: {
-                        store.send(.updatePin(RutokenTechApp.defaultPin))
+                        store.send(.getPin(user.tokenSerial))
                     }, onSubmit: { tokenType, pin in
                         store.send(.authUser(tokenType, pin, user))
                     }, onCancel: {
