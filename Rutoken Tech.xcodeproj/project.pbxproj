@@ -1559,8 +1559,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AktivCo/swift-rtlibcrypto-binary.git";
 			requirement = {
-				kind = revision;
-				revision = 4e1adc25677a589729725caf015e1760506a087e;
+				kind = exactVersion;
+				version = 3.0.14;
 			};
 		};
 		44A8CFF42C930F07009B3D06 /* XCRemoteSwiftPackageReference "swift-ui-components" */ = {
