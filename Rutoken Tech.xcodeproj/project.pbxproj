@@ -1600,7 +1600,7 @@
 			repositoryURL = "https://github.com/AktivCo/swift-rtpcsc-wrapper.git";
 			requirement = {
 				kind = exactVersion;
-				version = 1.3.0;
+				version = 1.4.0;
 			};
 		};
 		5EB636E12C29CFF900DDCA0F /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
