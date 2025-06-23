@@ -19,6 +19,7 @@ enum VcrError: Error {
 protocol VcrManagerProtocol {
     func generateQrCode() async throws -> Image
     func unpairVcr(fingerprint: Data) throws
+    func updateVcrStatus(readers: [RtReader]) async
     var vcrs: AnyPublisher<[VcrInfo], Never> { get }
     var didNewVcrConnected: AnyPublisher<Void, Never> { get }
 }
@@ -30,8 +31,6 @@ class VcrManager: VcrManagerProtocol {
     }
 
     private let pcscWrapper: RtPcscWrapper
-
-    private var cancellable = Set<AnyCancellable>()
 
     var vcrs: AnyPublisher<[VcrInfo], Never> {
         vcrsPublisher.share().eraseToAnyPublisher()
@@ -45,28 +44,28 @@ class VcrManager: VcrManagerProtocol {
 
     init(pcscWrapper: RtPcscWrapper) {
         self.pcscWrapper = pcscWrapper
+    }
 
-        pcscWrapper.readers
-            .sink { currentReaders in
-                let newVcrs = self.getPairedVcrs().map { vcr in
-                    return VcrInfo(id: vcr.id,
-                                   name: vcr.name,
-                                   isActive: currentReaders.filter({ $0.name.contains("VCR") }).contains(where: {
-                        guard let fingerprint = try? pcscWrapper.getFingerprint(for: $0.name) else {
-                            return false
-                        }
-                        return fingerprint == vcr.id
-                    }))
+    func updateVcrStatus(readers: [RtReader]) async {
+        let newVcrs = await self.getPairedVcrs().asyncMap { vcr in
+            return VcrInfo(id: vcr.id,
+                           name: vcr.name,
+                           isActive: await readers.filter({ $0.name.contains("VCR") }).async.contains(where: {
+                guard let fingerprint = try? await pcscWrapper.getFingerprint(for: $0.name) else {
+                    return false
                 }
-                let oldVcrs = self.vcrsPublisher.value
-                newVcrs.forEach { info in
-                    if oldVcrs.first(where: { info.id == $0.id }) == nil {
-                        self.didNewVcrConnectedPublisher.send()
-                    }
-                }
-                self.vcrsPublisher.send(newVcrs)
+
+                return fingerprint == vcr.id
+            }))
+        }
+
+        let oldVcrs = self.vcrsPublisher.value
+        newVcrs.forEach { info in
+            if oldVcrs.first(where: { info.id == $0.id }) == nil {
+                self.didNewVcrConnectedPublisher.send()
             }
-            .store(in: &cancellable)
+        }
+        self.vcrsPublisher.send(newVcrs)
     }
 
     func generateQrCode() async throws -> Image {

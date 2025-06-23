@@ -9,6 +9,8 @@ import Combine
 import Foundation
 import UIKit
 
+import AsyncAlgorithms
+
 
 protocol CryptoManagerProtocol {
     func withToken(connectionType: ConnectionType,
@@ -281,8 +283,8 @@ class CryptoManager: CryptoManagerProtocol {
 
         defer {
             if connectionType == .nfc {
-                try? pcscHelper.stopNfc()
                 Task {
+                    try? await pcscHelper.stopNfc()
                     do {
                         for try await cd in pcscHelper.getNfcCooldown() {
                             tokenStatePublisher.send(cd > 0 ? .cooldown(cd) : .ready)
@@ -297,10 +299,6 @@ class CryptoManager: CryptoManagerProtocol {
             connectedToken = nil
         }
         do {
-            if connectionType == .nfc {
-                try pcscHelper.startNfc()
-            }
-
             connectedToken = try await waitForToken(with: connectionType)
 
             if let serial {
@@ -336,32 +334,53 @@ class CryptoManager: CryptoManagerProtocol {
 
     private func waitForToken(with type: ConnectionType) async throws -> Pkcs11TokenProtocol {
         try await withCheckedThrowingContinuation { continuation in
-            switch type {
-            case .nfc:
-                let nfcTokenFind = pkcs11Helper.tokens
-                    .compactMap { $0.first(where: { $0.currentInterface == .nfc }) }
-                    .map { Optional($0) }
-                    .eraseToAnyPublisher()
+            Task {
+                do {
+                    switch type {
+                    case .nfc:
+                        let (tokenStream, tokenCont) = AsyncStream.makeStream(of: Pkcs11TokenProtocol?.self)
+                        defer { tokenCont.finish() }
+                        let uuid = UUID()
 
-                let uuid = UUID()
-                Publishers.CombineLatest(pcscHelper.nfcExchangeIsStopped().prepend(()), nfcTokenFind.prepend(nil))
-                    .dropFirst()
-                    .sink { result in
-                        guard let nfcToken = result.1 else {
-                            self.cancellable.removeValue(forKey: uuid)
+                        let tokenSub = pkcs11Helper.tokens
+                            .compactMap { $0.first(where: { $0.currentInterface == .nfc }) }
+                            .sink { value in
+                                tokenCont.yield(value)
+                            }
+                        tokenCont.yield(nil)
+                        let nfcStream = try await pcscHelper.startNfc()
+                        for await (token, nfcStatus) in combineLatest(tokenStream, nfcStream) {
+                            if case .inProgress = nfcStatus, let token {
+                                continuation.resume(returning: token)
+                                break
+                            }
+                            if case .exchangeIsStopped(let error) = nfcStatus {
+                                switch error {
+                                case .nfcIsStopped(.cancelledByUser):
+                                    continuation.resume(throwing: NfcError.cancelledByUser)
+                                case .nfcIsStopped(.timeout):
+                                    continuation.resume(throwing: NfcError.timeout)
+                                default:
+                                    continuation.resume(throwing: NfcError.unknown)
+                                }
+                                break
+                            }
+                            if case .exchangeIsCompleted = nfcStatus {
+                                continuation.resume(throwing: CryptoManagerError.tokenNotFound)
+                                break
+                            }
+                        }
+                        tokenCont.finish()
+                    case .usb:
+                        guard let usbToken = tokens.first else {
                             continuation.resume(throwing: CryptoManagerError.tokenNotFound)
                             return
                         }
-                        self.cancellable.removeValue(forKey: uuid)
-                        continuation.resume(returning: nfcToken)
+                        continuation.resume(returning: usbToken)
                     }
-                    .store(in: &cancellable, for: uuid)
-            case .usb:
-                guard let usbToken = tokens.first else {
-                    continuation.resume(throwing: CryptoManagerError.tokenNotFound)
-                    return
+                } catch {
+                    continuation.resume(throwing: CryptoManagerError.unknown)
                 }
-                continuation.resume(returning: usbToken)
             }
         }
     }

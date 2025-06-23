@@ -55,20 +55,22 @@ class CryptoManagerGetTokenInfoTests: XCTestCase {
     }
 
     func testGetTokenInfoNfcSuccess() async throws {
-        pcscHelper.mocked_startNfc_Void = {}
-        pcscHelper.mocked_stopNfc_Void = {}
-        pcscHelper.mocked_nfcExchangeIsStopped_AnyPublisherOf_VoidNever = {
-            Just(Void()).eraseToAnyPublisher()
+        pcscHelper.mocked_startNfc_async_AsyncStreamOf_RtNfcSearchStatus = { [self] in
+            AsyncStream { con in
+                con.yield(.inProgress)
+                token.mocked_currentInterface = .nfc
+                token.mocked_supportedInterfaces = [.nfc]
+                tokensPublisher.send([token])
+                con.finish()
+            }
         }
+        pcscHelper.mocked_stopNfc_async_Void = {}
         pcscHelper.mocked_getNfcCooldown_AsyncThrowingStreamOf_UIntError = {
             AsyncThrowingStream { con in
                 con.yield(0)
                 con.finish()
             }
         }
-        token.mocked_currentInterface = .nfc
-        token.mocked_supportedInterfaces = [.nfc]
-        tokensPublisher.send([token])
 
         var result: TokenInfo?
         try await manager.withToken(connectionType: .nfc, serial: token.serial, pin: nil) {

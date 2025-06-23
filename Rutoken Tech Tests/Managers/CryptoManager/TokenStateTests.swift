@@ -23,6 +23,8 @@ final class CryptoManageTokenStateTests: XCTestCase {
     var nfcToken: RtMockPkcs11TokenProtocol!
     var usbToken: RtMockPkcs11TokenProtocol!
 
+    var tokensPublisher: CurrentValueSubject<[Pkcs11TokenProtocol], Never>!
+
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
@@ -40,7 +42,9 @@ final class CryptoManageTokenStateTests: XCTestCase {
         nfcToken.mocked_currentInterface = .nfc
         nfcToken.mocked_supportedInterfaces = [.nfc]
 
-        pkcs11Helper.mocked_tokens = Just([usbToken, nfcToken]).eraseToAnyPublisher()
+        tokensPublisher = CurrentValueSubject<[Pkcs11TokenProtocol], Never>([])
+        pkcs11Helper.mocked_tokens = tokensPublisher.eraseToAnyPublisher()
+
         manager = CryptoManager(pkcs11Helper: pkcs11Helper, pcscHelper: pcscHelper,
                                 openSslHelper: openSslHelper, fileHelper: fileHelper,
                                 fileSource: fileSource, deviceInfo: deviceInfo)
@@ -48,6 +52,7 @@ final class CryptoManageTokenStateTests: XCTestCase {
 
     func testUsbStates() async throws {
         deviceInfo.mocked_isPhone = true
+        tokensPublisher.send([usbToken])
         let states = try await awaitPublisherUnwrapped(manager.tokenState.collect(2)) {
             try await manager.withToken(connectionType: .usb, serial: usbToken.serial, pin: nil) {}
         }
@@ -56,6 +61,7 @@ final class CryptoManageTokenStateTests: XCTestCase {
 
     func testUsbStatesIpad() async throws {
         deviceInfo.mocked_isPhone = false
+        tokensPublisher.send([usbToken])
         let states = try await awaitPublisherUnwrapped(manager.tokenState.collect(2)) {
             try await manager.withToken(connectionType: .usb, serial: usbToken.serial, pin: nil) {}
         }
@@ -64,6 +70,7 @@ final class CryptoManageTokenStateTests: XCTestCase {
 
     func testUsbStatesIgnoreNfcCooldown() async throws {
         deviceInfo.mocked_isPhone = true
+        tokensPublisher.send([usbToken])
         pcscHelper.mocked_getNfcCooldown_AsyncThrowingStreamOf_UIntError = {
             AsyncThrowingStream { con in
                 con.yield(5)
@@ -78,6 +85,7 @@ final class CryptoManageTokenStateTests: XCTestCase {
 
     func testUsbStatesIgnoreNfcCooldownIpad() async throws {
         deviceInfo.mocked_isPhone = false
+        tokensPublisher.send([usbToken])
         pcscHelper.mocked_getNfcCooldown_AsyncThrowingStreamOf_UIntError = {
             AsyncThrowingStream { con in
                 con.yield(5)
@@ -92,11 +100,14 @@ final class CryptoManageTokenStateTests: XCTestCase {
 
     func testNfcStates() async throws {
         deviceInfo.mocked_isPhone = true
-        pcscHelper.mocked_startNfc_Void = {}
-        pcscHelper.mocked_stopNfc_Void = {}
-        pcscHelper.mocked_nfcExchangeIsStopped_AnyPublisherOf_VoidNever = {
-            Just(Void()).eraseToAnyPublisher()
+        pcscHelper.mocked_startNfc_async_AsyncStreamOf_RtNfcSearchStatus = { [self] in
+            return AsyncStream { con in
+                con.yield(.inProgress)
+                tokensPublisher.send([nfcToken])
+                con.finish()
+            }
         }
+        pcscHelper.mocked_stopNfc_async_Void = {}
         pcscHelper.mocked_getNfcCooldown_AsyncThrowingStreamOf_UIntError = {
             AsyncThrowingStream { con in
                 con.yield(5)
@@ -113,8 +124,14 @@ final class CryptoManageTokenStateTests: XCTestCase {
 
     func testNfcStatesIpad() async throws {
         deviceInfo.mocked_isPhone = false
-        pcscHelper.mocked_startNfc_Void = {}
-        pcscHelper.mocked_stopNfc_Void = {}
+        pcscHelper.mocked_startNfc_async_AsyncStreamOf_RtNfcSearchStatus = { [self] in
+            AsyncStream { con in
+                con.yield(.inProgress)
+                tokensPublisher.send([nfcToken])
+                con.finish()
+            }
+        }
+        pcscHelper.mocked_stopNfc_async_Void = {}
         pcscHelper.mocked_getNfcCooldown_AsyncThrowingStreamOf_UIntError = {
             AsyncThrowingStream { con in
                 con.yield(5)
@@ -122,9 +139,6 @@ final class CryptoManageTokenStateTests: XCTestCase {
                 con.yield(0)
                 con.finish()
             }
-        }
-        pcscHelper.mocked_nfcExchangeIsStopped_AnyPublisherOf_VoidNever = {
-            Just(Void()).eraseToAnyPublisher()
         }
         let states = try await awaitPublisherUnwrapped(manager.tokenState.collect(4)) {
             try await manager.withToken(connectionType: .nfc, serial: nfcToken.serial, pin: nil) {}
@@ -134,16 +148,19 @@ final class CryptoManageTokenStateTests: XCTestCase {
 
     func testNfcStatesNfcCooldownError() async throws {
         deviceInfo.mocked_isPhone = true
-        pcscHelper.mocked_startNfc_Void = {}
-        pcscHelper.mocked_stopNfc_Void = {}
+        pcscHelper.mocked_startNfc_async_AsyncStreamOf_RtNfcSearchStatus = { [self] in
+            AsyncStream { con in
+                con.yield(.inProgress)
+                tokensPublisher.send([nfcToken])
+                con.finish()
+            }
+        }
+        pcscHelper.mocked_stopNfc_async_Void = {}
         pcscHelper.mocked_getNfcCooldown_AsyncThrowingStreamOf_UIntError = {
             AsyncThrowingStream { con in
                 con.yield(5)
                 con.finish(throwing: CryptoManagerError.unknown)
             }
-        }
-        pcscHelper.mocked_nfcExchangeIsStopped_AnyPublisherOf_VoidNever = {
-            Just(Void()).eraseToAnyPublisher()
         }
         let states = try await awaitPublisherUnwrapped(manager.tokenState.collect(3)) {
             try await manager.withToken(connectionType: .nfc, serial: nfcToken.serial, pin: nil) {}
@@ -153,16 +170,19 @@ final class CryptoManageTokenStateTests: XCTestCase {
 
     func testNfcStatesNfcCooldownErrorIpad() async throws {
         deviceInfo.mocked_isPhone = false
-        pcscHelper.mocked_startNfc_Void = {}
-        pcscHelper.mocked_stopNfc_Void = {}
+        pcscHelper.mocked_startNfc_async_AsyncStreamOf_RtNfcSearchStatus = { [self] in
+            AsyncStream { con in
+                con.yield(.inProgress)
+                tokensPublisher.send([nfcToken])
+                con.finish()
+            }
+        }
+        pcscHelper.mocked_stopNfc_async_Void = {}
         pcscHelper.mocked_getNfcCooldown_AsyncThrowingStreamOf_UIntError = {
             AsyncThrowingStream { con in
                 con.yield(5)
                 con.finish(throwing: CryptoManagerError.unknown)
             }
-        }
-        pcscHelper.mocked_nfcExchangeIsStopped_AnyPublisherOf_VoidNever = {
-            Just(Void()).eraseToAnyPublisher()
         }
         let states = try await awaitPublisherUnwrapped(manager.tokenState.collect(3)) {
             try await manager.withToken(connectionType: .nfc, serial: nfcToken.serial, pin: nil) {}

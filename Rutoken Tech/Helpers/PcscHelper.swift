@@ -5,7 +5,6 @@
 //  Created by Никита Девятых on 22.11.2023.
 //
 
-import Combine
 import Foundation
 
 import RtMock
@@ -25,31 +24,35 @@ enum NfcError: Error {
 
 @RtMock
 protocol PcscHelperProtocol {
-    func startNfc() throws
-    func stopNfc() throws
-    func nfcExchangeIsStopped() -> AnyPublisher<Void, Never>
+    func startNfc() async throws -> AsyncStream<RtNfcSearchStatus>
+    func stopNfc() async throws
     func getNfcCooldown() -> AsyncThrowingStream<UInt, Error>
 }
 
 class PcscHelper: PcscHelperProtocol {
     private var pcscWrapper: RtPcscWrapper
-    private var cancellable = Set<AnyCancellable>()
-    private var readers: [RtReader] = []
+    private var nfcReader: RtReader?
+    private var vcrManager: VcrManagerProtocol?
 
-    init(pcscWrapper: RtPcscWrapper) {
+    init(pcscWrapper: RtPcscWrapper, vcrManager: VcrManagerProtocol?) {
         self.pcscWrapper = pcscWrapper
+        self.vcrManager = vcrManager
 
-        pcscWrapper.readers
-            .receive(on: DispatchQueue.main)
-            .assign(to: \.readers, on: self)
-            .store(in: &cancellable)
-
-        pcscWrapper.start()
+        Task {
+            guard let stream = await pcscWrapper.start() else {
+                fatalError()
+            }
+            await vcrManager?.updateVcrStatus(readers: [])
+            for await element in stream {
+                await vcrManager?.updateVcrStatus(readers: element)
+                nfcReader = element.first(where: { $0.type == .nfc || $0.type == .vcr })
+            }
+        }
     }
 
     func getNfcCooldown() -> AsyncThrowingStream<UInt, Error> {
         AsyncThrowingStream { continuation in
-            guard let reader = readers.first(where: { $0.type == .nfc || $0.type == .vcr }) else {
+            guard let nfcReader else {
                 continuation.finish(throwing: PcscHelperError.general)
                 return
             }
@@ -59,7 +62,7 @@ class PcscHelper: PcscHelperProtocol {
                     var cooldownLeft: UInt = 1
                     while cooldownLeft > 0 {
                         try? await Task.sleep(for: .seconds(0.1))
-                        cooldownLeft = try self.pcscWrapper.getNfcCooldown(for: reader.name)
+                        cooldownLeft = try await self.pcscWrapper.getNfcCooldown(for: nfcReader.name)
                         continuation.yield(cooldownLeft)
                     }
                     continuation.finish()
@@ -70,38 +73,24 @@ class PcscHelper: PcscHelperProtocol {
         }
     }
 
-    func stopNfc() throws {
-        guard let reader = readers.first(where: { $0.type == .nfc || $0.type == .vcr }) else {
+    func stopNfc() async throws {
+        guard let nfcReader else {
             throw NfcError.generalError
         }
 
         do {
-            try pcscWrapper.stopNfc(onReader: reader.name, withMessage: NfcMessages.stopNfc.rawValue)
+            try await pcscWrapper.stopNfc(onReader: nfcReader.name, withMessage: NfcMessages.stopNfc.rawValue)
         } catch {
             throw NfcError.unknown
         }
     }
 
-    func startNfc() throws {
-        guard let reader = readers.first(where: { $0.type == .nfc || $0.type == .vcr }) else {
+    func startNfc() async throws -> AsyncStream<RtNfcSearchStatus> {
+        guard let nfcReader else {
             throw NfcError.generalError
         }
-        do {
-            try pcscWrapper.startNfc(onReader: reader.name, waitMessage: NfcMessages.startNfc.rawValue, workMessage: NfcMessages.workOn.rawValue)
-        } catch RtReaderError.nfcIsStopped(.cancelledByUser) {
-            throw NfcError.cancelledByUser
-        } catch RtReaderError.nfcIsStopped(.timeout) {
-            throw NfcError.timeout
-        } catch {
-            throw NfcError.unknown
-        }
-    }
 
-    func nfcExchangeIsStopped() -> AnyPublisher<Void, Never> {
-        guard let reader = readers.first(where: { $0.type == .vcr || $0.type == .nfc }) else {
-            return Just(()).eraseToAnyPublisher()
-        }
-
-        return pcscWrapper.nfcExchangeIsStopped(for: reader.name)
+        return await pcscWrapper.startNfcExchange(onReader: nfcReader.name, waitMessage: NfcMessages.startNfc.rawValue,
+                                                  workMessage: NfcMessages.workOn.rawValue)
     }
 }

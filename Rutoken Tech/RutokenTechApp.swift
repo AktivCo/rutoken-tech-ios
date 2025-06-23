@@ -36,14 +36,15 @@ struct RutokenTechApp: App {
             let openSslHelper = OpenSslHelper()
 
             let pkcsHelper = Pkcs11Helper(with: engineWrapper)
-            let pcscHelper = PcscHelper(pcscWrapper: pcscWrapper)
+
+            let vcrManager: VcrManagerProtocol? = !UIDevice.isPhone ? VcrManager(pcscWrapper: pcscWrapper) : nil
+            let pcscHelper = PcscHelper(pcscWrapper: pcscWrapper, vcrManager: vcrManager)
 
             let cryptoManager = CryptoManager(pkcs11Helper: pkcsHelper,
                                               pcscHelper: pcscHelper,
                                               openSslHelper: openSslHelper,
                                               fileHelper: fileHelper,
                                               fileSource: fileSource)
-            let vcrManager: VcrManagerProtocol? = !UIDevice.isPhone ? VcrManager(pcscWrapper: pcscWrapper) : nil
 
             middlewares = [
                 OnStartMonitoring(cryptoManager: cryptoManager, userManager: userManager,

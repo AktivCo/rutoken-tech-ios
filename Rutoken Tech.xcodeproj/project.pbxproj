@@ -129,11 +129,13 @@
 		D433144A2B767E2700442809 /* OnHandleOpenLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43314492B767E2600442809 /* OnHandleOpenLink.swift */; };
 		D433144C2B76848900442809 /* LinkType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D433144B2B76848900442809 /* LinkType.swift */; };
 		D43478F42BEB63C300986F79 /* EncryptDocumentByFileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43478F32BEB63C300986F79 /* EncryptDocumentByFileTests.swift */; };
+		D43E84822E03F57200DCE4AF /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = D43E84812E03F57200DCE4AF /* AsyncAlgorithms */; };
 		D44833A22B8C78A800A9B7A2 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44833A12B8C78A800A9B7A2 /* UserManager.swift */; };
 		D4497EF72C2AB8C800FCFBDF /* EncryptDocumentByCertIdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4497EF62C2AB8C800FCFBDF /* EncryptDocumentByCertIdTests.swift */; };
 		D4497EF92C2AB9CE00FCFBDF /* EncryptDocumentByDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4497EF82C2AB9CE00FCFBDF /* EncryptDocumentByDataTests.swift */; };
 		D44997F32AEA6F2100B0AB64 /* IphoneRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */; };
 		D44997F62AEA796E00B0AB64 /* RtAppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44997F52AEA796E00B0AB64 /* RtAppTab.swift */; };
+		D449FA512E09362100C28DF7 /* Sequence+asyncMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = D449FA502E09362100C28DF7 /* Sequence+asyncMap.swift */; };
 		D453F5F52B8CD8F1008DD9E1 /* OnSavePin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D453F5F42B8CD8F1008DD9E1 /* OnSavePin.swift */; };
 		D453F5F72B8CD94D008DD9E1 /* PinCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D453F5F62B8CD94D008DD9E1 /* PinCodeManager.swift */; };
 		D453F5FE2B90845A008DD9E1 /* PaymentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D453F5FD2B90845A008DD9E1 /* PaymentListView.swift */; };
@@ -313,6 +315,7 @@
 		D4497EF82C2AB9CE00FCFBDF /* EncryptDocumentByDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptDocumentByDataTests.swift; sourceTree = "<group>"; };
 		D44997F22AEA6F2100B0AB64 /* IphoneRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IphoneRootView.swift; sourceTree = "<group>"; };
 		D44997F52AEA796E00B0AB64 /* RtAppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtAppTab.swift; sourceTree = "<group>"; };
+		D449FA502E09362100C28DF7 /* Sequence+asyncMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+asyncMap.swift"; sourceTree = "<group>"; };
 		D453F5F42B8CD8F1008DD9E1 /* OnSavePin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSavePin.swift; sourceTree = "<group>"; };
 		D453F5F62B8CD94D008DD9E1 /* PinCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCodeManager.swift; sourceTree = "<group>"; };
 		D453F5FD2B90845A008DD9E1 /* PaymentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentListView.swift; sourceTree = "<group>"; };
@@ -376,6 +379,7 @@
 				4496DABA2BF387160032FC29 /* RtPcscWrapper in Frameworks */,
 				443D2FEF2C9C398100AFA263 /* RtMock in Frameworks */,
 				5E1F3AA52BA362C5008158EF /* TinyAsyncRedux in Frameworks */,
+				D43E84822E03F57200DCE4AF /* AsyncAlgorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -693,6 +697,7 @@
 		7DAF6E742AFA35A5003A57D1 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				D449FA502E09362100C28DF7 /* Sequence+asyncMap.swift */,
 				4428BB3B2C94148400CB937E /* Data */,
 				4416A2782B70F9E100645800 /* View */,
 				4413CFB02B592EC8000987A8 /* String */,
@@ -942,6 +947,7 @@
 				44A8CFF82C930F1C009B3D06 /* RtUiComponents */,
 				443D2FEE2C9C398100AFA263 /* RtMock */,
 				449AB5EC2D106A9C001AAEC5 /* libcrypto */,
+				D43E84812E03F57200DCE4AF /* AsyncAlgorithms */,
 			);
 			productName = "Rutoken Tech";
 			productReference = 5EF75DDB2AC707BD001834BE /* Rutoken Tech.app */;
@@ -1001,8 +1007,9 @@
 				5EB636E12C29CFF900DDCA0F /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
 				44A8CFF42C930F07009B3D06 /* XCRemoteSwiftPackageReference "swift-ui-components" */,
 				443D2FEC2C9C38CB00AFA263 /* XCRemoteSwiftPackageReference "swift-mock" */,
-				5EAC2AA02CE3A6770051E158 /* XCRemoteSwiftPackageReference "swift-rtpcsc-wrapper" */,
+				5EAC2AA02CE3A6770051E158 /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */,
 				449AB5EA2D106A27001AAEC5 /* XCRemoteSwiftPackageReference "swift-rtlibcrypto-binary" */,
+				D43E84802E03F57200DCE4AF /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
 			);
 			productRefGroup = 5EF75DDC2AC707BD001834BE /* Products */;
 			projectDirPath = "";
@@ -1160,6 +1167,7 @@
 				D4246A942B876CD500B5F737 /* AppStorage.xcdatamodeld in Sources */,
 				5EC532012BD0189200AD5854 /* BankUserInfo.swift in Sources */,
 				D4FAF1772B8347530024EFDA /* BankSelectUserState.swift in Sources */,
+				D449FA512E09362100C28DF7 /* Sequence+asyncMap.swift in Sources */,
 				4422B8222BB1540700A4EDB4 /* BankDocumentListState.swift in Sources */,
 				7D9E5A602B0BA55E00E2EAB7 /* CaConnectedTokenState.swift in Sources */,
 				D453F5FE2B90845A008DD9E1 /* PaymentListView.swift in Sources */,
@@ -1595,12 +1603,12 @@
 				version = 2.16.1;
 			};
 		};
-		5EAC2AA02CE3A6770051E158 /* XCRemoteSwiftPackageReference "swift-rtpcsc-wrapper" */ = {
+		5EAC2AA02CE3A6770051E158 /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/AktivCo/swift-rtpcsc-wrapper.git";
+			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-pcsc-wrapper.git";
 			requirement = {
-				kind = exactVersion;
-				version = 1.4.0;
+				kind = revision;
+				revision = 86625639b53473763c5453889470bfa09dc582c8;
 			};
 		};
 		5EB636E12C29CFF900DDCA0F /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
@@ -1609,6 +1617,14 @@
 			requirement = {
 				kind = exactVersion;
 				version = 0.56.1;
+			};
+		};
+		D43E84802E03F57200DCE4AF /* XCRemoteSwiftPackageReference "swift-async-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-async-algorithms.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.0.4;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1657,6 +1673,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5EB636E12C29CFF900DDCA0F /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
 			productName = "plugin:SwiftLintBuildToolPlugin";
+		};
+		D43E84812E03F57200DCE4AF /* AsyncAlgorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D43E84802E03F57200DCE4AF /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
+			productName = AsyncAlgorithms;
 		};
 /* End XCSwiftPackageProductDependency section */
 
