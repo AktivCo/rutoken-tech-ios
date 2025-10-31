@@ -127,6 +127,6 @@ extension BankDocument: Equatable {
 }
 
 enum DocType: String, RawRepresentable, CaseIterable {
-    case income = "Входящие"
     case outcome = "Исходящие"
+    case income = "Входящие"
 }

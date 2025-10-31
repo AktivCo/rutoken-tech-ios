@@ -14,7 +14,7 @@ import TinyAsyncRedux
 struct PaymentListView: View {
     @EnvironmentObject private var store: Store<AppState, AppAction>
     @Environment(\.dismiss) private var dismiss
-    @State private var docsType: DocType = .income
+    @State private var docsType: DocType = .outcome
     @State private var isArchivedDocsShown = true
     @State private var isTopViewShown = false
     @State private var topSafeAreaHeight: CGFloat = getSafeAreaInsets()?.top ?? 0
