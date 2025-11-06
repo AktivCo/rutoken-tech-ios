@@ -44,6 +44,8 @@ enum CryptoManagerError: Error, Equatable {
     case noSuitCert
     case failedChain
     case invalidSignature
+    case tokenInteractionTimeout
+    case unsupportedDevice
 }
 
 enum RtFile: String {
@@ -318,11 +320,27 @@ class CryptoManager: CryptoManagerProtocol {
             try await callback()
         } catch NfcError.cancelledByUser, NfcError.timeout {
             throw CryptoManagerError.nfcStopped
+        } catch NfcError.connectionLost {
+            throw CryptoManagerError.connectionLost
+        } catch NfcError.unsupportedDevice {
+            throw CryptoManagerError.unsupportedDevice
         } catch Pkcs11Error.incorrectPin {
             throw CryptoManagerError.incorrectPin((try? connectedToken?.getPinAttempts()) ?? 0)
         } catch Pkcs11Error.internalError {
             guard let slot = connectedToken?.slot else {
                 throw CryptoManagerError.connectionLost
+            }
+            if connectionType == .nfc {
+                let reason = try await pcscHelper.getLastNfcStopReason()
+                if reason == .timeout {
+                    throw CryptoManagerError.tokenInteractionTimeout
+                }
+                if reason == .cancelledByUser {
+                    throw CryptoManagerError.nfcStopped
+                }
+                if reason == .connectionLost {
+                    throw CryptoManagerError.connectionLost
+                }
             }
             throw pkcs11Helper.isPresent(slot) ? CryptoManagerError.unknown : CryptoManagerError.connectionLost
         } catch let error as CryptoManagerError {
@@ -360,9 +378,14 @@ class CryptoManager: CryptoManagerProtocol {
                                     continuation.resume(throwing: NfcError.cancelledByUser)
                                 case .nfcIsStopped(.timeout):
                                     continuation.resume(throwing: NfcError.timeout)
+                                case .nfcIsStopped(.connectionLost):
+                                    continuation.resume(throwing: NfcError.connectionLost)
+                                case .nfcIsStopped(.unsupportedDevice):
+                                    continuation.resume(throwing: NfcError.unsupportedDevice)
                                 default:
                                     continuation.resume(throwing: NfcError.unknown)
                                 }
+
                                 break
                             }
                             if case .exchangeIsCompleted = nfcStatus {

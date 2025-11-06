@@ -27,6 +27,7 @@ enum AppAlert {
     case invalidSignature
     case unknownError
     case pinHasChanged
+    case tokenInteractionTimeout
     // MARK: Notification
     case rewriteCert(() -> Void)
 
@@ -86,6 +87,10 @@ enum AppAlert {
             return .init(title: .titleOnly("Перезаписать сертификат?"),
                          subTitle: "Для этой ключевой пары уже выпущен сертификат. Текущий сертификат будет перезаписан",
                          buttons: [.init(.regular("Перезаписать"), action: callback), .init(.bold("Отменить"))])
+        case .tokenInteractionTimeout:
+            return .init(title: .titleOnly("Долгая работа с токеном"),
+                         subTitle: "Возможно на токене слишком много объектов",
+                         buttons: [.init(.regular("ОК"))])
         case .unknownError:
             return .init(title: .titleOnly("Неизвестная ошибка"),
                          subTitle: "Попробуйте еще раз или обратитесь в Техническую поддержку",
@@ -109,6 +114,10 @@ enum AppAlert {
             self = .failedChain
         case .invalidSignature:
             self = .invalidSignature
+        case .tokenInteractionTimeout:
+            self = .tokenInteractionTimeout
+        case .unsupportedDevice:
+            self = .unknownDevice
         }
     }
 }

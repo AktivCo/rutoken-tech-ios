@@ -171,9 +171,7 @@ final class CryptoManagerWithTokenTests: XCTestCase {
         token.mocked_login_withPinString_Void = { _ in
             throw Pkcs11Error.internalError(rv: 10)
         }
-        pkcs11Helper.mocked_isPresent__SlotCK_SLOT_ID_Bool = { _ in
-            return false
-        }
+        pcscHelper.mocked_getLastNfcStopReason_async_RtNfcStopReason = { .connectionLost }
 
         await assertErrorAsync(
             try await manager.withToken(connectionType: .nfc, serial: token.serial, pin: "12345678") { },

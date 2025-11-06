@@ -20,6 +20,8 @@ enum NfcError: Error {
     case generalError
     case timeout
     case cancelledByUser
+    case connectionLost
+    case unsupportedDevice
 }
 
 @RtMock
@@ -27,6 +29,7 @@ protocol PcscHelperProtocol {
     func startNfc() async throws -> AsyncStream<RtNfcSearchStatus>
     func stopNfc() async throws
     func getNfcCooldown() -> AsyncThrowingStream<UInt, Error>
+    func getLastNfcStopReason() async throws -> RtNfcStopReason
 }
 
 class PcscHelper: PcscHelperProtocol {
@@ -92,5 +95,12 @@ class PcscHelper: PcscHelperProtocol {
 
         return await pcscWrapper.startNfcExchange(onReader: nfcReader.name, waitMessage: NfcMessages.startNfc.rawValue,
                                                   workMessage: NfcMessages.workOn.rawValue)
+    }
+
+    func getLastNfcStopReason() async throws -> RtNfcStopReason {
+        guard let nfcReader else {
+            throw NfcError.generalError
+        }
+        return try await pcscWrapper.getLastNfcStopReason(onReader: nfcReader.name)
     }
 }
