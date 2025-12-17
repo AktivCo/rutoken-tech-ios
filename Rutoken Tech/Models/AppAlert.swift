@@ -28,6 +28,7 @@ enum AppAlert {
     case unknownError
     case pinHasChanged
     case tokenInteractionTimeout
+    case systemRejected
     // MARK: Notification
     case rewriteCert(() -> Void)
 
@@ -88,8 +89,12 @@ enum AppAlert {
                          subTitle: "Для этой ключевой пары уже выпущен сертификат. Текущий сертификат будет перезаписан",
                          buttons: [.init(.regular("Перезаписать"), action: callback), .init(.bold("Отменить"))])
         case .tokenInteractionTimeout:
-            return .init(title: .titleOnly("Долгая работа с токеном"),
-                         subTitle: "Возможно на токене слишком много объектов",
+            return .init(title: .titleOnly("Обмен данными прерван системой"),
+                         subTitle: "Время для работы с NFC истекло. Удалите ненужные сертификаты и ключевые пары, и повторите попытку",
+                         buttons: [.init(.regular("ОК"))])
+        case .systemRejected:
+            return .init(title: .titleOnly("NFC сейчас недоступен"),
+                         subTitle: "Система подготавливает NFC-модуль к работе. Подождите несколько секунд и повторите попытку",
                          buttons: [.init(.regular("ОК"))])
         case .unknownError:
             return .init(title: .titleOnly("Неизвестная ошибка"),
@@ -118,6 +123,8 @@ enum AppAlert {
             self = .tokenInteractionTimeout
         case .unsupportedDevice:
             self = .unknownDevice
+        case .systemRejected:
+            self = .systemRejected
         }
     }
 }

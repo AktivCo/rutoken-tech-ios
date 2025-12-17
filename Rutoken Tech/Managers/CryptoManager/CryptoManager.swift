@@ -38,6 +38,7 @@ enum CryptoManagerError: Error, Equatable {
     case tokenNotFound
     case unknown
     case connectionLost
+    case systemRejected
     case nfcStopped
     case incorrectPin(UInt)
     case wrongToken
@@ -324,6 +325,8 @@ class CryptoManager: CryptoManagerProtocol {
             throw CryptoManagerError.connectionLost
         } catch NfcError.unsupportedDevice {
             throw CryptoManagerError.unsupportedDevice
+        } catch NfcError.systemRejected {
+            throw CryptoManagerError.systemRejected
         } catch Pkcs11Error.incorrectPin {
             throw CryptoManagerError.incorrectPin((try? connectedToken?.getPinAttempts()) ?? 0)
         } catch Pkcs11Error.internalError {
@@ -332,14 +335,15 @@ class CryptoManager: CryptoManagerProtocol {
             }
             if connectionType == .nfc {
                 let reason = try await pcscHelper.getLastNfcStopReason()
-                if reason == .timeout {
+                switch reason {
+                case .timeout:
                     throw CryptoManagerError.tokenInteractionTimeout
-                }
-                if reason == .cancelledByUser {
+                case .cancelledByUser:
                     throw CryptoManagerError.nfcStopped
-                }
-                if reason == .connectionLost {
+                case .connectionLost:
                     throw CryptoManagerError.connectionLost
+                default:
+                    break
                 }
             }
             throw pkcs11Helper.isPresent(slot) ? CryptoManagerError.unknown : CryptoManagerError.connectionLost
@@ -382,6 +386,8 @@ class CryptoManager: CryptoManagerProtocol {
                                     continuation.resume(throwing: NfcError.connectionLost)
                                 case .nfcIsStopped(.unsupportedDevice):
                                     continuation.resume(throwing: NfcError.unsupportedDevice)
+                                case .nfcIsStopped(.systemRejected):
+                                    continuation.resume(throwing: NfcError.systemRejected)
                                 default:
                                     continuation.resume(throwing: NfcError.unknown)
                                 }

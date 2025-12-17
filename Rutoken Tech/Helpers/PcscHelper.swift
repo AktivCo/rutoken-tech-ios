@@ -22,6 +22,7 @@ enum NfcError: Error {
     case cancelledByUser
     case connectionLost
     case unsupportedDevice
+    case systemRejected
 }
 
 @RtMock
