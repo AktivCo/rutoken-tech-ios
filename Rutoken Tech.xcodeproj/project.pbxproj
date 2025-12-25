@@ -1603,7 +1603,7 @@
 			repositoryURL = "https://github.com/AktivCo/swift-rtpkcs11ecp-binary.git";
 			requirement = {
 				kind = exactVersion;
-				version = 2.18.1;
+				version = 2.18.4;
 			};
 		};
 		5EB636E12C29CFF900DDCA0F /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
