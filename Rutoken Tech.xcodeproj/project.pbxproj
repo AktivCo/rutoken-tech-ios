@@ -1627,7 +1627,7 @@
 			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-pcsc-wrapper.git";
 			requirement = {
 				kind = revision;
-				revision = ad56359de868d46123b4af72443544a47b6b4724;
+				revision = 4e3930c925188258707c14a613ddb84338cf829d;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
