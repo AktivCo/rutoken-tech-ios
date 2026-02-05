@@ -1571,7 +1571,7 @@
 			repositoryURL = "https://github.com/AktivCo/swift-rtlibcrypto-binary.git";
 			requirement = {
 				kind = exactVersion;
-				version = 3.0.14;
+				version = 3.5.4;
 			};
 		};
 		44A8CFF42C930F07009B3D06 /* XCRemoteSwiftPackageReference "swift-ui-components" */ = {
@@ -1595,7 +1595,7 @@
 			repositoryURL = "https://github.com/AktivCo/swift-rtengine-binary.git";
 			requirement = {
 				kind = exactVersion;
-				version = 3.3.1;
+				version = 3.3.6;
 			};
 		};
 		5E1F3AA92BA36474008158EF /* XCRemoteSwiftPackageReference "swift-rtpkcs11ecp-binary" */ = {
