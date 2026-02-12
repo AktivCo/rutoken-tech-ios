@@ -1012,7 +1012,7 @@
 				443D2FEC2C9C38CB00AFA263 /* XCRemoteSwiftPackageReference "swift-mock" */,
 				449AB5EA2D106A27001AAEC5 /* XCRemoteSwiftPackageReference "swift-rtlibcrypto-binary" */,
 				D43E84802E03F57200DCE4AF /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
-				D4FDC95A2EC40F520003871C /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */,
+				D4FDC95A2EC40F520003871C /* XCRemoteSwiftPackageReference "swift-rtpcsc-wrapper" */,
 			);
 			productRefGroup = 5EF75DDC2AC707BD001834BE /* Products */;
 			projectDirPath = "";
@@ -1622,12 +1622,12 @@
 				version = 1.0.4;
 			};
 		};
-		D4FDC95A2EC40F520003871C /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */ = {
+		D4FDC95A2EC40F520003871C /* XCRemoteSwiftPackageReference "swift-rtpcsc-wrapper" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@scm.aktivco.ru:rutoken/dev/ios-projects/swift-packages/rt-pcsc-wrapper.git";
+			repositoryURL = "https://github.com/AktivCo/swift-rtpcsc-wrapper.git";
 			requirement = {
-				kind = revision;
-				revision = 4e3930c925188258707c14a613ddb84338cf829d;
+				kind = exactVersion;
+				version = 1.8.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1684,7 +1684,7 @@
 		};
 		D4FDC95B2EC40F520003871C /* RtPcscWrapper */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = D4FDC95A2EC40F520003871C /* XCRemoteSwiftPackageReference "rt-pcsc-wrapper" */;
+			package = D4FDC95A2EC40F520003871C /* XCRemoteSwiftPackageReference "swift-rtpcsc-wrapper" */;
 			productName = RtPcscWrapper;
 		};
 /* End XCSwiftPackageProductDependency section */
